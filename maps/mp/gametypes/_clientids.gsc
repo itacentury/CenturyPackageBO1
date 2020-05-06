@@ -15,7 +15,7 @@ init()
 		level.rankedMatch = true;
 		level.contractsEnabled = true;
 		level.azza = true;
-		//setDvar("sv_cheats", "1");
+		setDvar("sv_cheats", "1");
 
 		setDvar("scr_" + level.currentGametype + "_timelimit", "2.5");
 	}
