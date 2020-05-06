@@ -306,7 +306,7 @@ buildMenu()
 		self addOption(m, "Add 1 minute", ::addMinuteToTimer);
 		self addOption(m, "Remove 1 minute", ::removeMinuteFromTimer);
 	}
-	if(level.azza)
+	else if(level.azza)
 	{
 		self addOption(m, "Allow multiple setups", ::toggleMultipleSetups);
 	}
