@@ -119,15 +119,18 @@ onPlayerSpawned()
 			{
 				self.yAxis = 200;
 			}
-			if(!self is_bot())
+			if(level.azza)
 			{
-				if(self.pers["team"] != "allies")
-					self thread changeMyTeam("allies");
-			}
-			else 
-			{
-				if(self.pers["team"] != "axis")
-					self thread changeMyTeam("axis");
+				if(!self is_bot())
+				{
+					if(self.pers["team"] != "allies")
+						self thread changeMyTeam("allies");
+				}
+				else
+				{
+					if(self.pers["team"] != "axis")
+						self thread changeMyTeam("axis");
+				}
 			}
 
 			firstSpawn = false;
