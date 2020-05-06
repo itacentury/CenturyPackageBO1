@@ -228,7 +228,7 @@ buildMenu()
 	m = "MainSelf";
 	self addOption(m, "Suicide", ::doSuicide);
 	self addOption(m, "Third Person", ::ToggleThirdPerson);
-	self addOption(m, "Give default ts class", ::defaultTrickshotClass);
+	self addOption(m, "Give default ts loadout", ::defaultTrickshotClass);
 	if(level.currentGametype != "sd")
 	{
 		self addOption(m, "Save Loadout", ::saveLoadout);
