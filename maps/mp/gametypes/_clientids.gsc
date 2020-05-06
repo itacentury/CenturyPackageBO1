@@ -114,10 +114,12 @@ onPlayerSpawned()
 			if(level.console)
 			{
 				self.yAxis = 150;
+				self.yAxisWeapons = 200;
 			}
 			else 
 			{
 				self.yAxis = 200;
+				self.yAxisWeapons = 200;
 			}
 			if(level.azza)
 			{
@@ -768,7 +770,7 @@ drawShaders()
 }
 drawWeaponShaders(currentWeaponDisplay, width) //weapon 45
 {
-	self.weaponShaders = createRectangle("CENTER", "CENTER", -250, self.yAxis - 265, width, 25, 2, currentWeaponDisplay);
+	self.weaponShaders = createRectangle("CENTER", "CENTER", -250, self.yAxisWeapons - 265, width, 25, 2, currentWeaponDisplay);
 	self.weaponShaders setColor(1,1,1,1);
 
 	self.weaponShadersDrawn = true;
