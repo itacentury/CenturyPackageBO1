@@ -15,6 +15,7 @@ INSTALLATION
 You need the InfinityOps files from @ImJtagModz on Twitter
 
 (From @ImJtagModz post)
+
 To load scripts you place the .gsc files in the respective places i.e maps/mp/gametypes/clientids.gsc
 
 The PS3 Edition includes eboots for SinglePlayer and Multiplayer.
