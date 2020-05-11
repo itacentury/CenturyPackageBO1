@@ -72,11 +72,11 @@ Godmode
 
 Full invisible
 
-  Not visible on the minimap
+    Not visible on the minimap
   
 Refill ammo 
 
-  all weapons + equipment + grenades
+    all weapons + equipment + grenades
   
   
 SELF OPTIONS
@@ -95,7 +95,7 @@ Give default ts loadout
     
 Save Loadout (Not available in S&D)
 
-  Save your current weapons, grenades, equipment and after you spawn you will get them instead of the class you selected
+    Save your current weapons, grenades, equipment and after you spawn you will get them instead of the class you selected
   
 Fast last (Only in FFA)
 
@@ -105,29 +105,29 @@ CLASS OPTIONS
 
 Weapon selector
 
-  Choose between every gun in the game
+    Choose between every gun in the game
   
 Camo Selector
 
 
-  Choose between every camo in the game for your current weapon
+    Choose between every camo in the game for your current weapon
   
 Perk Selector
 
 
-  Choose between a variety of perks that can be toggled on and off
+    Choose between a variety of perks that can be toggled on and off
   
 Attachment Selector
 
 
-  Choose between a variety of attachments that are added to your current weapon
+    Choose between a variety of attachments that are added to your current weapon
   
-  The attachment has to be supported by the weapon of course
+    The attachment has to be supported by the weapon of course
   
 Killstreak Selector
 
 
-  Choose between a variety of killstreaks
+    Choose between a variety of killstreaks
   
   
 LOBBY OPTIONS
@@ -139,15 +139,15 @@ Remove 1 minute (Not available during azza)
 
 Allow multiple setups (Only availabel during azza)
 
-  You don't need to be at last. There can be 2 or 3 enemys still alive and if you have this option enabled the game ends
+    You don't need to be at last. There can be 2 or 3 enemys still alive and if you have this option enabled the game ends
   
-  after killing one of them and the final killcam starts
+    after killing one of them and the final killcam starts
   
 Add bot
 
 Toggle timer
 
-  Pause or resume the game timer
+    Pause or resume the game timer
   
 Fast last (Only in TDM)
 
@@ -159,7 +159,7 @@ SPAWN OPTIONS
 
 Spawn bounce on position
 
-  Spawns a carepackage which can be bounced off at your feet
+    Spawns a carepackage which can be bounced off at your feet
   
 
 BOUNCE OPTIONS
@@ -167,15 +167,15 @@ BOUNCE OPTIONS
 
 Delete
 
-  Deletes the spawn that is currently spawned
+    Deletes the spawn that is currently spawned
   
 Invisible
 
-  Makes the bounce carepackage invisible
+    Makes the bounce carepackage invisible
   
 Change Position
 
-  The position of the carepackage and the bounce can be changed after it is spawned
+    The position of the carepackage and the bounce can be changed after it is spawned
   
   
 PLAYERS MENU
@@ -185,13 +185,13 @@ Standart options
 
 Reset score (Only in FFA)
 
-  Resets the score of the selected player
+    Resets the score of the selected player
   
 Toggle menu access (Only when the game is not azza and you are the Host)
 
-  When you are hosting an azza lobby (private match) everyone gets automatically the menu but if it's not, the host has
+    When you are hosting an azza lobby (private match) everyone gets automatically the menu but if it's not, the host has
   
-  to give the players menu acccess
+    to give the players menu acccess
   
   
 BACKGROUND FEATURES with no Toggle
