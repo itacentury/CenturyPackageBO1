@@ -114,7 +114,7 @@ onPlayerSpawned()
 			if(level.console)
 			{
 				self.yAxis = 150;
-				self.yAxisWeapons = 200;
+				self.yAxisWeapons = 185;
 			}
 			else 
 			{
