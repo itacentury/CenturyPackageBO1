@@ -223,7 +223,7 @@ buildMenu()
 	self addOption(m, "Refill Ammo", ::refillAmmo);
 	self addMenu(m, "MainSelf", "^9Self Options");
 	self addMenu(m, "MainClass", "^9Class Options");
-	self addMenu(m, "MainLobby", "^9Lobby Mods");
+	self addMenu(m, "MainLobby", "^9Lobby Options");
 	
 	m = "MainSelf";
 	self addOption(m, "Suicide", ::doSuicide);
@@ -243,7 +243,7 @@ buildMenu()
 	self addMenu(m, "ClassCamo", "^9Camo Selector");
 	self addMenu(m, "ClassPerk", "^9Perk Selector");
 	self addMenu(m ,"ClassAttachment", "^9Attachment Selector");
-	self addMenu(m, "ClassKillstreaks", "^9Killstreaks Menu");
+	self addMenu(m, "ClassKillstreaks", "^9Killstreak Menu");
 
 	self thread buildWeaponMenu();
 	
@@ -317,7 +317,7 @@ buildMenu()
 		self addOption(m, "Fast last", ::fastLast);
 		self addOption(m, "Reset enemy team score", ::resetEnemyTeamScore);
 	}
-	self addMenu(m, "ExtraSpawn", "^9Spawn Menu");
+	self addMenu(m, "ExtraSpawn", "^9Spawn Options");
 	
 	m = "ExtraSpawn";
 	self addOption(m, "Spawn Bounce On Position", ::bounce);
