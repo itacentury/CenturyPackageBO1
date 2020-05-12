@@ -10,13 +10,12 @@ init()
 	//Needed to display a correct match bonus
 	level.currentGametype = getDvar("g_gametype");
 	level.currentMapName = getDvar("mapName");
-	if(level.currentGametype == "sd")
+	if(level.currentGametype == "sd" && getDvar("xblive_privatematch") == true)
 	{
 		level.rankedMatch = true;
 		level.contractsEnabled = true;
 		level.azza = true;
 		setDvar("sv_cheats", "1");
-
 		setDvar("scr_" + level.currentGametype + "_timelimit", "2.5");
 	}
 	else 
@@ -215,7 +214,7 @@ buildMenu()
 	self addMenu("", m, "gsc.cty");
 	//self addOption(m, "Print origin", ::printOrigin);
 	//self addOption(m, "Print weapon class", ::printWeaponClass);
-	if(level.azza || level.currentGametype == "tdm" || level.currentGametype == "dm" || level.currentGametype == "sd")
+	if(level.azza)
 	{
 		self addOption(m, "Godmode", ::toggleGodmode);
 		self addOption(m, "Invisible", ::toggleInvisible);
