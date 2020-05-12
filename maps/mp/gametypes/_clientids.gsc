@@ -10,7 +10,7 @@ init()
 	//Needed to display a correct match bonus
 	level.currentGametype = getDvar("g_gametype");
 	level.currentMapName = getDvar("mapName");
-	if(level.currentGametype == "sd" && getDvar("xblive_privatematch") == true)
+	if(level.currentGametype == "sd" && getDvar("xblive_privatematch") == 1)
 	{
 		level.rankedMatch = true;
 		level.contractsEnabled = true;
@@ -133,7 +133,6 @@ onPlayerSpawned()
 						self thread changeMyTeam("axis");
 				}
 			}
-
 			firstSpawn = false;
 		}
 		self FreezeControls(false);
