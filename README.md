@@ -220,7 +220,7 @@ Everyone gets Lightweight Pro.
 
 A Bot is automatically spawned on the enemy team if no Bot has already been spawned.
 
-If the game is an Azza lobby, the current map is Launch and someone is standing underneath the rocket. He automatically receives Godmode right before the rocket launches. 
+If the current map is Launch and someone is standing underneath the rocket. He automatically receives Godmode right before the rocket launches. 
 Godmode is removed after it's safe again.
 
 
