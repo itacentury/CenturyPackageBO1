@@ -50,19 +50,19 @@ If you have any issues with this then feel free to hit me up via twitter and i c
 ##USAGE
 
 
-Open menu: ads + dpad down
+*Open menu:* ads + dpad down
 
-Select option: jump
+*Select option:* jump
 
-Return / close menu: Knife
+*Return / close menu:* Knife
 
-Navigate menu: dpad up / down
+*Navigate menu:* dpad up / down
 
-UFO bind: Crouch + dpad left
+*UFO bind:* Crouch + dpad left
 
-Save position bind: Crouch + ads + knife
+*Save position bind:* Crouch + ads + knife
 
-Load position bind: Crouch + dpad right
+*Load position bind:* Crouch + dpad right
 
 
 
@@ -195,7 +195,32 @@ Toggle menu access (Only when the game is not azza and you are the Host)
     to give the players menu acccess
   
   
-**BACKGROUND FEATURES _with no Toggle_**
+##BACKGROUND FEATURES _with no Toggle_
 
 
-Coming soon
+###Always working
+
+Carepackage stall is always working.
+
+Tactical insertion cannot be destroyed.
+
+Tactical insertion can be used in FFA.
+
+No second chance perk. If someone is detected with second chance the perk is automatically removed from him.
+
+Everyone gets Marathon Pro, Steady Aim Pro and Hardened Pro.
+
+###While in an Azza lobby
+
+When the Timer is at 1 second, 2 minutes are automatically added. Only works one time.
+
+All snipers do unlimited damage and every other weapon do none, even grenades, knifes etc.
+
+Everyone gets Lightweight Pro.
+
+A Bot is automatically spawned on the enemy team if no Bot has already been spawned.
+
+If the game is an Azza lobby, the current map is Launch and someone is standing underneath the rocket. He automatically receives Godmode right before the rocket launches. 
+Godmode is removed after it's safe again.
+
+
