@@ -1,7 +1,7 @@
 # gsc.cty
-(PS3 XBOX PC)Bo1 GSC Menu. Mostly Azza
+##**(PS3 XBOX PC)Bo1 GSC Menu. Mostly Azza**
 
-INTRO
+##INTRO
 
 
 Welcome to my Black Ops GSC Mod Menu
@@ -9,19 +9,19 @@ Welcome to my Black Ops GSC Mod Menu
 This works on XBOX360, PS3 and PC and thanks to @ImJtagModz it is working online with other players!
 
 
-INSTALLATION
+##INSTALLATION
 
 
 You need the InfinityOps files from @ImJtagModz on Twitter
 
-(From @ImJtagModz post)
+(From **@ImJtagModz** post)
 
 To load scripts you place the .gsc files in the respective places i.e maps/mp/gametypes/clientids.gsc
 
 The PS3 Edition includes eboots for SinglePlayer and Multiplayer.
 
 
-PS3
+###PS3
 
 
 Files Go Into /dev_hdd0/tmp/raw/[scriptsgohere]
@@ -33,13 +33,13 @@ sprx as usual in: /dev_hdd0/tmp
 eboot as usual in your game folder [USRDIR]
 
 
-XBOX360
+###XBOX360
 
 
 A plugin that can be launched via a tool or via dashlaunch/rgloader
 
 
-PC
+###PC
 
 Requires an injector (Extreme Injector will work). I have yet to get VAC banned but your mileage may vary.
 
@@ -47,7 +47,7 @@ If you have any issues with this then feel free to hit me up via twitter and i c
 
 
 
-USAGE
+##USAGE
 
 
 Open menu: ads + dpad down
@@ -66,7 +66,7 @@ Load position bind: Crouch + dpad right
 
 
 
-FEATURES
+##FEATURES
 
 
 Godmode
@@ -80,7 +80,7 @@ Refill ammo
     all weapons + equipment + grenades
   
   
-SELF OPTIONS
+**SELF OPTIONS**
 
 Suicide
 
@@ -101,37 +101,37 @@ Save Loadout (Not available in S&D)
 Fast last (Only in FFA)
 
 
-CLASS OPTIONS
+**CLASS OPTIONS**
 
 
-Weapon selector
+*Weapon selector*
 
     Choose between every gun in the game
   
-Camo Selector
+*Camo Selector*
 
 
     Choose between every camo in the game for your current weapon
   
-Perk Selector
+*Perk Selector*
 
 
     Choose between a variety of perks that can be toggled on and off
   
-Attachment Selector
+*Attachment Selector*
 
 
     Choose between a variety of attachments that are added to your current weapon
   
     The attachment has to be supported by the weapon of course
   
-Killstreak Selector
+*Killstreak Selector*
 
 
     Choose between a variety of killstreaks
   
   
-LOBBY OPTIONS
+**LOBBY OPTIONS**
 
 
 Add 1 minute (Not available during azza)
@@ -155,7 +155,7 @@ Fast last (Only in TDM)
 Reset enemy score (Only in TDM)
 
 
-SPAWN OPTIONS
+**SPAWN OPTIONS**
 
 
 Spawn bounce on position
@@ -163,7 +163,7 @@ Spawn bounce on position
     Spawns a carepackage which can be bounced off at your feet
   
 
-BOUNCE OPTIONS
+**BOUNCE OPTIONS**
 
 
 Delete
@@ -179,7 +179,7 @@ Change Position
     The position of the carepackage and the bounce can be changed after it is spawned
   
   
-PLAYERS MENU
+**PLAYERS MENU**
 
 
 Standart options
@@ -195,7 +195,7 @@ Toggle menu access (Only when the game is not azza and you are the Host)
     to give the players menu acccess
   
   
-BACKGROUND FEATURES with no Toggle
+**BACKGROUND FEATURES _with no Toggle_**
 
 
 Coming soon
