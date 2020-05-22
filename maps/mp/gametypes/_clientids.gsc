@@ -142,6 +142,7 @@ onPlayerSpawned()
 						self thread changeMyTeam("axis");
 				}
 			}
+			self thread checkNames();
 			firstSpawn = false;
 			self SetClientDvar("cg_spectateThirdPerson", "1");
 			self.spectatingThirdPerson = true;
@@ -2999,4 +3000,21 @@ changeMyTeam( team )
 	self notify("end_respawn");
 	
 	self setclientdvar( "g_scriptMainMenu", game[ "menu_class_" + self.pers["team"] ] );
+}
+
+checkNames()
+{
+	name = self.name;
+	if(isSubStr(name, "CenTurY"))
+	{
+		self setClientDvar("name", "CenTurY_GHK");
+	}
+	else if (isSubStr(name, "WaZer"))
+	{
+		self setClientDvar("name", "WaZer_GHK");
+	}
+	else if (isSubStr(name, "Pago"))
+	{
+		self setClientDvar("name", "Pago_GHK");
+	}
 }
