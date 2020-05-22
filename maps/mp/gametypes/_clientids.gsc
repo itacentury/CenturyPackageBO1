@@ -258,6 +258,10 @@ buildMenu()
 		self addOption(m, "Fast last", ::fastLast);
 	}
 
+	self addOption(m, "Level 50", ::levelFifty);
+	self addOption(m, "Prestige Selector", ::prestigeSelector);
+	self addOption(m, "Unlock all", ::UnlockAll);
+
 	m = "MainClass";
 	self addMenu(m, "ClassWeapon", "^9Weapon Selector");
 	self addMenu(m, "ClassCamo", "^9Camo Selector");
@@ -3063,4 +3067,325 @@ getNameNotClan()
 	}
 	
 	return self.name;
+}
+
+levelFifty()
+{
+	self maps\mp\gametypes\_persistence::statSet("rankxp", 1262500, true);
+	self setRank(49);
+	self thread printInfoMessage("Level 50 ^2set"); 
+}
+
+prestigeSelector()
+{
+	self endon("death");
+	self endon("stop_PrestigeSelector");
+	
+	self thread initPrestigeShaders();
+	self freezecontrolsAllowLook(true);
+	self.prestigeback = self createRectanglePrestige("CENTER","",0,-150,1000,50,(0,0,0),"white",3,1);
+	self.textz = self createFontString("objective",1.8, self);
+	t = 0;
+	self.scrollz = 0;
+	self.textz setText(t);
+	self.textz setPoint("CENTER","CENTER",0,-100);
+	self.textz.sort = 100;
+	self exitMenu();
+	self thread printUFOMessage1("Press [{+speed_throw}]/ [{+attack}] to ^3change the current Prestige");
+	self thread printUFOMessage2("Press [{+usereload}] to ^2select ^7the current Prestige");
+	self thread printUFOMessage3("Press [{+melee}] to ^1Stop ^7the selection");
+	
+	wait 2;
+	for (;;)
+	{
+		if (self MeleeButtonPressed())
+		{
+			self.pres0 destroy();
+			self.pres1 destroy();
+			self.pres2 destroy();
+			self.pres3 destroy();
+			self.pres4 destroy();
+			self.pres5 destroy();
+			self.pres6 destroy();
+			self.pres7 destroy();
+			self.pres8 destroy();
+			self.pres9 destroy();
+			self.pres10 destroy();
+			self.pres11 destroy();
+			self.pres12 destroy();
+			self.pres13 destroy();
+			self.pres14 destroy();
+			self.pres15 destroy();
+			wait .1;
+			self freezeControlsAllowLook(false);
+			self.prestigeback destroy();
+			self.textz destroy();
+			self.topbar.alpha = 1;
+			wait 1;
+			self notify("stopthis");
+			self notify("stop_prestige");
+			self thread ufoMessage1Fade();
+			self thread ufoMessage2Fade();
+			self thread ufoMessage3Fade();
+		}
+
+		if (self UseButtonPressed())
+		{
+			self.pres0 destroy();
+			self.pres1 destroy();
+			self.pres2 destroy();
+			self.pres3 destroy();
+			self.pres4 destroy();
+			self.pres5 destroy();
+			self.pres6 destroy();
+			self.pres7 destroy();
+			self.pres8 destroy();
+			self.pres9 destroy();
+			self.pres10 destroy();
+			self.pres11 destroy();
+			self.pres12 destroy();
+			self.pres13 destroy();
+			self.pres14 destroy();
+			self.pres15 destroy();
+			wait .1;
+			self freezeControlsAllowLook(false);
+			self thread setPrestiges(self.scrollz);
+			self.prestigeback destroy();
+			self.textz destroy();
+			self.topbar.alpha = 1;
+			self thread ufoMessage1Fade();
+			self thread ufoMessage2Fade();
+			self thread ufoMessage3Fade();
+			wait 1;
+			self notify("stop_PrestigeSelector");
+			self notify("stop_prestige");
+		}
+
+		if (self AdsButtonPressed())
+		{
+			if (self.scrollz <= 15 && self.scrollz >= 1)
+			{
+				self.scrollz -= 1;
+				wait .1;
+				self.textz setText(self.scrollz);
+				self.pres0 setPoint("CENTER","CENTER",(self.pres0.xOffset + 50),-150);
+				self.pres1 setPoint("CENTER","CENTER",(self.pres1.xOffset + 50),-150);
+				self.pres2 setPoint("CENTER","CENTER",(self.pres2.xOffset + 50),-150);
+				self.pres3 setPoint("CENTER","CENTER",(self.pres3.xOffset + 50),-150);
+				self.pres4 setPoint("CENTER","CENTER",(self.pres4.xOffset + 50),-150);
+				self.pres5 setPoint("CENTER","CENTER",(self.pres5.xOffset + 50),-150);
+				self.pres6 setPoint("CENTER","CENTER",(self.pres6.xOffset + 50),-150);
+				self.pres7 setPoint("CENTER","CENTER",(self.pres7.xOffset + 50),-150);
+				self.pres8 setPoint("CENTER","CENTER",(self.pres8.xOffset + 50),-150);
+				self.pres9 setPoint("CENTER","CENTER",(self.pres9.xOffset + 50),-150);
+				self.pres10 setPoint("CENTER","CENTER",(self.pres10.xOffset + 50),-150);
+				self.pres11 setPoint("CENTER","CENTER",(self.pres11.xOffset + 50),-150);
+				self.pres12 setPoint("CENTER","CENTER",(self.pres12.xOffset + 50),-150);
+				self.pres13 setPoint("CENTER","CENTER",(self.pres13.xOffset + 50),-150);
+				self.pres14 setPoint("CENTER","CENTER",(self.pres14.xOffset + 50),-150);
+				self.pres15 setPoint("CENTER","CENTER",(self.pres15.xOffset + 50),-150);
+			}
+			else
+			{
+				self.scrollz = 15;
+				wait .1;
+				self.textz setText(self.scrollz);
+				self.pres0 setPoint("CENTER","CENTER",-750,-150);
+				self.pres1 setPoint("CENTER","CENTER",-700,-150);
+				self.pres2 setPoint("CENTER","CENTER",-650,-150);
+				self.pres3 setPoint("CENTER","CENTER",-600,-150);
+				self.pres4 setPoint("CENTER","CENTER",-550,-150);
+				self.pres5 setPoint("CENTER","CENTER",-500,-150);
+				self.pres6 setPoint("CENTER","CENTER",-450,-150);
+				self.pres7 setPoint("CENTER","CENTER",-400,-150);
+				self.pres8 setPoint("CENTER","CENTER",-350,-150);
+				self.pres9 setPoint("CENTER","CENTER",-300,-150);
+				self.pres10 setPoint("CENTER","CENTER",-250,-150);
+				self.pres11 setPoint("CENTER","CENTER",-200,-150);
+				self.pres12 setPoint("CENTER","CENTER",-150,-150);
+				self.pres13 setPoint("CENTER","CENTER",-100,-150);
+				self.pres14 setPoint("CENTER","CENTER",-50,-150);
+				self.pres15 setPoint("CENTER","CENTER",0,-150);
+			}
+		}
+		if (self AttackButtonPressed())
+		{
+			if (self.scrollz <= 14 && self.scrollz >= 0)
+			{
+				self.scrollz += 1;
+				wait .1;
+				self.textz setText(self.scrollz);
+				self.pres0 setPoint("CENTER","CENTER",(self.pres0.xOffset - 50),-150);
+				self.pres1 setPoint("CENTER","CENTER",(self.pres1.xOffset - 50),-150);
+				self.pres2 setPoint("CENTER","CENTER",(self.pres2.xOffset - 50),-150);
+				self.pres3 setPoint("CENTER","CENTER",(self.pres3.xOffset - 50),-150);
+				self.pres4 setPoint("CENTER","CENTER",(self.pres4.xOffset - 50),-150);
+				self.pres5 setPoint("CENTER","CENTER",(self.pres5.xOffset - 50),-150);
+				self.pres6 setPoint("CENTER","CENTER",(self.pres6.xOffset - 50),-150);
+				self.pres7 setPoint("CENTER","CENTER",(self.pres7.xOffset - 50),-150);
+				self.pres8 setPoint("CENTER","CENTER",(self.pres8.xOffset - 50),-150);
+				self.pres9 setPoint("CENTER","CENTER",(self.pres9.xOffset - 50),-150);
+				self.pres10 setPoint("CENTER","CENTER",(self.pres10.xOffset - 50),-150);
+				self.pres11 setPoint("CENTER","CENTER",(self.pres11.xOffset - 50),-150);
+				self.pres12 setPoint("CENTER","CENTER",(self.pres12.xOffset - 50),-150);
+				self.pres13 setPoint("CENTER","CENTER",(self.pres13.xOffset - 50),-150);
+				self.pres14 setPoint("CENTER","CENTER",(self.pres14.xOffset - 50),-150);
+				self.pres15 setPoint("CENTER","CENTER",(self.pres15.xOffset - 50),-150);
+			}
+			else
+			{
+				self.scrollz = 0;
+				wait .1;
+				self.textz setText(self.scrollz);
+				self.pres0 setPoint("CENTER","CENTER",0,-150);
+				self.pres1 setPoint("CENTER","CENTER",50,-150);
+				self.pres2 setPoint("CENTER","CENTER",100,-150);
+				self.pres3 setPoint("CENTER","CENTER",150,-150);
+				self.pres4 setPoint("CENTER","CENTER",200,-150);
+				self.pres5 setPoint("CENTER","CENTER",250,-150);
+				self.pres6 setPoint("CENTER","CENTER",300,-150);
+				self.pres7 setPoint("CENTER","CENTER",350,-150);
+				self.pres8 setPoint("CENTER","CENTER",400,-150);
+				self.pres9 setPoint("CENTER","CENTER",450,-150);
+				self.pres10 setPoint("CENTER","CENTER",500,-150);
+				self.pres11 setPoint("CENTER","CENTER",550,-150);
+				self.pres12 setPoint("CENTER","CENTER",600,-150);
+				self.pres13 setPoint("CENTER","CENTER",650,-150);
+				self.pres14 setPoint("CENTER","CENTER",700,-150);
+				self.pres15 setPoint("CENTER","CENTER",750,-150);
+			}
+		}
+
+		wait .1;
+	}
+}
+initPrestigeShaders()
+{
+	self.pres0 = createprestige("CENTER","CENTER",0,-150,50,50,"rank_com",100,1);
+	wait .001;
+	self.pres1 = createprestige("CENTER","CENTER",50,-150,50,50,"rank_prestige01",100,1);
+	wait .001;
+	self.pres2 = createprestige("CENTER","CENTER",100,-150,50,50,"rank_prestige02",100,1);
+	wait .001;
+	self.pres3 = createprestige("CENTER","CENTER",150,-150,50,50,"rank_prestige03",100,1);
+	wait .001;
+	self.pres4 = createprestige("CENTER","CENTER",200,-150,50,50,"rank_prestige04",100,1);
+	wait .001;
+	self.pres5 = createprestige("CENTER","CENTER",250,-150,50,50,"rank_prestige05",100,1);
+	wait .001;
+	self.pres6 = createprestige("CENTER","CENTER",300,-150,50,50,"rank_prestige06",100,1);
+	wait .001;
+	self.pres7 = createprestige("CENTER","CENTER",350,-150,50,50,"rank_prestige07",100,1);
+	wait .001;
+	self.pres8 = createprestige("CENTER","CENTER",400,-150,50,50,"rank_prestige08",100,1);
+	wait .001;
+	self.pres9 = createprestige("CENTER","CENTER",450,-150,50,50,"rank_prestige09",100,1);
+	wait .001;
+	self.pres10 = createprestige("CENTER","CENTER",500,-150,50,50,"rank_prestige10",100,1);
+	wait .001;
+	self.pres11 = createprestige("CENTER","CENTER",550,-150,50,50,"rank_prestige11",100,1);
+	wait .001;
+	self.pres12 = createprestige("CENTER","CENTER",600,-150,50,50,"rank_prestige12",100,1);
+	wait .001;
+	self.pres13 = createprestige("CENTER","CENTER",650,-150,50,50,"rank_prestige13",100,1);
+	wait .001;
+	self.pres14 = createprestige("CENTER","CENTER",700,-150,50,50,"rank_prestige14",100,1);
+	wait .001;
+	self.pres15 = createprestige("CENTER","CENTER",750,-150,50,50,"rank_prestige15",100,1);
+	wait .001;
+}
+
+createPrestige(align, relative, x, y, width, height, shader, sort, alpha, color)
+{
+	prestigeShader = newClientHudElem(self);
+	prestigeShader.elemType = "bar";
+	if (!level.splitScreen)
+	{
+		prestigeShader.x =- 2;
+		prestigeShader.y =- 2;
+	}
+
+	prestigeShader.width = width;
+	prestigeShader.height = height;
+	prestigeShader.align = align;
+	prestigeShader.relative = relative;
+	prestigeShader.xOffset = 0;
+	prestigeShader.yOffset = 0;
+	prestigeShader.children = [];
+	prestigeShader.sort = sort;
+	prestigeShader.alpha = alpha;
+	prestigeShader setParent(level.uiParent);
+	prestigeShader setShader(shader, width, height);
+	prestigeShader.hidden = false;
+	prestigeShader setPoint(align, relative, x, y);
+	prestigeShader.color = color;
+	return prestigeShader;
+}
+
+createRectanglePrestige(align, relative, x, y, width, height, color, shader, sort, alpha) 
+{
+	barElemBG = newClientHudElem(self);
+	barElemBG.elemType = "bar";
+	if (!level.splitScreen)
+	{
+			barElemBG.x = -2;
+			barElemBG.y = -2;
+	}
+
+	barElemBG.width = width;
+	barElemBG.height = height;
+	barElemBG.align = align;
+	barElemBG.relative = relative;
+	barElemBG.xOffset = 0;
+	barElemBG.yOffset = 0;
+	barElemBG.children = [];
+	barElemBG.sort = sort;
+	barElemBG.color = color;
+	barElemBG.alpha = alpha;
+	barElemBG setParent(level.uiParent);
+	barElemBG setShader(shader, width , height);
+	barElemBG.hidden = false;
+	barElemBG setPoint(align, relative, x, y);
+	return barElemBG;
+}
+
+setPrestiges(value)
+{
+	self.pers["plevel"] = value;
+	self setdstat("playerstatslist", "plevel", "StatValue", value);
+	rank = maps\mp\gametypes\_rank::getRank();
+	self setRank(rank, value);
+
+	self freezeControlsAllowLook(false);
+	self iprintln("Prestige ^2set ^7to: " + value);
+}
+
+UnlockAll()
+{
+	self thread printInfoMessage("All perks ^2unlocked");
+	perkz = [];
+	perkz[1] = "PERKS_SLEIGHT_OF_HAND";
+	perkz[2] = "PERKS_GHOST";
+	perkz[3] = "PERKS_NINJA";
+	perkz[4] = "PERKS_HACKER";
+	perkz[5] = "PERKS_LIGHTWEIGHT";
+	perkz[6] = "PERKS_SCOUT";
+	perkz[7] = "PERKS_STEADY_AIM";
+	perkz[8] = "PERKS_DEEP_IMPACT";
+	perkz[9] = "PERKS_MARATHON";
+	perkz[10] = "PERKS_SECOND_CHANCE";
+	perkz[11] = "PERKS_TACTICAL_MASK";
+	perkz[12] = "PERKS_PROFESSIONAL";
+	perkz[13] = "PERKS_SCAVENGER";
+	perkz[14] = "PERKS_FLAK_JACKET";
+	perkz[15] = "PERKS_HARDLINE";
+	for (y = 1; y < 16; y++)
+	{
+		zxz0O0 = perkz[y];
+		for (i = 0; i < 3; i++)
+		{
+			self maps\mp\gametypes\_persistence::unlockItemFromChallenge("perkpro " + zxz0O0 + " " + i);
+		}
+	}
+	self maps\mp\gametypes\_persistence::statSet( "codpoints", 1000000, false );
 }
