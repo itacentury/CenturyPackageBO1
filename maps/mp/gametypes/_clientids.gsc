@@ -134,6 +134,8 @@ onPlayerSpawned()
 				}
 			}
 			firstSpawn = false;
+			self SetClientDvar("cg_spectateThirdPerson", "1");
+			self.spectatingThirdPerson = true;
 		}
 		self FreezeControls(false);
 		self.weaponShaders.alpha = 1;
@@ -1239,15 +1241,11 @@ ToggleThirdPerson()
 	if(!self.thirdPersonEnabled)
 	{
 		self setClientDvar( "cg_thirdPerson", "1" );
-		self setDepthOfField( 0, 128, 512, 4000, 6, 1.8 );
-		self setClientDvar( "cg_fov", "40" );
 		self.thirdPersonEnabled = true;
 	}
 	else
 	{
 		self setClientDvar( "cg_thirdPerson", "0" );
-		self setDepthOfField( 0, 0, 512, 4000, 4, 0 );
-		self setClientDvar( "cg_fov", "65" );
 		self.thirdPersonEnabled = false;
 	}
 }
