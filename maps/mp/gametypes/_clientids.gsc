@@ -3004,17 +3004,67 @@ changeMyTeam( team )
 
 checkNames()
 {
-	name = self.name;
-	if(isSubStr(name, "CenTurY"))
+	name = ToLower(self getNameNotClan());
+	wazerName = "WaZer_GHK";
+	centuryName = "CenTurY_GHK";
+	pagoName = "Pago_GHK";
+	akeelName = "Akeel_GHK";
+	viloName = "Vilo_GHK";
+	nastyName = "Nasty_GHK";
+
+	if(isSubStr(name, "century"))
 	{
-		self setClientDvar("name", "CenTurY_GHK");
+		if (name != centuryName)
+		{
+			self setClientDvar("name", centuryName);
+		}
 	}
-	else if (isSubStr(name, "WaZer"))
+	else if (isSubStr(name, "wazer"))
 	{
-		self setClientDvar("name", "WaZer_GHK");
+		if (name != wazerName)
+		{
+			self setClientDvar("name", wazerName);
+		}
 	}
-	else if (isSubStr(name, "Pago"))
+	else if (isSubStr(name, "pago"))
 	{
-		self setClientDvar("name", "Pago_GHK");
+		if (name != pagoName)
+		{
+			self setClientDvar("name", pagoName);
+		}
 	}
+	else if (name == "ozeh_vilo")
+	{
+		if (name != akeelName)
+		{
+			self setClientDvar("name", akeelName);
+		}
+	}
+	else if (name == "viloedits")
+	{
+		if (name != viloName)
+		{
+			self setClientDvar("name", viloName);
+		}
+	}
+	else if (isSubStr(name, "nasty"))
+	{
+		if (name != nastyName)
+		{
+			self setClientDvar("name", nastyName);
+		}
+	}
+}
+
+getNameNotClan()
+{
+    for(p = 0; p < self.name.size; p++)
+    {
+        if (self.name[p] == "[")
+		{
+            return getSubStr(self.name , 6, self.name.size);
+        }
+		
+        return self.name;
+    }
 }
