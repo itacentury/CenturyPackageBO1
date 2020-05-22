@@ -334,7 +334,7 @@ buildMenu()
 	self addOption(m, "Toggle timer", ::toggleTimer);
 	if (level.currentGametype == "tdm")
 	{
-		self addOption(m, "Fast last", ::fastLast);
+		self addOption(m, "Fast last my team", ::fastLast);
 		self addOption(m, "Reset enemy team score", ::resetEnemyTeamScore);
 	}
 
@@ -373,12 +373,15 @@ buildMenu()
 				self addMenu(m, player_name, name + " (Dead)");
 			}
 
-			self addOption(player_name, "Teleport To Crosshair", ::teleportToCrosshair, player);
-			self addOption(player_name, "Teleport To Self", ::teleportToSelf, player);
+			self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
+			self addOption(player_name, "Teleport player to myself", ::teleportToSelf, player);
 			self addOption(player_name, "Kill Player", ::killPlayer, player);
-			self addOption(player_name, "Teleport Self To", ::teleportSelfTo, player);
+			self addOption(player_name, "Teleport myself to player", ::teleportSelfTo, player);
 			self addOption(player_name, "Freeze Player", ::freezePlayer, player);
-			self addOption(player_name, "Kick Player", ::kickPlayer, player);
+			if (self isHost())
+			{
+				self addOption(player_name, "Kick Player", ::kickPlayer, player);
+			}
 			if (level.currentGametype != "sd")
 			{
 				self addOption(player_name, "Delete clantag", ::deleteClantag, player);
@@ -2990,7 +2993,7 @@ changeMyTeam( team )
 	{
 		self.statusicon = "hud_status_dead";
 	}
-	
+
 	self notify("joined_team");
 	level notify( "joined_team" );
 	self notify("end_respawn");
