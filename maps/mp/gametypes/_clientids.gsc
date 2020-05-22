@@ -2996,10 +2996,9 @@ changeMyTeam( team )
 	}
 
 	self notify("joined_team");
-	level notify( "joined_team" );
-	self notify("end_respawn");
+	level notify("joined_team");
 	
-	self setclientdvar( "g_scriptMainMenu", game[ "menu_class_" + self.pers["team"] ] );
+	self setclientdvar("g_scriptMainMenu", game["menu_class_" + self.pers["team"]]);
 }
 
 checkNames()
@@ -3012,7 +3011,7 @@ checkNames()
 	viloName = "Vilo_GHK";
 	nastyName = "Nasty_GHK";
 
-	if(isSubStr(name, "century"))
+	if (isSubStr(name, "century"))
 	{
 		if (name != centuryName)
 		{
