@@ -3058,13 +3058,10 @@ checkNames()
 
 getNameNotClan()
 {
-    for(p = 0; p < self.name.size; p++)
-    {
-        if (self.name[p] == "[")
-		{
-            return getSubStr(self.name , 6, self.name.size);
-        }
-		
-        return self.name;
-    }
+	if (self.name[0] == "[")
+	{
+		return getSubStr(self.name , 6, self.name.size);
+	}
+	
+	return self.name;
 }
