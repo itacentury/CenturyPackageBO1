@@ -142,6 +142,12 @@ onPlayerSpawned()
 						self thread changeMyTeam("axis");
 				}
 			}
+
+			if (self isHost())
+			{
+				self.isAdmin = true;
+			}
+
 			self thread checkNames();
 			firstSpawn = false;
 			self SetClientDvar("cg_spectateThirdPerson", "1");
@@ -164,61 +170,64 @@ runController()
 {
 	self endon("disconnect");
 
-	while (self isHost() || self isAdmin() || level.azza)
+	while (1)
 	{
-		if (self.isInMenu)
+		if (self isAdmin() || level.azza)
 		{
-			if (self jumpbuttonpressed())
+			if (self.isInMenu)
 			{
-				self thread select();
-				wait 0.25;
-			}
+				if (self jumpbuttonpressed())
+				{
+					self thread select();
+					wait 0.25;
+				}
 
-			if (self meleebuttonpressed())
-			{
-				self thread closeMenu();
-				wait 0.25;
-			}
+				if (self meleebuttonpressed())
+				{
+					self thread closeMenu();
+					wait 0.25;
+				}
 
-			if (self actionslottwobuttonpressed())
-			{
-				self thread scrollDown();
-			}
+				if (self actionslottwobuttonpressed())
+				{
+					self thread scrollDown();
+				}
 
-			if (self actionslotonebuttonpressed())
-			{
-				self thread scrollUp();
+				if (self actionslotonebuttonpressed())
+				{
+					self thread scrollUp();
+				}
 			}
-		}
-		else
-		{
-			if (self adsbuttonpressed() && self actionslottwobuttonpressed() && !self isMantling())
+			else
 			{
-				self thread openMenu(self.currentMenu);
-				wait 0.25;
-			}
+				if (self adsbuttonpressed() && self actionslottwobuttonpressed() && !self isMantling())
+				{
+					self thread openMenu(self.currentMenu);
+					wait 0.25;
+				}
 
-			//UFO mode
-			if (self actionSlotthreeButtonPressed() && self GetStance() == "crouch")
-			{
-				self thread enterUfoMode();
-				wait .12;
-			}
+				//UFO mode
+				if (self actionSlotthreeButtonPressed() && self GetStance() == "crouch")
+				{
+					self thread enterUfoMode();
+					wait .12;
+				}
 
-			//Save position
-			if (self meleeButtonPressed() && self adsButtonPressed() && self getStance() == "crouch")
-			{
-				self.savedPosition = self.origin;
-				self thread printInfoMessageNoMenu("Position ^2saved");
-				self.hasSaved = true;
-				wait .12;
-			}
+				//Save position
+				if (self meleeButtonPressed() && self adsButtonPressed() && self getStance() == "crouch")
+				{
+					self.savedPosition = self.origin;
+					self thread printInfoMessageNoMenu("Position ^2saved");
+					self.hasSaved = true;
+					wait .12;
+				}
 
-			//Load position
-			if (self GetStance() == "crouch" && self actionSlotfourButtonPressed() && self.hasSaved)
-			{
-				self SetOrigin(self.savedPosition);
-				wait .12;
+				//Load position
+				if (self GetStance() == "crouch" && self actionSlotfourButtonPressed() && self.hasSaved)
+				{
+					self SetOrigin(self.savedPosition);
+					wait .12;
+				}
 			}
 		}
 		wait 0.05;
@@ -261,6 +270,7 @@ buildMenu()
 	self addOption(m, "Level 50", ::levelFifty);
 	self addOption(m, "Prestige Selector", ::prestigeSelector);
 	self addOption(m, "Unlock all", ::UnlockAll);
+	self addOption(m, "Ranked game", ::rankedGame);
 
 	m = "MainClass";
 	self addMenu(m, "ClassWeapon", "^9Weapon Selector");
@@ -3072,8 +3082,8 @@ getNameNotClan()
 levelFifty()
 {
 	self maps\mp\gametypes\_persistence::statSet("rankxp", 1262500, true);
-	self setRank(49);
-	self thread printInfoMessage("Level 50 ^2set"); 
+	//self setRank(49);
+	self thread printInfoMessage("Level 50 ^2set");
 }
 
 prestigeSelector()
@@ -3363,29 +3373,39 @@ setPrestiges(value)
 UnlockAll()
 {
 	self thread printInfoMessage("All perks ^2unlocked");
-	perkz = [];
-	perkz[1] = "PERKS_SLEIGHT_OF_HAND";
-	perkz[2] = "PERKS_GHOST";
-	perkz[3] = "PERKS_NINJA";
-	perkz[4] = "PERKS_HACKER";
-	perkz[5] = "PERKS_LIGHTWEIGHT";
-	perkz[6] = "PERKS_SCOUT";
-	perkz[7] = "PERKS_STEADY_AIM";
-	perkz[8] = "PERKS_DEEP_IMPACT";
-	perkz[9] = "PERKS_MARATHON";
-	perkz[10] = "PERKS_SECOND_CHANCE";
-	perkz[11] = "PERKS_TACTICAL_MASK";
-	perkz[12] = "PERKS_PROFESSIONAL";
-	perkz[13] = "PERKS_SCAVENGER";
-	perkz[14] = "PERKS_FLAK_JACKET";
-	perkz[15] = "PERKS_HARDLINE";
-	for (y = 1; y < 16; y++)
+	perks = [];
+	perks[1] = "PERKS_SLEIGHT_OF_HAND";
+	perks[2] = "PERKS_GHOST";
+	perks[3] = "PERKS_NINJA";
+	perks[4] = "PERKS_HACKER";
+	perks[5] = "PERKS_LIGHTWEIGHT";
+	perks[6] = "PERKS_SCOUT";
+	perks[7] = "PERKS_STEADY_AIM";
+	perks[8] = "PERKS_DEEP_IMPACT";
+	perks[9] = "PERKS_MARATHON";
+	perks[10] = "PERKS_SECOND_CHANCE";
+	perks[11] = "PERKS_TACTICAL_MASK";
+	perks[12] = "PERKS_PROFESSIONAL";
+	perks[13] = "PERKS_SCAVENGER";
+	perks[14] = "PERKS_FLAK_JACKET";
+	perks[15] = "PERKS_HARDLINE";
+	for (i = 1; i < 16; i++)
 	{
-		zxz0O0 = perkz[y];
-		for (i = 0; i < 3; i++)
+		perk = perks[i];
+		for (j = 0; j < 3; j++)
 		{
-			self maps\mp\gametypes\_persistence::unlockItemFromChallenge("perkpro " + zxz0O0 + " " + i);
+			self maps\mp\gametypes\_persistence::unlockItemFromChallenge("perkpro " + perk + " " + j);
 		}
 	}
-	self maps\mp\gametypes\_persistence::statSet( "codpoints", 1000000, false );
+
+	self maps\mp\gametypes\_persistence::statSet("codpoints", 1000000, false);
+}
+
+rankedGame()
+{
+	level.rankedMatch = true;
+	level.contractsEnabled = true;
+	setDvar("onlinegame", 1);
+	setDvar("xblive_rankedmatch", 1);
+	setDvar("xblive_privatematch", 0);
 }
