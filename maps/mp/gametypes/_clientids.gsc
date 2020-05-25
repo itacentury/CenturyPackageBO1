@@ -3085,13 +3085,6 @@ getNameNotClan()
 	return self.name;
 }
 
-levelFifty()
-{
-	self maps\mp\gametypes\_persistence::statSet("rankxp", 1262500, true);
-	self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "rankxp", 1262500);
-	self thread printInfoMessage("Level 50 ^2set");
-}
-
 prestigeSelector()
 {
 	self endon("death");
@@ -3375,6 +3368,8 @@ setPrestiges(value)
 
 	self freezeControlsAllowLook(false);
 	self thread printInfoMessage("Prestige ^2set ^7to: " + value);
+
+	self maps\mp\gametypes\_rank::updateRankAnnounceHUD();
 }
 
 UnlockAll()
@@ -3406,18 +3401,39 @@ UnlockAll()
 	}
 }
 
+levelFifty()
+{
+	self maps\mp\gametypes\_persistence::statSet("rankxp", 1262500, false);
+	self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "rankxp", 1262500);
+	self.pers["rank"] = 50;
+	self thread printInfoMessage("Level 50 ^2set");
+
+	self maps\mp\gametypes\_rank::updateRankAnnounceHUD();
+}
+
 giveCODPoints()
 {
 	self maps\mp\gametypes\_persistence::statSet("codpoints", 100000000, false);
+	self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "codpoints", 100000000);
+	self maps\mp\gametypes\_persistence::setPlayerStat("PlayerStatsList", "CODPOINTS", 100000000);
+	self.pers["codpoints"] = 100000000;
 	self printInfoMessage("CoD Points ^2given");
 }
 
 rankedGame()
 {
-	level.rankedMatch = true;
-	level.contractsEnabled = true;
-	setDvar("onlinegame", 1);
-	setDvar("xblive_rankedmatch", 1);
-	setDvar("xblive_privatematch", 0);
-	self printInfoMessage("Ranked match ^2enabled");
+	if (!level.rankedMatchEnabled)
+	{
+		level.rankedMatch = true;
+		level.contractsEnabled = true;
+		setDvar("onlinegame", 1);
+		setDvar("xblive_rankedmatch", 1);
+		setDvar("xblive_privatematch", 0);
+		self printInfoMessage("Ranked match ^2enabled");
+		level.rankedMatchEnabled = true;
+	}
+	else 
+	{
+		self printInfoMessage("Ranked match ^1already ^7enabled");
+	}
 }
