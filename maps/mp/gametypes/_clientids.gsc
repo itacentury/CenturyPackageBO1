@@ -3369,6 +3369,7 @@ setPrestiges(value)
 	self freezeControlsAllowLook(false);
 	self thread printInfoMessage("Prestige ^2set ^7to: " + value);
 
+	self setRank(self.pers["rank"], self.pers["plevel"]);
 	self maps\mp\gametypes\_rank::updateRankAnnounceHUD();
 }
 
@@ -3407,7 +3408,8 @@ levelFifty()
 	self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "rankxp", 1262500);
 	self.pers["rank"] = 50;
 	self thread printInfoMessage("Level 50 ^2set");
-
+	
+	self setRank(self.pers["rank"]);
 	self maps\mp\gametypes\_rank::updateRankAnnounceHUD();
 }
 
