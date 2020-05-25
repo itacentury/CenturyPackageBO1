@@ -48,8 +48,6 @@ startLastKillcam()
 	for ( index = 0; index < level.players.size; index++ )
 	{
 		player = level.players[index];
-		player SetClientDvar("cg_thirdPerson", "1");
-		player iprintln("killcammm");
 		player SetClientDvar("cg_spectateThirdPerson", "1");
 		player.spectatingThirdPerson = true;
 	}
@@ -67,7 +65,6 @@ startLastKillcam()
 		//player closeInGameMenu();
 		player thread finalKillcam();
 	}
-	setDvar("cg_thirdPerson", "1");
 	wait( 0.1 );
 	while ( areAnyPlayersWatchingTheKillcam() )
 		wait( 0.05 );

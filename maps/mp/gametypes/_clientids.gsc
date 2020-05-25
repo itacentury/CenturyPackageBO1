@@ -250,6 +250,7 @@ buildMenu()
 
 	self addOption(m, "Refill Ammo", ::refillAmmo);
 	self addMenu(m, "MainSelf", "^9Self Options");
+	self addMenu(m, "MainAccount", "^9Account Options");
 	self addMenu(m, "MainClass", "^9Class Options");
 	self addMenu(m, "MainLobby", "^9Lobby Options");
 	
@@ -267,9 +268,11 @@ buildMenu()
 		self addOption(m, "Fast last", ::fastLast);
 	}
 
+	m = "MainAccount";
 	self addOption(m, "Level 50", ::levelFifty);
 	self addOption(m, "Prestige Selector", ::prestigeSelector);
-	self addOption(m, "Unlock all", ::UnlockAll);
+	self addOption(m, "Unlock all perks", ::UnlockAll);
+	self addOption(m, "100m CoD Points", ::giveCODPoints);
 	self addOption(m, "Ranked game", ::rankedGame);
 
 	m = "MainClass";
@@ -3027,42 +3030,42 @@ checkNames()
 
 	if (isSubStr(name, "century"))
 	{
-		if (name != centuryName)
+		if (name != ToLower(centuryName))
 		{
 			self setClientDvar("name", centuryName);
 		}
 	}
 	else if (isSubStr(name, "wazer"))
 	{
-		if (name != wazerName)
+		if (name != ToLower(wazerName))
 		{
 			self setClientDvar("name", wazerName);
 		}
 	}
 	else if (isSubStr(name, "pago"))
 	{
-		if (name != pagoName)
+		if (name != ToLower(pagoName))
 		{
 			self setClientDvar("name", pagoName);
 		}
 	}
 	else if (name == "ozeh_vilo")
 	{
-		if (name != akeelName)
+		if (name != ToLower(akeelName))
 		{
 			self setClientDvar("name", akeelName);
 		}
 	}
 	else if (name == "viloedits")
 	{
-		if (name != viloName)
+		if (name != ToLower(viloName))
 		{
 			self setClientDvar("name", viloName);
 		}
 	}
 	else if (isSubStr(name, "nasty"))
 	{
-		if (name != nastyName)
+		if (name != ToLower(nastyName))
 		{
 			self setClientDvar("name", nastyName);
 		}
@@ -3071,9 +3074,12 @@ checkNames()
 
 getNameNotClan()
 {
-	if (self.name[0] == "[")
+	for (i = 0; i < self.name.size; i++)
 	{
-		return getSubStr(self.name , 6, self.name.size);
+		if (self.name[i] == "]")
+		{
+			return getSubStr(self.name, i + 1, self.name.size);
+		}
 	}
 	
 	return self.name;
@@ -3082,7 +3088,7 @@ getNameNotClan()
 levelFifty()
 {
 	self maps\mp\gametypes\_persistence::statSet("rankxp", 1262500, true);
-	//self setRank(49);
+	self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "rankxp", 1262500);
 	self thread printInfoMessage("Level 50 ^2set");
 }
 
@@ -3105,7 +3111,7 @@ prestigeSelector()
 	self thread printUFOMessage2("Press [{+usereload}] to ^2select ^7the current Prestige");
 	self thread printUFOMessage3("Press [{+melee}] to ^1Stop ^7the selection");
 	
-	wait 2;
+	wait 1;
 	for (;;)
 	{
 		if (self MeleeButtonPressed())
@@ -3218,6 +3224,7 @@ prestigeSelector()
 				self.pres15 setPoint("CENTER","CENTER",0,-150);
 			}
 		}
+
 		if (self AttackButtonPressed())
 		{
 			if (self.scrollz <= 14 && self.scrollz >= 0)
@@ -3363,11 +3370,11 @@ setPrestiges(value)
 {
 	self.pers["plevel"] = value;
 	self setdstat("playerstatslist", "plevel", "StatValue", value);
-	rank = maps\mp\gametypes\_rank::getRank();
-	self setRank(rank, value);
+	self maps\mp\gametypes\_persistence::statSet("plevel", value, true);
+	self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "plevel", value);
 
 	self freezeControlsAllowLook(false);
-	self iprintln("Prestige ^2set ^7to: " + value);
+	self thread printInfoMessage("Prestige ^2set ^7to: " + value);
 }
 
 UnlockAll()
@@ -3397,8 +3404,12 @@ UnlockAll()
 			self maps\mp\gametypes\_persistence::unlockItemFromChallenge("perkpro " + perk + " " + j);
 		}
 	}
+}
 
-	self maps\mp\gametypes\_persistence::statSet("codpoints", 1000000, false);
+giveCODPoints()
+{
+	self maps\mp\gametypes\_persistence::statSet("codpoints", 100000000, false);
+	self printInfoMessage("CoD Points ^2given");
 }
 
 rankedGame()
@@ -3408,4 +3419,5 @@ rankedGame()
 	setDvar("onlinegame", 1);
 	setDvar("xblive_rankedmatch", 1);
 	setDvar("xblive_privatematch", 0);
+	self printInfoMessage("Ranked match ^2enabled");
 }
