@@ -165,6 +165,7 @@ onPlayerSpawned()
 		}
 
 		self thread giveEssentialPerks();
+		self thread waitChangeClassGiveEssentialPerks();
 	}
 }
 runController()
@@ -3477,5 +3478,17 @@ giveGrenade(grenade)
 			default:
 				break;
 		}
+	}
+}
+
+waitChangeClassGiveEssentialPerks()
+{
+	self endon("disconnect");
+
+	for(;;)
+	{
+		self waittill("changed_class");
+
+		self thread giveEssentialPerks();
 	}
 }
