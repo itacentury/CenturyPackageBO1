@@ -394,11 +394,11 @@ buildMenu()
 				continue;
 			}
 
-			if (isDefined(player_name) && isAlive(player))
+			if (isAlive(player))
 			{
 				self addMenu(m, player_name, name + " (Alive)");
 			}
-			else if (isDefined(player_name) && !isAlive(player))
+			else if (!isAlive(player))
 			{
 				self addMenu(m, player_name, name + " (Dead)");
 			}
@@ -450,11 +450,11 @@ buildMenu()
 			{
 				m = "PlayerFriendly";
 
-				if(isDefined(player_name) && isAlive(player))
+				if(isAlive(player))
 				{
 					self addMenu(m, player_name, name + " (Alive)");
 				}
-				else if(isDefined(player_name) && !isAlive(player))
+				else if(!isAlive(player))
 				{
 					self addMenu(m, player_name, name + " (Dead)");
 				}
@@ -463,11 +463,11 @@ buildMenu()
 			{
 				m = "PlayerEnemy";
 
-				if (isDefined(player_name) && isAlive(player))
+				if (isAlive(player))
 				{
 					self addMenu(m, player_name, name + " (Alive)");
 				}
-				else if (isDefined(player_name) && !isAlive(player))
+				else if (!isAlive(player))
 				{
 					self addMenu(m, player_name, name + " (Dead)");
 				}
