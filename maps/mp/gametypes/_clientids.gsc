@@ -278,6 +278,7 @@ buildMenu()
 
 	m = "MainClass";
 	self addMenu(m, "ClassWeapon", "^9Weapon Selector");
+	self addMenu(m, "ClassGrenades", "^9Grenade Selector");
 	self addMenu(m, "ClassCamo", "^9Camo Selector");
 	self addMenu(m, "ClassPerk", "^9Perk Selector");
 	self addMenu(m ,"ClassAttachment", "^9Attachment Selector");
@@ -285,6 +286,11 @@ buildMenu()
 
 	self thread buildWeaponMenu();
 	
+	m = "ClassGrenades";
+	self addOption(m, "Frag", ::giveGrenade, "frag_grenade_mp");
+	self addOption(m, "Semtex", ::giveGrenade, "sticky_grenade_mp");
+	self addOption(m, "Tomahawk", ::giveGrenade, "hatchet_mp");
+
     m = "ClassCamo";
 	self addMenu(m, "CamoOne", "^9Camos Part 1");
 	self addMenu(m, "CamoTwo", "^9Camos Part 2");
@@ -1951,7 +1957,7 @@ defaultTrickshotClass()
 	weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
 	self GiveWeapon("l96a1_vzoom_mp", 0, weaponOptions);
 	self GiveWeapon("python_speed_mp");
-	self GiveWeapon("claymore_mp"); //Doesn't work
+	self GiveWeapon("claymore_mp");
 	self GiveWeapon("hatchet_mp");
 	self GiveWeapon("concussion_grenade_mp");
 
@@ -3441,5 +3447,35 @@ rankedGame()
 	else 
 	{
 		self printInfoMessage("Ranked match ^1already ^7enabled");
+	}
+}
+
+giveGrenade(grenade)
+{
+	primaryWeapons = self GetWeaponsListPrimaries();
+	offHandWeapons = array_exclude(self GetWeaponsList(), primaryWeapons);
+	offHandWeapons = array_remove(offHandWeapons, "knife_mp");
+
+	for (i = 0; i < offHandWeapons.size; i++)
+	{
+		weapon = offHandWeapons[i];
+		if (isHackWeapon(weapon) || isLauncherkWeapon(weapon))
+		{
+			continue;
+		}
+
+		switch (weapon)
+		{
+			case "frag_grenade_mp":
+			case "sticky_grenade_mp":
+			case "hatchet_mp":
+				self TakeWeapon(weapon);
+				self GiveWeapon(grenade);
+				self GiveStartAmmo(grenade);
+				self printInfoMessage(grenade + " ^2Given");
+				break;
+			default:
+				break;
+		}
 	}
 }
