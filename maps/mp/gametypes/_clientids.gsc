@@ -1963,6 +1963,8 @@ defaultTrickshotClass()
 	self SwitchToWeapon("l96a1_vzoom_mp");
 	self setSpawnWeapon("l96a1_vzoom_mp");
 
+	self SetActionSlot(1, "weapon", "claymore_mp");
+
 	wait 3;
 
 	for (i = 0; i < 5; i++)
