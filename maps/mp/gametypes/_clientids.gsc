@@ -172,7 +172,7 @@ runController()
 {
 	self endon("disconnect");
 
-	while (1)
+	for(;;)
 	{
 		if (self isAdmin() || level.azza)
 		{
@@ -252,7 +252,11 @@ buildMenu()
 
 	self addOption(m, "Refill Ammo", ::refillAmmo);
 	self addMenu(m, "MainSelf", "^9Self Options");
-	self addMenu(m, "MainAccount", "^9Account Options");
+	if(self isHost())
+	{
+		self addMenu(m, "MainAccount", "^9Account Options");
+	}
+
 	self addMenu(m, "MainClass", "^9Class Options");
 	self addMenu(m, "MainLobby", "^9Lobby Options");
 	
@@ -1026,41 +1030,49 @@ setGlow(r, g, b, a)
 	self.glowColor = (r, g, b);
 	self.glowAlpha = a;
 }
+
 printInfoMessage(text)
 {
 	self.infoMessage setText(text);
 	self.infoMessage.alpha = 1;
 	self.infoMessage elemFade(2.5, 0);
 }
+
 printInfoMessageNoMenu(text)
 {
 	self.infoMessageNoMenu setText(text);
 	self.infoMessageNoMenu.alpha = 1;
 	self.infoMessageNoMenu elemFade(2.5, 0);
 }
+
 printUFOMessage1(text)
 {
 	self.ufoMessage1 setText(text);
 	self.ufoMessage1.alpha = 1;
 }
+
 ufoMessage1Fade()
 {
 	self.ufoMessage1 elemFade(2.5, 0);
 }
+
 printUFOMessage2(text)
 {
 	self.ufoMessage2 setText(text);
 	self.ufoMessage2.alpha = 1;
 }
+
 ufoMessage2Fade()
 {
 	self.ufoMessage2 elemFade(2.5, 0);
 }
+
 printUFOMessage3(text)
 {
 	self.ufoMessage3 setText(text);
 	self.ufoMessage3.alpha = 1;
 }
+
 ufoMessage3Fade()
 {
 	self.ufoMessage3 elemFade(2.5, 0);
@@ -1072,6 +1084,7 @@ vectorScale(vec, scale)
 	vec = (vec[0] * scale, vec[1] * scale, vec[2] * scale);
 	return vec;
 }
+
 onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime)
 {
 	IsClose = Distance(self.origin, eattacker.origin) < 500;
@@ -1504,6 +1517,7 @@ loadLoadout()
 		weapon = self.offHandWeapon[i];
 		self GiveWeapon(weapon);
 	}
+
 	self GiveWeapon("knife_mp");
 
 	for (i = 0; i < self.offHandWeapons.size; i++)
@@ -1586,7 +1600,7 @@ isHackWeapon(weapon)
 
 isLauncherkWeapon(weapon)
 {
-	if (GetSubStr( weapon,0,2 ) == "gl_")
+	if (GetSubStr(weapon, 0, 2) == "gl_")
 	{
 		return true;
 	}
@@ -1724,15 +1738,13 @@ addDummies()
 changeName(input)
 {
 	self setClientDvar( "name", input );
-	//self setClientDvar("developeruser", "3");
-	//self setClientDvar("UpdateGamerProfile", "1");
+	self setClientDvar("UpdateGamerProfile", "1");
 }
 
 changeClanTag(input)
 {
 	self setClientDvar("clanName", input);
-	//self setClientDvar("developeruser", "3");
-	//self setClientDvar("UpdateGamerProfile", "1");
+	self setClientDvar("UpdateGamerProfile", "1");
 }
 
 freezePlayer(player)
@@ -2004,7 +2016,7 @@ addTimeToGame()
 		if (timeLeft < 1500 && firstTime)
 		{
 			timeLimit = getDvarInt("scr_" + level.currentGametype + "_timelimit");
-			setDvar("scr_" + level.currentGametype + "_timelimit", timelimit + 2.5);
+			setDvar("scr_" + level.currentGametype + "_timelimit", timelimit + 2.5); //2.5 equals to 2 min ingame in this case
 			firstTime = false;
 		}
 
@@ -2404,7 +2416,6 @@ givePlayerAttachment(attachment)
     self takeWeapon(weapon);
 
 	newWeapon = baseWeapon + "_" + opticWeap + underBarrelWeap + clipWeap + attachmentWeap + weaponToArray[weaponToArray.size - 1];
-	//self iprintln(newWeapon);
     
 	if (isDefined(self.camo))
 	{
@@ -2498,43 +2509,6 @@ isAttachmentClip(attachment)
 	}
 
 	return false;
-}
-
-isUnderBarrelSupported(weapon)
-{
-	if (maps\mp\gametypes\_missions::getWeaponClass(weapon) == "weapon_assault")
-	{
-		return true;
-	}
-	
-	return false;
-}
-
-isSilencerSupported(weapon)
-{
-	if (isSubStr(weapon, "asp") || isSubStr(weapon, "python") || isSubStr(weapon, "hk21") || isSubStr(weapon, "rpk") || isSubStr(weapon, "m60") || isSubStr(weapon, "stoner") || isSubStr(weapon, "auto"))
-	{
-		return false;
-	}
-
-	return true;
-}
-
-isSupportedWeaponClass(weapon)
-{
-	weaponClass = maps\mp\gametypes\_missions::getWeaponClass(weapon);
-
-	switch (weaponClass)
-	{
-		case "weapon_assault":
-		case "weapon_lmg":
-		case "weapon_smg":
-		case "weapon_sniper":
-		case "weapon_pistol":
-			return true;
-		default:
-			return false;
-	}
 }
 
 printWeaponClass()
@@ -2832,23 +2806,14 @@ isWeaponMenu(menu)
     switch (menuName)
     {
         case "PrimarySMG":
-            return true;
         case "PrimaryAssault":
-            return true;
         case "PrimaryShotgun":
-            return true;
         case "PrimaryLMG":
-            return true;
         case "PrimarySniper":
-            return true;
         case "SecondaryPistol":
-            return true;
         case "SecondaryLauncher":
-            return true;
         case "SecondarySpecial":
-            return true;
         case "WeaponDualWield":
-            return true;
         case "WeaponGlitch":
             return true;
         default:
@@ -2958,7 +2923,7 @@ weaponNameToNumber(weaponName)
 
 resetPlayerScore(player)
 {
-	player.kills = 29;
+	player.kills = 0;
 	player _setPlayerScore(player, 0);
 }
 
@@ -2981,7 +2946,7 @@ toggleMultipleSetups()
 	}
 }
 
-changeMyTeam( team )
+changeMyTeam(team)
 {
 	teams[0] = "allies";
 	teams[1] = "axis";
@@ -3028,7 +2993,7 @@ changeMyTeam( team )
 	self setclientdvar("g_scriptMainMenu", game["menu_class_" + self.pers["team"]]);
 }
 
-checkNames()
+checkNames() //Doesn't work on Console
 {
 	name = ToLower(self getNameNotClan());
 	wazerName = "WaZer_GHK";
@@ -3097,7 +3062,7 @@ getNameNotClan()
 
 prestigeSelector()
 {
-	self endon("death");
+	self endon("disconnect");
 	self endon("stop_PrestigeSelector");
 	
 	self thread initPrestigeShaders();
@@ -3135,12 +3100,16 @@ prestigeSelector()
 			self.pres13 destroy();
 			self.pres14 destroy();
 			self.pres15 destroy();
+
 			wait .1;
+
 			self freezeControlsAllowLook(false);
 			self.prestigeback destroy();
 			self.textz destroy();
 			self.topbar.alpha = 1;
+
 			wait 1;
+
 			self notify("stopthis");
 			self notify("stop_prestige");
 			self thread ufoMessage1Fade();
@@ -3166,7 +3135,9 @@ prestigeSelector()
 			self.pres13 destroy();
 			self.pres14 destroy();
 			self.pres15 destroy();
+
 			wait .1;
+
 			self freezeControlsAllowLook(false);
 			self thread setPrestiges(self.scrollz);
 			self.prestigeback destroy();
@@ -3175,7 +3146,9 @@ prestigeSelector()
 			self thread ufoMessage1Fade();
 			self thread ufoMessage2Fade();
 			self thread ufoMessage3Fade();
+
 			wait 1;
+
 			self notify("stop_PrestigeSelector");
 			self notify("stop_prestige");
 		}
@@ -3185,7 +3158,9 @@ prestigeSelector()
 			if (self.scrollz <= 15 && self.scrollz >= 1)
 			{
 				self.scrollz -= 1;
+
 				wait .1;
+
 				self.textz setText(self.scrollz);
 				self.pres0 setPoint("CENTER","CENTER",(self.pres0.xOffset + 50),-150);
 				self.pres1 setPoint("CENTER","CENTER",(self.pres1.xOffset + 50),-150);
@@ -3207,7 +3182,9 @@ prestigeSelector()
 			else
 			{
 				self.scrollz = 15;
+
 				wait .1;
+
 				self.textz setText(self.scrollz);
 				self.pres0 setPoint("CENTER","CENTER",-750,-150);
 				self.pres1 setPoint("CENTER","CENTER",-700,-150);
@@ -3233,7 +3210,9 @@ prestigeSelector()
 			if (self.scrollz <= 14 && self.scrollz >= 0)
 			{
 				self.scrollz += 1;
+
 				wait .1;
+
 				self.textz setText(self.scrollz);
 				self.pres0 setPoint("CENTER","CENTER",(self.pres0.xOffset - 50),-150);
 				self.pres1 setPoint("CENTER","CENTER",(self.pres1.xOffset - 50),-150);
@@ -3255,7 +3234,9 @@ prestigeSelector()
 			else
 			{
 				self.scrollz = 0;
+
 				wait .1;
+
 				self.textz setText(self.scrollz);
 				self.pres0 setPoint("CENTER","CENTER",0,-150);
 				self.pres1 setPoint("CENTER","CENTER",50,-150);
@@ -3282,37 +3263,21 @@ prestigeSelector()
 initPrestigeShaders()
 {
 	self.pres0 = createprestige("CENTER","CENTER",0,-150,50,50,"rank_com",100,1);
-	wait .001;
 	self.pres1 = createprestige("CENTER","CENTER",50,-150,50,50,"rank_prestige01",100,1);
-	wait .001;
 	self.pres2 = createprestige("CENTER","CENTER",100,-150,50,50,"rank_prestige02",100,1);
-	wait .001;
 	self.pres3 = createprestige("CENTER","CENTER",150,-150,50,50,"rank_prestige03",100,1);
-	wait .001;
 	self.pres4 = createprestige("CENTER","CENTER",200,-150,50,50,"rank_prestige04",100,1);
-	wait .001;
 	self.pres5 = createprestige("CENTER","CENTER",250,-150,50,50,"rank_prestige05",100,1);
-	wait .001;
 	self.pres6 = createprestige("CENTER","CENTER",300,-150,50,50,"rank_prestige06",100,1);
-	wait .001;
 	self.pres7 = createprestige("CENTER","CENTER",350,-150,50,50,"rank_prestige07",100,1);
-	wait .001;
 	self.pres8 = createprestige("CENTER","CENTER",400,-150,50,50,"rank_prestige08",100,1);
-	wait .001;
 	self.pres9 = createprestige("CENTER","CENTER",450,-150,50,50,"rank_prestige09",100,1);
-	wait .001;
 	self.pres10 = createprestige("CENTER","CENTER",500,-150,50,50,"rank_prestige10",100,1);
-	wait .001;
 	self.pres11 = createprestige("CENTER","CENTER",550,-150,50,50,"rank_prestige11",100,1);
-	wait .001;
 	self.pres12 = createprestige("CENTER","CENTER",600,-150,50,50,"rank_prestige12",100,1);
-	wait .001;
 	self.pres13 = createprestige("CENTER","CENTER",650,-150,50,50,"rank_prestige13",100,1);
-	wait .001;
 	self.pres14 = createprestige("CENTER","CENTER",700,-150,50,50,"rank_prestige14",100,1);
-	wait .001;
 	self.pres15 = createprestige("CENTER","CENTER",750,-150,50,50,"rank_prestige15",100,1);
-	wait .001;
 }
 
 createPrestige(align, relative, x, y, width, height, shader, sort, alpha, color)
@@ -3403,10 +3368,10 @@ UnlockAll()
 	perks[13] = "PERKS_SCAVENGER";
 	perks[14] = "PERKS_FLAK_JACKET";
 	perks[15] = "PERKS_HARDLINE";
-	for (i = 1; i < 16; i++)
+	for (i = 1; i < 16; i++) //all perks
 	{
 		perk = perks[i];
-		for (j = 0; j < 3; j++)
+		for (j = 0; j < 3; j++) //3 challenges per perk
 		{
 			self maps\mp\gametypes\_persistence::unlockItemFromChallenge("perkpro " + perk + " " + j);
 		}
