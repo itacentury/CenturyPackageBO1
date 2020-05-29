@@ -1093,23 +1093,23 @@ onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeap
 	{
 		if (sMeansOfDeath == "MOD_MELEE")
 		{
-			idamage = 1;
+			iDamage = 1;
 		}
 		else if (einflictor != eattacker && sweapon == "hatchet_mp" && !IsClose)
 		{
-			idamage = 10000000;
+			iDamage = 10000000;
 		}
 		else if (einflictor != eattacker && sweapon == "knife_ballistic_mp" && !IsClose)
 		{
-			idamage = 10000000;
+			iDamage = 10000000;
 		}
 		else if (maps\mp\gametypes\_missions::getWeaponClass(sWeapon) == "weapon_sniper")
 		{
-			idamage = 10000000;
+			iDamage = 10000000;
 		}
 		else
 		{
-			idamage = 1;
+			iDamage = 1;
 		}
 
 		if (sHitLoc == "head")
@@ -1140,9 +1140,9 @@ onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeap
 
 	[[level.onPlayerDamageStub]](eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime);
 
-	if (sMeansOfDeath != "MOD_TRIGGER_HURT" && sMeansOfDeath != "MOD_FALLING" && sMeansOfDeath != "MOD_SUICIDE")
+	if (sMeansOfDeath != "MOD_TRIGGER_HURT" && sMeansOfDeath != "MOD_FALLING" && sMeansOfDeath != "MOD_SUICIDE" && level.azza)
 	{
-		if (maps\mp\gametypes\_missions::getWeaponClass(sWeapon) == "weapon_sniper")
+		if (maps\mp\gametypes\_missions::getWeaponClass(sWeapon) == "weapon_sniper" && iDamage == 10000000)
 		{
 			if (level.multipleSetupsEnabled)
 			{
