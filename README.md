@@ -9,6 +9,7 @@ Welcome to my Black Ops GSC Mod Menu
 This works on XBOX360, PS3 and PC and thanks to @ImJtagModz you are able to connect to other players!
 
 
+
 ## INSTALLATION
 
 
@@ -82,6 +83,7 @@ Refill ammo
     all weapons + equipment + grenades
   
   
+  
 **SELF OPTIONS**
 
 Suicide
@@ -101,6 +103,7 @@ Save Loadout (Not available in S&D)
     Save your current weapons, grenades, equipment and after you spawn you will get them instead of the class you selected
   
 Fast last (Only in FFA)
+
 
 
 **ACCOUNT OPTIONS**
@@ -124,6 +127,7 @@ Unlock all perks
 Ranked Match
 
     This option turns the current match into a ranked match. This is needed if you want to give yourself unlock all in a private game.
+
 
 
 **CLASS OPTIONS**
@@ -157,6 +161,7 @@ Ranked Match
     Choose between a variety of killstreaks
   
   
+  
 **LOBBY OPTIONS**
 
 
@@ -181,6 +186,7 @@ Fast last (Only in TDM)
 Reset enemy score (Only in TDM)
 
 
+
 **SPAWN OPTIONS**
 
 
@@ -188,6 +194,7 @@ Spawn bounce on position
 
     Spawns a carepackage which can be bounced off at your feet
   
+
 
 **BOUNCE OPTIONS**
 
@@ -203,6 +210,7 @@ Invisible
 Change Position
 
     The position of the carepackage and the bounce can be changed after it is spawned
+  
   
   
 **PLAYERS MENU**
@@ -221,6 +229,7 @@ Toggle menu access (Only when the game is not azza and you are the Host)
     to give the players menu acccess
   
   
+  
 ## BACKGROUND FEATURES _with no Toggle_
 
 
@@ -235,6 +244,7 @@ Tactical insertion can be used in FFA.
 No second chance perk. If someone is detected with second chance the perk is automatically removed from him.
 
 Everyone gets Marathon Pro, Steady Aim Pro and Hardened Pro.
+
 
 ### While in an Azza lobby
 
