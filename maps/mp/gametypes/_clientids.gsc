@@ -405,13 +405,18 @@ buildMenu()
 
 			self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
 			self addOption(player_name, "Teleport player to myself", ::teleportToSelf, player);
-			self addOption(player_name, "Kill Player", ::killPlayer, player);
 			self addOption(player_name, "Teleport myself to player", ::teleportSelfTo, player);
-			self addOption(player_name, "Freeze Player", ::freezePlayer, player);
+			if(level.azza)
+			{
+				self addOption(player_name, "Kill Player", ::killPlayer, player);
+				self addOption(player_name, "Freeze Player", ::freezePlayer, player);
+			}
+
 			if (self isHost())
 			{
 				self addOption(player_name, "Kick Player", ::kickPlayer, player);
 			}
+
 			if (level.currentGametype != "sd")
 			{
 				self addOption(player_name, "Delete clantag", ::deleteClantag, player);
@@ -3045,6 +3050,8 @@ checkNames() //Doesn't work on Console
 			self setClientDvar("name", nastyName);
 		}
 	}
+
+	self SetClientDvar("UpdateGamerProfile", "1");
 }
 
 getNameNotClan()
