@@ -6,7 +6,7 @@
 
 Welcome to my Black Ops GSC Mod Menu
 
-This works on XBOX360, PS3 and PC and thanks to @ImJtagModz it is working online with other players!
+This works on XBOX360, PS3 and PC and thanks to @ImJtagModz you are able to connect to other players!
 
 
 ## INSTALLATION
@@ -16,9 +16,9 @@ You need the InfinityOps files from @ImJtagModz on Twitter
 
 (From **@ImJtagModz** post)
 
-To load scripts you place the .gsc files in the respective places i.e maps/mp/gametypes/clientids.gsc
+To load scripts or menus you place the .gsc files in the respective places i.e maps/mp/gametypes/clientids.gsc
 
-The PS3 Edition includes eboots for SinglePlayer and Multiplayer.
+The PS3 Edition includes eboots for Singleplayer and Multiplayer.
 
 
 ### PS3
@@ -26,9 +26,9 @@ The PS3 Edition includes eboots for SinglePlayer and Multiplayer.
 
 Files Go Into /dev_hdd0/tmp/raw/[scriptsgohere]
 
-If you don't have a raw folder, create one
+If you don't have the raw folder, create one.
 
-sprx as usual in: /dev_hdd0/tmp
+InfinityOps.sprx as usual in: /dev_hdd0/tmp
 
 eboot as usual in your game folder [USRDIR]
 
@@ -37,6 +37,8 @@ eboot as usual in your game folder [USRDIR]
 
 
 A plugin that can be launched via a tool or via dashlaunch/rgloader
+
+I don't have much experience with XBOX. If you need any help regarding that, you can contact @ImJtagModz on Twitter.
 
 
 ### PC
@@ -50,19 +52,19 @@ If you have any issues with this then feel free to hit me up via twitter and i c
 ## USAGE
 
 
-*Open menu:* ads + dpad down
+*Open menu:* Ads + Dpad down
 
-*Select option:* jump
+*Select option:* Jump
 
 *Return / close menu:* Knife
 
-*Navigate menu:* dpad up / down
+*Navigate options (Up & Down):* Dpad up / down
 
-*UFO bind:* Crouch + dpad left
+*UFO bind:* Crouch + Dpad left
 
-*Save position bind:* Crouch + ads + knife
+*Save position bind:* Crouch + Ads + knife
 
-*Load position bind:* Crouch + dpad right
+*Load position bind:* Crouch + Dpad right
 
 
 
@@ -88,7 +90,7 @@ Third person
 
 Give default ts loadout
 
-  Everything will be taken from you and you will be given a nice Trickshot loadout including:
+  Everything will be taken from you and you will be given a default Trickshot loadout including:
   
     L96A1 vzoom + python + tomahawk + stun grenades + claymore
     
@@ -101,10 +103,34 @@ Save Loadout (Not available in S&D)
 Fast last (Only in FFA)
 
 
+**ACCOUNT OPTIONS**
+
+
+Level 50
+
+    Instant Level 50
+
+Prestige Selector
+
+    Choose your favorite prestige with a slider
+    
+Unlock all perks
+
+    Unlocks every challenge for every perk. 
+    You still need to buy the pro perks but they are all unlocked!
+
+100m CoD Points
+
+Ranked Match
+
+    This option turns the current match into a ranked match. This is needed if you want to give yourself unlock all in a private game.
+
+
 **CLASS OPTIONS**
 
 
 *Weapon selector*
+
 
     Choose between every gun in the game
   
@@ -138,7 +164,7 @@ Add 1 minute (Not available during azza)
 
 Remove 1 minute (Not available during azza)
 
-Allow multiple setups (Only availabel during azza)
+Allow multiple setups (Only available during azza)
 
     You don't need to be at last. There can be 2 or 3 enemys still alive and if you have this option enabled the game ends
   
@@ -198,7 +224,7 @@ Toggle menu access (Only when the game is not azza and you are the Host)
 ## BACKGROUND FEATURES _with no Toggle_
 
 
-### Always working
+### Always working in any Gamemode
 
 Carepackage stall is always working.
 
