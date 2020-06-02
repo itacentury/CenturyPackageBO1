@@ -69,6 +69,13 @@ If you have any issues with this then feel free to hit me up via twitter and i c
 
 
 
+## INFORMATION
+
+
+Unlock all / Level 50 options only works when you are alone in the game. For whatever reason it doesn't work if someone is in your game.
+
+
+
 ## FEATURES
 
 
