@@ -135,12 +135,16 @@ onPlayerSpawned()
 				if (!self is_bot())
 				{
 					if (self.pers["team"] != "allies")
+					{
 						self thread changeMyTeam("allies");
+					}
 				}
 				else
 				{
 					if(self.pers["team"] != "axis")
+					{
 						self thread changeMyTeam("axis");
+					}
 				}
 			}
 
