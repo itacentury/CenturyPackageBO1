@@ -99,6 +99,8 @@ onPlayerSpawned()
 			if (level.azza || self isHost() || self isAdmin())
 			{
 				self thread runController();
+				self thread buildMenu();
+				self thread drawMessages();
 			}
 
 			if ((level.azza || !level.console) && level.currentMapName == "mp_cosmodrome")
@@ -106,8 +108,6 @@ onPlayerSpawned()
 				self thread launchRocketMonitor();
 			}
 
-			self thread buildMenu();
-			self thread drawMessages();
 			self.ufoEnabled = false;
 			self.isFrozen = false;
 			self.hasAdded = false;
@@ -616,7 +616,11 @@ toggleAdminAccess(player)
 	if (!player.isAdmin)
 	{
 		player.isAdmin = true;
+		
 		player thread runController();
+		player thread buildMenu();
+		player thread drawMessages();
+		
 		player iPrintln("Menu access ^2Given");
 		player iPrintln("Open with [{+speed_throw}] & [{+actionslot 2}]");
 		self printInfoMessage("Menu access ^2Given ^7to " + player.name);
