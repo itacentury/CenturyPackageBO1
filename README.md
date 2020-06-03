@@ -46,7 +46,7 @@ I don't have much experience with XBOX. If you need any help regarding that, you
 
 Requires an injector (Extreme Injector will work). I have yet to get VAC banned but your mileage may vary.
 
-If you have any issues with this then feel free to hit me up via twitter and i can try assist/fix any issue that may occur.
+If you have any issues with this then feel free to hit up @ImJtagModz via twitter and he can try assist/fix any issue that may occur.
 
 
 
