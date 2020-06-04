@@ -1138,7 +1138,14 @@ onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeap
 	{
 		if (maps\mp\gametypes\_missions::getWeaponClass( sWeapon ) == "weapon_sniper")
 		{
-			iDamage = 10000000;
+			if (level.currentGametype == "sd")
+			{
+				iDamage = 10000000;
+			}
+			else
+			{
+				iDamage += 8;
+			}
 		}
 		else 
 		{
