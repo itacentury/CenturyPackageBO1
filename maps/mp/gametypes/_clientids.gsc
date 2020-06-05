@@ -213,14 +213,14 @@ runController()
 				}
 
 				//UFO mode
-				if (self actionSlotthreeButtonPressed() && self GetStance() == "crouch")
+				if (self actionSlotthreeButtonPressed() && self GetStance() == "crouch" && level.azza)
 				{
 					self thread enterUfoMode();
 					wait .12;
 				}
 
 				//Save position
-				if (self meleeButtonPressed() && self adsButtonPressed() && self getStance() == "crouch")
+				if (self meleeButtonPressed() && self adsButtonPressed() && self getStance() == "crouch" && level.azza)
 				{
 					self.savedPosition = self.origin;
 					self thread printInfoMessageNoMenu("Position ^2saved");
@@ -229,7 +229,7 @@ runController()
 				}
 
 				//Load position
-				if (self GetStance() == "crouch" && self actionSlotfourButtonPressed() && self.hasSaved)
+				if (self GetStance() == "crouch" && self actionSlotfourButtonPressed() && self.hasSaved && level.azza)
 				{
 					self SetOrigin(self.savedPosition);
 					wait .12;
