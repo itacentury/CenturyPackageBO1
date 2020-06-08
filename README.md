@@ -8,6 +8,8 @@ Welcome to my Black Ops GSC Mod Menu
 
 This works on XBOX360, PS3 and PC and thanks to @ImJtagModz you are able to connect to other players!
 
+This menu / mod aims for a non-gamebreaking experience in regular mp to allow trickshotters and feeders to hit easier. You can describe it as a Shake like experience for trickshotters and feeders.
+
 
 
 ## INSTALLATION
