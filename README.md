@@ -61,9 +61,12 @@ If you have any issues with this then feel free to hit up @ImJtagModz via twitte
 
 *Navigate options (Up & Down):* Dpad up / down
 
+
+*These binds only work in a azza lobby as I want a non-gamebreaking experience in regular mp*
+
 *UFO bind:* Crouch + Dpad left
 
-*Save position bind:* Crouch + Ads + knife
+*Save position bind:* Crouch + Ads + Knife
 
 *Load position bind:* Crouch + Dpad right
 
@@ -74,6 +77,12 @@ If you have any issues with this then feel free to hit up @ImJtagModz via twitte
 
 Unlock all / Level 50 options only works when you are alone in the game. For whatever reason it doesn't work if someone is in your game.
 It also only works for the Host obviously. Therefore the SubMenu "Account" is only visible to the Host.
+
+
+If you're using force host and don't want the game to end due to no enemy players use the "Add bot" options. After regular players join you can kick the bot with the "Player menu".
+
+
+Only the Host can kick players and some more options are reserved to the host.
 
 
 
@@ -108,7 +117,8 @@ Give default ts loadout
     
 Save Loadout (Not available in S&D)
 
-    Save your current weapons, grenades, equipment and after you spawn you will get them instead of the class you selected.
+    Save your current weapons, grenades, equipment and after you spawn again you will get them instead of the class you selected.
+    Cannot be turned off, just resave the loadout / weapons you wanna spawn with.
   
 Fast last (Only in FFA)
 
@@ -238,6 +248,8 @@ Change Position
 
 Standart options
 
+Not all options are available in regular mp as I want a non-gamebreaking experience.
+
 Reset score (Only in FFA)
 
     Resets the score of the selected player.
@@ -250,14 +262,14 @@ Toggle menu access (Only when the game is not azza and you are the Host)
   
   
   
-## BACKGROUND FEATURES _with no Toggle_
+## BACKGROUND FEATURES _with no ON/OFF Toggle_
 
 
 ### Always working in any Gamemode
 
-Carepackage stall is always possible.
+Carepackage stall is always possible with any carepackage (yours, teammate and enemy).
 
-Tactical insertion cannot be destroyed.
+Tactical insertion cannot be destroyed by other players.
 
 Tactical insertion can be used in FFA.
 
@@ -265,16 +277,16 @@ No second chance perk. If someone is detected with second chance the perk is aut
 
 Everyone gets Marathon Pro, Steady Aim Pro and Hardened Pro.
 
-All snipers do unlimited damage, the damage of the other weapons is not changed.
+All snipers do unlimited damage only in S&D, in all other gamemodes I bumped the damage up by 8 to reduce a bit the hitmarkers, the damage of the other weapons is reduced by 5 but it doesn't noticibly change anything.
 
 
 ### While in an Azza lobby
 
 When the Timer is at 1 second, 2 minutes are automatically added. Only works one time per round.
 
-All snipers do unlimited damage and every other weapon do none, even grenades, knifes etc.
+All snipers do unlimited damage and every other weapon do 1 damage, even grenades, knifes etc. Tomahawks and balistic knife only deal damage at a certain distance.
 
-Everyone gets Lightweight Pro.
+Everyone gets Lightweight Pro to the other perks you get automatically.
 
 A bot is automatically spawned on the enemy team if no bot has already been spawned.
 
