@@ -256,7 +256,7 @@ buildMenu()
 
 	self addOption(m, "Refill Ammo", ::refillAmmo);
 	self addMenu(m, "MainSelf", "^9Self Options");
-	if(self isHost())
+	if (self isHost() && level.players.size == 1)
 	{
 		self addMenu(m, "MainAccount", "^9Account Options");
 	}
