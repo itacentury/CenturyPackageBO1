@@ -261,6 +261,10 @@ Toggle menu access (Only when the game is not azza and you are the Host)
     When you are hosting an azza lobby (private match) everyone automatically gets the menu but if it's not, the host has
   
     to give the players menu acccess.
+
+Change team
+
+    Changes the team of the selected player without him dying.
   
   
   
