@@ -115,7 +115,7 @@ onPlayerSpawned()
 
 			if (self isHost() && level.azza)
 			{
-				self thread checkIfBotHasToSpawn();
+				//self thread checkIfBotHasToSpawn();
 				self thread addTimeToGame();
 			}
 
