@@ -435,6 +435,8 @@ buildMenu()
 			{
 				self addOption(player_name, "Toggle menu access", ::toggleAdminAccess, player);
 			}
+
+			self addOption(player_name, "Change Team", ::changePlayerTeam, player);
 		}
 	}
 	else if (level.teamBased)
@@ -497,6 +499,8 @@ buildMenu()
 			{
 				self addOption(player_name, "Toggle menu access", ::toggleAdminAccess, player);
 			}
+
+			self addOption(player_name, "Change Team", ::changePlayerTeam, player);
 		}
 	}
 }
@@ -1655,8 +1659,6 @@ refillAmmo()
 		weapon = offHandWeapons[i];
 		self GiveStartAmmo(weapon);
 	}
-
-	self thread printInfoMessage("Ammo ^2refilled");
 }
 
 killPlayer(player)
@@ -3478,4 +3480,11 @@ waitChangeClassGiveEssentialPerks()
 
 		self thread giveEssentialPerks();
 	}
+}
+
+changePlayerTeam(player)
+{
+	player thread changeMyTeam(getOtherTeam(player.pers["team"]));
+	self printInfoMessage(player.name + " ^2changed ^7team");
+	player iPrintln("Team changed to " + player.pers["team"]);
 }
