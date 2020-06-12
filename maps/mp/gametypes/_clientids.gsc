@@ -342,6 +342,7 @@ buildMenu()
 	self addOption(m, "Toggle Flamethrower", ::givePlayerAttachment, "ft");
 	self addOption(m, "Toggle Maskerkey", ::givePlayerAttachment, "mk");
 	self addOption(m, "Toggle Grenade Launcher", ::givePlayerAttachment, "gl");
+	self addOption(m, "Toggle Dual Mag", ::givePlayerAttachment, "dualclip");
 	self addOption(m, "Toggle Dual Wield", ::givePlayerAttachment, "dw");
 	self addOption(m, "Remove all attachments", ::removeAllAttachments);
 
@@ -2581,6 +2582,7 @@ precacheWeaponShaders()
     precacheShader("menu_mp_weapons_attach_flamethrower");
     precacheShader("menu_mp_weapons_attach_masterkey");
 	precacheShader("menu_mp_weapons_attach_grenade_launcher");
+	precacheShader("menu_mp_weapons_attach_dual_clip");
 
 	//Perks
     precacheShader("perk_lightweight_pro");
@@ -2732,6 +2734,8 @@ weaponNameToShader(optionName)
             return "menu_mp_weapons_attach_masterkey";
 		case "Toggle Grenade Launcher":
 			return "menu_mp_weapons_attach_grenade_launcher";
+		case "Toggle Dual Mag":
+			return "menu_mp_weapons_attach_dual_clip";
 		//Perks
         case "Toggle Lightweight Pro":
             return "perk_lightweight_pro";
