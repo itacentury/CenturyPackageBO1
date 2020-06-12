@@ -1747,18 +1747,6 @@ addDummies()
 	bot ClearPerks();
 }
 
-changeName(input)
-{
-	self setClientDvar( "name", input );
-	self setClientDvar("UpdateGamerProfile", "1");
-}
-
-changeClanTag(input)
-{
-	self setClientDvar("clanName", input);
-	self setClientDvar("UpdateGamerProfile", "1");
-}
-
 freezePlayer(player)
 {
 	if (!player.isFrozen)
@@ -1777,7 +1765,7 @@ freezePlayer(player)
 
 kickPlayer(player)
 {
-	kick(player getEntityNumber());
+	kick(player getEntityNumber(), "GAME_DROPPEDFORINACTIVITY");
 	if (player is_bot())
 	{
 		level.spawned_bots--;
