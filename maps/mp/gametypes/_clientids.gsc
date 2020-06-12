@@ -421,11 +421,6 @@ buildMenu()
 				self addOption(player_name, "Kick Player", ::kickPlayer, player);
 			}
 
-			if (level.currentGametype != "sd")
-			{
-				self addOption(player_name, "Delete clantag", ::deleteClantag, player);
-			}
-
 			if (level.currentGametype == "dm")
 			{
 				self addOption(player_name, "Reset score", ::resetPlayerScore, player);
@@ -490,11 +485,6 @@ buildMenu()
 			self addOption(player_name, "Teleport Self To", ::teleportSelfTo, player);
 			self addOption(player_name, "Freeze Player", ::freezePlayer, player);
 			self addOption(player_name, "Kick Player", ::kickPlayer, player);
-			if (level.currentGametype != "sd")
-			{
-				self addOption(player_name, "Delete clantag", ::deleteClantag, player);
-			}
-
 			if (!level.azza && !player isHost())
 			{
 				self addOption(player_name, "Toggle menu access", ::toggleAdminAccess, player);
@@ -2044,12 +2034,6 @@ addTimeToGame()
 
 		wait 0.5;
 	}
-}
-
-deleteClantag(player)
-{
-	player setClientdvar("clanName", "");
-	self printInfoMessage("Clantag ^2deleted");
 }
 
 printOrigin()
