@@ -347,11 +347,17 @@ buildMenu()
 	self addOption(m, "Remove all attachments", ::removeAllAttachments);
 
 	m = "ClassKillstreaks";
+	self addOption(m, "Spy Plane", ::giveUserKillstreak, "radar_mp");
 	self addOption(m, "RC-XD", ::giveUserKillstreak, "rcbomb_mp");
+	self addOption(m, "Counter-Spy Plane", ::giveUserKillstreak, "counteruav_mp");
+	self addOption(m, "Sam Turret", ::giveUserKillstreak, "tow_turret_drop_mp");
 	self addOption(m, "Carepackage", ::giveUserKillstreak, "supply_drop_mp");
 	self addOption(m, "Napalm Strike", ::giveUserKillstreak, "napalm_mp");
 	self addOption(m, "Sentry Gun", ::giveUserKillstreak, "autoturret_mp");
+	self addOption(m, "Mortar Team", ::giveUserKillstreak, "mortar_mp");
 	self addOption(m, "Valkyrie Rocket", ::giveUserKillstreak, "m220_tow_mp");
+	self addOption(m, "Blackbird", ::giveUserKillstreak, "radardirection_mp");
+	self addOption(m, "Minigun", ::giveUserKillstreak, "minigun_mp");
     
 	m = "MainLobby";
 	//addOption(m, "Backflip (Buggy)", ::toggleBackflip);
@@ -1440,7 +1446,6 @@ changeCamo(num)
 giveUserKillstreak(killstreak)
 {
 	self maps\mp\gametypes\_hardpoints::giveKillstreak(killstreak);
-	self thread printInfoMessage(killstreak + " ^2Given");
 }
 
 giveUserWeapon(weapon)
@@ -2594,11 +2599,17 @@ precacheWeaponShaders()
     precacheShader("perk_tactical_mask_pro");
 
 	//Killstreaks
+	precacheShader("hud_icon_u2_spyplane");
     precacheShader("hud_icon_rcbomb");
+	precacheShader("hud_icon_counter_uav");
+	precacheShader("hud_ks_sam_turret");
     precacheShader("hud_supply_drop");
     precacheShader("hud_icon_air_napalm");
     precacheShader("hud_ks_auto_turret");
+	precacheShader("hud_mortarshell");
     precacheShader("hud_ks_tv_guided_missile");
+	precacheShader("hud_ks_spy_sat");
+	precacheShader("hud_ks_minigun");
 
 	//Camos
     precacheShader("menu_mp_weapons_camo_dusty");
@@ -2752,16 +2763,28 @@ weaponNameToShader(optionName)
         case "Toggle Tactical Mask Pro":
             return "perk_tactical_mask_pro";
 		//Killstreaks
+		case "Spy Plane":
+			return "hud_icon_u2_spyplane";
         case "RC-XD":
             return "hud_icon_rcbomb";
+		case "Counter-Spy Plane":
+			return "hud_icon_counter_uav";
+		case "Sam Turret":
+			return "hud_ks_sam_turret";
         case "Carepackage":
             return "hud_supply_drop";
         case "Napalm Strike":
             return "hud_icon_air_napalm";
         case "Sentry Gun":
             return "hud_ks_auto_turret";
+		case "Mortar Team":
+			return "hud_mortarshell";
         case "Valkyrie Rocket":
             return "hud_ks_tv_guided_missile";
+		case "Blackbird":
+			return "hud_ks_spy_sat";
+		case "Minigun":
+			return "hud_ks_minigun";
 		//Camos
         case "Dusty":
             return "menu_mp_weapons_camo_dusty";
