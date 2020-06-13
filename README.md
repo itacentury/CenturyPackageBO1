@@ -8,7 +8,7 @@ Welcome to my Black Ops GSC Mod Menu
 
 This works on XBOX360, PS3 and PC and thanks to @ImJtagModz you are able to connect to other players!
 
-This menu / mod aims for a non-gamebreaking experience in regular mp to allow trickshotters and feeders to hit easier. You can describe it as a Shake like experience for trickshotters and feeders.
+This menu / mod aims for a non-gamebreaking experience in regular mp to allow trickshotters and feeders to hit easier.
 
 
 
@@ -26,14 +26,16 @@ The PS3 Edition includes eboots for Singleplayer and Multiplayer.
 
 ### PS3
 
+**If you have a HEN PS3 use the files in HEN Folder. I'm not sure the menu will work on (pretty sure it doesn't) but you can try**
 
-Files Go Into /dev_hdd0/tmp/raw/[scriptsgohere]
+
+Files Go Into /dev_hdd0/tmp/raw/[scriptsgohere] (Put the whole maps folder in the raw folder)
 
 If you don't have the raw folder, create one.
 
 InfinityOps.sprx as usual in: /dev_hdd0/tmp
 
-eboot as usual in your game folder [USRDIR]
+eboot as usual in your game folder [USRDIR] (You need the disk version of bo1 for this to work. If you have the PSN version you have to convert the EBOOT)
 
 
 ### XBOX360
@@ -87,13 +89,19 @@ If you're using force host and don't want the game to end due to no enemy player
 Only the Host can kick players and some more options are reserved to the host.
 
 
+Sometimes players don't connect to the lobby. Rejoining the lobby works.
+
+
+Sometimes players don't show up in the player menu unter certain circumstances.
+
+
 
 ## FEATURES
 
 
-Godmode
+Godmode (Only in azza)
 
-Full invisible
+Full invisible (Only in azza)
 
     Not visible on the minimap.
   
@@ -187,15 +195,15 @@ Ranked Match
 **LOBBY OPTIONS**
 
 
-Add 1 minute (Not available during azza)
+Add 1 minute (Not available in azza)
 
     Adds one minute to the game time.
 
-Remove 1 minute (Not available during azza)
+Remove 1 minute (Not available in azza)
 
     Removes one minute from the game time.
 
-Allow multiple setups (Only available during azza)
+Allow multiple setups (Only available in azza)
 
     You don't need to be at last. There can be 2 or 3 enemys still alive and if you have this option enabled the game ends
   
@@ -273,6 +281,8 @@ Change team
 
 ### Always working in any Gamemode
 
+Class can always be changed.
+
 Carepackage stall is always possible with any carepackage (yours, teammate and enemy).
 
 Tactical insertion cannot be destroyed by other players.
@@ -283,18 +293,16 @@ No second chance perk. If someone is detected with second chance the perk is aut
 
 Everyone gets Marathon Pro, Steady Aim Pro and Hardened Pro.
 
-All snipers do unlimited damage only in S&D, in all other gamemodes I bumped the damage up by 8 to reduce a bit the hitmarkers, the damage of the other weapons is reduced by 5 but it doesn't noticibly change anything.
+All snipers do unlimited damage only in S&D, in all other gamemodes I bumped up the damage by 8 to reduce the hitmarkers, the damage of other weapons is reduced by 5 but it doesn't noticibly change anything.
 
 
 ### While in an Azza lobby
 
 When the Timer is at 1 second, 2 minutes are automatically added. Only works one time per round.
 
-All snipers do unlimited damage and every other weapon do 1 damage, even grenades, knifes etc. Tomahawks and balistic knife only deal damage at a certain distance.
+All snipers do unlimited damage and every other weapon do 1 damage (almost none), even grenades, knifes etc. Tomahawks and balistic knife only kill at a certain distance.
 
-Everyone gets Lightweight Pro to the other perks you get automatically.
-
-A bot is automatically spawned on the enemy team if no bot has already been spawned.
+Everyone gets Lightweight Pro and the other perks you get automatically.
 
 If the current map is Launch and someone is standing underneath the rocket. He automatically receives Godmode right before the rocket launches. 
 Godmode is removed after the rocket is gone.
