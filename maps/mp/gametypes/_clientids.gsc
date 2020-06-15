@@ -631,6 +631,11 @@ toggleAdminAccess(player)
 		player.isAdmin = false;
 		player iPrintln("Menu access ^1Removed");
 		self printInfoMessage("Menu access ^1Removed ^7from " + player.name);
+		if (player.isInMenu)
+		{
+			player ClearAllTextAfterHudelem();
+			player thread exitMenu();
+		}
 	}
 }
 closeMenuOnDeath()
