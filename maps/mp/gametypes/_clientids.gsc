@@ -33,20 +33,8 @@ init()
 	level.multipleSetupsEnabled = false;
 	//Precache for the menu UI
 	precacheShader("score_bar_bg");
-	//Precache all shaders to be displayed in menu
+	//Precache all shaders
 	precacheWeaponShaders();
-	//Precaching glitch weapons
-	precacheModel("t5_weapon_asp_lh_world");
-	precacheModel("t5_weapon_asp_world_dw_lh");
-	precacheModel("t5_weapon_1911_lh_world");
-	precacheModel("t5_weapon_m1911_world_dw_lh");
-	precacheModel("t5_weapon_makarov_lh_world");
-	precacheModel("t5_weapon_makarov_world_dw_lh");
-	precacheModel("t5_weapon_python_lh_world");
-	precacheModel("t5_weapon_python_world_dw_lh");
-	precacheModel("t5_weapon_cz75_lh_world");
-	precacheModel("t5_weapon_cz75_dw_lh_world");
-	precacheModel("t5_weapon_cz75_world_dw_lh");
 
 	level.onPlayerDamageStub = level.callbackPlayerDamage;
 	level.callbackPlayerDamage = ::onPlayerDamageHook;
@@ -2529,6 +2517,19 @@ printWeaponClass()
 
 precacheWeaponShaders()
 {
+    	//Glitch weapons
+	precacheModel("t5_weapon_asp_lh_world");
+	precacheModel("t5_weapon_asp_world_dw_lh");
+	precacheModel("t5_weapon_1911_lh_world");
+	precacheModel("t5_weapon_m1911_world_dw_lh");
+	precacheModel("t5_weapon_makarov_lh_world");
+	precacheModel("t5_weapon_makarov_world_dw_lh");
+	precacheModel("t5_weapon_python_lh_world");
+	precacheModel("t5_weapon_python_world_dw_lh");
+	precacheModel("t5_weapon_cz75_lh_world");
+	precacheModel("t5_weapon_cz75_dw_lh_world");
+	precacheModel("t5_weapon_cz75_world_dw_lh");
+    
     //MP
     precacheShader("menu_mp_weapons_mp5k");
     precacheShader("menu_mp_weapons_skorpion");
