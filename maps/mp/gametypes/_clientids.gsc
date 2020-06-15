@@ -641,6 +641,10 @@ closeMenuOnDeath()
 	
 	self ClearAllTextAfterHudelem();
 	self thread exitMenu();
+	if (self.weaponShadersDrawn)
+	{
+		self thread destroyWeaponShaders();
+	}
 }
 
 openMenu(menu)
