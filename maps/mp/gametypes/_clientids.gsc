@@ -10,22 +10,26 @@ init()
 	//Needed to display a correct match bonus
 	level.currentGametype = getDvar("g_gametype");
 	level.currentMapName = getDvar("mapName");
-	if (level.currentGametype == "sd" && getDvar("xblive_privatematch") == 1)
+	if (level.currentGametype == "sd" && getDvar("isAzza") == "1")
 	{
 		level.rankedMatch = true;
 		level.contractsEnabled = true;
 		level.azza = true;
-		setDvar("sv_cheats", "1");
-		setDvar("scr_" + level.currentGametype + "_timelimit", "2.5");
+		setDvar("isAzza", "1");
 	}
 	else
 	{
 		level.azza = false;
+		setDvar("isAzza", "0");
 	}
 
 	if (level.currentGametype == "dm")
 	{
 		setDvar("scr_disable_tacinsert", "0");
+	}
+	else if (level.currentGametype == "sd")
+	{
+		setDvar("scr_sd_timelimit", "2.5");
 	}
 
 	level.spawned_bots = 0;
@@ -41,6 +45,7 @@ init()
 
 	level thread onPlayerConnect();
 }
+
 onPlayerConnect()
 {
 	for (;;)
@@ -67,6 +72,7 @@ onPlayerConnect()
 		player thread onPlayerSpawned();
 	}
 }
+
 onPlayerSpawned()
 {
 	self endon("disconnect");
@@ -141,10 +147,7 @@ onPlayerSpawned()
 				self.isAdmin = true;
 			}
 
-			self thread checkNames();
 			firstSpawn = false;
-			self SetClientDvar("cg_spectateThirdPerson", "1");
-			self.spectatingThirdPerson = true;
 		}
 
 		self FreezeControls(false);
@@ -160,6 +163,7 @@ onPlayerSpawned()
 		self thread waitChangeClassGiveEssentialPerks();
 	}
 }
+
 runController()
 {
 	self endon("disconnect");
@@ -227,6 +231,7 @@ runController()
 		wait 0.05;
 	}
 }
+
 /*MENU*/
 buildMenu()
 {
@@ -236,6 +241,7 @@ buildMenu()
 	self addMenu("", m, "gsc.cty");
 	//self addOption(m, "Print origin", ::printOrigin);
 	//self addOption(m, "Print weapon class", ::printWeaponClass);
+	//self addOption(m ,"Change name", ::changename);
 	if (level.azza)
 	{
 		self addOption(m, "Godmode", ::toggleGodmode);
@@ -264,6 +270,11 @@ buildMenu()
 	if (level.currentGametype == "dm")
 	{		
 		self addOption(m, "Fast last", ::fastLast);
+	}
+
+	if (self isHost())
+	{
+		self addOption(m, "Force Host", ::doForceHost);
 	}
 
 	m = "MainAccount";
@@ -366,7 +377,13 @@ buildMenu()
 		self addOption(m, "Fast last my team", ::fastLast);
 		self addOption(m, "Reset enemy team score", ::resetEnemyTeamScore);
 	}
+	else if (level.currentGametype == "sd")
+	{
+		self addOption(m, "Enabled azza", ::toggleAzza);
+		self addOption(m, "Disable Bomb", ::toggleBomb);
+	}
 
+	self addOption(m, "Pre-cam ots, smoothies...", ::precamOTS);
 	self addMenu(m, "ExtraSpawn", "^9Spawn Options");
 	
 	m = "ExtraSpawn";
@@ -3024,62 +3041,6 @@ changeMyTeam(team)
 	self setclientdvar("g_scriptMainMenu", game["menu_class_" + self.pers["team"]]);
 }
 
-checkNames() //Doesn't work on Console
-{
-	name = ToLower(self getNameNotClan());
-	wazerName = "WaZer_GHK";
-	centuryName = "CenTurY_GHK";
-	pagoName = "Pago_GHK";
-	akeelName = "Akeel_GHK";
-	viloName = "Vilo_GHK";
-	nastyName = "Nasty_GHK";
-
-	if (isSubStr(name, "century"))
-	{
-		if (name != ToLower(centuryName))
-		{
-			self setClientDvar("name", centuryName);
-		}
-	}
-	else if (isSubStr(name, "wazer"))
-	{
-		if (name != ToLower(wazerName))
-		{
-			self setClientDvar("name", wazerName);
-		}
-	}
-	else if (isSubStr(name, "pago"))
-	{
-		if (name != ToLower(pagoName))
-		{
-			self setClientDvar("name", pagoName);
-		}
-	}
-	else if (name == "ozeh_vilo")
-	{
-		if (name != ToLower(akeelName))
-		{
-			self setClientDvar("name", akeelName);
-		}
-	}
-	else if (name == "viloedits")
-	{
-		if (name != ToLower(viloName))
-		{
-			self setClientDvar("name", viloName);
-		}
-	}
-	else if (isSubStr(name, "nasty"))
-	{
-		if (name != ToLower(nastyName))
-		{
-			self setClientDvar("name", nastyName);
-		}
-	}
-
-	self SetClientDvar("UpdateGamerProfile", "1");
-}
-
 getNameNotClan()
 {
 	for (i = 0; i < self.name.size; i++)
@@ -3385,6 +3346,7 @@ setPrestiges(value)
 UnlockAll()
 {
 	self thread printInfoMessage("All perks ^2unlocked");
+
 	perks = [];
 	perks[1] = "PERKS_SLEIGHT_OF_HAND";
 	perks[2] = "PERKS_GHOST";
@@ -3409,6 +3371,9 @@ UnlockAll()
 			self maps\mp\gametypes\_persistence::unlockItemFromChallenge("perkpro " + perk + " " + j);
 		}
 	}
+
+	setDvar("allItemsUnlocked", "1");
+	setDvar("allEmblemsUnlocked", "1");
 }
 
 levelFifty()
@@ -3496,4 +3461,127 @@ changePlayerTeam(player)
 	player thread changeMyTeam(getOtherTeam(player.pers["team"]));
 	self printInfoMessage(player.name + " ^2changed ^7team");
 	player iPrintln("Team changed to " + player.pers["team"]);
+}
+
+precamOTS()
+{
+	if (getDvar("cg_nopredict") == "0")
+	{
+		setDvar("cg_nopredict", "1");
+		self printInfoMessage("Precam ^2enabled");
+	}
+	else if (getDvar("cg_nopredict") == "1")
+	{
+		setDvar("cg_nopredict", "0");
+		self printInfoMessage("Precam ^1disabled");
+	}
+}
+
+changename()
+{
+	setDvar("sv_hostname", "sv_hostname");
+	setDvar("ui_hostname", "ui_hostname");
+	setDvar("ui_demoname", "ui_demoname");
+	setDvar("smpUpdatePlayerNames", "1");
+	setDvar("name", "name");
+
+	self iprintln("UpdatePlayerNames: " + getDvar("smpUpdatePlayerNames"));
+}
+
+doForceHost()
+{
+	if (getDvar("forceHostEnabled") == "1")
+	{
+		setDvar("party_connectToOthers", "1");
+		setDvar("forceHostEnabled", "0");
+		self printInfoMessage("Force Host ^1Disabled");
+	}
+	else 
+	{
+		setDvar("party_connectToOthers", "0");
+		setDvar("party_maxTeamDiff", "12");
+		setDvar("party_minLobbyTime", "5");
+		setDvar("forceHostEnabled", "1");
+		self printInfoMessage("Force Host ^2Enabled");
+	}
+}
+
+toggleAzza()
+{
+	if (getDvar("isAzza") == "1")
+	{
+		level.azza = false;
+		setDvar("isAzza", "0");
+
+		for (i = 0; i < level.players.size; i++)
+		{
+			player = level.players[i];
+			if (!player.isAdmin)
+			{
+				if (player.isInMenu)
+				{
+					player ClearAllTextAfterHudelem();
+					player thread exitMenu();
+				}
+			}
+		}
+
+		self printInfoMessage("Azza ^1disabled");
+	}
+	else
+	{
+		level.rankedMatch = true;
+		level.contractsEnabled = true;
+		level.azza = true;
+		setDvar("isAzza", "1");
+
+		for (i = 0; i < level.players.size; i++)
+		{
+			player = level.players[i];
+			if (player != getHostPlayer())
+			{
+				player thread runController();
+				player thread buildMenu();
+				player thread drawMessages();
+			}
+
+			if (player isHost())
+			{
+				player thread addTimeToGame();
+			}
+
+			if (!player is_bot())
+			{
+				if (player.pers["team"] != "allies")
+				{
+					player thread changeMyTeam("allies");
+				}
+			}
+			else
+			{
+				if(player.pers["team"] != "axis")
+				{
+					player thread changeMyTeam("axis");
+				}
+			}
+
+			player thread setMatchBonus();
+		}
+
+		self printInfoMessage("Azza ^2enabled");
+	}
+}
+
+toggleBomb()
+{
+	if (getDvar("bombEnabled") == "0")
+	{
+		setDvar("bombEnabled", "1");
+		self printInfoMessage("Bomb ^2enabled");
+	}
+	else 
+	{
+		setDvar("bombEnabled", "0");
+		self printInfoMessage("Bomb ^1disabled");
+	}
 }
