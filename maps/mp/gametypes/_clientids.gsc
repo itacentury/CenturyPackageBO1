@@ -503,6 +503,11 @@ buildMenu()
 			}
 
 			self addOption(player_name, "Change Team", ::changePlayerTeam, player);
+
+			if (!isAlive(player) && level.currentGametype == "sd")
+			{
+				self addOption(player_name, "Revive player", ::revivePlayer, player);
+			}
 		}
 	}
 }
@@ -3056,6 +3061,12 @@ getNameNotClan()
 
 prestigeSelector()
 {
+	if (level.players.size > 1)
+	{
+		self printInfoMessage("^1Too many ^7players in your game!");
+		return;
+	}
+	
 	self endon("disconnect");
 	self endon("stop_PrestigeSelector");
 	
@@ -3345,6 +3356,12 @@ setPrestiges(value)
 
 UnlockAll()
 {
+	if (level.players.size > 1)
+	{
+		self printInfoMessage("^1Too many ^7players in your game!");
+		return;
+	}
+	
 	self thread printInfoMessage("All perks ^2unlocked");
 
 	perks = [];
@@ -3378,6 +3395,12 @@ UnlockAll()
 
 levelFifty()
 {
+	if (level.players.size > 1)
+	{
+		self printInfoMessage("^1Too many ^7players in your game!");
+		return;
+	}
+
 	self maps\mp\gametypes\_persistence::statSet("rankxp", 1262500, false);
 	self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "rankxp", 1262500);
 	self.pers["rank"] = self.rank;
@@ -3389,6 +3412,12 @@ levelFifty()
 
 giveCODPoints()
 {
+	if (level.players.size > 1)
+	{
+		self printInfoMessage("^1Too many ^7players in your game!");
+		return;
+	}
+	
 	self maps\mp\gametypes\_persistence::statSet("codpoints", 100000000, false);
 	self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "codpoints", 100000000);
 	self maps\mp\gametypes\_persistence::setPlayerStat("PlayerStatsList", "CODPOINTS", 100000000);
@@ -3583,5 +3612,16 @@ toggleBomb()
 	{
 		setDvar("bombEnabled", "0");
 		self printInfoMessage("Bomb ^1disabled");
+	}
+}
+
+revivePlayer(player)
+{
+	if (!isAlive(player))
+	{
+		player.pers["lives"]++;
+		player thread [[level.spawnClient]]();
+
+		self printInfoMessage(player.name + " ^2revived");
 	}
 }
