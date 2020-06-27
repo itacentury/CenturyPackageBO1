@@ -379,12 +379,12 @@ buildMenu()
 	}
 	else if (level.currentGametype == "sd")
 	{
-		self addOption(m, "Enabled azza", ::toggleAzza);
-		self addOption(m, "Disable Bomb", ::toggleBomb);
+		self addOption(m, "Toggle azza", ::toggleAzza);
+		self addOption(m, "Toggle Bomb", ::toggleBomb);
 	}
 
-	self addOption(m, "Pre-cam ots, smoothies...", ::precamOTS);
-	self addMenu(m, "ExtraSpawn", "^9Spawn Options");
+	self addOption(m, "Pre-cam animations", ::precamOTS);
+	self addMenu(m, "ExtraSpawn", "^9Bounces");
 	
 	m = "ExtraSpawn";
 	self addOption(m, "Spawn Bounce On Position", ::bounce);
