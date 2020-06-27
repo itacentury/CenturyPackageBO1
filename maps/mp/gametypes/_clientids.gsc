@@ -23,13 +23,20 @@ init()
 		setDvar("isAzza", "0");
 	}
 
-	if (level.currentGametype == "dm")
+	switch (level.currentGametype)
 	{
-		setDvar("scr_disable_tacinsert", "0");
-	}
-	else if (level.currentGametype == "sd")
-	{
-		setDvar("scr_sd_timelimit", "2.5");
+		case "dm":
+			setDvar("scr_disable_tacinsert", "0");
+			setDvar("scr_" + level.currentGametype + "_timelimit", "10");
+			break;
+		case "sd":
+			setDvar("scr_" + level.currentGametype + "_timelimit", "2.5");
+			break;
+		case "tdm":
+			setDvar("scr_" + level.currentGametype + "_timelimit", "10");
+			break;
+		default:
+			break;
 	}
 
 	level.spawned_bots = 0;
@@ -215,13 +222,12 @@ runController()
 				if (self meleeButtonPressed() && self adsButtonPressed() && self getStance() == "crouch" && level.azza)
 				{
 					self.savedPosition = self.origin;
-					self thread printInfoMessageNoMenu("Position ^2saved");
-					self.hasSaved = true;
+					self printInfoMessageNoMenu("Position ^2saved");
 					wait .12;
 				}
 
 				//Load position
-				if (self GetStance() == "crouch" && self actionSlotfourButtonPressed() && self.hasSaved && level.azza)
+				if (self GetStance() == "crouch" && self actionSlotfourButtonPressed() && level.azza && isDefined(self.savedPosition))
 				{
 					self SetOrigin(self.savedPosition);
 					wait .12;
@@ -3508,13 +3514,13 @@ precamOTS()
 
 changename()
 {
-	setDvar("sv_hostname", "sv_hostname");
-	setDvar("ui_hostname", "ui_hostname");
-	setDvar("ui_demoname", "ui_demoname");
 	setDvar("smpUpdatePlayerNames", "1");
-	setDvar("name", "name");
+	self setPlayerNameString("name");
+	self setClientDvar("name", "name");
+	//self updateClientNames();
 
-	self iprintln("UpdatePlayerNames: " + getDvar("smpUpdatePlayerNames"));
+	//self iprintln("UpdatePlayerNames: " + getDvar("smpUpdatePlayerNames"));
+	self printInfoMessage("Name ^2changed");
 }
 
 doForceHost()
