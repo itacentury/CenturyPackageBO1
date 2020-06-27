@@ -88,7 +88,7 @@ onPlayerSpawned()
 
 	for (;;)
 	{
-		self waittill ("spawned_player");
+		self waittill("spawned_player");
 
 		if (firstSpawn)
 		{
@@ -428,7 +428,7 @@ buildMenu()
 			self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
 			self addOption(player_name, "Teleport player to myself", ::teleportToSelf, player);
 			self addOption(player_name, "Teleport myself to player", ::teleportSelfTo, player);
-			if(level.azza)
+			if (level.azza)
 			{
 				self addOption(player_name, "Kill Player", ::killPlayer, player);
 				self addOption(player_name, "Freeze Player", ::freezePlayer, player);
@@ -474,11 +474,11 @@ buildMenu()
 			{
 				m = "PlayerFriendly";
 
-				if(isAlive(player))
+				if (isAlive(player))
 				{
 					self addMenu(m, player_name, name + " (Alive)");
 				}
-				else if(!isAlive(player))
+				else if (!isAlive(player))
 				{
 					self addMenu(m, player_name, name + " (Dead)");
 				}
@@ -517,6 +517,7 @@ buildMenu()
 		}
 	}
 }
+
 buildWeaponMenu()
 {
 	m = "ClassWeapon";
@@ -618,6 +619,7 @@ buildWeaponMenu()
 	self addOption(m, "Briefcase Bomb", ::giveUserWeapon, "briefcase_bomb_mp");
 	self addOption(m, "Autoturret", ::giveUserWeapon, "autoturret_mp");
 }
+
 /*MENU FUNCTIONS*/
 isAdmin()
 {
@@ -628,6 +630,7 @@ isAdmin()
 
 	return false;
 }
+
 toggleAdminAccess(player)
 {
 	if (!player.isAdmin)
@@ -654,6 +657,7 @@ toggleAdminAccess(player)
 		}
 	}
 }
+
 closeMenuOnDeath()
 {
 	self endon("exit_menu");
@@ -894,19 +898,22 @@ drawShaders()
 	
 	self.shadersDrawn = true;
 }
+
 drawWeaponShaders(currentWeaponDisplay, width) //weapon 45
 {
 	self.weaponShaders = createRectangle("CENTER", "CENTER", -250, self.yAxisWeapons - 265, width, 25, 2, currentWeaponDisplay);
-	self.weaponShaders setColor(1,1,1,1);
+	self.weaponShaders setColor(1, 1, 1, 1);
 
 	self.weaponShadersDrawn = true;
 }
+
 destroyWeaponShaders()
 {
 	self.weaponShaders destroy();
 
 	self.weaponShadersDrawn = false;
 }
+
 drawMessages()
 {
 	self.infoMessage = self createText2("default", 1, " ", "CENTER", "CENTER", -250, 100, 3, 0, (1, 1, 1));
@@ -920,6 +927,7 @@ drawMessages()
 	self.infoMessageNoMenu = self createText2("default", 1, " ", "LEFT", "CENTER", -370, -100, 3, 0, (1, 1, 1));
 	self.infoMessageNoMenu.archived = false;
 }
+
 drawText()
 {
 	self.menuTitle = self createText("objective", 1.3, "CENTER", "TOP", -250, self.yAxis - 50, 3, "");
@@ -935,11 +943,13 @@ drawText()
 	
 	self thread updateText();
 }
+
 elemFade(time, alpha)
 {
     self fadeOverTime(time);
     self.alpha = alpha;
 }
+
 updateText()
 {
 	currentMenu = self getCurrentMenu();
@@ -1010,7 +1020,7 @@ destroyShaders()
 destroyText()
 {
 	self.menuTitle destroy();
-	for ( o = 0; o < self.menuOptions.size; o++)
+	for (o = 0; o < self.menuOptions.size; o++)
 	{
 		self.menuOptions[o] destroy();
 		self iprintln(self.menuOptions[o].label);
@@ -1019,30 +1029,31 @@ destroyText()
 	self.textDrawn = false;
 }
 
-createText( font , fontScale , point , relative , xOffset , yOffset , sort , hideWhenInMenu , text )
+createText(font, fontScale, point, relative, xOffset, yOffset, sort, hideWhenInMenu, text)
 {
-    textElem = createFontString( font , fontScale );
-    textElem setText( text );
-    textElem setPoint( point , relative , xOffset , yOffset );
+    textElem = createFontString(font, fontScale);
+    textElem setText(text);
+    textElem setPoint(point, relative, xOffset, yOffset);
     textElem.sort = sort;
     textElem.hideWhenInMenu = hideWhenInMenu;
     return textElem;
 }
+
 createText2(font, fontScale, text, point, relative, xOffset, yOffset, sort, alpha, color)
 {
     textElem = createFontString(font, fontScale);
     textElem setText(text);
-    textElem setPoint( point, relative, xOffset, yOffset );
+    textElem setPoint(point, relative, xOffset, yOffset);
     textElem.sort = sort;
     textElem.alpha = alpha;
     textElem.color = color;
     return textElem;
 }
 
-createRectangle( align , relative , x , y , width , height , sort , shader )
+createRectangle(align, relative, x, y, width, height, sort, shader)
 {
-    barElemBG = newClientHudElem( self );
-    barElemBG.elemType = " bar ";
+    barElemBG = newClientHudElem(self);
+    barElemBG.elemType = "bar";
     barElemBG.width = width;
     barElemBG.height = height;
     barElemBG.align = align;
@@ -1051,10 +1062,10 @@ createRectangle( align , relative , x , y , width , height , sort , shader )
     barElemBG.yOffset = 0;
     barElemBG.children = [];
     barElemBG.sort = sort;
-    barElemBG setParent( level.uiParent );
-    barElemBG setShader( shader , width , height );
+    barElemBG setParent(level.uiParent);
+    barElemBG setShader(shader, width, height);
     barElemBG.hidden = false;
-    barElemBG setPoint( align , relative , x , y );
+    barElemBG setPoint(align, relative, x, y);
     return barElemBG;
 }
 
@@ -1205,7 +1216,7 @@ beginFinalKillcam(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapo
 	
 	lpattacknum = self getEntityNumber();
 	
-	killcamentity = self maps\mp\gametypes\_globallogic_player::getKillcamEntity( attacker, eInflictor, sWeapon );
+	killcamentity = self maps\mp\gametypes\_globallogic_player::getKillcamEntity(attacker, eInflictor, sWeapon);
 	killcamentityindex = -1;
 	killcamentitystarttime = 0;
 	if (isDefined(killcamentity))
@@ -1411,15 +1422,13 @@ toggleInvisible()
 
 ToggleThirdPerson()
 {
-	if (!self.thirdPersonEnabled)
+	if (getDvar("cg_thirdPerson") == "0")
 	{
-		self setClientDvar( "cg_thirdPerson", "1" );
-		self.thirdPersonEnabled = true;
+		self setClientDvar("cg_thirdPerson", "1");
 	}
 	else
 	{
-		self setClientDvar( "cg_thirdPerson", "0" );
-		self.thirdPersonEnabled = false;
+		self setClientDvar("cg_thirdPerson", "0");
 	}
 }
 
@@ -1525,11 +1534,12 @@ saveLoadout()
 	self.primaryWeapons = self GetWeaponsListPrimaries();
 	self.offHandWeapons = array_exclude(self GetWeaponsList(), self.primaryWeapons);
 	self.offHandWeapons = array_remove(self.offHandWeapons, "knife_mp");
-
 	self.saveLoadoutEnabled = true;
 
 	self thread printInfoMessage("Weapons ^2saved^7.");
+
 	wait 1.5;
+
 	self thread printInfoMessage("You will have them next time you spawn!");
 }
 
@@ -2545,7 +2555,7 @@ printWeaponClass()
 
 precacheWeaponShaders()
 {
-    	//Glitch weapons
+    //Glitch weapons
 	precacheModel("t5_weapon_asp_lh_world");
 	precacheModel("t5_weapon_asp_world_dw_lh");
 	precacheModel("t5_weapon_1911_lh_world");
@@ -3078,12 +3088,12 @@ prestigeSelector()
 	
 	self thread initPrestigeShaders();
 	self freezecontrolsAllowLook(true);
-	self.prestigeback = self createRectanglePrestige("CENTER","",0,-150,1000,50,(0,0,0),"white",3,1);
-	self.textz = self createFontString("objective",1.8, self);
+	self.prestigeback = self createRectanglePrestige("CENTER", "", 0, -150, 1000, 50, (0, 0, 0), "white", 3, 1);
+	self.textz = self createFontString("objective", 1.8, self);
 	t = 0;
 	self.scrollz = 0;
 	self.textz setText(t);
-	self.textz setPoint("CENTER","CENTER",0,-100);
+	self.textz setPoint("CENTER", "CENTER", 0, -100);
 	self.textz.sort = 100;
 	self exitMenu();
 	self thread printUFOMessage1("Press [{+speed_throw}]/ [{+attack}] to ^3change the current Prestige");
@@ -3091,6 +3101,7 @@ prestigeSelector()
 	self thread printUFOMessage3("Press [{+melee}] to ^1Stop ^7the selection");
 	
 	wait 1;
+
 	for (;;)
 	{
 		if (self MeleeButtonPressed())
@@ -3123,6 +3134,7 @@ prestigeSelector()
 
 			self notify("stopthis");
 			self notify("stop_prestige");
+
 			self thread ufoMessage1Fade();
 			self thread ufoMessage2Fade();
 			self thread ufoMessage3Fade();
@@ -3173,22 +3185,22 @@ prestigeSelector()
 				wait .1;
 
 				self.textz setText(self.scrollz);
-				self.pres0 setPoint("CENTER","CENTER",(self.pres0.xOffset + 50),-150);
-				self.pres1 setPoint("CENTER","CENTER",(self.pres1.xOffset + 50),-150);
-				self.pres2 setPoint("CENTER","CENTER",(self.pres2.xOffset + 50),-150);
-				self.pres3 setPoint("CENTER","CENTER",(self.pres3.xOffset + 50),-150);
-				self.pres4 setPoint("CENTER","CENTER",(self.pres4.xOffset + 50),-150);
-				self.pres5 setPoint("CENTER","CENTER",(self.pres5.xOffset + 50),-150);
-				self.pres6 setPoint("CENTER","CENTER",(self.pres6.xOffset + 50),-150);
-				self.pres7 setPoint("CENTER","CENTER",(self.pres7.xOffset + 50),-150);
-				self.pres8 setPoint("CENTER","CENTER",(self.pres8.xOffset + 50),-150);
-				self.pres9 setPoint("CENTER","CENTER",(self.pres9.xOffset + 50),-150);
-				self.pres10 setPoint("CENTER","CENTER",(self.pres10.xOffset + 50),-150);
-				self.pres11 setPoint("CENTER","CENTER",(self.pres11.xOffset + 50),-150);
-				self.pres12 setPoint("CENTER","CENTER",(self.pres12.xOffset + 50),-150);
-				self.pres13 setPoint("CENTER","CENTER",(self.pres13.xOffset + 50),-150);
-				self.pres14 setPoint("CENTER","CENTER",(self.pres14.xOffset + 50),-150);
-				self.pres15 setPoint("CENTER","CENTER",(self.pres15.xOffset + 50),-150);
+				self.pres0 setPoint("CENTER", "CENTER", (self.pres0.xOffset + 50), -150);
+				self.pres1 setPoint("CENTER", "CENTER", (self.pres1.xOffset + 50), -150);
+				self.pres2 setPoint("CENTER", "CENTER", (self.pres2.xOffset + 50), -150);
+				self.pres3 setPoint("CENTER", "CENTER", (self.pres3.xOffset + 50), -150);
+				self.pres4 setPoint("CENTER", "CENTER", (self.pres4.xOffset + 50), -150);
+				self.pres5 setPoint("CENTER", "CENTER", (self.pres5.xOffset + 50), -150);
+				self.pres6 setPoint("CENTER", "CENTER", (self.pres6.xOffset + 50), -150);
+				self.pres7 setPoint("CENTER", "CENTER", (self.pres7.xOffset + 50), -150);
+				self.pres8 setPoint("CENTER", "CENTER", (self.pres8.xOffset + 50), -150);
+				self.pres9 setPoint("CENTER", "CENTER", (self.pres9.xOffset + 50), -150);
+				self.pres10 setPoint("CENTER", "CENTER", (self.pres10.xOffset + 50), -150);
+				self.pres11 setPoint("CENTER", "CENTER", (self.pres11.xOffset + 50), -150);
+				self.pres12 setPoint("CENTER", "CENTER", (self.pres12.xOffset + 50), -150);
+				self.pres13 setPoint("CENTER", "CENTER", (self.pres13.xOffset + 50), -150);
+				self.pres14 setPoint("CENTER", "CENTER", (self.pres14.xOffset + 50), -150);
+				self.pres15 setPoint("CENTER", "CENTER", (self.pres15.xOffset + 50), -150);
 			}
 			else
 			{
@@ -3197,22 +3209,22 @@ prestigeSelector()
 				wait .1;
 
 				self.textz setText(self.scrollz);
-				self.pres0 setPoint("CENTER","CENTER",-750,-150);
-				self.pres1 setPoint("CENTER","CENTER",-700,-150);
-				self.pres2 setPoint("CENTER","CENTER",-650,-150);
-				self.pres3 setPoint("CENTER","CENTER",-600,-150);
-				self.pres4 setPoint("CENTER","CENTER",-550,-150);
-				self.pres5 setPoint("CENTER","CENTER",-500,-150);
-				self.pres6 setPoint("CENTER","CENTER",-450,-150);
-				self.pres7 setPoint("CENTER","CENTER",-400,-150);
-				self.pres8 setPoint("CENTER","CENTER",-350,-150);
-				self.pres9 setPoint("CENTER","CENTER",-300,-150);
-				self.pres10 setPoint("CENTER","CENTER",-250,-150);
-				self.pres11 setPoint("CENTER","CENTER",-200,-150);
-				self.pres12 setPoint("CENTER","CENTER",-150,-150);
-				self.pres13 setPoint("CENTER","CENTER",-100,-150);
-				self.pres14 setPoint("CENTER","CENTER",-50,-150);
-				self.pres15 setPoint("CENTER","CENTER",0,-150);
+				self.pres0 setPoint("CENTER", "CENTER", -750, -150);
+				self.pres1 setPoint("CENTER", "CENTER", -700, -150);
+				self.pres2 setPoint("CENTER", "CENTER", -650, -150);
+				self.pres3 setPoint("CENTER", "CENTER", -600, -150);
+				self.pres4 setPoint("CENTER", "CENTER", -550, -150);
+				self.pres5 setPoint("CENTER", "CENTER", -500, -150);
+				self.pres6 setPoint("CENTER", "CENTER", -450, -150);
+				self.pres7 setPoint("CENTER", "CENTER", -400, -150);
+				self.pres8 setPoint("CENTER", "CENTER", -350, -150);
+				self.pres9 setPoint("CENTER", "CENTER", -300, -150);
+				self.pres10 setPoint("CENTER", "CENTER", -250, -150);
+				self.pres11 setPoint("CENTER", "CENTER", -200, -150);
+				self.pres12 setPoint("CENTER", "CENTER", -150, -150);
+				self.pres13 setPoint("CENTER", "CENTER", -100, -150);
+				self.pres14 setPoint("CENTER", "CENTER", -50, -150);
+				self.pres15 setPoint("CENTER", "CENTER", 0, -150);
 			}
 		}
 
@@ -3225,22 +3237,22 @@ prestigeSelector()
 				wait .1;
 
 				self.textz setText(self.scrollz);
-				self.pres0 setPoint("CENTER","CENTER",(self.pres0.xOffset - 50),-150);
-				self.pres1 setPoint("CENTER","CENTER",(self.pres1.xOffset - 50),-150);
-				self.pres2 setPoint("CENTER","CENTER",(self.pres2.xOffset - 50),-150);
-				self.pres3 setPoint("CENTER","CENTER",(self.pres3.xOffset - 50),-150);
-				self.pres4 setPoint("CENTER","CENTER",(self.pres4.xOffset - 50),-150);
-				self.pres5 setPoint("CENTER","CENTER",(self.pres5.xOffset - 50),-150);
-				self.pres6 setPoint("CENTER","CENTER",(self.pres6.xOffset - 50),-150);
-				self.pres7 setPoint("CENTER","CENTER",(self.pres7.xOffset - 50),-150);
-				self.pres8 setPoint("CENTER","CENTER",(self.pres8.xOffset - 50),-150);
-				self.pres9 setPoint("CENTER","CENTER",(self.pres9.xOffset - 50),-150);
-				self.pres10 setPoint("CENTER","CENTER",(self.pres10.xOffset - 50),-150);
-				self.pres11 setPoint("CENTER","CENTER",(self.pres11.xOffset - 50),-150);
-				self.pres12 setPoint("CENTER","CENTER",(self.pres12.xOffset - 50),-150);
-				self.pres13 setPoint("CENTER","CENTER",(self.pres13.xOffset - 50),-150);
-				self.pres14 setPoint("CENTER","CENTER",(self.pres14.xOffset - 50),-150);
-				self.pres15 setPoint("CENTER","CENTER",(self.pres15.xOffset - 50),-150);
+				self.pres0 setPoint("CENTER", "CENTER", (self.pres0.xOffset - 50), -150);
+				self.pres1 setPoint("CENTER", "CENTER", (self.pres1.xOffset - 50), -150);
+				self.pres2 setPoint("CENTER", "CENTER", (self.pres2.xOffset - 50), -150);
+				self.pres3 setPoint("CENTER", "CENTER", (self.pres3.xOffset - 50), -150);
+				self.pres4 setPoint("CENTER", "CENTER", (self.pres4.xOffset - 50), -150);
+				self.pres5 setPoint("CENTER", "CENTER", (self.pres5.xOffset - 50), -150);
+				self.pres6 setPoint("CENTER", "CENTER", (self.pres6.xOffset - 50), -150);
+				self.pres7 setPoint("CENTER", "CENTER", (self.pres7.xOffset - 50), -150);
+				self.pres8 setPoint("CENTER", "CENTER", (self.pres8.xOffset - 50), -150);
+				self.pres9 setPoint("CENTER", "CENTER", (self.pres9.xOffset - 50), -150);
+				self.pres10 setPoint("CENTER", "CENTER", (self.pres10.xOffset - 50), -150);
+				self.pres11 setPoint("CENTER", "CENTER", (self.pres11.xOffset - 50), -150);
+				self.pres12 setPoint("CENTER", "CENTER", (self.pres12.xOffset - 50), -150);
+				self.pres13 setPoint("CENTER", "CENTER", (self.pres13.xOffset - 50), -150);
+				self.pres14 setPoint("CENTER", "CENTER", (self.pres14.xOffset - 50), -150);
+				self.pres15 setPoint("CENTER", "CENTER", (self.pres15.xOffset - 50), -150);
 			}
 			else
 			{
@@ -3249,22 +3261,22 @@ prestigeSelector()
 				wait .1;
 
 				self.textz setText(self.scrollz);
-				self.pres0 setPoint("CENTER","CENTER",0,-150);
-				self.pres1 setPoint("CENTER","CENTER",50,-150);
-				self.pres2 setPoint("CENTER","CENTER",100,-150);
-				self.pres3 setPoint("CENTER","CENTER",150,-150);
-				self.pres4 setPoint("CENTER","CENTER",200,-150);
-				self.pres5 setPoint("CENTER","CENTER",250,-150);
-				self.pres6 setPoint("CENTER","CENTER",300,-150);
-				self.pres7 setPoint("CENTER","CENTER",350,-150);
-				self.pres8 setPoint("CENTER","CENTER",400,-150);
-				self.pres9 setPoint("CENTER","CENTER",450,-150);
-				self.pres10 setPoint("CENTER","CENTER",500,-150);
-				self.pres11 setPoint("CENTER","CENTER",550,-150);
-				self.pres12 setPoint("CENTER","CENTER",600,-150);
-				self.pres13 setPoint("CENTER","CENTER",650,-150);
-				self.pres14 setPoint("CENTER","CENTER",700,-150);
-				self.pres15 setPoint("CENTER","CENTER",750,-150);
+				self.pres0 setPoint("CENTER", "CENTER", 0, -150);
+				self.pres1 setPoint("CENTER", "CENTER", 50, -150);
+				self.pres2 setPoint("CENTER", "CENTER", 100, -150);
+				self.pres3 setPoint("CENTER", "CENTER", 150, -150);
+				self.pres4 setPoint("CENTER", "CENTER", 200, -150);
+				self.pres5 setPoint("CENTER", "CENTER", 250, -150);
+				self.pres6 setPoint("CENTER", "CENTER", 300, -150);
+				self.pres7 setPoint("CENTER", "CENTER", 350, -150);
+				self.pres8 setPoint("CENTER", "CENTER", 400, -150);
+				self.pres9 setPoint("CENTER", "CENTER", 450, -150);
+				self.pres10 setPoint("CENTER", "CENTER", 500, -150);
+				self.pres11 setPoint("CENTER", "CENTER", 550, -150);
+				self.pres12 setPoint("CENTER", "CENTER", 600, -150);
+				self.pres13 setPoint("CENTER", "CENTER", 650, -150);
+				self.pres14 setPoint("CENTER", "CENTER", 700, -150);
+				self.pres15 setPoint("CENTER", "CENTER", 750, -150);
 			}
 		}
 
@@ -3273,22 +3285,22 @@ prestigeSelector()
 }
 initPrestigeShaders()
 {
-	self.pres0 = createprestige("CENTER","CENTER",0,-150,50,50,"rank_com",100,1);
-	self.pres1 = createprestige("CENTER","CENTER",50,-150,50,50,"rank_prestige01",100,1);
-	self.pres2 = createprestige("CENTER","CENTER",100,-150,50,50,"rank_prestige02",100,1);
-	self.pres3 = createprestige("CENTER","CENTER",150,-150,50,50,"rank_prestige03",100,1);
-	self.pres4 = createprestige("CENTER","CENTER",200,-150,50,50,"rank_prestige04",100,1);
-	self.pres5 = createprestige("CENTER","CENTER",250,-150,50,50,"rank_prestige05",100,1);
-	self.pres6 = createprestige("CENTER","CENTER",300,-150,50,50,"rank_prestige06",100,1);
-	self.pres7 = createprestige("CENTER","CENTER",350,-150,50,50,"rank_prestige07",100,1);
-	self.pres8 = createprestige("CENTER","CENTER",400,-150,50,50,"rank_prestige08",100,1);
-	self.pres9 = createprestige("CENTER","CENTER",450,-150,50,50,"rank_prestige09",100,1);
-	self.pres10 = createprestige("CENTER","CENTER",500,-150,50,50,"rank_prestige10",100,1);
-	self.pres11 = createprestige("CENTER","CENTER",550,-150,50,50,"rank_prestige11",100,1);
-	self.pres12 = createprestige("CENTER","CENTER",600,-150,50,50,"rank_prestige12",100,1);
-	self.pres13 = createprestige("CENTER","CENTER",650,-150,50,50,"rank_prestige13",100,1);
-	self.pres14 = createprestige("CENTER","CENTER",700,-150,50,50,"rank_prestige14",100,1);
-	self.pres15 = createprestige("CENTER","CENTER",750,-150,50,50,"rank_prestige15",100,1);
+	self.pres0 = createprestige("CENTER", "CENTER", 0, -150, 50, 50, "rank_com", 100, 1);
+	self.pres1 = createprestige("CENTER", "CENTER", 50, -150, 50, 50, "rank_prestige01", 100, 1);
+	self.pres2 = createprestige("CENTER", "CENTER", 100, -150, 50, 50, "rank_prestige02", 100, 1);
+	self.pres3 = createprestige("CENTER", "CENTER", 150, -150, 50, 50, "rank_prestige03", 100, 1);
+	self.pres4 = createprestige("CENTER", "CENTER", 200, -150, 50, 50, "rank_prestige04", 100, 1);
+	self.pres5 = createprestige("CENTER", "CENTER", 250, -150, 50, 50, "rank_prestige05", 100, 1);
+	self.pres6 = createprestige("CENTER", "CENTER", 300, -150, 50, 50, "rank_prestige06", 100, 1);
+	self.pres7 = createprestige("CENTER", "CENTER", 350, -150, 50, 50, "rank_prestige07", 100, 1);
+	self.pres8 = createprestige("CENTER", "CENTER", 400, -150, 50, 50, "rank_prestige08", 100, 1);
+	self.pres9 = createprestige("CENTER", "CENTER", 450, -150, 50, 50, "rank_prestige09", 100, 1);
+	self.pres10 = createprestige("CENTER", "CENTER", 500, -150, 50, 50, "rank_prestige10", 100, 1);
+	self.pres11 = createprestige("CENTER", "CENTER", 550, -150, 50, 50, "rank_prestige11", 100, 1);
+	self.pres12 = createprestige("CENTER", "CENTER", 600, -150, 50, 50, "rank_prestige12", 100, 1);
+	self.pres13 = createprestige("CENTER", "CENTER", 650, -150, 50, 50, "rank_prestige13", 100, 1);
+	self.pres14 = createprestige("CENTER", "CENTER", 700, -150, 50, 50, "rank_prestige14", 100, 1);
+	self.pres15 = createprestige("CENTER", "CENTER", 750, -150, 50, 50, "rank_prestige15", 100, 1);
 }
 
 createPrestige(align, relative, x, y, width, height, shader, sort, alpha, color)
@@ -3353,11 +3365,11 @@ setPrestiges(value)
 	self maps\mp\gametypes\_persistence::statSet("plevel", value, true);
 	self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "plevel", value);
 
-	self freezeControlsAllowLook(false);
-	self thread printInfoMessage("Prestige ^2set ^7to: " + value);
-
 	self setRank(self.pers["rank"], value);
 	self maps\mp\gametypes\_rank::updateRankAnnounceHUD();
+
+	self freezeControlsAllowLook(false);
+	self thread printInfoMessage("Prestige ^2set ^7to: " + value);
 }
 
 UnlockAll()
@@ -3367,8 +3379,6 @@ UnlockAll()
 		self printInfoMessage("^1Too many ^7players in your game!");
 		return;
 	}
-	
-	self thread printInfoMessage("All perks ^2unlocked");
 
 	perks = [];
 	perks[1] = "PERKS_SLEIGHT_OF_HAND";
@@ -3397,6 +3407,8 @@ UnlockAll()
 
 	setDvar("allItemsUnlocked", "1");
 	setDvar("allEmblemsUnlocked", "1");
+
+	self thread printInfoMessage("All perks ^2unlocked");
 }
 
 levelFifty()
@@ -3495,7 +3507,7 @@ changePlayerTeam(player)
 {
 	player thread changeMyTeam(getOtherTeam(player.pers["team"]));
 	self printInfoMessage(player.name + " ^2changed ^7team");
-	player iPrintln("Team changed to " + player.pers["team"]);
+	player iPrintln("Team ^2changed ^7to " + player.pers["team"]);
 }
 
 precamOTS()
@@ -3528,12 +3540,14 @@ doForceHost()
 	if (getDvar("forceHostEnabled") == "1")
 	{
 		setDvar("party_connectToOthers", "1");
+		self SetClientDvar("party_connectToOthers", "1");
 		setDvar("forceHostEnabled", "0");
 		self printInfoMessage("Force Host ^1Disabled");
 	}
 	else 
 	{
 		setDvar("party_connectToOthers", "0");
+		self SetClientDvar("party_connectToOthers", "0");
 		setDvar("party_maxTeamDiff", "12");
 		setDvar("party_minLobbyTime", "5");
 		setDvar("forceHostEnabled", "1");
@@ -3594,7 +3608,7 @@ toggleAzza()
 			}
 			else
 			{
-				if(player.pers["team"] != "axis")
+				if (player.pers["team"] != "axis")
 				{
 					player thread changeMyTeam("axis");
 				}
