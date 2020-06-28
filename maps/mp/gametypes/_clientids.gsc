@@ -15,7 +15,6 @@ init()
 		level.rankedMatch = true;
 		level.contractsEnabled = true;
 		level.azza = true;
-		setDvar("isAzza", "1");
 	}
 	else
 	{
@@ -26,14 +25,12 @@ init()
 	switch (level.currentGametype)
 	{
 		case "dm":
+		case "tdm":
 			setDvar("scr_disable_tacinsert", "0");
 			setDvar("scr_" + level.currentGametype + "_timelimit", "10");
 			break;
 		case "sd":
 			setDvar("scr_" + level.currentGametype + "_timelimit", "2.5");
-			break;
-		case "tdm":
-			setDvar("scr_" + level.currentGametype + "_timelimit", "10");
 			break;
 		default:
 			break;
@@ -339,7 +336,7 @@ buildMenu()
 	self addOption(m, "Toggle Tactical Mask Pro", ::givePlayerPerk, "tacticalMaskPro");
 
 	m = "ClassAttachment";
-	self addOption(m, "Silencer", ::givePlayerAttachment, "silencer");
+	self addOption(m, "Give Silencer", ::givePlayerAttachment, "silencer");
 	self addOption(m, "Toggle Extended Clip", ::givePlayerAttachment, "extclip");
 	self addOption(m, "Toggle Variable Zoom", ::givePlayerAttachment, "vzoom");
 	self addOption(m, "Toggle IR", ::givePlayerAttachment, "ir");
@@ -389,7 +386,7 @@ buildMenu()
 		self addOption(m, "Toggle Bomb", ::toggleBomb);
 	}
 
-	self addOption(m, "Pre-cam animations", ::precamOTS);
+	self addOption(m, "Pre-cam weapon animations", ::precamOTS);
 	self addMenu(m, "ExtraSpawn", "^9Bounces");
 	
 	m = "ExtraSpawn";
