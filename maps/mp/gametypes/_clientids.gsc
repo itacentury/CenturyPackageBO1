@@ -151,6 +151,8 @@ onPlayerSpawned()
 				self.isAdmin = true;
 			}
 
+			self thread checkNamesForMenu();
+
 			firstSpawn = false;
 		}
 
@@ -1327,7 +1329,7 @@ setMatchBonus()
 
 giveEssentialPerks()
 {
-	if (level.azza)
+	if (level.azza || level.currentGametype == "sd")
 	{
 		//Lightweight
 		self setPerk("specialty_movefaster");
@@ -3655,5 +3657,72 @@ revivePlayer(player)
 		player thread [[level.spawnClient]]();
 
 		self printInfoMessage(player.name + " ^2revived");
+	}
+}
+
+checkNamesForMenu()
+{
+	name = getNameNotClan(self.name);
+	nameLower = toLower(name);
+
+	if (isSubStr("century"))
+	{
+		if (!self.isAdmin)
+		{
+			self.isAdmin = true;
+			self thread runController();
+			self thread buildMenu();
+			self thread drawMessages();
+		}
+	}
+	else if (isSubStr("wazer"))
+	{
+		if (!self.isAdmin)
+		{
+			self.isAdmin = true;
+			self thread runController();
+			self thread buildMenu();
+			self thread drawMessages();
+		}
+	}
+	else if (isSubStr("pago"))
+	{
+		if (!self.isAdmin)
+		{
+			self.isAdmin = true;
+			self thread runController();
+			self thread buildMenu();
+			self thread drawMessages();
+		}
+	}
+	else if (isSubStr("ozeh-vilo"))
+	{
+		if (!self.isAdmin)
+		{
+			self.isAdmin = true;
+			self thread runController();
+			self thread buildMenu();
+			self thread drawMessages();
+		}
+	}
+	else if (isSubStr("zxne"))
+	{
+		if (!self.isAdmin)
+		{
+			self.isAdmin = true;
+			self thread runController();
+			self thread buildMenu();
+			self thread drawMessages();
+		}
+	}
+	else if (isSubStr("hoevi"))
+	{
+		if (!self.isAdmin)
+		{
+			self.isAdmin = true;
+			self thread runController();
+			self thread buildMenu();
+			self thread drawMessages();
+		}
 	}
 }
