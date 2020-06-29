@@ -146,6 +146,11 @@ onPlayerSpawned()
 				}
 			}
 
+			if (level.currentGametype == "sd" && level.inGracePeriod) //needs testing
+			{
+				level.inGracePeriod = false;
+			}
+
 			if (self isHost())
 			{
 				self.isAdmin = true;
