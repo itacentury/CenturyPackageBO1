@@ -132,6 +132,10 @@ Save Loadout (Not available in S&D)
   
 Fast last (Only in FFA)
 
+Toggle Force Host
+
+    This enables or disables force host but it actually doesn't work. If anyone know a force host code that works please DM me.
+
 
 
 **ACCOUNT OPTIONS**
@@ -224,6 +228,14 @@ Fast last (Only in TDM)
 Reset enemy score (Only in TDM)
 
     Resets the score of the enemy team to 0.
+    
+Toggle pre-cam weapon animations
+
+    This enables the real-time display of over the shoulders, smooth reloads, etc. Just like in MW2
+    
+Toggle bomb
+
+    This enables or disables the bomb in S&D. Once activated, the bomb will disappear as of the next round. This setting sticks over rounds and games. No need to re-enabled         after every round.
 
 
 
@@ -273,6 +285,11 @@ Toggle menu access (Only when the game is not azza and you are the Host)
 Change team
 
     Changes the team of the selected player without him dying.
+    
+Revive player (Only S&D)
+
+    This option is only visible if the current gamemode is S&D and if the player is dead. 
+    Revives him and spawns him at the normal spawn point.
   
   
   
