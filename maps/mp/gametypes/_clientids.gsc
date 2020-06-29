@@ -1691,23 +1691,35 @@ refillAmmo()
 
 killPlayer(player)
 {
-	player suicide();
-	self thread printInfoMessage("^2Killed ^7" + player.name);
+	if (isAlive(player))
+	{
+		player suicide();
+		self thread printInfoMessage("^2Killed ^7" + player.name);
+	}
 }
 
 teleportSelfTo(player)
 {
-	self SetOrigin(player.origin);
+	if (isAlive(player))
+	{
+		self SetOrigin(player.origin);
+	}
 }
 
 teleportToSelf(player)
 {
-	player SetOrigin(self.origin);
+	if (isAlive(player))
+	{
+		player SetOrigin(self.origin);
+	}
 }
 
 teleportToCrosshair(player)
 {
-	player setOrigin(bullettrace(self gettagorigin("j_head"), self gettagorigin("j_head") + anglesToForward(self getplayerangles()) * 1000000, 0, self)["position"]);
+	if (isAlive(player))
+	{
+		player setOrigin(bullettrace(self gettagorigin("j_head"), self gettagorigin("j_head") + anglesToForward(self getplayerangles()) * 1000000, 0, self)["position"]);
+	}
 }
 
 toggleBackflip()
@@ -1787,17 +1799,20 @@ addDummies()
 
 freezePlayer(player)
 {
-	if (!player.isFrozen)
+	if (isAlive(player))
 	{
-		player FreezeControlsAllowLook(true);
-		player.isFrozen = true;
-		self printInfoMessage(player.name + " is ^2frozen");
-	}
-	else 
-	{
-		player FreezeControlsAllowLook(false);
-		player.isFrozen = false;
-		self printInfoMessage(player.name + " is ^2unfrozen");
+		if (!player.isFrozen)
+		{
+			player FreezeControlsAllowLook(true);
+			player.isFrozen = true;
+			self printInfoMessage(player.name + " is ^2frozen");
+		}
+		else 
+		{
+			player FreezeControlsAllowLook(false);
+			player.isFrozen = false;
+			self printInfoMessage(player.name + " is ^2unfrozen");
+		}
 	}
 }
 
