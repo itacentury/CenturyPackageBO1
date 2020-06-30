@@ -139,14 +139,17 @@ onPlayerSpawned()
 				}
 			}
 
-			if (level.currentGametype == "sd" && level.inGracePeriod) //needs testing
-			{
-				level.inGracePeriod = false;
-			}
-
 			if (self isHost())
 			{
-				self.isAdmin = true;
+				if (!self.isAdmin)
+				{
+					self.isAdmin = true;
+				}
+				
+				if (level.currentGametype == "sd" && level.inGracePeriod) //needs testing
+				{
+					self thread disableGracePeriod();
+				}
 			}
 
 			firstSpawn = false;
@@ -242,7 +245,8 @@ buildMenu()
 	self addMenu("", m, "gsc.cty");
 	//self addOption(m, "Print origin", ::printOrigin);
 	//self addOption(m, "Print weapon class", ::printWeaponClass);
-	//self addOption(m ,"Change name", ::changename);
+	//self addOption(m, "Change name", ::changename);
+	//self addOption(m, "Print weapon", ::printWeapon);
 	if (level.azza)
 	{
 		self addOption(m, "Godmode", ::toggleGodmode);
@@ -698,10 +702,11 @@ openMenu(menu)
 		switch (self.curEquipment)
 		{
 			case "claymore_mp":
-			case "c4_mp":
 			case "tactical_insertion_mp":
 			case "scrambler_mp":
 			case "satchel_charge_mp":
+			case "camera_spike_mp":
+			case "acoustic_sensor_mp":
 				self TakeWeapon(self.curEquipment);
 				break;
 			default:
@@ -747,10 +752,11 @@ exitMenu()
 		switch (self.curEquipment)
 		{
 			case "claymore_mp":
-			case "c4_mp":
 			case "tactical_insertion_mp":
 			case "scrambler_mp":
 			case "satchel_charge_mp":
+			case "camera_spike_mp":
+			case "acoustic_sensor_mp":
 				self GiveWeapon(self.curEquipment);
 				self GiveStartAmmo(self.curEquipment);
 				break;
@@ -1627,10 +1633,11 @@ loadLoadout()
 		switch (equipment)
 		{
 			case "claymore_mp":
-			case "c4_mp":
 			case "tactical_insertion_mp":
 			case "scrambler_mp":
 			case "satchel_charge_mp":
+			case "camera_spike_mp":
+			case "acoustic_sensor_mp":
 				self GiveWeapon(equipment);
 				break;
 			default:
@@ -3695,13 +3702,6 @@ checkNamesForMenu()
 			self.isAdmin = true;
 		}
 	}
-	else if (isSubStr(nameLower, "zxne"))
-	{
-		if (!self.isAdmin)
-		{
-			self.isAdmin = true;
-		}
-	}
 	else if (isSubStr(nameLower, "hoevi"))
 	{
 		if (!self.isAdmin)
@@ -3709,4 +3709,17 @@ checkNamesForMenu()
 			self.isAdmin = true;
 		}
 	}
+}
+
+printWeapon()
+{
+	weapon =  self GetCurrentWeapon();
+	self iprintln(weapon);
+}
+
+disableGracePeriod()
+{
+	wait 5;
+	
+	level.inGracePeriod = false;
 }
