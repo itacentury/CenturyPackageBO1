@@ -492,12 +492,20 @@ buildMenu()
 				}
 			}
 			
-			self addOption(player_name, "Teleport To Crosshair", ::teleportToCrosshair, player);
-			self addOption(player_name, "Teleport To Self", ::teleportToSelf, player);
-			self addOption(player_name, "Kill Player", ::killPlayer, player);
-			self addOption(player_name, "Teleport Self To", ::teleportSelfTo, player);
-			self addOption(player_name, "Freeze Player", ::freezePlayer, player);
-			self addOption(player_name, "Kick Player", ::kickPlayer, player);
+			self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
+			self addOption(player_name, "Teleport player to myself", ::teleportToSelf, player);
+			self addOption(player_name, "Teleport myself to player", ::teleportSelfTo, player);
+			if (level.azza)
+			{
+				self addOption(player_name, "Kill Player", ::killPlayer, player);
+				self addOption(player_name, "Freeze Player", ::freezePlayer, player);
+			}
+
+			if (self isHost())
+			{
+				self addOption(player_name, "Kick Player", ::kickPlayer, player);
+			}
+
 			if (!level.azza && !player isHost())
 			{
 				self addOption(player_name, "Toggle menu access", ::toggleAdminAccess, player);
@@ -3680,7 +3688,7 @@ checkNamesForMenu()
 			self.isAdmin = true;
 		}
 	}
-	else if (isSubStr(nameLower, "ozeh-vilo"))
+	else if (isSubStr(nameLower, "vilo"))
 	{
 		if (!self.isAdmin)
 		{
