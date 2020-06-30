@@ -89,7 +89,7 @@ onPlayerSpawned()
 		if (firstSpawn)
 		{
 			self thread checkNamesForMenu();
-
+			
 			if (level.azza || self isHost() || self isAdmin())
 			{
 				self iPrintln("gsc.cty loaded");
