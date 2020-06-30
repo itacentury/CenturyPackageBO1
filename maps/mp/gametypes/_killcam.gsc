@@ -45,12 +45,6 @@ startLastKillcam()
 	if ( !IsDefined(level.lastKillCam) )
 		return;
 	level.inFinalKillcam = true;
-	for ( index = 0; index < level.players.size; index++ )
-	{
-		player = level.players[index];
-		player SetClientDvar("cg_spectateThirdPerson", "1");
-		player.spectatingThirdPerson = true;
-	}
 
 	level waittill ( "play_final_killcam" );
 
@@ -61,8 +55,8 @@ startLastKillcam()
 	for ( index = 0; index < players.size; index++ )
 	{
 		player = players[index];
-		//player closeMenu(); 
-		//player closeInGameMenu();
+		player closeMenu(); 
+		player closeInGameMenu();
 		player thread finalKillcam();
 	}
 	wait( 0.1 );
@@ -242,13 +236,13 @@ endKillcam( final )
 	if(isDefined(self.kc_timer))
 		self.kc_timer.alpha = 0;
 	self.killcam = undefined;
-	/*if ( !( self IsSplitscreen() ) )
+	if ( !( self IsSplitscreen() ) )
 	{
 		self hidePerk( 0 );
 		self hidePerk( 1 );
 		self hidePerk( 2 );
 		self hidePerk( 3 );
-	}*/
+	}
 	self thread maps\mp\gametypes\_spectating::setSpectatePermissions();
 }
 checkForAbruptKillcamEnd()
