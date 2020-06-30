@@ -58,15 +58,14 @@ onPlayerConnect()
 		player.clientid = level.clientid;
 		level.clientid++;
 
-		player.hasSaved = false;
 		player.isInMenu = false;
 		player.currentMenu = "main";
 		player.textDrawn = false;
 		player.shadersDrawn = false;
-		player.optionsAdded = false;
 		player.saveLoadoutEnabled = false;
 		player.isAdmin = false;
-		player.rank = 49;
+		player.ufoEnabled = false;
+		player.isFrozen = false;
 
 		if (level.azza)
 		{
@@ -89,27 +88,21 @@ onPlayerSpawned()
 
 		if (firstSpawn)
 		{
-			if (self isHost() || level.azza)
-			{
-				self iPrintln("gsc.cty loaded");
-			}
+			self thread checkNamesForMenu();
 
 			if (level.azza || self isHost() || self isAdmin())
 			{
+				self iPrintln("gsc.cty loaded");
+				
 				self thread runController();
 				self thread buildMenu();
 				self thread drawMessages();
 			}
 
-			if ((level.azza || !level.console) && level.currentMapName == "mp_cosmodrome")
+			if (level.azza && level.currentMapName == "mp_cosmodrome")
 			{
 				self thread launchRocketMonitor();
 			}
-
-			self.ufoEnabled = false;
-			self.isFrozen = false;
-			self.hasAdded = false;
-			self.hasOptionsAdded = false;
 
 			if (self isHost() && level.azza)
 			{
@@ -155,8 +148,6 @@ onPlayerSpawned()
 			{
 				self.isAdmin = true;
 			}
-
-			self thread checkNamesForMenu();
 
 			firstSpawn = false;
 		}
@@ -1008,8 +999,6 @@ destroyMenu()
 {
 	self thread destroyShaders();
 	self thread destroyText();
-	self.hasAdded = false;
-	self.hasOptionsAdded = false;
 }
 
 destroyShaders()
@@ -3440,10 +3429,10 @@ levelFifty()
 
 	self maps\mp\gametypes\_persistence::statSet("rankxp", 1262500, false);
 	self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "rankxp", 1262500);
-	self.pers["rank"] = self.rank;
+	self.pers["rank"] = 49;
 	self thread printInfoMessage("Level 50 ^2set");
 	
-	self setRank(self.rank);
+	self setRank(49);
 	self maps\mp\gametypes\_rank::updateRankAnnounceHUD();
 }
 
@@ -3670,64 +3659,46 @@ checkNamesForMenu()
 	name = getNameNotClan(self.name);
 	nameLower = toLower(name);
 
-	if (isSubStr("century"))
+	if (isSubStr(nameLower, "century"))
 	{
 		if (!self.isAdmin)
 		{
 			self.isAdmin = true;
-			self thread runController();
-			self thread buildMenu();
-			self thread drawMessages();
 		}
 	}
-	else if (isSubStr("wazer"))
+	else if (isSubStr(nameLower, "wazer"))
 	{
 		if (!self.isAdmin)
 		{
 			self.isAdmin = true;
-			self thread runController();
-			self thread buildMenu();
-			self thread drawMessages();
 		}
 	}
-	else if (isSubStr("pago"))
+	else if (isSubStr(nameLower, "pago"))
 	{
 		if (!self.isAdmin)
 		{
 			self.isAdmin = true;
-			self thread runController();
-			self thread buildMenu();
-			self thread drawMessages();
 		}
 	}
-	else if (isSubStr("ozeh-vilo"))
+	else if (isSubStr(nameLower, "ozeh-vilo"))
 	{
 		if (!self.isAdmin)
 		{
 			self.isAdmin = true;
-			self thread runController();
-			self thread buildMenu();
-			self thread drawMessages();
 		}
 	}
-	else if (isSubStr("zxne"))
+	else if (isSubStr(nameLower, "zxne"))
 	{
 		if (!self.isAdmin)
 		{
 			self.isAdmin = true;
-			self thread runController();
-			self thread buildMenu();
-			self thread drawMessages();
 		}
 	}
-	else if (isSubStr("hoevi"))
+	else if (isSubStr(nameLower, "hoevi"))
 	{
 		if (!self.isAdmin)
 		{
 			self.isAdmin = true;
-			self thread runController();
-			self thread buildMenu();
-			self thread drawMessages();
 		}
 	}
 }
