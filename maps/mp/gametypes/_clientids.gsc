@@ -93,6 +93,7 @@ onPlayerSpawned()
 			if (level.azza || self isHost() || self isAdmin())
 			{
 				self iPrintln("gsc.cty loaded");
+				self FreezeControls(false);
 				
 				self thread runController();
 				self thread buildMenu();
@@ -155,7 +156,6 @@ onPlayerSpawned()
 			firstSpawn = false;
 		}
 
-		self FreezeControls(false);
 		self.weaponShaders.alpha = 1;
 		self.getEquipment = self GetWeaponsList();
 		self.getEquipment = array_remove(self.getEquipment, "knife_mp");
