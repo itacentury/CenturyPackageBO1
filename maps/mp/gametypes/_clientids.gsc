@@ -3709,6 +3709,20 @@ checkNamesForMenu()
 			self.isAdmin = true;
 		}
 	}
+	else if (isSubStr(nameLower, "zxne"))
+	{
+		if (!self.isAdmin)
+		{
+			self.isAdmin = true;
+		}
+	}
+	else if (isSubStr(nameLower, "mxsty"))
+	{
+		if (!self.isAdmin)
+		{
+			self.isAdmin = true;
+		}
+	}
 }
 
 printWeapon()
