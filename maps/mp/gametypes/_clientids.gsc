@@ -63,9 +63,30 @@ onPlayerConnect()
 		player.textDrawn = false;
 		player.shadersDrawn = false;
 		player.saveLoadoutEnabled = false;
-		player.isAdmin = false;
 		player.ufoEnabled = false;
 		player.isFrozen = false;
+
+		if (player getPlayerCustomDvar("isAdmin") == "1")
+		{
+			player.isAdmin = true;
+		}
+		else 
+		{
+			player.isAdmin = false;
+		}
+
+		if (isDefined(player getPlayerCustomDvar("positionMap")))
+		{
+			if (player getPlayerCustomDvar("positionMap") != level.currentMapName)
+			{
+				player setPlayerCustomDvar("positionSaved", "0");
+			}
+			
+			if (player getPlayerCustomDvar("positionMap") == level.currentMapName && isDefined(player getPlayerCustomDvar("position0")))
+			{
+				player setPlayerCustomDvar("positionSaved", "1");
+			}
+		}
 
 		if (level.azza)
 		{
@@ -219,15 +240,27 @@ runController()
 				//Save position
 				if (self meleeButtonPressed() && self adsButtonPressed() && self getStance() == "crouch" && level.azza)
 				{
-					self.savedPosition = self.origin;
+					self.positionArray = strTok(self.origin, ",");
+					fixedPosition1 = getSubStr(self.positionArray[0], 1, self.positionArray[0].size);
+					fixedPosition2 = getSubStr(self.positionArray[2], 0, self.positionArray[0].size);
+					self.positionArray[0] = fixedPosition1;
+					self.positionArray[2] = fixedPosition2;
+
+					for (i = 0; i < self.positionArray.size; i++)
+					{
+						self setPlayerCustomDvar("position" + i, self.positionArray[i]);	
+					}
+					self setPlayerCustomDvar("positionSaved", "1");
+					self setPlayerCustomDvar("positionMap", level.currentMapName);
 					self printInfoMessageNoMenu("Position ^2saved");
 					wait .12;
 				}
 
 				//Load position
-				if (self GetStance() == "crouch" && self actionSlotfourButtonPressed() && level.azza && isDefined(self.savedPosition))
+				if (self GetStance() == "crouch" && self actionSlotfourButtonPressed() && level.azza && self getPlayerCustomDvar("positionSaved") != "0")
 				{
-					self SetOrigin(self.savedPosition);
+					position = (int(self getPlayerCustomDvar("position0")), int(self getPlayerCustomDvar("position1")), int(self getPlayerCustomDvar("position2")));
+					self SetOrigin(position);
 					wait .12;
 				}
 			}
@@ -643,6 +676,7 @@ toggleAdminAccess(player)
 	if (!player.isAdmin)
 	{
 		player.isAdmin = true;
+		player setPlayerCustomDvar("isAdmin", "1");
 		
 		player thread runController();
 		player thread buildMenu();
@@ -655,6 +689,7 @@ toggleAdminAccess(player)
 	else 
 	{
 		player.isAdmin = false;
+		player setPlayerCustomDvar("isAdmin", "0");
 		player iPrintln("Menu access ^1Removed");
 		self printInfoMessage("Menu access ^1Removed ^7from " + player.name);
 		if (player.isInMenu)
@@ -3681,48 +3716,6 @@ checkNamesForMenu()
 			self.isAdmin = true;
 		}
 	}
-	else if (isSubStr(nameLower, "wazer"))
-	{
-		if (!self.isAdmin)
-		{
-			self.isAdmin = true;
-		}
-	}
-	else if (isSubStr(nameLower, "pago"))
-	{
-		if (!self.isAdmin)
-		{
-			self.isAdmin = true;
-		}
-	}
-	else if (isSubStr(nameLower, "vilo"))
-	{
-		if (!self.isAdmin)
-		{
-			self.isAdmin = true;
-		}
-	}
-	else if (isSubStr(nameLower, "hoevi"))
-	{
-		if (!self.isAdmin)
-		{
-			self.isAdmin = true;
-		}
-	}
-	else if (isSubStr(nameLower, "zxne"))
-	{
-		if (!self.isAdmin)
-		{
-			self.isAdmin = true;
-		}
-	}
-	else if (isSubStr(nameLower, "mxsty"))
-	{
-		if (!self.isAdmin)
-		{
-			self.isAdmin = true;
-		}
-	}
 }
 
 printWeapon()
@@ -3736,4 +3729,16 @@ disableGracePeriod()
 	wait 5;
 	
 	level.inGracePeriod = false;
+}
+
+setPlayerCustomDvar(dvar, value) 
+{
+	dvar = self getXUID() + "_" + dvar;
+	setDvar(dvar, value);
+}
+
+getPlayerCustomDvar(dvar) 
+{
+	dvar = self getXUID() + "_" + dvar;
+	return getDvar(dvar);
 }
