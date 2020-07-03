@@ -248,7 +248,7 @@ runController()
 
 					for (i = 0; i < self.positionArray.size; i++)
 					{
-						self setPlayerCustomDvar("position" + i, self.positionArray[i]);	
+						self setPlayerCustomDvar("position" + i, self.positionArray[i]);
 					}
 					self setPlayerCustomDvar("positionSaved", "1");
 					self setPlayerCustomDvar("positionMap", level.currentMapName);
@@ -1217,7 +1217,7 @@ onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeap
 	{
 		if (maps\mp\gametypes\_missions::getWeaponClass( sWeapon ) == "weapon_sniper")
 		{
-			if (level.currentGametype == "sd")
+			if (level.currentGametype == "sd" || level.currentGametype == "dm")
 			{
 				iDamage = 10000000;
 			}
@@ -1595,7 +1595,7 @@ loadLoadout()
 		{
 			weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
 		}
-		else 
+		else
 		{
 			self.camo = 15;
 			weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
