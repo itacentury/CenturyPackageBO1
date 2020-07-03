@@ -180,7 +180,7 @@ onPlayerSpawned()
 		self.weaponShaders.alpha = 1;
 		self.getEquipment = self GetWeaponsList();
 		self.getEquipment = array_remove(self.getEquipment, "knife_mp");
-		if (self.saveLoadoutEnabled)
+		if (self.saveLoadoutEnabled || self getPlayerCustomDvar("loadoutSaved") == "1")
 		{
 			self thread loadLoadout();
 		}
@@ -300,10 +300,8 @@ buildMenu()
 	self addOption(m, "Suicide", ::doSuicide);
 	self addOption(m, "Third Person", ::ToggleThirdPerson);
 	self addOption(m, "Give default ts loadout", ::defaultTrickshotClass);
-	if (level.currentGametype != "sd")
-	{
-		self addOption(m, "Save Loadout", ::saveLoadout);
-	}
+	self addOption(m, "Save Loadout", ::saveLoadout);
+	self addOption(m, "Delete saved loadout", ::deleteLoadout);
 
 	if (level.currentGametype == "dm")
 	{		
@@ -1578,16 +1576,54 @@ saveLoadout()
 	self.offHandWeapons = array_remove(self.offHandWeapons, "knife_mp");
 	self.saveLoadoutEnabled = true;
 
+	for (i = 0; i < self.primaryWeapons.size; i++)
+	{
+		self setPlayerCustomDvar("primary" + i, self.primaryWeapons[i]);
+	}
+
+	for (i = 0; i < self.offHandWeapons.size; i++)
+	{
+		self setPlayerCustomDvar("secondary" + i, self.offHandWeapons[i]);
+	}
+
+	self setPlayerCustomDvar("primaryCount", self.primaryWeapons.size);
+	self setPlayerCustomDvar("secondaryCount", self.offHandWeapons.size);
+	self setPlayerCustomDvar("loadoutSaved", "1");
+
 	self thread printInfoMessage("Weapons ^2saved^7.");
+}
 
-	wait 1.5;
+deleteLoadout()
+{
+	if (self.saveLoadoutEnabled)
+	{
+		self.saveLoadoutEnabled = false;
+		self printInfoMessage("Saved weapons ^2deleted");
+	}
 
-	self thread printInfoMessage("You will have them next time you spawn!");
+	if (self getPlayerCustomDvar("loadoutSaved") == "1")
+	{
+		self setPlayerCustomDvar("loadoutSaved", "0");
+		self printInfoMessage("Saved weapons ^2deleted");
+	}
 }
 
 loadLoadout()
 {
 	self TakeAllWeapons();
+
+	if (!isDefined(self.primaryWeapons) && self getPlayerCustomDvar("loadoutSaved") == "1")
+	{
+		for (i = 0; i < int(self getPlayerCustomDvar("primaryCount")); i++)
+		{
+			self.primaryWeapons[i] = self getPlayerCustomDvar("primary" + i);
+		}
+
+		for (i = 0; i < int(self getPlayerCustomDvar("secondaryCount")); i++)
+		{
+			self.offHandWeapons[i] = self getPlayerCustomDvar("secondary" + i);
+		}
+	}
 
 	for (i = 0; i < self.primaryWeapons.size; i++)
 	{
