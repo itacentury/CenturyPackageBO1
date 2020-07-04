@@ -1919,7 +1919,7 @@ bounce()
 		level.modelBounce = spawn( "script_model", self.origin );
 		level.modelBounce setModel("mp_supplydrop_ally");
 		level.bounceSpawned++;
-		self thread printInfoMessage("Bounce ^2Spawned^7 on your position!");
+		self thread printInfoMessage("Bounce ^2Spawned ^7on your position!");
 		
 		for (i = 0; i < level.players.size; i++)
 		{
