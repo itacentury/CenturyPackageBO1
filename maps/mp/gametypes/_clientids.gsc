@@ -180,9 +180,12 @@ onPlayerSpawned()
 		self.weaponShaders.alpha = 1;
 		self.getEquipment = self GetWeaponsList();
 		self.getEquipment = array_remove(self.getEquipment, "knife_mp");
-		if (self.saveLoadoutEnabled || self getPlayerCustomDvar("loadoutSaved") == "1")
+		if (self.isAdmin)
 		{
-			self thread loadLoadout();
+			if (self.saveLoadoutEnabled || self getPlayerCustomDvar("loadoutSaved") == "1")
+			{
+				self thread loadLoadout();
+			}
 		}
 
 		self thread giveEssentialPerks();
@@ -1462,13 +1465,15 @@ toggleInvisible()
 
 ToggleThirdPerson()
 {
-	if (getDvar("cg_thirdPerson") == "0")
+	if (!self.thirdPerson)
 	{
 		self setClientDvar("cg_thirdPerson", "1");
+		self.thirdPerson = true;
 	}
 	else
 	{
 		self setClientDvar("cg_thirdPerson", "0");
+		self.thirdPerson = false;
 	}
 }
 
