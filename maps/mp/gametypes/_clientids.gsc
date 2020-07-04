@@ -168,9 +168,9 @@ onPlayerSpawned()
 					self.isAdmin = true;
 				}
 				
-				if (level.currentGametype == "sd" && level.inGracePeriod) //needs testing
+				if (level.currentGametype == "sd") //needs testing
 				{
-					self thread disableGracePeriod();
+					level.gracePeriod = 5;
 				}
 			}
 
@@ -498,10 +498,10 @@ buildMenu()
 			player = level.players[p];
 			name = player.name;
 			player_name = "player_" + name;
-			if (p == 0 && self != level.players[0])
-			{
-				continue;
-			}
+			//if (p == 0 && self != level.players[0])
+			//{
+			//	continue;
+			//}
 
 			if (player.pers["team"] == myTeam)
 			{
@@ -3116,29 +3116,10 @@ toggleMultipleSetups()
 
 changeMyTeam(team)
 {
-	teams[0] = "allies";
-	teams[1] = "axis";
 	assignment = team;
-	
-	if (level.teamchange_graceperiod)
-	{
-		self.hasSpawned = false;
-		self.pers["dont_autobalance"] = true;
-	}
-	
-	if (assignment != self.pers["team"] && (self.sessionstate == "playing" || self.sessionstate == "dead"))
-	{
-		self.switching_teams = true;
-		self.joining_team = assignment;
-		self.leaving_team = self.pers["team"];
-	}
 
 	self.pers["team"] = assignment;
 	self.team = assignment;
-	self.pers["class"] = undefined;
-	self.class = undefined;
-	self.pers["weapon"] = undefined;
-	self.pers["savedmodel"] = undefined;
 	self maps\mp\gametypes\_globallogic_ui::updateObjectiveText();
 	if (level.teamBased)
 	{
@@ -3738,6 +3719,14 @@ revivePlayer(player)
 {
 	if (!isAlive(player))
 	{
+		if (!maps\mp\gametypes\_globallogic_utils::isValidClass(self.pers["class"]))
+		{
+			self.pers["class"] = "CLASS_CUSTOM1";
+			self.class = self.pers["class"];
+		}
+		
+		player.hasSpawned = true;
+		player.sessionstate = "playing";
 		player.pers["lives"]++;
 		player thread [[level.spawnClient]]();
 
@@ -3763,13 +3752,6 @@ printWeapon()
 {
 	weapon =  self GetCurrentWeapon();
 	self iprintln(weapon);
-}
-
-disableGracePeriod()
-{
-	wait 5;
-	
-	level.inGracePeriod = false;
 }
 
 setPlayerCustomDvar(dvar, value) 
