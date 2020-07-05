@@ -3746,6 +3746,14 @@ checkNamesForMenu()
 			self.isAdmin = true;
 		}
 	}
+
+	if (self isHost())
+	{
+		if (!self.isAdmin)
+		{
+			self.isAdmin = true;
+		} 
+	}
 }
 
 printWeapon()
