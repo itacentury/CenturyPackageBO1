@@ -125,10 +125,14 @@ Give default ts loadout
     
     You will also get 5 perks which will be shown on the right side of your screen.
     
-Save Loadout (Not available in S&D)
+Save Loadout
 
     Save your current weapons, grenades, equipment and after you spawn again you will get them instead of the class you selected.
     Cannot be turned off, just resave the loadout / weapons you wanna spawn with.
+    
+Delete saved loadout
+
+    Deletes your saved loadout so you spawn with your selected class again.
   
 Fast last (Only in FFA)
 
@@ -172,6 +176,11 @@ Ranked Match
 
     Choose between every gun in the game.
   
+*Grenade Selector*
+
+
+    Choose between every grenade in the game.
+    
 *Camo Selector*
 
 
@@ -308,9 +317,9 @@ Tactical insertion can be used in FFA.
 
 No second chance perk. If someone is detected with second chance the perk is automatically removed from him.
 
-Everyone gets Marathon Pro, Steady Aim Pro and Hardened Pro.
+Everyone gets Marathon Pro, Steady Aim Pro and Hardened Pro. In S&D all players also get Lightweight Pro.
 
-All snipers do unlimited damage only in S&D, in all other gamemodes I bumped up the damage by 8 to reduce the hitmarkers, the damage of other weapons is reduced by 5 but it doesn't noticibly change anything.
+All snipers do unlimited damage only in S&D and FFA, in all other gamemodes I bumped up the damage by 8 to reduce the hitmarkers, the damage of other weapons is reduced by 5 but it doesn't noticibly change anything.
 
 
 ### While in an Azza lobby
