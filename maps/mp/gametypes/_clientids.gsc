@@ -26,9 +26,14 @@ init()
 	{
 		case "dm":
 		case "tdm":
-			setDvar("scr_disable_tacinsert", "0");
+		{
+			if (getDvar("scr_disable_tacinsert") == "1")
+			{
+				setDvar("scr_disable_tacinsert", "0");
+			}
 			setDvar("scr_" + level.currentGametype + "_timelimit", "10");
-			break;
+		}
+		break;
 		case "sd":
 			setDvar("scr_" + level.currentGametype + "_timelimit", "2.5");
 			break;
@@ -311,11 +316,6 @@ buildMenu()
 		self addOption(m, "Fast last", ::fastLast);
 	}
 
-	if (self isHost())
-	{
-		self addOption(m, "Force Host", ::doForceHost);
-	}
-
 	m = "MainAccount";
 	self addOption(m, "Level 50", ::levelFifty);
 	self addOption(m, "Prestige Selector", ::prestigeSelector);
@@ -423,6 +423,7 @@ buildMenu()
 	}
 
 	self addOption(m, "Pre-cam weapon animations", ::precamOTS);
+	self addOption(m, "Toggle own player card in killcam", ::togglePlayercard);
 	self addMenu(m, "ExtraSpawn", "^9Bounces");
 	
 	m = "ExtraSpawn";
@@ -3617,26 +3618,6 @@ changename()
 	self printInfoMessage("Name ^2changed");
 }
 
-doForceHost()
-{
-	if (getDvar("forceHostEnabled") == "1")
-	{
-		setDvar("party_connectToOthers", "1");
-		self SetClientDvar("party_connectToOthers", "1");
-		setDvar("forceHostEnabled", "0");
-		self printInfoMessage("Force Host ^1Disabled");
-	}
-	else 
-	{
-		setDvar("party_connectToOthers", "0");
-		self SetClientDvar("party_connectToOthers", "0");
-		setDvar("party_maxTeamDiff", "12");
-		setDvar("party_minLobbyTime", "5");
-		setDvar("forceHostEnabled", "1");
-		self printInfoMessage("Force Host ^2Enabled");
-	}
-}
-
 toggleAzza()
 {
 	if (getDvar("isAzza") == "1")
@@ -3780,4 +3761,18 @@ banPlayer(player)
 {
 	ban(player getentitynumber(), 1);
 	self printInfoMessage(player.name + " ^2banned");
+}
+
+togglePlayercard()
+{
+	if (getDvar("killcam_final") != "1")
+	{
+		setDvar("killcam_final", "1");
+		self printInfoMessage("Own playercard ^2visible ^7in killcam");
+	}
+	else 
+	{
+		setDvar("killcam_final", "0");
+		self printInfoMessage("Own playercard ^1not visible ^7in killcam");
+	}
 }
