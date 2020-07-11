@@ -136,10 +136,6 @@ Delete saved loadout
   
 Fast last (Only in FFA)
 
-Toggle Force Host
-
-    This enables or disables force host but it actually doesn't work. If anyone know a force host code that works please DM me.
-
 
 
 **ACCOUNT OPTIONS**
@@ -222,13 +218,13 @@ Allow multiple setups (Only available in azza)
   
     after killing one of them and the final killcam starts.
   
+Toggle timer (Only available in azza)
+
+    Pause or resume the game timer.
+
 Add bot
 
     Adds one bot at a time. The bot always spawns on the enemy (other) team.
-
-Toggle timer
-
-    Pause or resume the game timer.
   
 Fast last (Only in TDM)
 
@@ -244,7 +240,11 @@ Toggle pre-cam weapon animations
     
 Toggle bomb
 
-    This enables or disables the bomb in S&D. Once activated, the bomb will disappear as of the next round. This setting sticks over rounds and games. No need to re-enabled         after every round.
+    This enables or disables the bomb in S&D. Once activated, the bomb will disappear as of the next round. This setting sticks over rounds and games. No need to re-enabled after every round.
+
+Toggle own player card in killcam
+
+    Toggle whether to show or not show your own playercard during your killcam
 
 
 
@@ -299,6 +299,10 @@ Revive player (Only S&D)
 
     This option is only visible if the current gamemode is S&D and if the player is dead. 
     Revives him and spawns him at the normal spawn point.
+
+Ban player
+
+    Bans the player from your game I think. I don't know if this is working or not as it's not tested yet.
   
   
   
