@@ -344,6 +344,7 @@ buildMenu()
 	self addOption(m, "Random Camo", ::randomCamo);
     
 	m = "CamoOne";
+	self addOption(m, "None", ::changeCamo, 0);
 	self addOption(m, "Dusty", ::changeCamo, 1);
 	self addOption(m, "Ice", ::changeCamo, 2);
 	self addOption(m, "Red", ::changeCamo, 3);
