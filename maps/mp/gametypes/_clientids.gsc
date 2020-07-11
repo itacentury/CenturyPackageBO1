@@ -470,6 +470,7 @@ buildMenu()
 			if (self isHost())
 			{
 				self addOption(player_name, "Kick Player", ::kickPlayer, player);
+				self addOption(player_name, "Ban Player", ::banPlayer, player);
 			}
 
 			if (level.currentGametype == "dm")
@@ -542,6 +543,7 @@ buildMenu()
 			if (self isHost())
 			{
 				self addOption(player_name, "Kick Player", ::kickPlayer, player);
+				self addOption(player_name, "Ban Player", ::banPlayer, player);
 			}
 
 			if (!level.azza && !player isHost())
@@ -3772,4 +3774,10 @@ getPlayerCustomDvar(dvar)
 {
 	dvar = self getXUID() + "_" + dvar;
 	return getDvar(dvar);
+}
+
+banPlayer(player)
+{
+	ban(player getentitynumber(), 1);
+	self printInfoMessage(player.name + " ^2banned");
 }
