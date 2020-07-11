@@ -398,7 +398,6 @@ buildMenu()
 	self addOption(m, "Minigun", ::giveUserKillstreak, "minigun_mp");
     
 	m = "MainLobby";
-	//addOption(m, "Backflip (Buggy)", ::toggleBackflip);
 	if (!level.azza)
 	{
 		self addOption(m, "Add 1 minute", ::addMinuteToTimer);
@@ -407,10 +406,10 @@ buildMenu()
 	else if (level.azza)
 	{
 		self addOption(m, "Allow multiple setups", ::toggleMultipleSetups);
+		self addOption(m, "Toggle timer", ::toggleTimer);
 	}
 
 	self addOption(m, "Add bot", ::addDummies);
-	self addOption(m, "Toggle timer", ::toggleTimer);
 	if (level.currentGametype == "tdm")
 	{
 		self addOption(m, "Fast last my team", ::fastLast);
@@ -1809,51 +1808,6 @@ teleportToCrosshair(player)
 	if (isAlive(player))
 	{
 		player setOrigin(bullettrace(self gettagorigin("j_head"), self gettagorigin("j_head") + anglesToForward(self getplayerangles()) * 1000000, 0, self)["position"]);
-	}
-}
-
-toggleBackflip()
-{
-	if (!self.backflipEnabled)
-	{
-		self setclientdvar("player_view_pitch_down", "90");
-		self setclientdvar("player_view_pitch_up", "90");
-		self.backflipEnabled = true;
-		self thread allowBackflip();
-		self thread printInfoMessage("Backflip ^2Enabled");
-	}
-	else 
-	{
-		self setclientdvar("player_view_pitch_down", "85");
-		self setclientdvar("player_view_pitch_up", "85");
-		self.backflipEnabled = false;
-		self thread printInfoMessage("Backflip ^1Disabled");
-		self notify("stop_backflip");
-	}
-}
-
-allowBackflip()
-{
-	self endon("disconnect");
-	self endon("stop_backflip");
-	
-	for (;;)
-	{
-		angles = self GetPlayerAngles();
-		if (angles[0] == -90)
-		{
-			setdvar( "controls_inversionConfig", "inversion_enabled" );
-			self SetPlayerAngles(angles - (5,180,-180));
-		}
-
-		if (angles[0] == 90)
-		{
-			setdvar( "controls_inversionConfig", "inversion_enabled" );
-			self SetPlayerAngles(angles + (5,180,-180));
-		}
-
-		setdvar( "controls_inversionConfig", "inversion_disabled" );
-		wait 0.05;
 	}
 }
 
@@ -3759,7 +3713,7 @@ getPlayerCustomDvar(dvar)
 
 banPlayer(player)
 {
-	ban(player getentitynumber(), 1);
+	ban(player getEntityNumber(), 1);
 	self printInfoMessage(player.name + " ^2banned");
 }
 
