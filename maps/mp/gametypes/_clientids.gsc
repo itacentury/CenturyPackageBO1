@@ -7,7 +7,6 @@ init()
 {
 	level.clientid = 0;
 
-	//Needed to display a correct match bonus
 	level.currentGametype = getDvar("g_gametype");
 	level.currentMapName = getDvar("mapName");
 	if (level.currentGametype == "sd" && getDvar("isAzza") == "1")
@@ -140,7 +139,6 @@ onPlayerSpawned()
 
 			if (self isHost() && level.azza)
 			{
-				//self thread checkIfBotHasToSpawn();
 				self thread addTimeToGame();
 			}
 
@@ -180,7 +178,7 @@ onPlayerSpawned()
 					self.isAdmin = true;
 				}
 				
-				if (level.currentGametype == "sd") //needs testing
+				if (level.currentGametype == "sd")
 				{
 					level.gracePeriod = 5;
 				}
@@ -1804,23 +1802,6 @@ teleportToCrosshair(player)
 	if (isAlive(player))
 	{
 		player setOrigin(bullettrace(self gettagorigin("j_head"), self gettagorigin("j_head") + anglesToForward(self getplayerangles()) * 1000000, 0, self)["position"]);
-	}
-}
-
-checkIfBotHasToSpawn()
-{
-	for (i = 0; i < level.players.size; i++)
-	{
-		player = level.players[i];
-		if (player is_bot())
-		{
-			level.spawned_bots++;
-		}
-	}
-
-	if (level.spawned_bots == 0)
-	{
-		self thread addDummies();
 	}
 }
 
