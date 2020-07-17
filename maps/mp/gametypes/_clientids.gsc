@@ -95,6 +95,11 @@ onPlayerConnect()
 			}
 		}
 
+		if (isDefined(player getPlayerCustomDvar("camo")))
+		{
+			player.camo = int(player getPlayerCustomDvar("camo"));
+		}
+
 		if (level.azza)
 		{
 			player thread setMatchBonus();
@@ -1507,6 +1512,7 @@ randomCamo()
 	self setweaponammoclip(weap, myclip);
     self setweaponammostock(weap, mystock);
 	self.camo = numEro;
+	self setPlayerCustomDvar("camo", self.camo);
 }
 
 changeCamo(num)
@@ -1526,6 +1532,7 @@ changeCamo(num)
     self setweaponammostock(weap, mystock);
 	
 	self.camo = num;
+	self setPlayerCustomDvar("camo", self.camo);
 }
 
 giveUserKillstreak(killstreak)
