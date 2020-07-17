@@ -1027,7 +1027,7 @@ updateText()
 UpdateShaderIcons(currentMenu)
 {
 	currentMenuName = currentMenu.name;
-	if (isWeaponMenu(currentMenu) || currentMenuName == "CamoOne" || currentMenuName == "CamoTwo")
+	if (isWeaponMenu(currentMenu))
 	{
 		if (self.weaponShadersDrawn)
 		{
@@ -1041,7 +1041,7 @@ UpdateShaderIcons(currentMenu)
 		}
 	}
 
-	if (currentMenuName == "ClassAttachment" || currentMenuName == "ClassPerk" || currentMenuName == "ClassKillstreaks")
+	if (isOtherClassMenu(currentMenuName))
 	{
 		if (self.weaponShadersDrawn)
 		{
@@ -2594,126 +2594,146 @@ printWeaponClass()
 
 precacheWeaponShaders()
 {
-    //Glitch weapons
-	precacheModel("t5_weapon_asp_lh_world");
-	precacheModel("t5_weapon_asp_world_dw_lh");
-	precacheModel("t5_weapon_1911_lh_world");
-	precacheModel("t5_weapon_m1911_world_dw_lh");
-	precacheModel("t5_weapon_makarov_lh_world");
-	precacheModel("t5_weapon_makarov_world_dw_lh");
-	precacheModel("t5_weapon_python_lh_world");
-	precacheModel("t5_weapon_python_world_dw_lh");
-	precacheModel("t5_weapon_cz75_lh_world");
-	precacheModel("t5_weapon_cz75_dw_lh_world");
-	precacheModel("t5_weapon_cz75_world_dw_lh");
-    
-    //MP
-    precacheShader("menu_mp_weapons_mp5k");
-    precacheShader("menu_mp_weapons_skorpion");
-    precacheShader("menu_mp_weapons_mac11");
-    precacheShader("menu_mp_weapons_ak74u");
-    precacheShader("menu_mp_weapons_uzi");
-    precacheShader("menu_mp_weapons_pm63");
-    precacheShader("menu_mp_weapons_mpl");
-    precacheShader("menu_mp_weapons_spectre");
-    precacheShader("menu_mp_weapons_kiparis");
+	//Glitch weapons
+	level.models[0][0] = "t5_weapon_asp_lh_world";
+	level.models[0][1] = "t5_weapon_asp_world_dw_lh";
+	level.models[0][2] = "t5_weapon_1911_lh_world";
+	level.models[0][3] = "t5_weapon_m1911_world_dw_lh";
+	level.models[0][4] = "t5_weapon_makarov_lh_world";
+	level.models[0][5] = "t5_weapon_makarov_world_dw_lh";
+	level.models[0][6] = "t5_weapon_python_lh_world";
+	level.models[0][7] = "t5_weapon_python_world_dw_lh";
+	level.models[0][8] = "t5_weapon_cz75_lh_world";
+	level.models[0][9] = "t5_weapon_cz75_dw_lh_world";
+	level.models[0][10] = "t5_weapon_cz75_world_dw_lh";
 
-    //AR
-    precacheShader("menu_mp_weapons_m16");
-    precacheShader("menu_mp_weapons_enfield");
-    precacheShader("menu_mp_weapons_m14");
-    precacheShader("menu_mp_weapons_famas");
-    precacheShader("menu_mp_weapons_galil");
-    precacheShader("menu_mp_weapons_aug");
-    precacheShader("menu_mp_weapons_fnfal");
-    precacheShader("menu_mp_weapons_ak47");
-    precacheShader("menu_mp_weapons_commando");
-    precacheShader("menu_mp_weapons_g11");
+	//MP
+	level.models[1][0] = "menu_mp_weapons_mp5k";
+	level.models[1][1] = "menu_mp_weapons_skorpion";
+	level.models[1][2] = "menu_mp_weapons_mac11";
+	level.models[1][3] = "menu_mp_weapons_ak74u";
+	level.models[1][4] = "menu_mp_weapons_uzi";
+	level.models[1][5] = "menu_mp_weapons_pm63";
+	level.models[1][6] = "menu_mp_weapons_mpl";
+	level.models[1][7] = "menu_mp_weapons_spectre";
+	level.models[1][8] = "menu_mp_weapons_kiparis";
 
-    //Shotgun
-    precacheShader("menu_mp_weapons_rottweil72");
-    precacheShader("menu_mp_weapons_ithaca");
-    precacheShader("menu_mp_weapons_spas");
-    precacheShader("menu_mp_weapons_hs10");
+	//AR
+	level.models[2][0] = "menu_mp_weapons_m16";
+	level.models[2][1] = "menu_mp_weapons_enfield";
+	level.models[2][2] = "menu_mp_weapons_m14";
+	level.models[2][3] = "menu_mp_weapons_famas";
+	level.models[2][4] = "menu_mp_weapons_galil";
+	level.models[2][5] = "menu_mp_weapons_aug";
+	level.models[2][6] = "menu_mp_weapons_fnfal";
+	level.models[2][7] = "menu_mp_weapons_ak47";
+	level.models[2][8] = "menu_mp_weapons_commando";
+	level.models[2][9] = "menu_mp_weapons_g11";
 
-    //LMG
-    precacheShader("menu_mp_weapons_hk21");
-    precacheShader("menu_mp_weapons_rpk");
-    precacheShader("menu_mp_weapons_m60");
-    precacheShader("menu_mp_weapons_stoner63a");
+	//Shotgun
+	level.models[3][0] = "menu_mp_weapons_rottweil72";
+	level.models[3][1] = "menu_mp_weapons_ithaca";
+	level.models[3][2] = "menu_mp_weapons_spas";
+	level.models[3][3] = "menu_mp_weapons_hs10";
 
-    //Sniper
-    precacheShader("menu_mp_weapons_dragunov");
-    precacheShader("menu_mp_weapons_wa2000");
-    precacheShader("menu_mp_weapons_l96a1");
-    precacheShader("menu_mp_weapons_psg1");
+	//LMG
+	level.models[4][0] = "menu_mp_weapons_hk21";
+	level.models[4][1] = "menu_mp_weapons_rpk";
+	level.models[4][2] = "menu_mp_weapons_m60";
+	level.models[4][3] = "menu_mp_weapons_stoner63a";
 
-    //Pistol
-    precacheShader("menu_mp_weapons_asp");
-    precacheShader("menu_mp_weapons_colt");
-    precacheShader("menu_mp_weapons_makarov");
-    precacheShader("menu_mp_weapons_python");
-    precacheShader("menu_mp_weapons_cz75");
+	//Sniper
+	level.models[5][0] = "menu_mp_weapons_dragunov";
+	level.models[5][1] = "menu_mp_weapons_wa2000";
+	level.models[5][2] = "menu_mp_weapons_l96a1";
+	level.models[5][3] = "menu_mp_weapons_psg1";
 
-    //Launcher
-    precacheShader("menu_mp_weapons_m72_law");
-    precacheShader("menu_mp_weapons_rpg");
-    precacheShader("menu_mp_weapons_strela");
-    precacheShader("menu_mp_weapons_china_lake");
+	level.models[6][0] = "menu_mp_weapons_asp";
+	level.models[6][1] = "menu_mp_weapons_colt";
+	level.models[6][2] = "menu_mp_weapons_makarov";
+	level.models[6][3] = "menu_mp_weapons_python";
+	level.models[6][4] = "menu_mp_weapons_cz75";
 
-    //Special
-    precacheShader("menu_mp_weapons_ballistic_knife");
-    precacheShader("menu_mp_weapons_crossbow");
+	//Launcher
+	level.models[7][0] = "menu_mp_weapons_m72_law";
+	level.models[7][1] = "menu_mp_weapons_rpg";
+	level.models[7][2] = "menu_mp_weapons_strela";
+	level.models[7][3] = "menu_mp_weapons_china_lake";
+
+	//Special
+	level.models[8][0] = "menu_mp_weapons_ballistic_knife";
+	level.models[8][1] = "menu_mp_weapons_crossbow";
 
 	//Attachments
-    precacheShader("menu_mp_weapons_attach_silencer");
-    precacheShader("menu_mp_weapons_attach_extend_clip");
-    precacheShader("menu_mp_weapons_attach_vzoom");
-    precacheShader("menu_mp_weapons_attach_ir");
-    precacheShader("menu_mp_weapons_attach_acog");
-    precacheShader("menu_mp_weapons_attach_flamethrower");
-    precacheShader("menu_mp_weapons_attach_masterkey");
-	precacheShader("menu_mp_weapons_attach_grenade_launcher");
-	precacheShader("menu_mp_weapons_attach_dual_clip");
+	level.models[9][0] = "menu_mp_weapons_attach_silencer";
+	level.models[9][1] = "menu_mp_weapons_attach_extend_clip";
+	level.models[9][2] = "menu_mp_weapons_attach_vzoom";
+	level.models[9][3] = "menu_mp_weapons_attach_ir";
+	level.models[9][4] = "menu_mp_weapons_attach_acog";
+	level.models[9][5] = "menu_mp_weapons_attach_flamethrower";
+	level.models[9][6] = "menu_mp_weapons_attach_masterkey";
+	level.models[9][7] = "menu_mp_weapons_attach_grenade_launcher";
+	level.models[9][8] = "menu_mp_weapons_attach_dual_clip";
 
 	//Perks
-    precacheShader("perk_lightweight_pro");
-    precacheShader("perk_flak_jacket_pro");
-    precacheShader("perk_scout_pro");
-    precacheShader("perk_sleight_of_hand_pro");
-    precacheShader("perk_ninja_pro");
-    precacheShader("perk_hacker_pro");
-    precacheShader("perk_tactical_mask_pro");
+	level.models[10][0] = "perk_lightweight_pro";
+	level.models[10][1] = "perk_flak_jacket_pro";
+	level.models[10][2] = "perk_scout_pro";
+	level.models[10][3] = "perk_sleight_of_hand_pro";
+	level.models[10][4] = "perk_ninja_pro";
+	level.models[10][5] = "perk_hacker_pro";
+	level.models[10][6] = "perk_tactical_mask_pro";
 
 	//Killstreaks
-	precacheShader("hud_icon_u2_spyplane");
-    precacheShader("hud_icon_rcbomb");
-	precacheShader("hud_icon_counter_uav");
-	precacheShader("hud_ks_sam_turret");
-    precacheShader("hud_supply_drop");
-    precacheShader("hud_icon_air_napalm");
-    precacheShader("hud_ks_auto_turret");
-	precacheShader("hud_mortarshell");
-    precacheShader("hud_ks_tv_guided_missile");
-	precacheShader("hud_ks_spy_sat");
-	precacheShader("hud_ks_minigun");
+	level.models[11][0] = "hud_icon_u2_spyplane";
+	level.models[11][1] = "hud_icon_rcbomb";
+	level.models[11][2] = "hud_icon_counter_uav";
+	level.models[11][3] = "hud_ks_sam_turret";
+	level.models[11][4] = "hud_supply_drop";
+	level.models[11][5] = "hud_icon_air_napalm";
+	level.models[11][6] = "hud_ks_auto_turret";
+	level.models[11][7] = "hud_mortarshell";
+	level.models[11][8] = "hud_ks_tv_guided_missile";
+	level.models[11][9] = "hud_ks_spy_sat";
+	level.models[11][10] = "hud_ks_minigun";
 
 	//Camos
-    precacheShader("menu_mp_weapons_camo_dusty");
-    precacheShader("menu_mp_weapons_camo_icy");
-    precacheShader("menu_mp_weapons_camo_mass");
-    precacheShader("menu_mp_weapons_camo_olive");
-    precacheShader("menu_mp_weapons_camo_nevada");
-    precacheShader("menu_mp_weapons_camo_sahara");
-    precacheShader("menu_mp_weapons_camo_erdl");
-    precacheShader("menu_mp_weapons_camo_tiger");
-    precacheShader("menu_mp_weapons_camo_berlin");
-    precacheShader("menu_mp_weapons_camo_warsaw");
-    precacheShader("menu_mp_weapons_camo_siberia");
-    precacheShader("menu_mp_weapons_camo_yukon");
-    precacheShader("menu_mp_weapons_camo_wood");
-    precacheShader("menu_mp_weapons_camo_flora");
-    precacheShader("menu_mp_weapons_camo_gold");
+	level.models[12][0] = "menu_mp_weapons_camo_dusty";
+	level.models[12][1] = "menu_mp_weapons_camo_icy";
+	level.models[12][2] = "menu_mp_weapons_camo_mass";
+	level.models[12][3] = "menu_mp_weapons_camo_olive";
+	level.models[12][4] = "menu_mp_weapons_camo_nevada";
+	level.models[12][5] = "menu_mp_weapons_camo_sahara";
+	level.models[12][6] = "menu_mp_weapons_camo_erdl";
+	level.models[12][7] = "menu_mp_weapons_camo_tiger";
+	level.models[12][8] = "menu_mp_weapons_camo_berlin";
+	level.models[12][9] = "menu_mp_weapons_camo_warsaw";
+	level.models[12][10] = "menu_mp_weapons_camo_siberia";
+	level.models[12][11] = "menu_mp_weapons_camo_yukon";
+	level.models[12][12] = "menu_mp_weapons_camo_wood";
+	level.models[12][13] = "menu_mp_weapons_camo_flora";
+	level.models[12][14] = "menu_mp_weapons_camo_gold";
+
+	//Grenades
+	level.models[13][0] = "hud_us_grenade";
+	level.models[13][1] = "hud_icon_sticky_grenade";
+	level.models[13][2] = "hud_hatchet";
+
+	//Equipment
+	level.models[14][0] = "hud_deployable_camera";
+	level.models[14][1] = "hud_icon_satchelcharge";
+	level.models[14][2] = "hud_tact_insert";
+	level.models[14][3] = "hud_radar_jammer";
+	level.models[14][4] = "hud_acoustic_sensor";
+	level.models[14][5] = "hud_icon_claymore";
+
+	for (i = 0; i < level.models.size; i++)
+	{
+		for (j = 0; j < level.models[i].size; j++)
+		{
+			precacheShader(level.models[i][j]);
+		}
+	}
 
 	//Default
 	precacheShader("menu_mp_lobby_none_selected");
@@ -2725,184 +2745,204 @@ weaponNameToShader(optionName)
     {
         //MP
         case "MP5K":
-            return "menu_mp_weapons_mp5k";
+            return level.models[1][0];
         case "Skorpion":
-            return "menu_mp_weapons_skorpion";
+            return level.models[1][1];
         case "MAC11":
-            return "menu_mp_weapons_mac11";
+            return level.models[1][2];
         case "AK74u":
-            return "menu_mp_weapons_ak74u";
+            return level.models[1][3];
         case "UZI":
-            return "menu_mp_weapons_uzi";
+            return level.models[1][4];
         case "PM63":
-            return "menu_mp_weapons_pm63";
+            return level.models[1][5];
         case "MPL":
-            return "menu_mp_weapons_mpl";
+            return level.models[1][6];
         case "Spectre":
-            return "menu_mp_weapons_spectre";
+            return level.models[1][7];
         case "Kiparis":
-            return "menu_mp_weapons_kiparis";
+            return level.models[1][8];
         //AR
         case "M16":
-            return "menu_mp_weapons_m16";
+            return level.models[2][0];
         case "Enfield":
-            return "menu_mp_weapons_enfield";
+            return level.models[2][1];
         case "M14":
-            return "menu_mp_weapons_m14";
+            return level.models[2][2];
         case "Famas":
-            return "menu_mp_weapons_famas";
+            return level.models[2][3];
         case "Galil":
-            return "menu_mp_weapons_galil";
+            return level.models[2][4];
         case "AUG":
-            return "menu_mp_weapons_aug";
+            return level.models[2][5];
         case "FN FAL":
-            return "menu_mp_weapons_fnfal";
+            return level.models[2][6];
         case "AK47":
-            return "menu_mp_weapons_ak47";
+            return level.models[2][7];
         case "Commando":
-            return "menu_mp_weapons_commando";
+            return level.models[2][8];
         case "G11":
-            return "menu_mp_weapons_g11";
+            return level.models[2][9];
         //Shotgun
         case "Olympia":
-            return "menu_mp_weapons_rottweil72";
+            return level.models[3][0];
         case "Stakeout":
-            return "menu_mp_weapons_ithaca";
+            return level.models[3][1];
         case "SPAS-12":
-            return "menu_mp_weapons_spas";
+            return level.models[3][2];
         case "HS10":
-            return "menu_mp_weapons_hs10";
+            return level.models[3][3];
         //LMG
         case "HK21":
-            return "menu_mp_weapons_hk21";
+            return level.models[4][0];
         case "RPK":
-            return "menu_mp_weapons_rpk";
+            return level.models[4][1];
         case "M60":
-            return "menu_mp_weapons_m60";
+            return level.models[4][2];
         case "Stoner63":
-            return "menu_mp_weapons_stoner63a";
+            return level.models[4][3];
         //Sniper
         case "Dragunov":
-            return "menu_mp_weapons_dragunov";
+            return level.models[5][0];
         case "WA2000":
-            return "menu_mp_weapons_wa2000";
+            return level.models[5][1];
         case "L96A1":
-            return "menu_mp_weapons_l96a1";
+            return level.models[5][2];
         case "PSG1":
-            return "menu_mp_weapons_psg1";
+            return level.models[5][3];
         //Pistol
         case "ASP":
-            return "menu_mp_weapons_asp";
+            return level.models[6][0];
         case "M1911":
-            return "menu_mp_weapons_colt";
+            return level.models[6][1];
         case "Makarov":
-            return "menu_mp_weapons_makarov";
+            return level.models[6][2];
         case "Python":
-            return "menu_mp_weapons_python";
+            return level.models[6][3];
         case "CZ75":
-            return "menu_mp_weapons_cz75";
+            return level.models[6][4];
         //Launcher
         case "M72 LAW":
-            return "menu_mp_weapons_m72_law";
+            return level.models[7][0];
         case "RPG":
-            return "menu_mp_weapons_rpg";
+            return level.models[7][1];
         case "Strela-3":
-            return "menu_mp_weapons_strela";
+            return level.models[7][2];
         case "China Lake":
-            return "menu_mp_weapons_china_lake";
+            return level.models[7][3];
         //Special
         case "Ballistic Knife":
-            return "menu_mp_weapons_ballistic_knife";
+            return level.models[8][0];
         case "Crossbow":
-            return "menu_mp_weapons_crossbow";
+            return level.models[8][1];
 		//Attachments
 		case "Silencer":
-            return "menu_mp_weapons_attach_silencer";
+            return level.models[9][0];
         case "Toggle Extended Clip":
-            return "menu_mp_weapons_attach_extend_clip";
+            return level.models[9][1];
         case "Toggle Variable Zoom":
-            return "menu_mp_weapons_attach_vzoom";
+            return level.models[9][2];
         case "Toggle IR":
-            return "menu_mp_weapons_attach_ir";
+            return level.models[9][3];
         case "Toggle ACOG":
-            return "menu_mp_weapons_attach_acog";
+            return level.models[9][4];
         case "Toggle Flamethrower":
-            return "menu_mp_weapons_attach_flamethrower";
+            return level.models[9][5];
         case "Toggle Maskerkey":
-            return "menu_mp_weapons_attach_masterkey";
+            return level.models[9][6];
 		case "Toggle Grenade Launcher":
-			return "menu_mp_weapons_attach_grenade_launcher";
+			return level.models[9][7];
 		case "Toggle Dual Mag":
-			return "menu_mp_weapons_attach_dual_clip";
+			return level.models[9][8];
 		//Perks
         case "Toggle Lightweight Pro":
-            return "perk_lightweight_pro";
+            return level.models[10][0];
         case "Toggle Flak Jacket Pro":
-            return "perk_flak_jacket_pro";
+            return level.models[10][1];
         case "Toggle Scout Pro":
-            return "perk_scout_pro";
+            return level.models[10][2];
         case "Toggle Sleight of Hand Pro":
-            return "perk_sleight_of_hand_pro";
+            return level.models[10][3];
         case "Toggle Ninja Pro":
-            return "perk_ninja_pro";
+            return level.models[10][4];
         case "Toggle Hacker Pro":
-            return "perk_hacker_pro";
+            return level.models[10][5];
         case "Toggle Tactical Mask Pro":
-            return "perk_tactical_mask_pro";
+            return level.models[10][6];
 		//Killstreaks
 		case "Spy Plane":
-			return "hud_icon_u2_spyplane";
+			return level.models[11][0];
         case "RC-XD":
-            return "hud_icon_rcbomb";
+            return level.models[11][1];
 		case "Counter-Spy Plane":
-			return "hud_icon_counter_uav";
+			return level.models[11][2];
 		case "Sam Turret":
-			return "hud_ks_sam_turret";
+			return level.models[11][3];
         case "Carepackage":
-            return "hud_supply_drop";
+            return level.models[11][4];
         case "Napalm Strike":
-            return "hud_icon_air_napalm";
+            return level.models[11][5];
         case "Sentry Gun":
-            return "hud_ks_auto_turret";
+            return level.models[11][6];
 		case "Mortar Team":
-			return "hud_mortarshell";
+			return level.models[11][7];
         case "Valkyrie Rocket":
-            return "hud_ks_tv_guided_missile";
+            return level.models[11][8];
 		case "Blackbird":
-			return "hud_ks_spy_sat";
+			return level.models[11][9];
 		case "Minigun":
-			return "hud_ks_minigun";
+			return level.models[11][10];
 		//Camos
         case "Dusty":
-            return "menu_mp_weapons_camo_dusty";
+            return level.models[12][0];
         case "Ice":
-            return "menu_mp_weapons_camo_icy";
+            return level.models[12][1];
         case "Red":
-            return "menu_mp_weapons_camo_mass";
+            return level.models[12][2];
         case "Olive":
-            return "menu_mp_weapons_camo_olive";
+            return level.models[12][3];
         case "Nevada":
-            return "menu_mp_weapons_camo_nevada";
+            return level.models[12][4];
         case "Sahara":
-            return "menu_mp_weapons_camo_sahara";
+            return level.models[12][5];
         case "ERDL":
-            return "menu_mp_weapons_camo_erdl";
+            return level.models[12][6];
         case "Tiger":
-            return "menu_mp_weapons_camo_tiger";
+            return level.models[12][7];
         case "Berlin":
-            return "menu_mp_weapons_camo_berlin";
+            return level.models[12][8];
         case "Warsaw":
-            return "menu_mp_weapons_camo_warsaw";
+            return level.models[12][9];
         case "Siberia":
-            return "menu_mp_weapons_camo_siberia";
+            return level.models[12][10];
         case "Yukon":
-            return "menu_mp_weapons_camo_yukon";
+            return level.models[12][11];
         case "Woodland":
-            return "menu_mp_weapons_camo_wood";
+            return level.models[12][12];
         case "Flora":
-            return "menu_mp_weapons_camo_flora";
+            return level.models[12][13];
         case "Gold":
-            return "menu_mp_weapons_camo_gold";
+            return level.models[12][14];
+		//Grenades
+		case "Frag":
+			return level.models[13][0];
+		case "Semtex":
+			return level.models[13][1];
+		case "Tomahawk":
+			return level.models[13][2];
+		//Equipment
+		case "Camera Spike":
+			return level.models[14][0];
+		case "C4":
+			return level.models[14][1];
+		case "Tactical Insertion":
+			return level.models[14][2];
+		case "Jammer":
+			return level.models[14][3];
+		case "Motion Sensor":
+			return level.models[14][4];
+		case "Claymore":
+			return level.models[14][5];
         default:
             return "menu_mp_lobby_none_selected";
     }
@@ -2923,10 +2963,27 @@ isWeaponMenu(menu)
         case "SecondarySpecial":
         case "WeaponDualWield":
         case "WeaponGlitch":
+		case "CamoOne":
+		case "CamoTwo":
             return true;
         default:
             return false;
     }
+}
+
+isOtherClassMenu(menuName)
+{
+	switch (menuName)
+	{
+		case "ClassAttachment":
+		case "ClassPerk":
+		case "ClassKillstreaks":
+		case "ClassEquipment":
+		case "ClassGrenades":
+			return true;
+		default:
+			return false;
+	}
 }
 
 weaponNameToNumber(weaponName)
