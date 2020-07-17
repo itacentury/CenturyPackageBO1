@@ -25,7 +25,6 @@ init()
 	switch (level.currentGametype)
 	{
 		case "dm":
-		case "tdm":
 		{
 			if (getDvar("scr_disable_tacinsert") == "1")
 			{
@@ -33,7 +32,10 @@ init()
 			}
 			setDvar("scr_" + level.currentGametype + "_timelimit", "10");
 		}
-		break;
+			break;
+		case "tdm":
+			setDvar("scr_" + level.currentGametype + "_timelimit", "10");
+			break;
 		case "sd":
 			setDvar("scr_" + level.currentGametype + "_timelimit", "2.5");
 			break;
@@ -183,8 +185,6 @@ onPlayerSpawned()
 		}
 
 		self.weaponShaders.alpha = 1;
-		self.getEquipment = self GetWeaponsList();
-		self.getEquipment = array_remove(self.getEquipment, "knife_mp");
 		if (self.isAdmin)
 		{
 			if (self.saveLoadoutEnabled || self getPlayerCustomDvar("loadoutSaved") == "1")
@@ -720,6 +720,9 @@ closeMenuOnDeath()
 
 openMenu(menu)
 {
+	self.getEquipment = self GetWeaponsList();
+	self.getEquipment = array_remove(self.getEquipment, "knife_mp");
+	
 	self.isInMenu = true;
 	self.currentMenu = menu;
 	currentMenu = self getCurrentMenu();
