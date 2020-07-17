@@ -446,7 +446,6 @@ buildMenu()
 	self addOption(m, "Invisible", ::invisibleBounce);
 	self addOption(m, "Change Position", ::toggleMoveBounce);
 
-	//WORKING
 	self addMenu("main", "MainPlayers", "^9Players Menu");
 	m = "MainPlayers";
 	if (!level.teamBased)
@@ -511,10 +510,6 @@ buildMenu()
 			player = level.players[p];
 			name = player.name;
 			player_name = "player_" + name;
-			//if (p == 0 && self != level.players[0])
-			//{
-			//	continue;
-			//}
 
 			if (player.pers["team"] == myTeam)
 			{
@@ -947,7 +942,7 @@ drawShaders()
 	self.shadersDrawn = true;
 }
 
-drawWeaponShaders(currentWeaponDisplay, width) //weapon 45
+drawWeaponShaders(currentWeaponDisplay, width)
 {
 	self.weaponShaders = createRectangle("CENTER", "CENTER", -250, self.yAxisWeapons - 265, width, 25, 2, currentWeaponDisplay);
 	self.weaponShaders setColor(1, 1, 1, 1);
@@ -965,7 +960,6 @@ destroyWeaponShaders()
 drawMessages()
 {
 	self.infoMessage = self createText2("default", 1, " ", "CENTER", "CENTER", -250, 100, 3, 0, (1, 1, 1));
-	//self.infoMessage.archived = false;
 	self.ufoMessage1 = self createText2("default", 1, " ", "LEFT", "CENTER", -370, -10, 3, 0, (1, 1, 1));
 	self.ufoMessage1.archived = false;
 	self.ufoMessage2 = self createText2("default", 1, " ", "LEFT", "CENTER", -370, 5, 3, 0, (1, 1, 1));
@@ -2090,7 +2084,7 @@ addTimeToGame()
 		if (timeLeft < 1500 && firstTime)
 		{
 			timeLimit = getDvarInt("scr_" + level.currentGametype + "_timelimit");
-			setDvar("scr_" + level.currentGametype + "_timelimit", timelimit + 2.5); //2.5 equals to 2 min ingame in this case
+			setDvar("scr_" + level.currentGametype + "_timelimit", timelimit + 2.5); //2.5 equals to 2 min ingame in this case for some reason
 			firstTime = false;
 		}
 
@@ -2112,7 +2106,6 @@ launchRocketMonitor()
 	for (;;)
 	{
 		timeLeft = maps\mp\gametypes\_globallogic_utils::getTimeRemaining(); //5000 = 5sec
-
 		if (timeLeft < 50000)
 		{
 			if (Distance(self.origin, rocketOrigin) < 400)
@@ -2373,7 +2366,6 @@ givePlayerAttachment(attachment)
         }
 	}
 
-	//CHECK STATEMENTS
 	baseWeapon = weaponToArray[0];
 	number = weaponNameToNumber(baseWeapon);
 
@@ -3350,8 +3342,8 @@ createRectanglePrestige(align, relative, x, y, width, height, color, shader, sor
 	barElemBG.elemType = "bar";
 	if (!level.splitScreen)
 	{
-			barElemBG.x = -2;
-			barElemBG.y = -2;
+		barElemBG.x = -2;
+		barElemBG.y = -2;
 	}
 
 	barElemBG.width = width;
