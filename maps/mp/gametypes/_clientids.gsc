@@ -29,9 +29,15 @@ init()
 			{
 				setDvar("scr_disable_tacinsert", "0");
 			}
+
+			if (level.disable_tacinsert)
+			{
+				level.disable_tacinsert = false;
+			}
+
 			setDvar("scr_" + level.currentGametype + "_timelimit", "10");
 		}
-			break;
+		break;
 		case "tdm":
 			setDvar("scr_" + level.currentGametype + "_timelimit", "10");
 			break;
@@ -198,6 +204,14 @@ onPlayerSpawned()
 
 		self thread giveEssentialPerks();
 		self thread waitChangeClassGiveEssentialPerks();
+		
+		for (i = 0; i < self.killstreak.size; i++)
+		{
+			if (isForbiddenStreak(self.killstreak[i]))
+			{
+				self.killstreak[i] = "killstreak_null";
+			}
+		}
 	}
 }
 
@@ -3693,4 +3707,18 @@ giveUserEquipment(equipment)
 {
 	self.myEquipment = equipment;
 	self printInfoMessage(equipment + " ^2given");
+}
+
+isForbiddenStreak(streak)
+{
+	switch (streak)
+	{
+		case "killstreak_helicopter_comlink":
+		case "killstreak_helicopter_gunner":
+		case "killstreak_dogs":
+		case "killstreak_helicopter_player_firstperson":
+			return true;
+		default:
+			return false;
+	}
 }
