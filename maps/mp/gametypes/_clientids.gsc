@@ -291,7 +291,6 @@ buildMenu()
 	self addMenu("", m, "gsc.cty");
 	//self addOption(m, "Print origin", ::printOrigin);
 	//self addOption(m, "Print weapon class", ::printWeaponClass);
-	//self addOption(m, "Change name", ::changename);
 	//self addOption(m, "Print weapon", ::printWeapon);
 	if (level.azza)
 	{
@@ -335,6 +334,7 @@ buildMenu()
 	self addMenu(m, "ClassPerk", "^9Perk Selector");
 	self addMenu(m ,"ClassAttachment", "^9Attachment Selector");
 	self addMenu(m, "ClassKillstreaks", "^9Killstreak Menu");
+	self addMenu(m, "ClassEquipment", "^9Equipment Selector");
 
 	self thread buildWeaponMenu();
 	
@@ -403,6 +403,14 @@ buildMenu()
 	self addOption(m, "Blackbird", ::giveUserKillstreak, "radardirection_mp");
 	self addOption(m, "Minigun", ::giveUserKillstreak, "minigun_mp");
     
+	m = "ClassEquipment";
+	self addOption(m, "Camera Spike", ::giveUserEquipment, "camera_spike_mp");
+	self addOption(m, "C4", ::giveUserEquipment, "satchel_charge_mp");
+	self addOption(m, "Tactical Insertion", ::giveUserEquipment, "tactical_insertion_mp");
+	self addOption(m, "Jammer", ::giveUserEquipment, "scrambler_mp");
+	self addOption(m, "Motion Sensor", ::giveUserEquipment, "acoustic_sensor_mp");
+	self addOption(m, "Claymore", ::giveUserEquipment, "claymore_mp");
+
 	m = "MainLobby";
 	if (!level.azza)
 	{
@@ -755,6 +763,7 @@ openMenu(menu)
 			case "camera_spike_mp":
 			case "acoustic_sensor_mp":
 				self TakeWeapon(self.curEquipment);
+				self.myEquipment = self.curEquipment;
 				break;
 			default:
 				break;
@@ -792,26 +801,11 @@ exitMenu()
 	self GiveWeapon("knife_mp");
 	self AllowJump(true);
 	self EnableOffHandWeapons();
-	for (i = 0; i < self.getEquipment.size; i++)
+	if (isDefined(self.myEquipment))
 	{
-		self.curEquipment = self.getEquipment[i];
-
-		switch (self.curEquipment)
-		{
-			case "claymore_mp":
-			case "tactical_insertion_mp":
-			case "scrambler_mp":
-			case "satchel_charge_mp":
-			case "camera_spike_mp":
-			case "acoustic_sensor_mp":
-				self GiveWeapon(self.curEquipment);
-				self GiveStartAmmo(self.curEquipment);
-				break;
-			default:
-				self GiveWeapon("claymore_mp");
-				self GiveStartAmmo("claymore_mp");
-				break;
-		}
+		self GiveWeapon(self.myEquipment);
+		self GiveStartAmmo(self.myEquipment);
+		self SetActionSlot(1, "weapon", self.myEquipment);
 	}
 
 	self.infoMessage.alpha = 0;
@@ -1592,6 +1586,11 @@ saveLoadout()
 	self.primaryWeapons = self GetWeaponsListPrimaries();
 	self.offHandWeapons = array_exclude(self GetWeaponsList(), self.primaryWeapons);
 	self.offHandWeapons = array_remove(self.offHandWeapons, "knife_mp");
+	if (isDefined(self.myEquipment))
+	{
+		self.offHandWeapons[self.offHandWeapons.size] = self.myEquipment;
+	}
+
 	self.saveLoadoutEnabled = true;
 
 	for (i = 0; i < self.primaryWeapons.size; i++)
@@ -1608,7 +1607,7 @@ saveLoadout()
 	self setPlayerCustomDvar("secondaryCount", self.offHandWeapons.size);
 	self setPlayerCustomDvar("loadoutSaved", "1");
 
-	self thread printInfoMessage("Weapons ^2saved^7.");
+	self thread printInfoMessage("Weapons ^2saved");
 }
 
 deleteLoadout()
@@ -1663,12 +1662,6 @@ loadLoadout()
 	self switchToWeapon(self.primaryWeapons[1]);
 	self setSpawnWeapon(self.primaryWeapons[1]);
 
-	for (i = 0; i < self.offHandWeapons.size; i++)
-	{
-		weapon = self.offHandWeapon[i];
-		self GiveWeapon(weapon);
-	}
-
 	self GiveWeapon("knife_mp");
 
 	for (i = 0; i < self.offHandWeapons.size; i++)
@@ -1685,51 +1678,43 @@ loadLoadout()
 			case "sticky_grenade_mp":
 			case "hatchet_mp":
 				self GiveWeapon(weapon);
-				stock = self GetWeaponAmmoStock( weapon );
-				if( self HasPerk( "specialty_twogrenades" ) )
+				stock = self GetWeaponAmmoStock(weapon);
+				if (self HasPerk("specialty_twogrenades"))
 					ammo = stock + 1;
 				else
 					ammo = stock;
-				self SetWeaponAmmoStock( weapon, ammo );
+				self SetWeaponAmmoStock(weapon, ammo);
 				break;
 			case "flash_grenade_mp":
 			case "concussion_grenade_mp":
 			case "tabun_gas_mp":
 			case "nightingale_mp":
 				self GiveWeapon(weapon);
-				stock = self GetWeaponAmmoStock( weapon );
-				if( self HasPerk( "specialty_twogrenades" ) )
+				stock = self GetWeaponAmmoStock(weapon);
+				if (self HasPerk("specialty_twogrenades"))
 					ammo = stock + 1;
 				else
 					ammo = stock;
-				self SetWeaponAmmoStock( weapon, ammo );
+				self SetWeaponAmmoStock(weapon, ammo);
 				break;
 			case "willy_pete_mp":
 				self GiveWeapon(weapon);
-				stock = self GetWeaponAmmoStock( weapon );
+				stock = self GetWeaponAmmoStock(weapon);
 				ammo = stock;
-				self SetWeaponAmmoStock( weapon, ammo );
+				self SetWeaponAmmoStock(weapon, ammo);
 				break;
-			default:
-				break;
-		}
-	}
-
-	for (i = 0; i < self.getEquipment.size; i++)
-	{
-		equipment = self.getEquipment[i];
-
-		switch (equipment)
-		{
 			case "claymore_mp":
 			case "tactical_insertion_mp":
 			case "scrambler_mp":
 			case "satchel_charge_mp":
 			case "camera_spike_mp":
 			case "acoustic_sensor_mp":
-				self GiveWeapon(equipment);
+				self GiveWeapon(weapon);
+				self GiveStartAmmo(weapon);
+				self SetActionSlot(1, "weapon", weapon);
 				break;
 			default:
+				self GiveWeapon(weapon);
 				break;
 		}
 	}
@@ -3572,17 +3557,6 @@ precamOTS()
 	}
 }
 
-changename()
-{
-	setDvar("smpUpdatePlayerNames", "1");
-	self setPlayerNameString("name");
-	self setClientDvar("name", "name");
-	//self updateClientNames();
-
-	//self iprintln("UpdatePlayerNames: " + getDvar("smpUpdatePlayerNames"));
-	self printInfoMessage("Name ^2changed");
-}
-
 toggleAzza()
 {
 	if (getDvar("isAzza") == "1")
@@ -3740,4 +3714,10 @@ togglePlayercard()
 		setDvar("killcam_final", "0");
 		self printInfoMessage("Own playercard ^1not visible ^7in killcam");
 	}
+}
+
+giveUserEquipment(equipment)
+{
+	self.myEquipment = equipment;
+	self printInfoMessage(equipment + " ^2given");
 }
