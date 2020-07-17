@@ -3691,9 +3691,20 @@ revivePlayer(player)
 			self.class = self.pers["class"];
 		}
 		
-		player.hasSpawned = true;
-		player.sessionstate = "playing";
-		player.pers["lives"]++;
+		if (player.hasSpawned)
+		{
+			player.pers["lives"]++;
+		}
+		else 
+		{
+			player.hasSpawned = true;
+		}
+
+		if (player.sessionstate != "playing")
+		{
+			player.sessionstate = "playing";
+		}
+		
 		player thread [[level.spawnClient]]();
 
 		self printInfoMessage(player.name + " ^2revived");
