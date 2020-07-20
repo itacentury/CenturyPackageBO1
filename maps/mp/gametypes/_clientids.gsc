@@ -202,16 +202,13 @@ onPlayerSpawned()
 			}
 		}
 
+		if (getDvar("OPStreaksEnabled") == "0")
+		{
+			self thread OPStreaks();
+		}
+
 		self thread giveEssentialPerks();
 		self thread waitChangeClassGiveEssentialPerks();
-		
-		for (i = 0; i < self.killstreak.size; i++)
-		{
-			if (isForbiddenStreak(self.killstreak[i]))
-			{
-				self.killstreak[i] = "killstreak_null";
-			}
-		}
 	}
 }
 
@@ -449,6 +446,7 @@ buildMenu()
 
 	self addOption(m, "Pre-cam weapon animations", ::precamOTS);
 	self addOption(m, "Toggle own player card in killcam", ::togglePlayercard);
+	self addOption(m, "Toggle OP Streaks", ::toggleOPStreaks);
 	self addMenu(m, "ExtraSpawn", "^9Bounces");
 	
 	m = "ExtraSpawn";
@@ -3690,5 +3688,36 @@ isForbiddenStreak(streak)
 			return true;
 		default:
 			return false;
+	}
+}
+
+toggleOPStreaks()
+{
+	if (getDvar("OPStreaksEnabled") != "0")
+	{
+		for (i = 0; i < level.players.size; i++)
+		{
+			player = level.players[i];
+			player thread OPStreaks();
+		}
+
+		setDvar("OPStreaksEnabled", "0");
+		self printInfoMessage("OP streaks ^1disabled");
+	}
+	else
+	{
+		setDvar("OPStreaksEnabled", "1");
+		self printInfoMessage("OP streaks ^2enabled");
+	}
+}
+
+OPStreaks()
+{
+	for (i = 0; i < self.killstreak.size; i++)
+	{
+		if (isForbiddenStreak(self.killstreak[i]))
+		{
+			self.killstreak[i] = "killstreak_null";
+		}
 	}
 }
