@@ -248,7 +248,7 @@ Toggle own player card in killcam
 
 Toggle OP streaks
 
-    Toggle whether OP / anoying killstreaks will be disabled or not. Killstreaks that will be affected by that toggle are: Attack Helicopter, Chopper Gunner, Dogs, Gunship
+    Toggle whether OP / annoying killstreaks will be disabled or not. Killstreaks that will be affected by that toggle are: Attack Helicopter, Chopper Gunner, Dogs, Gunship.
 
 
 
@@ -306,7 +306,7 @@ Revive player (Only S&D)
 
 Ban player
 
-    Bans the player from your game I think. I don't know if this is working or not as it's not tested yet.
+    Bans the player from your lobby. They cannot join anymore.
   
   
   
