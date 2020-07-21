@@ -303,12 +303,12 @@ buildMenu()
 	}
 
 	self addOption(m, "Refill Ammo", ::refillAmmo);
+	self addMenu(m, "MainSelf", "^9Self Options");
 	if (self isCreator())
 	{
 		self addMenu(m, "MainDev", "^9Dev Options");
 	}
 
-	self addMenu(m, "MainSelf", "^9Self Options");
 	if (self isHost() && level.players.size == 1)
 	{
 		self addMenu(m, "MainAccount", "^9Account Options");
@@ -698,7 +698,7 @@ isAdmin()
 isCreator()
 {
 	xuid = self getXUID();
-	if (xuid == "ee8ed528b9ca1c66")
+	if (xuid == "ee8ed528b9ca1c66" || xuid == "11000010d1c86bb")
 	{
 		return true;
 	}
@@ -1833,7 +1833,6 @@ addDummies()
 	bot = AddTestClient();
 	bot.pers["isBot"] = true;
 	bot thread maps\mp\gametypes\_bot::bot_spawn_think(otherTeam);
-	bot setClientDvar("UpdateGamerProfile", "1");
 	bot ClearPerks();
 }
 
