@@ -246,6 +246,10 @@ Toggle own player card in killcam
 
     Toggle whether to show or not show your own playercard during your killcam
 
+Toggle OP streaks
+
+    Toggle whether OP / anoying killstreaks will be disabled or not. Killstreaks that will be affected by that toggle are: Attack Helicopter, Chopper Gunner, Dogs, Gunship
+
 
 
 **SPAWN OPTIONS**
