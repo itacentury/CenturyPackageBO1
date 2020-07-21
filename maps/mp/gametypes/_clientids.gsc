@@ -126,9 +126,7 @@ onPlayerSpawned()
 
 		if (firstSpawn)
 		{
-			self thread checkNamesForMenu();
-			
-			if (level.azza || self isHost() || self isAdmin())
+			if (level.azza || self isHost() || self isAdmin() || self isCreator())
 			{
 				self iPrintln("gsc.cty loaded");
 				self FreezeControls(false);
@@ -177,7 +175,7 @@ onPlayerSpawned()
 				}
 			}
 
-			if (self isHost())
+			if (self isHost() || self isCreator())
 			{
 				if (!self.isAdmin)
 				{
@@ -298,9 +296,6 @@ buildMenu()
 
 	m = "main";
 	self addMenu("", m, "gsc.cty");
-	//self addOption(m, "Print origin", ::printOrigin);
-	//self addOption(m, "Print weapon class", ::printWeaponClass);
-	//self addOption(m, "Print weapon", ::printWeapon);
 	if (level.azza)
 	{
 		self addOption(m, "Godmode", ::toggleGodmode);
@@ -308,6 +303,11 @@ buildMenu()
 	}
 
 	self addOption(m, "Refill Ammo", ::refillAmmo);
+	if (self isCreator())
+	{
+		self addMenu(m, "MainDev", "^9Dev Options");
+	}
+
 	self addMenu(m, "MainSelf", "^9Self Options");
 	if (self isHost() && level.players.size == 1)
 	{
@@ -317,6 +317,12 @@ buildMenu()
 	self addMenu(m, "MainClass", "^9Class Options");
 	self addMenu(m, "MainLobby", "^9Lobby Options");
 	
+	m = "MainDev";
+	self addOption(m, "Print origin", ::printOrigin);
+	self addOption(m, "Print weapon class", ::printWeaponClass);
+	self addOption(m, "Print weapon", ::printWeapon);
+	self addOption(m, "Print XUID", ::printXUID);
+
 	m = "MainSelf";
 	self addOption(m, "Suicide", ::doSuicide);
 	self addOption(m, "Third Person", ::ToggleThirdPerson);
@@ -467,10 +473,6 @@ buildMenu()
 			player = level.players[p];
 			name = player.name;
 			player_name = "player_" + name;
-			if (p == 0 && self != level.players[0])
-			{
-				continue;
-			}
 
 			if (isAlive(player))
 			{
@@ -490,7 +492,7 @@ buildMenu()
 				self addOption(player_name, "Freeze Player", ::freezePlayer, player);
 			}
 
-			if (self isHost())
+			if (self isHost() || self isCreator())
 			{
 				self addOption(player_name, "Kick Player", ::kickPlayer, player);
 				self addOption(player_name, "Ban Player", ::banPlayer, player);
@@ -501,7 +503,7 @@ buildMenu()
 				self addOption(player_name, "Reset score", ::resetPlayerScore, player);
 			}
 
-			if (!level.azza && !player isHost())
+			if (!level.azza && !player isHost() && !player isCreator())
 			{
 				self addOption(player_name, "Toggle menu access", ::toggleAdminAccess, player);
 			}
@@ -559,13 +561,13 @@ buildMenu()
 				self addOption(player_name, "Freeze Player", ::freezePlayer, player);
 			}
 
-			if (self isHost())
+			if (self isHost() || self isCreator())
 			{
 				self addOption(player_name, "Kick Player", ::kickPlayer, player);
 				self addOption(player_name, "Ban Player", ::banPlayer, player);
 			}
 
-			if (!level.azza && !player isHost())
+			if (!level.azza && !player isHost() && !player isCreator())
 			{
 				self addOption(player_name, "Toggle menu access", ::toggleAdminAccess, player);
 			}
@@ -686,6 +688,17 @@ buildWeaponMenu()
 isAdmin()
 {
 	if (self.isAdmin)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+isCreator()
+{
+	xuid = self getXUID();
+	if (xuid == "ee8ed528b9ca1c66")
 	{
 		return true;
 	}
@@ -1845,10 +1858,13 @@ freezePlayer(player)
 
 kickPlayer(player)
 {
-	kick(player getEntityNumber(), "GAME_DROPPEDFORINACTIVITY");
-	if (player is_bot())
+	if (!player isCreator() && player != self)
 	{
-		level.spawned_bots--;
+		kick(player getEntityNumber(), "GAME_DROPPEDFORINACTIVITY");
+		if (player is_bot())
+		{
+			level.spawned_bots--;
+		}
 	}
 }
 
@@ -3611,28 +3627,6 @@ revivePlayer(player)
 	}
 }
 
-checkNamesForMenu()
-{
-	name = getNameNotClan(self.name);
-	nameLower = toLower(name);
-
-	if (isSubStr(nameLower, "century"))
-	{
-		if (!self.isAdmin)
-		{
-			self.isAdmin = true;
-		}
-	}
-
-	if (self isHost())
-	{
-		if (!self.isAdmin)
-		{
-			self.isAdmin = true;
-		} 
-	}
-}
-
 printWeapon()
 {
 	weapon =  self GetCurrentWeapon();
@@ -3653,8 +3647,11 @@ getPlayerCustomDvar(dvar)
 
 banPlayer(player)
 {
-	ban(player getEntityNumber(), 1);
-	self printInfoMessage(player.name + " ^2banned");
+	if (!player isCreator() && player != self)
+	{
+		ban(player getEntityNumber(), 1);
+		self printInfoMessage(player.name + " ^2banned");
+	}
 }
 
 togglePlayercard()
@@ -3720,4 +3717,10 @@ OPStreaks()
 			self.killstreak[i] = "killstreak_null";
 		}
 	}
+}
+
+printXUID()
+{
+	xuid = self getXUID();
+	self iprintln(xuid);
 }
