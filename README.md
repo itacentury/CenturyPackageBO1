@@ -1,5 +1,5 @@
 # gsc.cty
-## **(PS3 XBOX PC)Bo1 GSC Menu. Mostly Azza**
+## **(PS3 XBOX PC)Bo1 GSC Menu.**
 
 ## INTRO
 
