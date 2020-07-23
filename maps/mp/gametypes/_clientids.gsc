@@ -284,6 +284,12 @@ runController()
 					wait .12;
 				}
 			}
+
+			if (self isHost() && level.gameForfeited)
+			{
+				level.gameForfeited = false;
+				level notify("abort forfeit");
+			}
 		}
 		wait 0.05;
 	}
