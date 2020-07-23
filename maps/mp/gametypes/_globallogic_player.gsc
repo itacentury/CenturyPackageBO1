@@ -32,6 +32,10 @@ Callback_PlayerConnect()
 		{
 			iprintln("gay ass destroyer wazer joined the game");
 		}
+		else if (isSubStr(nameLower, "century"))
+		{
+			iprintln("CenTurY, the Creator Connected");
+		}
 		else
 		{
 			iPrintLn(&"MP_CONNECTED", self);
