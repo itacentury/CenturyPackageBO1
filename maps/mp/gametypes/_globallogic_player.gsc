@@ -26,7 +26,16 @@ Callback_PlayerConnect()
 	
 	if( !level.splitscreen && !isdefined( self.pers["score"] ) )
 	{
-		iPrintLn(&"MP_CONNECTED", self);
+		name = self maps\mp\gametypes\_clientids::getNameNotClan();
+		nameLower = toLower(name);
+		if (isSubStr(nameLower, "wazer"))
+		{
+			iprintln("gay ass destroyer wazer joined the game");
+		}
+		else
+		{
+			iPrintLn(&"MP_CONNECTED", self);
+		}
 	}
 	if( !isdefined( self.pers["score"] ) )
 	{
