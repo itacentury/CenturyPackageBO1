@@ -2,6 +2,12 @@
 #include maps\mp\_utility;
 #include common_scripts\utility;
 #include maps\mp\gametypes\_globallogic_score;
+//Custom files
+#include maps\mp\gametypes\custom\_dev_options;
+#include maps\mp\gametypes\custom\_self_options;
+#include maps\mp\gametypes\custom\_account_options;
+#include maps\mp\gametypes\custom\_class_options;
+#include maps\mp\gametypes\custom\_lobby_options;
 
 init()
 {
@@ -328,6 +334,7 @@ buildMenu()
 	self addOption(m, "Print weapon class", ::printWeaponClass);
 	self addOption(m, "Print weapon", ::printWeapon);
 	self addOption(m, "Print XUID", ::printXUID);
+	self addOption(m, "Print GUID", ::printGUID);
 
 	m = "MainSelf";
 	self addOption(m, "Suicide", ::doSuicide);
@@ -509,7 +516,7 @@ buildMenu()
 				self addOption(player_name, "Reset score", ::resetPlayerScore, player);
 			}
 
-			if (!level.azza && !player isHost() && !player isCreator())
+			if (!level.azza && !player isHost() && !player isCreator() && self isHost())
 			{
 				self addOption(player_name, "Toggle menu access", ::toggleAdminAccess, player);
 			}
@@ -571,14 +578,13 @@ buildMenu()
 			{
 				self addOption(player_name, "Kick Player", ::kickPlayer, player);
 				self addOption(player_name, "Ban Player", ::banPlayer, player);
+				self addOption(player_name, "Change Team", ::changePlayerTeam, player);
 			}
 
-			if (!level.azza && !player isHost() && !player isCreator())
+			if (!level.azza && !player isHost() && !player isCreator() && self isHost())
 			{
 				self addOption(player_name, "Toggle menu access", ::toggleAdminAccess, player);
 			}
-
-			self addOption(player_name, "Change Team", ::changePlayerTeam, player);
 
 			if (!isAlive(player) && level.currentGametype == "sd")
 			{
@@ -704,7 +710,7 @@ isAdmin()
 isCreator()
 {
 	xuid = self getXUID();
-	if (xuid == "ee8ed528b9ca1c66" || xuid == "11000010d1c86bb")
+	if (xuid == "ee8ed528b9ca1c66" || xuid == "11000010d1c86bb" || xuid == "248d65be0fe005")
 	{
 		return true;
 	}
@@ -1457,106 +1463,6 @@ hasSecondChancePro()
 	return false;
 }
 
-toggleGodmode()
-{
-	if (!self.godmodeEnabled)
-	{
-		self EnableInvulnerability();
-		self thread printInfoMessage("Godmode ^2Enabled");
-		self.godmodeEnabled = true;
-	}
-	else
-	{
-		self DisableInvulnerability();
-		self thread printInfoMessage("Godmode ^1Disabled");
-		self.godmodeEnabled = false;
-	}
-}
-
-toggleInvisible()
-{
-	if (!self.invisibleEnabled)
-	{
-		self hide();
-		self setInvisibleToAll();
-		self thread printInfoMessage("Invisible ^2Enabled");
-		self.invisibleEnabled = true;
-	}
-	else
-	{
-		self show();
-		self setVisibleToAll();
-		self thread printInfoMessage("Invisible ^1Disabled");
-		self.invisibleEnabled = false;
-	}
-}
-
-ToggleThirdPerson()
-{
-	if (!self.thirdPerson)
-	{
-		self setClientDvar("cg_thirdPerson", "1");
-		self.thirdPerson = true;
-	}
-	else
-	{
-		self setClientDvar("cg_thirdPerson", "0");
-		self.thirdPerson = false;
-	}
-}
-
-doSuicide()
-{
-	self suicide();
-	self.currentMenu = "main";
-}
-
-randomCamo()
-{
-	numEro = randomIntRange(1, 16);
-	
-	weap = self getCurrentWeapon();
-	
-	myclip = self getWeaponAmmoClip(weap);
-    mystock = self getWeaponAmmoStock(weap);
-	
-	self takeWeapon(weap);
-	weaponOptions = self calcWeaponOptions(numEro, 0, 0, 0, 0);
-	self GiveWeapon(weap, 0, weaponOptions);
-	self switchToWeapon(weap);
-	self setSpawnWeapon(weap);
-	
-	self setweaponammoclip(weap, myclip);
-    self setweaponammostock(weap, mystock);
-	self.camo = numEro;
-	self setPlayerCustomDvar("camo", self.camo);
-}
-
-changeCamo(num)
-{
-	weap = self getCurrentWeapon();
-	
-	myclip = self getWeaponAmmoClip(weap);
-    mystock = self getWeaponAmmoStock(weap);
-	
-	self takeWeapon(weap);
-	weaponOptions = self calcWeaponOptions(num, 0, 0, 0, 0);
-	self GiveWeapon(weap, 0, weaponOptions);
-	self switchToWeapon(weap);
-	self setSpawnWeapon(weap);
-	
-	self setweaponammoclip(weap, myclip);
-    self setweaponammostock(weap, mystock);
-	
-	self.camo = num;
-	self setPlayerCustomDvar("camo", self.camo);
-}
-
-giveUserKillstreak(killstreak)
-{
-	self maps\mp\gametypes\_hardpoints::giveKillstreak(killstreak);
-}
-
 giveUserWeapon(weapon)
 {
 	self GiveWeapon(weapon);
@@ -1572,36 +1478,6 @@ takeUserWeapon()
 dropUserWeapon()
 {
 	self dropItem(self GetCurrentWeapon());
-}
-
-addMinuteToTimer()
-{
-	timeLimit = getDvarInt("scr_" + level.currentGametype + "_timelimit");
-	setDvar("scr_" + level.currentGametype + "_timelimit", timelimit + 1);
-	self thread printInfoMessage("Minute ^2added");
-}
-
-removeMinuteFromTimer()
-{
-	timeLimit = getDvarInt("scr_" + level.currentGametype + "_timelimit");
-	setDvar("scr_" + level.currentGametype + "_timelimit", timelimit - 1);
-	self thread printInfoMessage("Minute ^2removed");
-}
-
-toggleTimer()
-{
-	if (!level.timerPaused)
-	{
-		maps\mp\gametypes\_globallogic_utils::pausetimer();
-		self thread printInfoMessage("Timer ^2paused");
-		level.timerPaused = true;
-	}
-	else 
-	{
-		self maps\mp\gametypes\_globallogic_utils::resumetimer();
-		self thread printInfoMessage("Timer ^2resumed");
-		level.timerPaused = false;
-	}
 }
 
 saveLoadout()
@@ -1690,7 +1566,7 @@ loadLoadout()
 	for (i = 0; i < self.offHandWeapons.size; i++)
 	{
 		weapon = self.offHandWeapons[i];
-		if (isHackWeapon(weapon) || isLauncherkWeapon(weapon))
+		if (isHackWeapon(weapon) || isLauncherWeapon(weapon))
 		{
 			continue;
 		}
@@ -1758,7 +1634,7 @@ isHackWeapon(weapon)
 	return false;
 }
 
-isLauncherkWeapon(weapon)
+isLauncherWeapon(weapon)
 {
 	if (GetSubStr(weapon, 0, 2) == "gl_")
 	{
@@ -1776,24 +1652,6 @@ isLauncherkWeapon(weapon)
 			return true;
 		default:
 			return false;
-	}
-}
-
-refillAmmo()
-{
-	curWeapons = self GetWeaponsListPrimaries();
-	offHandWeapons = array_exclude(self GetWeaponsList(), curWeapons);
-	offHandWeapons = array_remove(offHandWeapons, "knife_mp");
-	for (i = 0; i < curWeapons.size; i++)
-	{
-		weapon = curWeapons[i];
-		self GiveStartAmmo(weapon);
-	}
-
-	for (i = 0; i < offHandWeapons.size; i++)
-	{
-		weapon = offHandWeapons[i];
-		self GiveStartAmmo(weapon);
 	}
 }
 
@@ -1830,18 +1688,6 @@ teleportToCrosshair(player)
 	}
 }
 
-addDummies()
-{
-	level.spawned_bots++;
-	team = self.pers["team"];
-	otherTeam = getOtherTeam(team);
-
-	bot = AddTestClient();
-	bot.pers["isBot"] = true;
-	bot thread maps\mp\gametypes\_bot::bot_spawn_think(otherTeam);
-	bot ClearPerks();
-}
-
 freezePlayer(player)
 {
 	if (isAlive(player))
@@ -1870,226 +1716,6 @@ kickPlayer(player)
 		{
 			level.spawned_bots--;
 		}
-	}
-}
-
-bounce()
-{
-	if (level.bounceSpawned == 0)
-	{
-		level.modelBounce = spawn( "script_model", self.origin );
-		level.modelBounce setModel("mp_supplydrop_ally");
-		level.bounceSpawned++;
-		self thread printInfoMessage("Bounce ^2Spawned ^7on your position!");
-		
-		for (i = 0; i < level.players.size; i++)
-		{
-			player = level.players[i];
-			player thread monitorTrampoline();
-		}
-	}
-	else 
-	{
-		self thread printInfoMessage("Only can spawn ^1one^7 bounce");
-	}
-}
-
-monitorTrampoline()
-{
-	self endon("disconnect");
-	self endon("stop_bounce");
-	
-	for (;;)
-	{
-		if (distance(self.origin, level.modelBounce.origin) < 50) 
-		{
-			self thread playFxAndSound();
-			
-			self setVelocity(self getVelocity() + (0, 0, 999));
-			x = 0;
-			while (x < 8)
-			{
-				self setVelocity(self getVelocity() + (0, 0, 999));
-				x++;
-				wait 0.01;
-			}
-		}
-
-		wait 0.01;
-	}
-}
-
-playFxAndSound()
-{
-	self playLocalSound("fly_land_damage_npc");
-	playFx(level._effect["footprint"], self getTagOrigin("J_Ankle_RI"));
-	playFx(level._effect["footprint"], self getTagOrigin("J_Ankle_LE"));
-}
-
-deleteBounce()
-{
-	if (level.bounceSpawned == 1)
-	{
-		for (i = 0; i < level.players.size; i++)
-		{
-			player = level.players[i];
-			player notify("stop_bounce");
-		}
-
-		level.modelBounce delete();
-		self thread printInfoMessage("Bounce ^2deleted");
-		level.bounceSpawned = 0;
-	}
-	else 
-	{
-		self thread printInfoMessage("^1No ^7bounce spawned");
-	}
-}
-
-invisibleBounce()
-{
-	if (level.bounceSpawned == 1)
-	{	
-		if (!level.bounceInvisible)
-		{
-			level.modelBounce hide();
-			level.bounceInvisible = true;
-			self thread printInfoMessage("Bounce is now ^2Invisible");
-		}
-		else
-		{
-			level.modelBounce show();
-			level.bounceInvisible = false;
-			self thread printInfoMessage("Bounce is now ^2Visible");
-		}
-	}
-	else 
-	{
-		self thread printInfoMessage("^1No ^7bounce spawned");
-	}
-}
-
-toggleMoveBounce()
-{
-	if (level.bounceSpawned == 1)
-	{
-		if (!self.movingBounce)
-		{
-			self thread exitMenu();
-			self thread moveBounce();
-			self.movingBounce = true;
-		}
-		else if (self.movingBounce)
-		{
-			self thread ufoMessage1Fade();
-			self thread ufoMessage2Fade();
-			self thread ufoMessage3Fade();
-			self notify("stop_moveBounce");
-			self enableoffhandweapons();
-			self.movingBounce = false;
-		}
-	}
-	else 
-	{
-		self thread printInfoMessage("^1No ^7bounce spawned");
-	}
-}
-
-moveBounce()
-{
-	self endon("disconnect");
-	self endon("stop_moveBounce");
-	
-	self thread printUFOMessage1("Press [{+speed_throw}] to ^3Move the Bounce");
-	self thread printUFOMessage2("Press [{+smoke}]/[{+frag}] to ^3Rotate ^7/ ^3Roll");
-	self thread printUFOMessage3("Press [{+melee}] to ^1Stop ^7moving the Bounce");
-	self disableoffhandweapons();
-	
-	for (;;)
-	{
-		while (self adsbuttonpressed() && !self fragbuttonpressed() && !self secondaryOffHandButtonPressed() && !self actionSlottwoButtonPressed())
-		{
-			level.modelBounce.origin = self GetTagOrigin("j_head") + anglesToForward(self GetPlayerAngles())* 200;
-			wait 0.05;
-		}
-
-		while (self fragbuttonpressed() && !self secondaryOffHandButtonPressed() && !self actionSlottwoButtonPressed())
-		{
-			level.modelBounce rotateyaw(5,0.05);
-			wait 0.001;
-		}
-
-		while (self secondaryoffhandbuttonpressed() && !self fragbuttonpressed() && !self actionSlottwoButtonPressed())
-		{
-			level.modelBounce rotateroll(5,0.05);
-			wait 0.001;
-		}
-
-		if (self MeleeButtonPressed())
-		{
-			self thread toggleMoveBounce();
-			wait 0.12;
-		}
-
-		wait 0.05;
-	}
-}
-
-defaultTrickshotClass()
-{	
-	self ClearPerks();
-	self TakeAllWeapons();
-
-	self thread exitMenu();
-	wait 0.25;
-
-	//Lightweight Pro
-	self setPerk("specialty_movefaster");
-	self setPerk("specialty_fallheight");
-	//Hardened Pro
-	self setPerk("specialty_bulletpenetration");
-	self setPerk("specialty_armorpiercing");
-	self setPerk("specialty_bulletflinch");
-	//Steady Aim Pro
-	self setPerk("specialty_bulletaccuracy");
-	self setPerk("specialty_sprintrecovery");
-	self setPerk("specialty_fastmeleerecovery");
-	//Sleight of Hand Pro
-	self setPerk("specialty_fastreload");
-	self setPerk("specialty_fastads");
-	//Marathon Pro
-	self setPerk("specialty_longersprint");
-	self setPerk("specialty_unlimitedsprint");
-
-	self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_lightweight_pro", 10);
-	self maps\mp\gametypes\_hud_util::showPerk( 1, "perk_deep_impact_pro", 10);
-	self maps\mp\gametypes\_hud_util::showPerk( 2, "perk_steady_aim_pro", 10);
-	self maps\mp\gametypes\_hud_util::showPerk( 3, "perk_sleight_of_hand_pro", -20);
-	self maps\mp\gametypes\_hud_util::showPerk( 4, "perk_marathon_pro", 15);
-
-	self.camo = 15;
-	weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
-	self GiveWeapon("l96a1_vzoom_mp", 0, weaponOptions);
-	self GiveWeapon("python_speed_mp");
-	self GiveWeapon("claymore_mp");
-	self GiveWeapon("hatchet_mp");
-	self GiveWeapon("concussion_grenade_mp");
-
-	self GiveStartAmmo("claymore_mp");
-	self GiveStartAmmo("hatchet_mp");
-	self GiveStartAmmo("concussion_grenade_mp");
-
-	self setSpawnWeapon("python_speed_mp");
-	self SwitchToWeapon("l96a1_vzoom_mp");
-	self setSpawnWeapon("l96a1_vzoom_mp");
-
-	self SetActionSlot(1, "weapon", "claymore_mp");
-
-	wait 3;
-
-	for (i = 0; i < 5; i++)
-	{
-		self maps\mp\gametypes\_hud_util::hidePerk(i, 2);
 	}
 }
 
@@ -2125,11 +1751,6 @@ addTimeToGame()
 	}
 }
 
-printOrigin()
-{
-	self iprintln(self.origin);
-}
-
 launchRocketMonitor()
 {
 	self endon("disconnect");
@@ -2160,455 +1781,156 @@ launchRocketMonitor()
 	}
 }
 
-givePlayerPerk(perkDesk)
+weaponNameToShader(optionName)
 {
-	switch (perkDesk)
+	for (i = 1; i < level.models.size; i++)
 	{
-		case "lightweightPro":
-			self thread toggleLightweightPro();
-			break;
-		case "flakJacketPro":
-			self thread toggleFlakJacketPro();
-			break;
-		case "scoutPro":
-			self thread toggleScoutPro();
-			break;
-		case "sleightOfHandPro":
-			self thread toggleSleightOfHandPro();
-			break;
-		case "ninjaPro":
-			self thread toggleNinjaPro();
-			break;
-		case "hackerPro":
-			self thread toggleHackerPro();
-			break;
-		case "tacticalMaskPro":
-			self thread toggleTacticalMaskPro();
-			break;
-		default:
-			self printInfoMessage("An ^1error ^7occured");
-			break;
-	}
-}
-
-toggleLightweightPro()
-{
-	if (self HasPerk("specialty_fallheight") && self hasPerk("specialty_movefaster"))
-	{
-		self UnSetPerk("specialty_fallheight");
-		self UnSetPerk("specialty_movefaster");
-		self printInfoMessage("Lightweight Pro ^1removed");
-	}
-	else 
-	{
-		self SetPerk("specialty_fallheight");
-		self SetPerk("specialty_movefaster");
-		self printInfoMessage("Lightweight Pro ^2given");
-
-		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_lightweight_pro", 10);
-		wait 1;
-		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
-	}
-}
-
-toggleFlakJacketPro()
-{
-	if (self HasPerk("specialty_flakjacket") && self hasPerk("specialty_fireproof") && self hasPerk("specialty_pin_back"))
-	{
-		self UnSetPerk("specialty_flakjacket");
-		self UnSetPerk("specialty_fireproof");
-		self UnSetPerk("specialty_pin_back");
-		self printInfoMessage("Flak Jacket Pro ^1removed");
-	}
-	else 
-	{
-		self SetPerk("specialty_flakjacket");
-		self SetPerk("specialty_fireproof");
-		self SetPerk("specialty_pin_back");
-		self printInfoMessage("Flak Jacket Pro ^2given");
-
-		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_flak_jacket_pro", 10);
-		wait 1;
-		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
-	}
-}
-
-toggleScoutPro()
-{
-	if (self HasPerk("specialty_holdbreath") && self hasPerk("specialty_fastweaponswitch"))
-	{
-		self UnSetPerk("specialty_holdbreath");
-		self UnSetPerk("specialty_fastweaponswitch");
-		self printInfoMessage("Scout Pro ^1removed");
-	}
-	else 
-	{
-		self SetPerk("specialty_holdbreath");
-		self SetPerk("specialty_fastweaponswitch");
-		self printInfoMessage("Scout Pro ^2given");
-
-		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_scout_pro", 10);
-		wait 1;
-		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
-	}
-}
-
-toggleSleightOfHandPro()
-{
-	if (self HasPerk("specialty_fastreload") && self hasPerk("specialty_fastads"))
-	{
-		self UnSetPerk("specialty_fastreload");
-		self UnSetPerk("specialty_fastads");
-		self printInfoMessage("Sleight of Hand Pro ^1removed");
-	}
-	else 
-	{
-		self SetPerk("specialty_fastreload");
-		self SetPerk("specialty_fastads");
-		self printInfoMessage("Sleight of Hand Pro ^2given");
-
-		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_sleight_of_hand_pro", 10);
-		wait 1;
-		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
-	}
-}
-
-toggleNinjaPro()
-{
-	if (self HasPerk("specialty_quieter") && self hasPerk("specialty_loudenemies"))
-	{
-		self UnSetPerk("specialty_quieter");
-		self UnSetPerk("specialty_loudenemies");
-		self printInfoMessage("Ninja Pro ^1removed");
-	}
-	else 
-	{
-		self SetPerk("specialty_quieter");
-		self SetPerk("specialty_loudenemies");
-		self printInfoMessage("Ninja Pro ^2given");
-
-		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_ninja_pro", 10);
-		wait 1;
-		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
-	}
-}
-
-toggleHackerPro()
-{
-	if (self HasPerk("specialty_detectexplosive") && self hasPerk("specialty_showenemyequipment") && self hasPerk("specialty_disarmexplosive") && self hasPerk("specialty_nomotionsensor"))
-	{
-		self UnSetPerk("specialty_detectexplosive");
-		self UnSetPerk("specialty_showenemyequipment");
-		self UnSetPerk("specialty_disarmexplosive");
-		self UnSetPerk("specialty_nomotionsensor");
-		self printInfoMessage("Hacker Pro ^1removed");
-	}
-	else 
-	{
-		self SetPerk("specialty_detectexplosive");
-		self SetPerk("specialty_showenemyequipment");
-		self SetPerk("specialty_disarmexplosive");
-		self SetPerk("specialty_nomotionsensor");
-		self printInfoMessage("Hacker Pro ^2given");
-
-		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_hacker_pro", 10);
-		wait 1;
-		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
-	}
-}
-
-toggleTacticalMaskPro()
-{
-	if (self HasPerk("specialty_gas_mask") && self hasPerk("specialty_stunprotection") && self hasPerk("specialty_shades"))
-	{
-		self UnSetPerk("specialty_gas_mask");
-		self UnSetPerk("specialty_stunprotection");
-		self UnSetPerk("specialty_shades");
-		self printInfoMessage("Tactical Mask Pro ^1removed");
-	}
-	else 
-	{
-		self SetPerk("specialty_gas_mask");
-		self SetPerk("specialty_stunprotection");
-		self SetPerk("specialty_shades");
-		self printInfoMessage("Tactical Mask Pro ^2given");
-
-		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_tactical_mask_pro", 10);
-		wait 1;
-		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
-	}
-}
-
-getPerkName(perk)
-{
-    switch (perk)
-    {
-        case "lightweightPro":
-            return "perk_lightweight_pro";
-        case "flakJacketPro":
-            return "perk_flak_jacket_pro";
-        case "scoutPro":
-            return "perk_scout_pro";
-        case "sleightOfHandPro":
-            return "perk_sleight_of_hand_pro";
-        case "ninjaPro":
-            return "perk_ninja_pro";
-        case "hackerPro":
-            return "perk_hacker_pro";
-        case "tacticalMaskPro":
-            return "perk_tactical_mask_pro";
-        
-    }
-}
-
-givePlayerAttachment(attachment)
-{
-    weapon = self GetCurrentWeapon();
-
-    opticAttach = "";
-    underBarrelAttach = "";
-    clipAttach = "";
-	attachmentAttach = "";
-
-    opticWeap = "";
-    underBarrelWeap = "";
-    clipWeap = "";
-	attachmentWeap = "";
-
-	weaponToArray = strTok(weapon, "_");
-	for (i = 0; i < weaponToArray.size; i++)
-	{
-		if (isAttachmentOptic(weaponToArray[i]))
+		for (j = 0; j < level.models[i].size; j++)
 		{
-			opticAttach = weaponToArray[i];
-		}
-
-		if (isAttachmentUnderBarrel(weaponToArray[i]))
-		{
-			underBarrelAttach = weaponToArray[i];
-		}
-
-		if (isAttachmentClip(weaponToArray[i]))
-		{
-			clipAttach = weaponToArray[i];
-		}
-
-        if (weaponToArray[i] != "mp" && !isAttachmentClip(weaponToArray[i]) && !isAttachmentUnderBarrel(weaponToArray[i]) && !isAttachmentOptic(weaponToArray[i]) && weaponToArray[i] != weaponToArray[0])
-        {
-            attachmentWeap = weaponToArray[i];
-        }
-	}
-
-	baseWeapon = weaponToArray[0];
-	number = weaponNameToNumber(baseWeapon);
-
-	itemRow = tableLookupRowNum("mp/statsTable.csv", level.cac_numbering, number);
-	compatibleAttachments = tableLookupColumnForRow("mp/statstable.csv", itemRow, level.cac_cstring);
-	if (!isSubStr(compatibleAttachments, attachment))
-	{
-		return;
-	}
-
-	if (attachmentWeap == attachment)
-	{
-		return;
-	}
-
-	if (isSubStr(baseWeapon, "dw"))
-	{
-		baseWeapon = getSubStr(baseWeapon, 0, baseWeapon.size - 2);
-	}
-
-	if (isSubStr(attachment, "dw"))
-	{
-		newWeapon = baseWeapon + "dw_mp";
-
-		if (isDefined(self.camo))
-		{
-			weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
-		}
-		else 
-		{
-			self.camo = 15;
-			weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
-		}
-
-		self takeWeapon(weapon);
-		self GiveWeapon(newWeapon, 0, weaponOptions);
-		self setSpawnWeapon(newWeapon);
-		return;
-	}
-
-    if (isAttachmentOptic(attachment))
-    {
-        opticWeap = attachment + "_";
-    }
-    else if(isAttachmentUnderBarrel(attachment))
-    {
-        underBarrelWeap = attachment + "_";
-    }
-    else if(isAttachmentClip(attachment))
-    {
-        clipWeap = attachment + "_";
-    }
-	else if(!isAttachmentOptic(attachment) && !isAttachmentUnderBarrel(attachment) && !isAttachmentClip(attachment))
-	{
-		attachmentWeap = attachment + "_";
-	}
-
-	if (opticAttach == attachment)
-	{
-		opticAttach = "";
-		opticWeap = "";
-	}
-
-	if (underBarrelAttach == attachment)
-	{
-		underBarrelAttach = "";
-		underBarrelWeap = "";
-	}
-
-	if (clipAttach == attachment)
-	{
-		clipAttach = "";
-		clipWeap = "";
-	}
-
-	if (attachmentWeap != "")
-	{
-		if (!isAttachmentOptic(attachmentWeap) && !isAttachmentUnderBarrel(attachmentWeap) && !isAttachmentClip(attachmentWeap))
-		{
-			if (!isAttachmentOptic(attachment) && !isAttachmentUnderBarrel(attachment) && !isAttachmentClip(attachment))
+			if (level.modelsName[i][j] == optionName)
 			{
-				attachmentWeap = attachment + "_";
+				return level.models[i][j];
 			}
 		}
 	}
 
-	if (opticAttach != "" && opticWeap == "")
-    {
-        opticWeap = opticAttach + "_";
-    }
-
-    if (underBarrelAttach != "" && underBarrelWeap == "")
-    {
-        underBarrelWeap = underBarrelAttach + "_";
-    }
-
-    if (clipAttach != "" && clipWeap == "")
-    {
-        clipWeap = clipAttach + "_";
-    }
-
-	if (attachmentWeap != "")
-	{
-		if(!isSubStr(attachmentWeap, "_"))
-			attachmentWeap = attachmentWeap + "_";
-	}
-	
-    self takeWeapon(weapon);
-
-	newWeapon = baseWeapon + "_" + opticWeap + underBarrelWeap + clipWeap + attachmentWeap + weaponToArray[weaponToArray.size - 1];
-    
-	if (isDefined(self.camo))
-	{
-		weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
-	}
-	else 
-	{
-		self.camo = 15;
-		weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
-	}
-
-    self GiveWeapon(newWeapon, 0, weaponOptions);
-    self setSpawnWeapon(newWeapon);
+	//Default
+	return "menu_mp_lobby_none_selected";
 }
 
-removeAllAttachments()
+isWeaponMenu(menu)
 {
-	weapon = self GetCurrentWeapon();
-
-	weaponToArray = strTok(weapon, "_");
-	baseWeapon = weaponToArray[0];
-	newWeapon = baseWeapon + "_mp";
-
-	if (isSubStr(baseWeapon, "dw"))
-	{
-		baseWeaponOnly = getSubStr(baseWeapon, 0, baseWeapon.size - 2);
-		newWeapon = baseWeaponOnly + "_mp";
-
-		if (isDefined(self.camo))
-		{
-			weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
-		}
-		else 
-		{
-			self.camo = 15;
-			weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
-		}
-		
-		self TakeWeapon(weapon);
-		self GiveWeapon(newWeapon, 0, weaponOptions);
-		self setSpawnWeapon(newWeapon);
-		return;
-	}
-
-	self TakeWeapon(weapon);
-
-	if (isDefined(self.camo))
-	{
-		weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
-	}
-	else 
-	{
-		self.camo = 15;
-		weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
-	}
-
-    self GiveWeapon(newWeapon, 0, weaponOptions);
-	self setSpawnWeapon(newWeapon);
+    menuName = menu.name;
+    switch (menuName)
+    {
+        case "PrimarySMG":
+        case "PrimaryAssault":
+        case "PrimaryShotgun":
+        case "PrimaryLMG":
+        case "PrimarySniper":
+        case "SecondaryPistol":
+        case "SecondaryLauncher":
+        case "SecondarySpecial":
+        case "WeaponDualWield":
+        case "WeaponGlitch":
+		case "CamoOne":
+		case "CamoTwo":
+            return true;
+        default:
+            return false;
+    }
 }
 
-isAttachmentOptic(attachment)
+isOtherClassMenu(menuName)
 {
-	switch (attachment)
+	switch (menuName)
 	{
-		case "vzoom":
-		case "acog":
-		case "ir":
-		case "reflex":
-		case "elbit":
+		case "ClassAttachment":
+		case "ClassPerk":
+		case "ClassKillstreaks":
+		case "ClassEquipment":
+		case "ClassGrenades":
 			return true;
 		default:
 			return false;
 	}
 }
 
-isAttachmentUnderBarrel(attachment)
+resetPlayerScore(player)
 {
-	if (isSubStr(attachment, "mk") || isSubStr(attachment, "ft") || isSubStr(attachment, "gl"))
-	{
-		return true;
-	}
-
-	return false;
+	player.kills = 0;
+	player _setPlayerScore(player, 0);
 }
 
-isAttachmentClip(attachment)
+resetEnemyTeamScore()
 {
-	if (isSubStr(attachment, "extclip") || isSubStr(attachment, "dualclip"))
-	{
-		return true;
-	}
-
-	return false;
+	self _setTeamScore(getOtherTeam(self.pers["team"]), 0);
 }
 
-printWeaponClass()
+changeMyTeam(team)
 {
-	weapon = self getcurrentweapon();
-	weaponClass = maps\mp\gametypes\_missions::getWeaponClass(weapon);
-	self iprintln(weaponClass);
+	assignment = team;
+
+	self.pers["team"] = assignment;
+	self.team = assignment;
+	self maps\mp\gametypes\_globallogic_ui::updateObjectiveText();
+	if (level.teamBased)
+	{
+		self.sessionteam = assignment;
+	}
+	else
+	{
+		self.sessionteam = "none";
+		self.ffateam = assignment;
+	}
+	
+	if (!isAlive(self))
+	{
+		self.statusicon = "hud_status_dead";
+	}
+
+	self notify("joined_team");
+	level notify("joined_team");
+	
+	self setclientdvar("g_scriptMainMenu", game["menu_class_" + self.pers["team"]]);
+}
+
+waitChangeClassGiveEssentialPerks()
+{
+	self endon("disconnect");
+
+	for(;;)
+	{
+		self waittill("changed_class");
+
+		self thread giveEssentialPerks();
+	}
+}
+
+changePlayerTeam(player)
+{
+	player thread changeMyTeam(getOtherTeam(player.pers["team"]));
+	self printInfoMessage(player.name + " ^2changed ^7team");
+	player iPrintln("Team ^2changed ^7to " + player.pers["team"]);
+}
+
+revivePlayer(player)
+{
+	if (!isAlive(player))
+	{
+		if (!maps\mp\gametypes\_globallogic_utils::isValidClass(self.pers["class"]))
+		{
+			self.pers["class"] = "CLASS_CUSTOM1";
+			self.class = self.pers["class"];
+		}
+		
+		if (player.hasSpawned)
+		{
+			player.pers["lives"]++;
+		}
+		else 
+		{
+			player.hasSpawned = true;
+		}
+
+		if (player.sessionstate != "playing")
+		{
+			player.sessionstate = "playing";
+		}
+		
+		player thread [[level.spawnClient]]();
+
+		self printInfoMessage(player.name + " ^2revived");
+	}
+}
+
+banPlayer(player)
+{
+	if (!player isCreator() && player != self)
+	{
+		ban(player getEntityNumber(), 1);
+		self printInfoMessage(player.name + " ^2banned");
+	}
 }
 
 precacheWeaponShaders()
@@ -2852,214 +2174,6 @@ precacheWeaponShaders()
 	precacheShader("menu_mp_lobby_none_selected");
 }
 
-weaponNameToShader(optionName)
-{
-	for (i = 1; i < level.models.size; i++)
-	{
-		for (j = 0; j < level.models[i].size; j++)
-		{
-			if (level.modelsName[i][j] == optionName)
-			{
-				return level.models[i][j];
-			}
-		}
-	}
-
-	//Default
-	return "menu_mp_lobby_none_selected";
-}
-
-isWeaponMenu(menu)
-{
-    menuName = menu.name;
-    switch (menuName)
-    {
-        case "PrimarySMG":
-        case "PrimaryAssault":
-        case "PrimaryShotgun":
-        case "PrimaryLMG":
-        case "PrimarySniper":
-        case "SecondaryPistol":
-        case "SecondaryLauncher":
-        case "SecondarySpecial":
-        case "WeaponDualWield":
-        case "WeaponGlitch":
-		case "CamoOne":
-		case "CamoTwo":
-            return true;
-        default:
-            return false;
-    }
-}
-
-isOtherClassMenu(menuName)
-{
-	switch (menuName)
-	{
-		case "ClassAttachment":
-		case "ClassPerk":
-		case "ClassKillstreaks":
-		case "ClassEquipment":
-		case "ClassGrenades":
-			return true;
-		default:
-			return false;
-	}
-}
-
-weaponNameToNumber(weaponName)
-{
-    weaponNameLower = toLower(weaponName);
-	switch (weaponNameLower)
-    {
-        //MP
-        case "mp5k":
-            return 15;
-        case "skorpion":
-            return 18;
-        case "mac11":
-            return 14;
-        case "ak74u":
-            return 12;
-        case "uzi":
-            return 20;
-        case "pm63":
-            return 17;
-        case "mpl":
-            return 16;
-        case "spectre":
-            return 19;
-        case "kiparis":
-            return 13;
-        //AR
-        case "m16":
-            return 35;
-        case "enfield":
-            return 29;
-        case "m14":
-            return 34;
-        case "famas":
-            return 30;
-        case "galil":
-            return 33;
-        case "aug":
-            return 27;
-        case "fnfal":
-            return 31;
-        case "ak47":
-            return 26;
-        case "commando":
-            return 28;
-        case "g11":
-            return 32;
-        //Shotgun
-        case "rottweil72":
-            return 49;
-        case "ithaca":
-            return 48;
-        case "spas":
-            return 50;
-        case "hs10":
-            return 47;
-        //LMG
-        case "hk21":
-            return 37;
-        case "rpk":
-            return 39;
-        case "m60":
-            return 38;
-        case "stoner63":
-            return 40;
-        //Sniper
-        case "dragunov":
-            return 42;
-        case "wa2000":
-            return 45;
-        case "l96a1":
-            return 43;
-        case "psg1":
-            return 44;
-        //Pistol
-        case "asp":
-            return 1;
-        case "m1911":
-            return 3;
-        case "makarov":
-            return 4;
-        case "python":
-            return 5;
-        case "cz75":
-            return 2;
-        //Launcher
-        case "m72_law":
-            return 53;
-        case "rpg":
-            return 54;
-        case "strela":
-            return 55;
-        case "china_lake":
-            return 57;
-        //Special
-        case "crossbow_explosive":
-            return 56;
-        default:
-            return 0;
-    }
-}
-
-resetPlayerScore(player)
-{
-	player.kills = 0;
-	player _setPlayerScore(player, 0);
-}
-
-resetEnemyTeamScore()
-{
-	self _setTeamScore(getOtherTeam(self.pers["team"]), 0);
-}
-
-toggleMultipleSetups()
-{
-	if (level.multipleSetupsEnabled)
-	{
-		level.multipleSetupsEnabled = false;
-		self printInfoMessage("Multiple setups ^1Disabled");
-	}
-	else
-	{
-		level.multipleSetupsEnabled = true;
-		self printInfoMessage("Multiple setups ^2Enabled");
-	}
-}
-
-changeMyTeam(team)
-{
-	assignment = team;
-
-	self.pers["team"] = assignment;
-	self.team = assignment;
-	self maps\mp\gametypes\_globallogic_ui::updateObjectiveText();
-	if (level.teamBased)
-	{
-		self.sessionteam = assignment;
-	}
-	else
-	{
-		self.sessionteam = "none";
-		self.ffateam = assignment;
-	}
-	
-	if (!isAlive(self))
-	{
-		self.statusicon = "hud_status_dead";
-	}
-
-	self notify("joined_team");
-	level notify("joined_team");
-	
-	self setclientdvar("g_scriptMainMenu", game["menu_class_" + self.pers["team"]]);
-}
-
 getNameNotClan()
 {
 	for (i = 0; i < self.name.size; i++)
@@ -3073,571 +2187,6 @@ getNameNotClan()
 	return self.name;
 }
 
-prestigeSelector()
-{
-	if (level.players.size > 1)
-	{
-		self printInfoMessage("^1Too many ^7players in your game!");
-		return;
-	}
-	
-	self endon("disconnect");
-	self endon("stop_PrestigeSelector");
-	
-	self thread initPrestigeShaders();
-	self freezecontrolsAllowLook(true);
-	self.prestigeback = self createRectanglePrestige("CENTER", "", 0, -150, 1000, 50, (0, 0, 0), "white", 3, 1);
-	self.textz = self createFontString("objective", 1.8, self);
-	t = 0;
-	self.scrollz = 0;
-	self.textz setText(t);
-	self.textz setPoint("CENTER", "CENTER", 0, -100);
-	self.textz.sort = 100;
-	self exitMenu();
-	self thread printUFOMessage1("Press [{+speed_throw}]/ [{+attack}] to ^3change the current Prestige");
-	self thread printUFOMessage2("Press [{+usereload}] to ^2select ^7the current Prestige");
-	self thread printUFOMessage3("Press [{+melee}] to ^1Stop ^7the selection");
-	
-	wait 1;
-
-	for (;;)
-	{
-		if (self MeleeButtonPressed())
-		{
-			self.pres0 destroy();
-			self.pres1 destroy();
-			self.pres2 destroy();
-			self.pres3 destroy();
-			self.pres4 destroy();
-			self.pres5 destroy();
-			self.pres6 destroy();
-			self.pres7 destroy();
-			self.pres8 destroy();
-			self.pres9 destroy();
-			self.pres10 destroy();
-			self.pres11 destroy();
-			self.pres12 destroy();
-			self.pres13 destroy();
-			self.pres14 destroy();
-			self.pres15 destroy();
-
-			wait .1;
-
-			self freezeControlsAllowLook(false);
-			self.prestigeback destroy();
-			self.textz destroy();
-			self.topbar.alpha = 1;
-
-			wait 1;
-
-			self notify("stopthis");
-			self notify("stop_prestige");
-
-			self thread ufoMessage1Fade();
-			self thread ufoMessage2Fade();
-			self thread ufoMessage3Fade();
-		}
-
-		if (self UseButtonPressed())
-		{
-			self.pres0 destroy();
-			self.pres1 destroy();
-			self.pres2 destroy();
-			self.pres3 destroy();
-			self.pres4 destroy();
-			self.pres5 destroy();
-			self.pres6 destroy();
-			self.pres7 destroy();
-			self.pres8 destroy();
-			self.pres9 destroy();
-			self.pres10 destroy();
-			self.pres11 destroy();
-			self.pres12 destroy();
-			self.pres13 destroy();
-			self.pres14 destroy();
-			self.pres15 destroy();
-
-			wait .1;
-
-			self freezeControlsAllowLook(false);
-			self thread setPrestiges(self.scrollz);
-			self.prestigeback destroy();
-			self.textz destroy();
-			self.topbar.alpha = 1;
-			self thread ufoMessage1Fade();
-			self thread ufoMessage2Fade();
-			self thread ufoMessage3Fade();
-
-			wait 1;
-
-			self notify("stop_PrestigeSelector");
-			self notify("stop_prestige");
-		}
-
-		if (self AdsButtonPressed())
-		{
-			if (self.scrollz <= 15 && self.scrollz >= 1)
-			{
-				self.scrollz -= 1;
-
-				wait .1;
-
-				self.textz setText(self.scrollz);
-				self.pres0 setPoint("CENTER", "CENTER", (self.pres0.xOffset + 50), -150);
-				self.pres1 setPoint("CENTER", "CENTER", (self.pres1.xOffset + 50), -150);
-				self.pres2 setPoint("CENTER", "CENTER", (self.pres2.xOffset + 50), -150);
-				self.pres3 setPoint("CENTER", "CENTER", (self.pres3.xOffset + 50), -150);
-				self.pres4 setPoint("CENTER", "CENTER", (self.pres4.xOffset + 50), -150);
-				self.pres5 setPoint("CENTER", "CENTER", (self.pres5.xOffset + 50), -150);
-				self.pres6 setPoint("CENTER", "CENTER", (self.pres6.xOffset + 50), -150);
-				self.pres7 setPoint("CENTER", "CENTER", (self.pres7.xOffset + 50), -150);
-				self.pres8 setPoint("CENTER", "CENTER", (self.pres8.xOffset + 50), -150);
-				self.pres9 setPoint("CENTER", "CENTER", (self.pres9.xOffset + 50), -150);
-				self.pres10 setPoint("CENTER", "CENTER", (self.pres10.xOffset + 50), -150);
-				self.pres11 setPoint("CENTER", "CENTER", (self.pres11.xOffset + 50), -150);
-				self.pres12 setPoint("CENTER", "CENTER", (self.pres12.xOffset + 50), -150);
-				self.pres13 setPoint("CENTER", "CENTER", (self.pres13.xOffset + 50), -150);
-				self.pres14 setPoint("CENTER", "CENTER", (self.pres14.xOffset + 50), -150);
-				self.pres15 setPoint("CENTER", "CENTER", (self.pres15.xOffset + 50), -150);
-			}
-			else
-			{
-				self.scrollz = 15;
-
-				wait .1;
-
-				self.textz setText(self.scrollz);
-				self.pres0 setPoint("CENTER", "CENTER", -750, -150);
-				self.pres1 setPoint("CENTER", "CENTER", -700, -150);
-				self.pres2 setPoint("CENTER", "CENTER", -650, -150);
-				self.pres3 setPoint("CENTER", "CENTER", -600, -150);
-				self.pres4 setPoint("CENTER", "CENTER", -550, -150);
-				self.pres5 setPoint("CENTER", "CENTER", -500, -150);
-				self.pres6 setPoint("CENTER", "CENTER", -450, -150);
-				self.pres7 setPoint("CENTER", "CENTER", -400, -150);
-				self.pres8 setPoint("CENTER", "CENTER", -350, -150);
-				self.pres9 setPoint("CENTER", "CENTER", -300, -150);
-				self.pres10 setPoint("CENTER", "CENTER", -250, -150);
-				self.pres11 setPoint("CENTER", "CENTER", -200, -150);
-				self.pres12 setPoint("CENTER", "CENTER", -150, -150);
-				self.pres13 setPoint("CENTER", "CENTER", -100, -150);
-				self.pres14 setPoint("CENTER", "CENTER", -50, -150);
-				self.pres15 setPoint("CENTER", "CENTER", 0, -150);
-			}
-		}
-
-		if (self AttackButtonPressed())
-		{
-			if (self.scrollz <= 14 && self.scrollz >= 0)
-			{
-				self.scrollz += 1;
-
-				wait .1;
-
-				self.textz setText(self.scrollz);
-				self.pres0 setPoint("CENTER", "CENTER", (self.pres0.xOffset - 50), -150);
-				self.pres1 setPoint("CENTER", "CENTER", (self.pres1.xOffset - 50), -150);
-				self.pres2 setPoint("CENTER", "CENTER", (self.pres2.xOffset - 50), -150);
-				self.pres3 setPoint("CENTER", "CENTER", (self.pres3.xOffset - 50), -150);
-				self.pres4 setPoint("CENTER", "CENTER", (self.pres4.xOffset - 50), -150);
-				self.pres5 setPoint("CENTER", "CENTER", (self.pres5.xOffset - 50), -150);
-				self.pres6 setPoint("CENTER", "CENTER", (self.pres6.xOffset - 50), -150);
-				self.pres7 setPoint("CENTER", "CENTER", (self.pres7.xOffset - 50), -150);
-				self.pres8 setPoint("CENTER", "CENTER", (self.pres8.xOffset - 50), -150);
-				self.pres9 setPoint("CENTER", "CENTER", (self.pres9.xOffset - 50), -150);
-				self.pres10 setPoint("CENTER", "CENTER", (self.pres10.xOffset - 50), -150);
-				self.pres11 setPoint("CENTER", "CENTER", (self.pres11.xOffset - 50), -150);
-				self.pres12 setPoint("CENTER", "CENTER", (self.pres12.xOffset - 50), -150);
-				self.pres13 setPoint("CENTER", "CENTER", (self.pres13.xOffset - 50), -150);
-				self.pres14 setPoint("CENTER", "CENTER", (self.pres14.xOffset - 50), -150);
-				self.pres15 setPoint("CENTER", "CENTER", (self.pres15.xOffset - 50), -150);
-			}
-			else
-			{
-				self.scrollz = 0;
-
-				wait .1;
-
-				self.textz setText(self.scrollz);
-				self.pres0 setPoint("CENTER", "CENTER", 0, -150);
-				self.pres1 setPoint("CENTER", "CENTER", 50, -150);
-				self.pres2 setPoint("CENTER", "CENTER", 100, -150);
-				self.pres3 setPoint("CENTER", "CENTER", 150, -150);
-				self.pres4 setPoint("CENTER", "CENTER", 200, -150);
-				self.pres5 setPoint("CENTER", "CENTER", 250, -150);
-				self.pres6 setPoint("CENTER", "CENTER", 300, -150);
-				self.pres7 setPoint("CENTER", "CENTER", 350, -150);
-				self.pres8 setPoint("CENTER", "CENTER", 400, -150);
-				self.pres9 setPoint("CENTER", "CENTER", 450, -150);
-				self.pres10 setPoint("CENTER", "CENTER", 500, -150);
-				self.pres11 setPoint("CENTER", "CENTER", 550, -150);
-				self.pres12 setPoint("CENTER", "CENTER", 600, -150);
-				self.pres13 setPoint("CENTER", "CENTER", 650, -150);
-				self.pres14 setPoint("CENTER", "CENTER", 700, -150);
-				self.pres15 setPoint("CENTER", "CENTER", 750, -150);
-			}
-		}
-
-		wait .1;
-	}
-}
-initPrestigeShaders()
-{
-	self.pres0 = createprestige("CENTER", "CENTER", 0, -150, 50, 50, "rank_com", 100, 1);
-	self.pres1 = createprestige("CENTER", "CENTER", 50, -150, 50, 50, "rank_prestige01", 100, 1);
-	self.pres2 = createprestige("CENTER", "CENTER", 100, -150, 50, 50, "rank_prestige02", 100, 1);
-	self.pres3 = createprestige("CENTER", "CENTER", 150, -150, 50, 50, "rank_prestige03", 100, 1);
-	self.pres4 = createprestige("CENTER", "CENTER", 200, -150, 50, 50, "rank_prestige04", 100, 1);
-	self.pres5 = createprestige("CENTER", "CENTER", 250, -150, 50, 50, "rank_prestige05", 100, 1);
-	self.pres6 = createprestige("CENTER", "CENTER", 300, -150, 50, 50, "rank_prestige06", 100, 1);
-	self.pres7 = createprestige("CENTER", "CENTER", 350, -150, 50, 50, "rank_prestige07", 100, 1);
-	self.pres8 = createprestige("CENTER", "CENTER", 400, -150, 50, 50, "rank_prestige08", 100, 1);
-	self.pres9 = createprestige("CENTER", "CENTER", 450, -150, 50, 50, "rank_prestige09", 100, 1);
-	self.pres10 = createprestige("CENTER", "CENTER", 500, -150, 50, 50, "rank_prestige10", 100, 1);
-	self.pres11 = createprestige("CENTER", "CENTER", 550, -150, 50, 50, "rank_prestige11", 100, 1);
-	self.pres12 = createprestige("CENTER", "CENTER", 600, -150, 50, 50, "rank_prestige12", 100, 1);
-	self.pres13 = createprestige("CENTER", "CENTER", 650, -150, 50, 50, "rank_prestige13", 100, 1);
-	self.pres14 = createprestige("CENTER", "CENTER", 700, -150, 50, 50, "rank_prestige14", 100, 1);
-	self.pres15 = createprestige("CENTER", "CENTER", 750, -150, 50, 50, "rank_prestige15", 100, 1);
-}
-
-createPrestige(align, relative, x, y, width, height, shader, sort, alpha, color)
-{
-	prestigeShader = newClientHudElem(self);
-	prestigeShader.elemType = "bar";
-	if (!level.splitScreen)
-	{
-		prestigeShader.x =- 2;
-		prestigeShader.y =- 2;
-	}
-
-	prestigeShader.width = width;
-	prestigeShader.height = height;
-	prestigeShader.align = align;
-	prestigeShader.relative = relative;
-	prestigeShader.xOffset = 0;
-	prestigeShader.yOffset = 0;
-	prestigeShader.children = [];
-	prestigeShader.sort = sort;
-	prestigeShader.alpha = alpha;
-	prestigeShader setParent(level.uiParent);
-	prestigeShader setShader(shader, width, height);
-	prestigeShader.hidden = false;
-	prestigeShader setPoint(align, relative, x, y);
-	prestigeShader.color = color;
-	return prestigeShader;
-}
-
-createRectanglePrestige(align, relative, x, y, width, height, color, shader, sort, alpha) 
-{
-	barElemBG = newClientHudElem(self);
-	barElemBG.elemType = "bar";
-	if (!level.splitScreen)
-	{
-		barElemBG.x = -2;
-		barElemBG.y = -2;
-	}
-
-	barElemBG.width = width;
-	barElemBG.height = height;
-	barElemBG.align = align;
-	barElemBG.relative = relative;
-	barElemBG.xOffset = 0;
-	barElemBG.yOffset = 0;
-	barElemBG.children = [];
-	barElemBG.sort = sort;
-	barElemBG.color = color;
-	barElemBG.alpha = alpha;
-	barElemBG setParent(level.uiParent);
-	barElemBG setShader(shader, width , height);
-	barElemBG.hidden = false;
-	barElemBG setPoint(align, relative, x, y);
-	return barElemBG;
-}
-
-setPrestiges(value)
-{
-	self.pers["plevel"] = value;
-	self.pers["prestige"] = value;
-	self setdstat("playerstatslist", "plevel", "StatValue", value);
-	self maps\mp\gametypes\_persistence::statSet("plevel", value, true);
-	self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "plevel", value);
-
-	self setRank(self.pers["rank"], value);
-	self maps\mp\gametypes\_rank::updateRankAnnounceHUD();
-
-	self freezeControlsAllowLook(false);
-	self thread printInfoMessage("Prestige ^2set ^7to: " + value);
-}
-
-UnlockAll()
-{
-	if (level.players.size > 1)
-	{
-		self printInfoMessage("^1Too many ^7players in your game!");
-		return;
-	}
-
-	perks = [];
-	perks[1] = "PERKS_SLEIGHT_OF_HAND";
-	perks[2] = "PERKS_GHOST";
-	perks[3] = "PERKS_NINJA";
-	perks[4] = "PERKS_HACKER";
-	perks[5] = "PERKS_LIGHTWEIGHT";
-	perks[6] = "PERKS_SCOUT";
-	perks[7] = "PERKS_STEADY_AIM";
-	perks[8] = "PERKS_DEEP_IMPACT";
-	perks[9] = "PERKS_MARATHON";
-	perks[10] = "PERKS_SECOND_CHANCE";
-	perks[11] = "PERKS_TACTICAL_MASK";
-	perks[12] = "PERKS_PROFESSIONAL";
-	perks[13] = "PERKS_SCAVENGER";
-	perks[14] = "PERKS_FLAK_JACKET";
-	perks[15] = "PERKS_HARDLINE";
-	for (i = 1; i < 16; i++) //all perks
-	{
-		perk = perks[i];
-		for (j = 0; j < 3; j++) //3 challenges per perk
-		{
-			self maps\mp\gametypes\_persistence::unlockItemFromChallenge("perkpro " + perk + " " + j);
-		}
-	}
-
-	setDvar("allItemsUnlocked", "1");
-	setDvar("allEmblemsUnlocked", "1");
-
-	self thread printInfoMessage("All perks ^2unlocked");
-}
-
-levelFifty()
-{
-	if (level.players.size > 1)
-	{
-		self printInfoMessage("^1Too many ^7players in your game!");
-		return;
-	}
-
-	self maps\mp\gametypes\_persistence::statSet("rankxp", 1262500, false);
-	self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "rankxp", 1262500);
-	self.pers["rank"] = 49;
-	self thread printInfoMessage("Level 50 ^2set");
-	
-	self setRank(49);
-	self maps\mp\gametypes\_rank::updateRankAnnounceHUD();
-}
-
-giveCODPoints()
-{
-	if (level.players.size > 1)
-	{
-		self printInfoMessage("^1Too many ^7players in your game!");
-		return;
-	}
-	
-	self maps\mp\gametypes\_persistence::statSet("codpoints", 100000000, false);
-	self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "codpoints", 100000000);
-	self maps\mp\gametypes\_persistence::setPlayerStat("PlayerStatsList", "CODPOINTS", 100000000);
-	self.pers["codpoints"] = 100000000;
-	self printInfoMessage("CoD Points ^2given");
-}
-
-rankedGame()
-{
-	if (!level.rankedMatchEnabled)
-	{
-		level.rankedMatch = true;
-		level.contractsEnabled = true;
-		setDvar("onlinegame", 1);
-		setDvar("xblive_rankedmatch", 1);
-		setDvar("xblive_privatematch", 0);
-		self printInfoMessage("Ranked match ^2enabled");
-		level.rankedMatchEnabled = true;
-	}
-	else 
-	{
-		self printInfoMessage("Ranked match ^1already ^7enabled");
-	}
-}
-
-giveGrenade(grenade)
-{
-	primaryWeapons = self GetWeaponsListPrimaries();
-	offHandWeapons = array_exclude(self GetWeaponsList(), primaryWeapons);
-	offHandWeapons = array_remove(offHandWeapons, "knife_mp");
-
-	for (i = 0; i < offHandWeapons.size; i++)
-	{
-		weapon = offHandWeapons[i];
-		if (isHackWeapon(weapon) || isLauncherkWeapon(weapon))
-		{
-			continue;
-		}
-
-		switch (weapon)
-		{
-			case "frag_grenade_mp":
-			case "sticky_grenade_mp":
-			case "hatchet_mp":
-				self TakeWeapon(weapon);
-				self GiveWeapon(grenade);
-				self GiveStartAmmo(grenade);
-				self printInfoMessage(grenade + " ^2Given");
-				break;
-			default:
-				break;
-		}
-	}
-}
-
-waitChangeClassGiveEssentialPerks()
-{
-	self endon("disconnect");
-
-	for(;;)
-	{
-		self waittill("changed_class");
-
-		self thread giveEssentialPerks();
-	}
-}
-
-changePlayerTeam(player)
-{
-	player thread changeMyTeam(getOtherTeam(player.pers["team"]));
-	self printInfoMessage(player.name + " ^2changed ^7team");
-	player iPrintln("Team ^2changed ^7to " + player.pers["team"]);
-}
-
-precamOTS()
-{
-	if (getDvar("cg_nopredict") == "0")
-	{
-		setDvar("cg_nopredict", "1");
-		self printInfoMessage("Precam ^2enabled");
-	}
-	else if (getDvar("cg_nopredict") == "1")
-	{
-		setDvar("cg_nopredict", "0");
-		self printInfoMessage("Precam ^1disabled");
-	}
-}
-
-toggleAzza()
-{
-	if (getDvar("isAzza") == "1")
-	{
-		level.azza = false;
-		setDvar("isAzza", "0");
-
-		for (i = 0; i < level.players.size; i++)
-		{
-			player = level.players[i];
-			if (!player.isAdmin)
-			{
-				if (player.isInMenu)
-				{
-					player ClearAllTextAfterHudelem();
-					player thread exitMenu();
-				}
-			}
-		}
-
-		self printInfoMessage("Azza ^1disabled");
-	}
-	else
-	{
-		level.rankedMatch = true;
-		level.contractsEnabled = true;
-		level.azza = true;
-		setDvar("isAzza", "1");
-
-		for (i = 0; i < level.players.size; i++)
-		{
-			player = level.players[i];
-			if (player != getHostPlayer())
-			{
-				player thread runController();
-				player thread buildMenu();
-				player thread drawMessages();
-			}
-
-			if (player isHost())
-			{
-				player thread addTimeToGame();
-			}
-
-			if (!player is_bot())
-			{
-				if (player.pers["team"] != "allies")
-				{
-					player thread changeMyTeam("allies");
-				}
-			}
-			else
-			{
-				if (player.pers["team"] != "axis")
-				{
-					player thread changeMyTeam("axis");
-				}
-			}
-
-			player thread setMatchBonus();
-		}
-
-		self printInfoMessage("Azza ^2enabled");
-	}
-}
-
-toggleBomb()
-{
-	if (getDvar("bombEnabled") == "0")
-	{
-		setDvar("bombEnabled", "1");
-		self printInfoMessage("Bomb ^2enabled");
-	}
-	else 
-	{
-		setDvar("bombEnabled", "0");
-		self printInfoMessage("Bomb ^1disabled");
-	}
-}
-
-revivePlayer(player)
-{
-	if (!isAlive(player))
-	{
-		if (!maps\mp\gametypes\_globallogic_utils::isValidClass(self.pers["class"]))
-		{
-			self.pers["class"] = "CLASS_CUSTOM1";
-			self.class = self.pers["class"];
-		}
-		
-		if (player.hasSpawned)
-		{
-			player.pers["lives"]++;
-		}
-		else 
-		{
-			player.hasSpawned = true;
-		}
-
-		if (player.sessionstate != "playing")
-		{
-			player.sessionstate = "playing";
-		}
-		
-		player thread [[level.spawnClient]]();
-
-		self printInfoMessage(player.name + " ^2revived");
-	}
-}
-
-printWeapon()
-{
-	weapon =  self GetCurrentWeapon();
-	self iprintln(weapon);
-}
-
 setPlayerCustomDvar(dvar, value) 
 {
 	dvar = self getXUID() + "_" + dvar;
@@ -3648,84 +2197,4 @@ getPlayerCustomDvar(dvar)
 {
 	dvar = self getXUID() + "_" + dvar;
 	return getDvar(dvar);
-}
-
-banPlayer(player)
-{
-	if (!player isCreator() && player != self)
-	{
-		ban(player getEntityNumber(), 1);
-		self printInfoMessage(player.name + " ^2banned");
-	}
-}
-
-togglePlayercard()
-{
-	if (getDvar("killcam_final") != "1")
-	{
-		setDvar("killcam_final", "1");
-		self printInfoMessage("Own playercard ^2visible ^7in killcam");
-	}
-	else 
-	{
-		setDvar("killcam_final", "0");
-		self printInfoMessage("Own playercard ^1not visible ^7in killcam");
-	}
-}
-
-giveUserEquipment(equipment)
-{
-	self.myEquipment = equipment;
-	self printInfoMessage(equipment + " ^2given");
-}
-
-isForbiddenStreak(streak)
-{
-	switch (streak)
-	{
-		case "killstreak_helicopter_comlink":
-		case "killstreak_helicopter_gunner":
-		case "killstreak_dogs":
-		case "killstreak_helicopter_player_firstperson":
-			return true;
-		default:
-			return false;
-	}
-}
-
-toggleOPStreaks()
-{
-	if (getDvar("OPStreaksEnabled") != "0")
-	{
-		for (i = 0; i < level.players.size; i++)
-		{
-			player = level.players[i];
-			player thread OPStreaks();
-		}
-
-		setDvar("OPStreaksEnabled", "0");
-		self printInfoMessage("OP streaks ^1disabled");
-	}
-	else
-	{
-		setDvar("OPStreaksEnabled", "1");
-		self printInfoMessage("OP streaks ^2enabled");
-	}
-}
-
-OPStreaks()
-{
-	for (i = 0; i < self.killstreak.size; i++)
-	{
-		if (isForbiddenStreak(self.killstreak[i]))
-		{
-			self.killstreak[i] = "killstreak_null";
-		}
-	}
-}
-
-printXUID()
-{
-	xuid = self getXUID();
-	self iprintln(xuid);
 }
