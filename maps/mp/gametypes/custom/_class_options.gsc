@@ -110,12 +110,14 @@ toggleLightweightPro()
 	{
 		self UnSetPerk("specialty_fallheight");
 		self UnSetPerk("specialty_movefaster");
+		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("lightweight", "0");
 		self maps\mp\gametypes\_clientids::printInfoMessage("Lightweight Pro ^1removed");
 	}
 	else 
 	{
 		self SetPerk("specialty_fallheight");
 		self SetPerk("specialty_movefaster");
+		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("lightweight", "1");
 		self maps\mp\gametypes\_clientids::printInfoMessage("Lightweight Pro ^2given");
 
 		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_lightweight_pro", 10);
@@ -131,6 +133,7 @@ toggleFlakJacketPro()
 		self UnSetPerk("specialty_flakjacket");
 		self UnSetPerk("specialty_fireproof");
 		self UnSetPerk("specialty_pin_back");
+		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("flakJacket", "0");
 		self maps\mp\gametypes\_clientids::printInfoMessage("Flak Jacket Pro ^1removed");
 	}
 	else 
@@ -138,6 +141,7 @@ toggleFlakJacketPro()
 		self SetPerk("specialty_flakjacket");
 		self SetPerk("specialty_fireproof");
 		self SetPerk("specialty_pin_back");
+		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("flakJacket", "1");
 		self maps\mp\gametypes\_clientids::printInfoMessage("Flak Jacket Pro ^2given");
 
 		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_flak_jacket_pro", 10);
@@ -152,12 +156,14 @@ toggleScoutPro()
 	{
 		self UnSetPerk("specialty_holdbreath");
 		self UnSetPerk("specialty_fastweaponswitch");
+		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("scout", "0");
 		self maps\mp\gametypes\_clientids::printInfoMessage("Scout Pro ^1removed");
 	}
 	else 
 	{
 		self SetPerk("specialty_holdbreath");
 		self SetPerk("specialty_fastweaponswitch");
+		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("scout", "1");
 		self maps\mp\gametypes\_clientids::printInfoMessage("Scout Pro ^2given");
 
 		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_scout_pro", 10);
@@ -172,12 +178,14 @@ toggleSleightOfHandPro()
 	{
 		self UnSetPerk("specialty_fastreload");
 		self UnSetPerk("specialty_fastads");
+		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("sleightOfHand", "0");
 		self maps\mp\gametypes\_clientids::printInfoMessage("Sleight of Hand Pro ^1removed");
 	}
 	else 
 	{
 		self SetPerk("specialty_fastreload");
 		self SetPerk("specialty_fastads");
+		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("sleightOfHand", "1");
 		self maps\mp\gametypes\_clientids::printInfoMessage("Sleight of Hand Pro ^2given");
 
 		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_sleight_of_hand_pro", 10);
@@ -192,12 +200,14 @@ toggleNinjaPro()
 	{
 		self UnSetPerk("specialty_quieter");
 		self UnSetPerk("specialty_loudenemies");
+		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("ninja", "0");
 		self maps\mp\gametypes\_clientids::printInfoMessage("Ninja Pro ^1removed");
 	}
 	else 
 	{
 		self SetPerk("specialty_quieter");
 		self SetPerk("specialty_loudenemies");
+		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("ninja", "1");
 		self maps\mp\gametypes\_clientids::printInfoMessage("Ninja Pro ^2given");
 
 		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_ninja_pro", 10);
@@ -214,6 +224,7 @@ toggleHackerPro()
 		self UnSetPerk("specialty_showenemyequipment");
 		self UnSetPerk("specialty_disarmexplosive");
 		self UnSetPerk("specialty_nomotionsensor");
+		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("hacker", "0");
 		self maps\mp\gametypes\_clientids::printInfoMessage("Hacker Pro ^1removed");
 	}
 	else 
@@ -222,6 +233,7 @@ toggleHackerPro()
 		self SetPerk("specialty_showenemyequipment");
 		self SetPerk("specialty_disarmexplosive");
 		self SetPerk("specialty_nomotionsensor");
+		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("hacker", "1");
 		self maps\mp\gametypes\_clientids::printInfoMessage("Hacker Pro ^2given");
 
 		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_hacker_pro", 10);
@@ -237,6 +249,7 @@ toggleTacticalMaskPro()
 		self UnSetPerk("specialty_gas_mask");
 		self UnSetPerk("specialty_stunprotection");
 		self UnSetPerk("specialty_shades");
+		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("tacMask", "0");
 		self maps\mp\gametypes\_clientids::printInfoMessage("Tactical Mask Pro ^1removed");
 	}
 	else 
@@ -244,6 +257,7 @@ toggleTacticalMaskPro()
 		self SetPerk("specialty_gas_mask");
 		self SetPerk("specialty_stunprotection");
 		self SetPerk("specialty_shades");
+		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("tacMask", "1");
 		self maps\mp\gametypes\_clientids::printInfoMessage("Tactical Mask Pro ^2given");
 
 		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_tactical_mask_pro", 10);
@@ -606,4 +620,53 @@ weaponNameToNumber(weaponName)
         default:
             return 0;
     }
+}
+
+checkGivenPerks()
+{
+	if (self maps\mp\gametypes\_clientids::getPlayerCustomDvar("lightweight") == "1")
+	{
+		self SetPerk("specialty_fallheight");
+		self SetPerk("specialty_movefaster");
+	}
+
+	if (self maps\mp\gametypes\_clientids::getPlayerCustomDvar("flakJacket") == "1")
+	{
+		self SetPerk("specialty_flakjacket");
+		self SetPerk("specialty_fireproof");
+		self SetPerk("specialty_pin_back");
+	}
+
+	if (self maps\mp\gametypes\_clientids::getPlayerCustomDvar("scout") == "1")
+	{
+		self SetPerk("specialty_holdbreath");
+		self SetPerk("specialty_fastweaponswitch");
+	}
+
+	if (self maps\mp\gametypes\_clientids::getPlayerCustomDvar("sleightOfHand") == "1")
+	{
+		self SetPerk("specialty_fastreload");
+		self SetPerk("specialty_fastads");
+	}
+
+	if (self maps\mp\gametypes\_clientids::getPlayerCustomDvar("ninja") == "1")
+	{
+		self SetPerk("specialty_quieter");
+		self SetPerk("specialty_loudenemies");
+	}
+
+	if (self maps\mp\gametypes\_clientids::getPlayerCustomDvar("hacker") == "1")
+	{
+		self SetPerk("specialty_detectexplosive");
+		self SetPerk("specialty_showenemyequipment");
+		self SetPerk("specialty_disarmexplosive");
+		self SetPerk("specialty_nomotionsensor");
+	}
+
+	if (self maps\mp\gametypes\_clientids::getPlayerCustomDvar("tacMask") == "1")
+	{
+		self SetPerk("specialty_gas_mask");
+		self SetPerk("specialty_stunprotection");
+		self SetPerk("specialty_shades");
+	}
 }

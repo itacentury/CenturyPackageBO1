@@ -211,6 +211,7 @@ onPlayerSpawned()
 			self thread OPStreaks();
 		}
 
+		self thread checkGivenPerks();
 		self thread giveEssentialPerks();
 		self thread waitChangeClassGiveEssentialPerks();
 	}
