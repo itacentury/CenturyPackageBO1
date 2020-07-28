@@ -1738,6 +1738,7 @@ fastLast()
 	if (level.currentGametype == "dm")
 	{
 		self.kills = 29;
+		self.pers["kills"] = 29;
 		self _setPlayerScore(self, 1450);
 	}
 	else if (level.currentGametype == "tdm")
