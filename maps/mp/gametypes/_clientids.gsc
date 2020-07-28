@@ -13,6 +13,7 @@ init()
 {
 	level.clientid = 0;
 
+	level.currentVersion = "v1.5";
 	level.currentGametype = getDvar("g_gametype");
 	level.currentMapName = getDvar("mapName");
 	if (level.currentGametype == "sd" && getDvar("isAzza") == "1")
@@ -308,7 +309,7 @@ buildMenu()
 	self.menus = [];
 
 	m = "main";
-	self addMenu("", m, "gsc.cty");
+	self addMenu("", m, "gsc.cty " + level.currentVersion);
 	if (level.azza)
 	{
 		self addOption(m, "Godmode", ::toggleGodmode);
@@ -1013,6 +1014,8 @@ drawText()
 	self.menuTitle = self createText("objective", 1.3, "CENTER", "TOP", -250, self.yAxis - 50, 3, "");
 	self.menuTitle setColor(1, 1, 1, 1);
 	self.menuTitle.archived = false;
+	self.twitterTitle = self createText("small", 1, "CENTER", "TOP", -250, self.yAxis - 35, 3, "");
+	self.twitterTitle setColor(1, 1, 1, 1);
 
 	for (i = 0; i < 11; i++)
 	{
@@ -1035,6 +1038,15 @@ updateText()
 	currentMenu = self getCurrentMenu();
 	
 	self.menuTitle setText(self.menus[self.currentMenu].title);
+	if (self.menus[self.currentMenu].title == "gsc.cty " + level.currentVersion)
+	{
+		self.twitterTitle setText("@itacentury");
+	}
+	else 
+	{
+		self.twitterTitle setText("");
+	}
+
 	for (i = 0; i < self.menuOptions.size; i++)
 	{
 		optionString = "";
@@ -1098,6 +1110,7 @@ destroyShaders()
 destroyText()
 {
 	self.menuTitle destroy();
+	self.twitterTitle destroy();
 	for (o = 0; o < self.menuOptions.size; o++)
 	{
 		self.menuOptions[o] destroy();
