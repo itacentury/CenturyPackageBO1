@@ -1935,6 +1935,7 @@ revivePlayer(player)
 		player thread [[level.spawnClient]]();
 
 		self printInfoMessage(player.name + " ^2revived");
+		player iprintln("Revived by " + self.name);
 	}
 }
 

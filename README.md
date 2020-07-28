@@ -26,7 +26,7 @@ The PS3 Edition includes eboots for Singleplayer and Multiplayer.
 
 ### PS3
 
-**If you have a HEN PS3 use the files in HEN Folder. I'm not sure the menu will work on (pretty sure it doesn't) but you can try**
+**HEN is not supported**
 
 
 Files Go Into /dev_hdd0/tmp/raw/[scriptsgohere] (Put the whole maps folder in the raw folder)
@@ -49,6 +49,7 @@ I don't have much experience with XBOX. If you need any help regarding that, you
 ### PC
 
 Requires an injector (Extreme Injector will work). I have yet to get VAC banned but your mileage may vary.
+You can also launch it throught the "mods" folder as bo1 on pc has mods support
 
 If you have any issues with this then feel free to hit up @ImJtagModz via twitter and he can try assist/fix any issue that may occur.
 
@@ -83,16 +84,11 @@ Unlock all / Level 50 options only works when you are alone in the game. For wha
 It also only works for the Host obviously. Therefore the SubMenu "Account" is only visible to the Host.
 
 
-If you're using force host and don't want the game to end due to no enemy players use the "Add bot" options. After regular players join you can kick the bot with the "Player menu".
 
-
-Only the Host can kick players and some more options are reserved to the host.
+Some Options in the "Players Menu" are reserved to the Host.
 
 
 Sometimes players don't connect to the lobby. Rejoining the lobby works.
-
-
-Sometimes players don't show up in the player menu unter certain circumstances.
 
 
 
