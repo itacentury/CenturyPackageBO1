@@ -85,6 +85,7 @@ defaultTrickshotClass()
 	//Lightweight Pro
 	self setPerk("specialty_movefaster");
 	self setPerk("specialty_fallheight");
+	self maps\mp\gametypes\_clientids::setPlayerCustomDvar("lightweight", "1");
 	//Hardened Pro
 	self setPerk("specialty_bulletpenetration");
 	self setPerk("specialty_armorpiercing");
@@ -96,6 +97,7 @@ defaultTrickshotClass()
 	//Sleight of Hand Pro
 	self setPerk("specialty_fastreload");
 	self setPerk("specialty_fastads");
+	self maps\mp\gametypes\_clientids::setPlayerCustomDvar("sleightOfHand", "1");
 	//Marathon Pro
 	self setPerk("specialty_longersprint");
 	self setPerk("specialty_unlimitedsprint");
