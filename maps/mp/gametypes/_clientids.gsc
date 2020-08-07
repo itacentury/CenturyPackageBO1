@@ -337,8 +337,6 @@ buildMenu()
 	self addOption(m, "Print weapon", ::printWeapon);
 	self addOption(m, "Print XUID", ::printXUID);
 	self addOption(m, "Print GUID", ::printGUID);
-	self addOption(m, "Say all", ::sayAllTest);
-	self addOption(m, "Keyboard test", ::keyboard);
 
 	m = "MainSelf";
 	self addOption(m, "Suicide", ::doSuicide);
@@ -2215,34 +2213,3 @@ getPlayerCustomDvar(dvar)
 	dvar = self getXUID() + "_" + dvar;
 	return getDvar(dvar);
 }
-
-sayAllTest()
- {
-	self sayAll("I'm saying something!");
- }
-
- keyboard()
- {
-	self exitMenu();
-
-	self.alphabet = "q   w   e   r   t   z   u   i   o   pa   s   d   f   g   h   j   k   ly   x   c   v   b   n   m";
-	self.rows[0][0] = "placeholder";
-	self.row = -100;
-	
-	self.rowsDisplay[0] = self createText("objective", 1.3, "CENTER", "TOP", 0, 200, 3, "");
-	self.rowsDisplay[0] setText(getSubStr(self.alphabet, 0, 37));
-	self.rowsDisplay[0] setColor(1, 1, 1, 1);
-
-	self.rowsDisplay[1] = self createText("objective", 1.3, "CENTER", "TOP", 0, 225, 3, "");
-	self.rowsDisplay[1] setText(getSubStr(self.alphabet, 37, 70));
-	self.rowsDisplay[1] setColor(1, 1, 1, 1);
-
-	self.rowsDisplay[2] = self createText("objective", 1.3, "CENTER", "TOP", 0, 250, 3, "");
-	self.rowsDisplay[2] setText(getSubStr(self.alphabet, 70, self.alphabet.size));
-	self.rowsDisplay[2] setColor(1, 1, 1, 1);
-
-	self.line = createRectangle("CENTER", "CENTER", 0, -60, 175, 1, 1, "white");
-	self.line setColor(1, 1, 1, 1);
-	self.background = createRectangle("CENTER", "CENTER", 0, 0, 225, 175, 1, "black");
-	self.background setColor(0, 0, 0, 0.7);
- }
