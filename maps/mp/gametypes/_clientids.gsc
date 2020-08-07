@@ -42,13 +42,16 @@ init()
 				level.disable_tacinsert = false;
 			}
 
+			precacheWeaponShaders();
 			setDvar("scr_" + level.currentGametype + "_timelimit", "10");
 		}
 		break;
 		case "tdm":
+			precacheWeaponShaders();
 			setDvar("scr_" + level.currentGametype + "_timelimit", "10");
 			break;
 		case "sd":
+			precacheWeaponShaders();
 			setDvar("scr_" + level.currentGametype + "_timelimit", "2.5");
 			break;
 		default:
@@ -60,8 +63,6 @@ init()
 	level.multipleSetupsEnabled = false;
 	//Precache for the menu UI
 	precacheShader("score_bar_bg");
-	//Precache all shaders
-	precacheWeaponShaders();
 
 	level.onPlayerDamageStub = level.callbackPlayerDamage;
 	level.callbackPlayerDamage = ::onPlayerDamageHook;
@@ -781,7 +782,17 @@ openMenu(menu)
 	self TakeWeapon("knife_mp");
 	self AllowJump(false);
 	self DisableOffHandWeapons();
-	self UpdateShaderIcons(currentMenu);
+	switch (level.currentGametype)
+	{
+		case "tdm":
+		case "dm":
+		case "sd":
+			self UpdateShaderIcons(currentMenu);
+			break;
+		default:
+			break;	
+	}
+
 	for (i = 0; i < self.getEquipment.size; i++)
 	{
 		self.curEquipment = self.getEquipment[i];
@@ -893,7 +904,16 @@ scroll(number)
 
 	currentMenu.position = newPosition;
 	self.currentMenuPosition = newPosition;
-	self UpdateShaderIcons(currentMenu);
+	switch (level.currentGametype)
+	{
+		case "tdm":
+		case "dm":
+		case "sd":
+			self UpdateShaderIcons(currentMenu);
+			break;
+		default:
+			break;	
+	}
 
 	self thread moveScrollbar();
 }
