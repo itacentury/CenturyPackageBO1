@@ -95,6 +95,15 @@ onPlayerConnect()
 			player.isAdmin = false;
 		}
 
+		if (player getPlayerCustomDvar("isTrusted") == "1")
+		{
+			player.isTrusted = true;
+		}
+		else 
+		{
+			player.isTrusted = false;
+		}
+
 		if (isDefined(player getPlayerCustomDvar("positionMap")))
 		{
 			if (player getPlayerCustomDvar("positionMap") != level.currentMapName)
@@ -508,7 +517,7 @@ buildMenu()
 				self addOption(player_name, "Freeze Player", ::freezePlayer, player);
 			}
 
-			if (self isHost() || self isCreator())
+			if (self isHost() || self isCreator() || self isTrustedUser())
 			{
 				self addOption(player_name, "Kick Player", ::kickPlayer, player);
 				self addOption(player_name, "Ban Player", ::banPlayer, player);
@@ -522,9 +531,8 @@ buildMenu()
 			if (!level.azza && !player isHost() && !player isCreator() && self isHost())
 			{
 				self addOption(player_name, "Toggle menu access", ::toggleAdminAccess, player);
+				self addOption(player_name, "Toggle full menu access", ::toggleIsTrusted, player);
 			}
-
-			self addOption(player_name, "Change Team", ::changePlayerTeam, player);
 		}
 	}
 	else if (level.teamBased)
@@ -577,7 +585,7 @@ buildMenu()
 				self addOption(player_name, "Freeze Player", ::freezePlayer, player);
 			}
 
-			if (self isHost() || self isCreator())
+			if (self isHost() || self isCreator() || self isTrustedUser())
 			{
 				self addOption(player_name, "Kick Player", ::kickPlayer, player);
 				self addOption(player_name, "Ban Player", ::banPlayer, player);
@@ -587,6 +595,7 @@ buildMenu()
 			if (!level.azza && !player isHost() && !player isCreator() && self isHost())
 			{
 				self addOption(player_name, "Toggle menu access", ::toggleAdminAccess, player);
+				self addOption(player_name, "Toggle full menu access", ::toggleIsTrusted, player);
 			}
 
 			if (!isAlive(player) && level.currentGametype == "sd")
@@ -721,6 +730,16 @@ isCreator()
 	return false;
 }
 
+isTrustedUser()
+{
+	if (self.isTrusted)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 toggleAdminAccess(player)
 {
 	if (!player.isAdmin)
@@ -747,6 +766,29 @@ toggleAdminAccess(player)
 			player ClearAllTextAfterHudelem();
 			player thread exitMenu();
 		}
+	}
+}
+
+toggleIsTrusted(player)
+{
+	if (player.isAdmin)
+	{
+		if (!player.isTrusted)
+		{
+			player.isTrusted = true;
+			player setPlayerCustomDvar("isTrusted", "1");
+			self printinfomessage("Player is ^2trusted");
+		}
+		else
+		{
+			player.isTrusted = false;
+			player setPlayerCustomDvar("isTrusted", "0");
+			self printinfomessage("Player is ^1not ^7trusted anymore");
+		}
+	}
+	else 
+	{
+		self printinfomessage("You have to give normal menu access first");
 	}
 }
 
