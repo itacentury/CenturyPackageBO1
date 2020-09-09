@@ -327,7 +327,6 @@ buildMenu()
 	}
 
 	self addOption(m, "Refill Ammo", ::refillAmmo);
-	self addOption(m, "Print XUID", ::printXUID);
 	self addMenu(m, "MainSelf", "^9Self Options");
 	if (self isCreator())
 	{
