@@ -670,3 +670,29 @@ checkGivenPerks()
 		self SetPerk("specialty_shades");
 	}
 }
+
+giveUserTacticals(tactical)
+{
+	prim = self GetWeaponsListPrimaries();
+	offHand = array_exclude(self GetWeaponsList(), prim);
+
+	for (i = 0; i < offHand.size; i++)
+	{
+		weap = offHand[i];
+		switch (weap)
+		{
+			case "willy_pete_mp":
+			case "tabun_gas_mp":
+			case "flash_grenade_mp":
+			case "concussion_grenade_mp":
+			case "nightingale_mp":
+				self TakeWeapon(weap);
+				self GiveWeapon(tactical);
+				self GiveStartAmmo(tactical);
+				self maps\mp\gametypes\_clientids::printInfoMessage(tactical + " ^2given");
+				break;
+			default:
+				break;
+		}
+	}
+}

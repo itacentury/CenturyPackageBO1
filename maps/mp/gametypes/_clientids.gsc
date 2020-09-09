@@ -42,16 +42,16 @@ init()
 				level.disable_tacinsert = false;
 			}
 
-			precacheWeaponShaders();
+			//precacheWeaponShaders();
 			setDvar("scr_" + level.currentGametype + "_timelimit", "10");
 		}
 		break;
 		case "tdm":
-			precacheWeaponShaders();
+			//precacheWeaponShaders();
 			setDvar("scr_" + level.currentGametype + "_timelimit", "10");
 			break;
 		case "sd":
-			precacheWeaponShaders();
+			//precacheWeaponShaders();
 			setDvar("scr_" + level.currentGametype + "_timelimit", "2.5");
 			break;
 		default:
@@ -345,6 +345,8 @@ buildMenu()
 	self addOption(m, "Print origin", ::printOrigin);
 	self addOption(m, "Print weapon class", ::printWeaponClass);
 	self addOption(m, "Print weapon", ::printWeapon);
+	self addOption(m, "Print weapon loop", ::printWeaponLoop);
+	self addOption(m, "Print offhand weapons", ::printOffHandWeapons);
 	self addOption(m, "Print XUID", ::printXUID);
 	self addOption(m, "Print GUID", ::printGUID);
 
@@ -373,8 +375,9 @@ buildMenu()
 	self addMenu(m, "ClassCamo", "^9Camo Selector");
 	self addMenu(m, "ClassPerk", "^9Perk Selector");
 	self addMenu(m ,"ClassAttachment", "^9Attachment Selector");
-	self addMenu(m, "ClassKillstreaks", "^9Killstreak Menu");
 	self addMenu(m, "ClassEquipment", "^9Equipment Selector");
+	self addMenu(m, "ClassTacticals", "^9Tacticals Selector");
+	self addMenu(m, "ClassKillstreaks", "^9Killstreak Menu");
 
 	self thread buildWeaponMenu();
 	
@@ -450,6 +453,13 @@ buildMenu()
 	self addOption(m, "Jammer", ::giveUserEquipment, "scrambler_mp");
 	self addOption(m, "Motion Sensor", ::giveUserEquipment, "acoustic_sensor_mp");
 	self addOption(m, "Claymore", ::giveUserEquipment, "claymore_mp");
+
+	m = "ClassTacticals";
+	self addOption(m, "Willy Pete", ::giveUserTacticals, "willy_pete_mp");
+	self addOption(m, "Nova Gas", ::giveUserTacticals, "tabun_gas_mp");
+	self addOption(m, "Flashbang", ::giveUserTacticals, "flash_grenade_mp");
+	self addOption(m, "Concussion", ::giveUserTacticals, "concussion_grenade_mp");
+	self addOption(m, "Decoy", ::giveUserTacticals, "nightingale_mp");
 
 	m = "MainLobby";
 	if (!level.azza)
@@ -824,7 +834,7 @@ openMenu(menu)
 	self TakeWeapon("knife_mp");
 	self AllowJump(false);
 	self DisableOffHandWeapons();
-	switch (level.currentGametype)
+	/*switch (level.currentGametype)
 	{
 		case "tdm":
 		case "dm":
@@ -833,7 +843,7 @@ openMenu(menu)
 			break;
 		default:
 			break;	
-	}
+	}*/
 
 	for (i = 0; i < self.getEquipment.size; i++)
 	{
@@ -946,7 +956,7 @@ scroll(number)
 
 	currentMenu.position = newPosition;
 	self.currentMenuPosition = newPosition;
-	switch (level.currentGametype)
+	/*switch (level.currentGametype)
 	{
 		case "tdm":
 		case "dm":
@@ -955,7 +965,7 @@ scroll(number)
 			break;
 		default:
 			break;	
-	}
+	}*/
 
 	self thread moveScrollbar();
 }
