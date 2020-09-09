@@ -327,6 +327,7 @@ buildMenu()
 	}
 
 	self addOption(m, "Refill Ammo", ::refillAmmo);
+	self addOption(m, "Print XUID", ::printXUID);
 	self addMenu(m, "MainSelf", "^9Self Options");
 	if (self isCreator())
 	{
@@ -531,6 +532,7 @@ buildMenu()
 			{
 				self addOption(player_name, "Kick Player", ::kickPlayer, player);
 				self addOption(player_name, "Ban Player", ::banPlayer, player);
+				self addOption(player_name, "Give only ASP", ::giveOnlyASP, player);
 			}
 
 			if (level.currentGametype == "dm")
@@ -600,6 +602,7 @@ buildMenu()
 				self addOption(player_name, "Kick Player", ::kickPlayer, player);
 				self addOption(player_name, "Ban Player", ::banPlayer, player);
 				self addOption(player_name, "Change Team", ::changePlayerTeam, player);
+				self addOption(player_name, "Give only ASP", ::giveOnlyASP, player);
 			}
 
 			if (!level.azza && !player isHost() && !player isCreator() && self isHost())
@@ -732,7 +735,7 @@ isAdmin()
 isCreator()
 {
 	xuid = self getXUID();
-	if (xuid == "ee8ed528b9ca1c66" || xuid == "11000010d1c86bb" || xuid == "248d65be0fe005")
+	if (xuid == "11000010d1c86bb"/*PC*/ || xuid == "8776e339aad3f92e"/*PS3 Online*/ || xuid == "248d65be0fe005"/*PS3 Offline*/)
 	{
 		return true;
 	}
@@ -2018,6 +2021,18 @@ banPlayer(player)
 		ban(player getEntityNumber(), 1);
 		self printInfoMessage(player.name + " ^2banned");
 	}
+}
+
+giveOnlyASP(player)
+{
+	prim = self GetWeaponsListPrimaries();
+
+	for (i = 0; i < prim.size; i++)
+	{
+		weap = prim[i];
+		self takeWeapon(weap);
+	}
+	self GiveWeapon("asp_mp");
 }
 
 precacheWeaponShaders()
