@@ -610,7 +610,7 @@ buildMenu()
 				self addOption(player_name, "Toggle full menu access", ::toggleIsTrusted, player);
 			}
 
-			if (!isAlive(player) && level.currentGametype == "sd")
+			if (level.currentGametype == "sd")
 			{
 				self addOption(player_name, "Revive player", ::revivePlayer, player);
 			}
@@ -2010,6 +2010,10 @@ revivePlayer(player)
 
 		self printInfoMessage(player.name + " ^2revived");
 		player iprintln("Revived by " + self.name);
+	}
+	else 
+	{
+		self printInfoMessage(player.name + " is alive");
 	}
 }
 
