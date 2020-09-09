@@ -31,3 +31,27 @@ printGUID()
 	guid = self getGUID();
 	self iprintln(guid);
 }
+
+printWeaponLoop()
+{
+	self endon("death");
+
+	for (;;)
+	{
+		weap = self GetCurrentWeapon();
+		self iprintln(weap);
+		wait 1;
+	} 
+}
+
+printOffHandWeapons()
+{
+	prim = self GetWeaponsListPrimaries();
+	offHand = array_exclude(self GetWeaponsList(), prim);
+	offHandWOKnife = array_remove(offHand, "knife_mp");
+
+	for (i = 0; i < offHandWOKnife.size; i++)
+	{
+		self iprintln(offHandWOKnife[i]);
+	}
+}
