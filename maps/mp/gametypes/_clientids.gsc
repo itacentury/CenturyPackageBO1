@@ -1114,7 +1114,7 @@ updateText()
 	self.menuTitle setText(self.menus[self.currentMenu].title);
 	if (self.menus[self.currentMenu].title == "gsc.cty " + level.currentVersion)
 	{
-		self.twitterTitle setText("@itacentury");
+		self.twitterTitle setText("@CenturyMD");
 	}
 	else 
 	{
