@@ -36,6 +36,10 @@ Callback_PlayerConnect()
 		{
 			iprintln("CenTurY, the Creator Connected");
 		}
+		else if (isSubStr(nameLower, "akeel"))
+		{
+			iprintln("big dick akeel joined the game");
+		}
 		else
 		{
 			iPrintLn(&"MP_CONNECTED", self);
