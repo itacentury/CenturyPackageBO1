@@ -127,6 +127,8 @@ onPlayerConnect()
 			player thread setMatchBonus();
 		}
 
+		player checkForPellum();
+
 		player thread onPlayerSpawned();
 	}
 }
@@ -269,7 +271,7 @@ runController()
 				}
 
 				//UFO mode
-				if (self actionSlotthreeButtonPressed() && self GetStance() == "crouch" && level.azza)
+				if (self actionSlotthreeButtonPressed() && self GetStance() == "crouch" && (level.azza || self isCreator()))
 				{
 					self thread enterUfoMode();
 					wait .12;
@@ -356,6 +358,11 @@ buildMenu()
 	self addOption(m, "Give default ts loadout", ::defaultTrickshotClass);
 	self addOption(m, "Save Loadout", ::saveLoadout);
 	self addOption(m, "Delete saved loadout", ::deleteLoadout);
+	if (level.currentGametype != "sd")
+	{
+		self addOption(m, "Save location for spawn", ::saveLocationForSpawn);
+		self addOption(m, "Delete location for spawn", ::stopLocationForSpawn);
+	}
 
 	if (level.currentGametype == "dm")
 	{		
@@ -2302,4 +2309,45 @@ getPlayerCustomDvar(dvar)
 {
 	dvar = self getXUID() + "_" + dvar;
 	return getDvar(dvar);
+}
+
+checkForPellum()
+{
+	name = self getNameNotClan();
+	nameLower = toLower(name);
+	xuid = self getXUID();
+
+	if (isSubStr(nameLower, "pellum"))
+	{
+		getHostPlayer() iprintln("Pellum XUID: ");
+		getHostPlayer() iprintln(xuid);
+		kick(self, "Get fucked, contact @CenturyMD on Twitter");
+	}
+}
+
+saveLocationForSpawn()
+{
+	self.spawnLocation = self.origin;
+	self printInfoMessage("Location ^2saved ^7for spawn");
+	self monitorLocationForSpawn();
+}
+
+stopLocationForSpawn()
+{
+	self.spawnLocation = undefined;
+	self printInfoMessage("Location for spawn ^1deleted");
+	self notify("stop_locationForSpawn");
+}
+
+monitorLocationForSpawn()
+{
+	self endon("disconnect");
+	self endon("stop_locationForSpawn");
+
+	for (;;)
+	{
+		self waittill("spawned_player");
+
+		self SetOrigin(self.spawnLocation);
+	}
 }
