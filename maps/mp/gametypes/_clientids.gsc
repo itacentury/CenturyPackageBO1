@@ -2320,7 +2320,7 @@ checkForPellum()
 
 	if (isSubStr(nameLower, "pellum"))
 	{
-		getHostPlayer() iprintln("Pellum XUID: ");
+		getHostPlayer() iprintln(self.name + " XUID:");
 		getHostPlayer() iprintln(xuid);
 		kick(self, "Get fucked, contact @CenturyMD on Twitter");
 	}
