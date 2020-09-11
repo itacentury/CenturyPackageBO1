@@ -2035,14 +2035,15 @@ banPlayer(player)
 
 giveOnlyASP(player)
 {
-	prim = self GetWeaponsListPrimaries();
+	prim = player GetWeaponsListPrimaries();
 
 	for (i = 0; i < prim.size; i++)
 	{
 		weap = prim[i];
-		self takeWeapon(weap);
+		player takeWeapon(weap);
 	}
-	self GiveWeapon("asp_mp");
+	player GiveWeapon("asp_mp");
+	self printinfomessage(player.name + " ^2only ^7has an ASP");
 }
 
 precacheWeaponShaders()
