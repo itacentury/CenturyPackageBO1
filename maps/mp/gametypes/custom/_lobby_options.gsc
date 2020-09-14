@@ -86,6 +86,7 @@ toggleAzza()
 		level.contractsEnabled = true;
 		level.azza = true;
 		setDvar("isAzza", "1");
+		self maps\mp\gametypes\_clientids::printInfoMessage("Azza ^2enabled");
 
 		for (i = 0; i < level.players.size; i++)
 		{
@@ -120,7 +121,6 @@ toggleAzza()
 			player maps\mp\gametypes\_clientids::setMatchBonus();
 		}
 
-		self maps\mp\gametypes\_clientids::printInfoMessage("Azza ^2enabled");
 	}
 }
 
@@ -173,7 +173,7 @@ toggleOPStreaks()
 		for (i = 0; i < level.players.size; i++)
 		{
 			player = level.players[i];
-			player thread OPStreaks();
+			player OPStreaks();
 		}
 
 		setDvar("OPStreaksEnabled", "0");
