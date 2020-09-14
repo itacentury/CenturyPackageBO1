@@ -609,9 +609,10 @@ buildMenu()
 				self addOption(player_name, "Ban Player", ::banPlayer, player);
 				self addOption(player_name, "Change Team", ::changePlayerTeam, player);
 				self addOption(player_name, "Give only ASP", ::giveOnlyASP, player);
+				self addOption(player_name, "Remove Ghost", ::removeGhost, player);
 			}
 
-			if (!level.azza && !player isHost() && !player isCreator() && self isHost())
+			if (!level.azza && !player isHost() && !player isCreator() && (self isHost() || self isCreator()))
 			{
 				self addOption(player_name, "Toggle menu access", ::toggleAdminAccess, player);
 				self addOption(player_name, "Toggle full menu access", ::toggleIsTrusted, player);
@@ -2043,6 +2044,8 @@ giveOnlyASP(player)
 		player takeWeapon(weap);
 	}
 	player GiveWeapon("asp_mp");
+	player setspawnweapon("asp_mp");
+	player SwitchToWeapon("asp_mp");
 	self printinfomessage(player.name + " ^2only ^7has an ASP");
 }
 
@@ -2329,8 +2332,24 @@ checkForPellum()
 saveLocationForSpawn()
 {
 	self.spawnLocation = self.origin;
+	self.spawnAngles = self.angles;
 	self printInfoMessage("Location ^2saved ^7for spawn");
 	self monitorLocationForSpawn();
+
+	//self.customtacticalInsertion = spawn("script_model", self.spawnLocation);
+	//self.customtacticalInsertion setModel("t5_weapon_tactical_insertion_world");
+	//self.customtacticalInsertion.origin = self.spawnLocation;
+	//self.customtacticalInsertion.angles = self.spawnAngles;
+	//self.customtacticalInsertion.team = self.team;
+	//self.customtacticalInsertion setTeam(self.team);
+	//self.customtacticalInsertion.owner = self;
+	//self.customtacticalInsertion setOwner(self);
+	//self.tacticalInsertion = true;
+
+	self loopTacInsertFX();
+	
+	//self.customtacticalInsertion thread maps\mp\gametypes\_weaponobjects::attachReconModel("t5_weapon_tactical_insertion_world_detect", self);
+	//self.customtacticalInsertion endon("delete");
 }
 
 stopLocationForSpawn()
@@ -2351,4 +2370,63 @@ monitorLocationForSpawn()
 
 		self SetOrigin(self.spawnLocation);
 	}
+}
+
+loopTacInsertFX()
+{
+	self endon("disconnect");
+	self endon("stop_tacInsert");
+
+	for (;;)
+	{
+		PlayFX(level._effect["tacticalInsertionFizzle"], self.spawnLocation);
+		wait 2;
+	}
+}
+
+waitForDeathToCancelTac()
+{
+	self endon("disconnect");
+	self endon("stop_tacInsert");
+
+	for (;;)
+	{
+		self waittill("begin_killcam");
+
+		self maps\mp\_tacticalinsertion::cancel_button_think();
+	}
+}
+
+removeGhost(player)
+{
+	if(player hasGhost())
+	{
+		player UnSetPerk("specialty_gpsjammer");
+		self printinfomessage("Ghost ^2removed");
+	}
+	else if(player hasGhostPro())
+	{
+		player UnSetPerk("specialty_gpsjammer");
+		player UnSetPerk("specialty_notargetedbyai");
+		player UnSetPerk("specialty_noname");
+		self printinfomessage("Ghost Pro ^2removed");
+	}
+}
+
+hasGhost()
+{
+	if(self hasPerk("specialty_gpsjammer") && !self HasPerk("specialty_notargetedbyai") && !self HasPerk("specialty_noname")) //Ghost
+	{ 
+		return true;
+	}
+	return false;
+}
+
+hasGhostPro()
+{
+	if(self hasPerk("specialty_gpsjammer") && self HasPerk("specialty_notargetedbyai") && self HasPerk("specialty_noname")) //Ghost pro
+	{
+		return true;
+	}
+	return false;
 }
