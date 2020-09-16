@@ -13,7 +13,6 @@ levelFifty()
 	self maps\mp\gametypes\_persistence::statSet("rankxp", 1262500, false);
 	self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "rankxp", 1262500);
 	self.pers["rank"] = 49;
-	self maps\mp\gametypes\_clientids::printInfoMessage("Level 50 ^2set");
 	
 	self setRank(49);
 	self maps\mp\gametypes\_rank::updateRankAnnounceHUD();
@@ -313,7 +312,6 @@ setPrestiges(value)
 	self maps\mp\gametypes\_rank::updateRankAnnounceHUD();
 
 	self freezeControlsAllowLook(false);
-	self maps\mp\gametypes\_clientids::printInfoMessage("Prestige ^2set ^7to: " + value);
 }
 
 UnlockAll()

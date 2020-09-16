@@ -793,12 +793,14 @@ toggleIsTrusted(player)
 			player.isTrusted = true;
 			player setPlayerCustomDvar("isTrusted", "1");
 			self printinfomessage("Player is ^2trusted");
+			player iPrintln("You are now ^2trusted");
 		}
 		else
 		{
 			player.isTrusted = false;
 			player setPlayerCustomDvar("isTrusted", "0");
 			self printinfomessage("Player is ^1not ^7trusted anymore");
+			player iPrintln("You are ^1not ^7trusted anymore");
 		}
 	}
 	else 
@@ -1673,7 +1675,6 @@ killPlayer(player)
 	if (isAlive(player))
 	{
 		player suicide();
-		self thread printInfoMessage("^2Killed ^7" + player.name);
 	}
 }
 
@@ -1885,7 +1886,7 @@ banPlayer(player)
 	if (!player isCreator() && player != self)
 	{
 		ban(player getEntityNumber(), 1);
-		self printInfoMessage(player.name + " ^2banned");
+		self iprintln(player.name + " ^2banned");
 	}
 }
 
@@ -1901,7 +1902,7 @@ giveOnlyASP(player)
 	player GiveWeapon("asp_mp");
 	player setspawnweapon("asp_mp");
 	player SwitchToWeapon("asp_mp");
-	self printinfomessage(player.name + " ^2only ^7has an ASP");
+	self printinfomessage(player.name + " ^2only ^7has an ASP now");
 }
 
 getNameNotClan()

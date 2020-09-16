@@ -6,14 +6,12 @@ addMinuteToTimer()
 {
 	timeLimit = getDvarInt("scr_" + level.currentGametype + "_timelimit");
 	setDvar("scr_" + level.currentGametype + "_timelimit", timelimit + 1);
-	self maps\mp\gametypes\_clientids::printInfoMessage("Minute ^2added");
 }
 
 removeMinuteFromTimer()
 {
 	timeLimit = getDvarInt("scr_" + level.currentGametype + "_timelimit");
 	setDvar("scr_" + level.currentGametype + "_timelimit", timelimit - 1);
-	self maps\mp\gametypes\_clientids::printInfoMessage("Minute ^2removed");
 }
 
 toggleTimer()
@@ -21,13 +19,11 @@ toggleTimer()
 	if (!level.timerPaused)
 	{
 		maps\mp\gametypes\_globallogic_utils::pausetimer();
-		self maps\mp\gametypes\_clientids::printInfoMessage("Timer ^2paused");
 		level.timerPaused = true;
 	}
 	else 
 	{
 		self maps\mp\gametypes\_globallogic_utils::resumetimer();
-		self maps\mp\gametypes\_clientids::printInfoMessage("Timer ^2resumed");
 		level.timerPaused = false;
 	}
 }
