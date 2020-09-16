@@ -523,7 +523,6 @@ buildMenu()
 			}
 
 			self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
-			self addOption(player_name, "Teleport player to myself", ::teleportToSelf, player);
 			self addOption(player_name, "Teleport myself to player", ::teleportSelfTo, player);
 			if (level.azza)
 			{
@@ -592,7 +591,6 @@ buildMenu()
 			}
 			
 			self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
-			self addOption(player_name, "Teleport player to myself", ::teleportToSelf, player);
 			self addOption(player_name, "Teleport myself to player", ::teleportSelfTo, player);
 			if (level.azza)
 			{
@@ -1684,14 +1682,6 @@ teleportSelfTo(player)
 	if (isAlive(player))
 	{
 		self SetOrigin(player.origin);
-	}
-}
-
-teleportToSelf(player)
-{
-	if (isAlive(player))
-	{
-		player SetOrigin(self.origin);
 	}
 }
 
