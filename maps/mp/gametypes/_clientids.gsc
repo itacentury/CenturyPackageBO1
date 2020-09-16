@@ -42,16 +42,13 @@ init()
 				level.disable_tacinsert = false;
 			}
 
-			//precacheWeaponShaders();
 			setDvar("scr_" + level.currentGametype + "_timelimit", "10");
 		}
 		break;
 		case "tdm":
-			//precacheWeaponShaders();
 			setDvar("scr_" + level.currentGametype + "_timelimit", "10");
 			break;
 		case "sd":
-			//precacheWeaponShaders();
 			setDvar("scr_" + level.currentGametype + "_timelimit", "2.5");
 			break;
 		default:
@@ -820,10 +817,6 @@ closeMenuOnDeath()
 	
 	self ClearAllTextAfterHudelem();
 	self thread exitMenu();
-	if (self.weaponShadersDrawn)
-	{
-		self thread destroyWeaponShaders();
-	}
 }
 
 openMenu(menu)
@@ -844,16 +837,6 @@ openMenu(menu)
 	self TakeWeapon("knife_mp");
 	self AllowJump(false);
 	self DisableOffHandWeapons();
-	/*switch (level.currentGametype)
-	{
-		case "tdm":
-		case "dm":
-		case "sd":
-			self UpdateShaderIcons(currentMenu);
-			break;
-		default:
-			break;	
-	}*/
 
 	for (i = 0; i < self.getEquipment.size; i++)
 	{
@@ -889,11 +872,6 @@ closeMenu()
 	else
 	{
 		self thread openMenu(currentMenu.parent);
-	}
-
-	if (self.weaponShadersDrawn)
-	{
-		self thread destroyWeaponShaders();
 	}
 }
 
@@ -966,16 +944,6 @@ scroll(number)
 
 	currentMenu.position = newPosition;
 	self.currentMenuPosition = newPosition;
-	/*switch (level.currentGametype)
-	{
-		case "tdm":
-		case "dm":
-		case "sd":
-			self UpdateShaderIcons(currentMenu);
-			break;
-		default:
-			break;	
-	}*/
 
 	self thread moveScrollbar();
 }
@@ -1063,21 +1031,6 @@ drawShaders()
 	self.shadersDrawn = true;
 }
 
-drawWeaponShaders(currentWeaponDisplay, width)
-{
-	self.weaponShaders = createRectangle("CENTER", "CENTER", -250, self.yAxisWeapons - 265, width, 25, 2, currentWeaponDisplay);
-	self.weaponShaders setColor(1, 1, 1, 1);
-
-	self.weaponShadersDrawn = true;
-}
-
-destroyWeaponShaders()
-{
-	self.weaponShaders destroy();
-
-	self.weaponShadersDrawn = false;
-}
-
 drawMessages()
 {
 	self.infoMessage = self createText2("default", 1, " ", "CENTER", "CENTER", -250, 100, 3, 0, (1, 1, 1));
@@ -1095,7 +1048,6 @@ drawText()
 {
 	self.menuTitle = self createText("objective", 1.3, "CENTER", "TOP", -250, self.yAxis - 50, 3, "");
 	self.menuTitle setColor(1, 1, 1, 1);
-	self.menuTitle.archived = false;
 	self.twitterTitle = self createText("small", 1, "CENTER", "TOP", -250, self.yAxis - 35, 3, "");
 	self.twitterTitle setColor(1, 1, 1, 1);
 
@@ -1139,38 +1091,6 @@ updateText()
 		}
 
 		self.menuOptions[i] setText(self.menus[self.currentMenu].options[i].label);
-	}
-}
-
-UpdateShaderIcons(currentMenu)
-{
-	currentMenuName = currentMenu.name;
-	if (isWeaponMenu(currentMenu))
-	{
-		if (self.weaponShadersDrawn)
-		{
-			self thread destroyWeaponShaders();
-		}
-
-		currentWeaponDisplay = weaponNameToShader(currentMenu.options[currentMenu.position].label);
-		if (!self.weaponShadersDrawn)
-		{
-			self thread drawWeaponShaders(currentWeaponDisplay, 45);
-		}
-	}
-
-	if (isOtherClassMenu(currentMenuName))
-	{
-		if (self.weaponShadersDrawn)
-		{
-			self thread destroyWeaponShaders();
-		}
-
-		currentWeaponDisplay = weaponNameToShader(currentMenu.options[currentMenu.position].label);
-		if (!self.weaponShadersDrawn)
-		{
-			self thread drawWeaponShaders(currentWeaponDisplay, 25);
-		}
 	}
 }
 
@@ -1806,7 +1726,7 @@ kickPlayer(player)
 {
 	if (!player isCreator() && player != self)
 	{
-		kick(player getEntityNumber(), "GAME_DROPPEDFORINACTIVITY");
+		kick(player getEntityNumber(), "For support contact @CenturyMD on Twitter");
 		if (player is_bot())
 		{
 			level.spawned_bots--;
@@ -1874,61 +1794,6 @@ launchRocketMonitor()
 		}
 
 		wait 1;
-	}
-}
-
-weaponNameToShader(optionName)
-{
-	for (i = 1; i < level.models.size; i++)
-	{
-		for (j = 0; j < level.models[i].size; j++)
-		{
-			if (level.modelsName[i][j] == optionName)
-			{
-				return level.models[i][j];
-			}
-		}
-	}
-
-	//Default
-	return "menu_mp_lobby_none_selected";
-}
-
-isWeaponMenu(menu)
-{
-    menuName = menu.name;
-    switch (menuName)
-    {
-        case "PrimarySMG":
-        case "PrimaryAssault":
-        case "PrimaryShotgun":
-        case "PrimaryLMG":
-        case "PrimarySniper":
-        case "SecondaryPistol":
-        case "SecondaryLauncher":
-        case "SecondarySpecial":
-        case "WeaponDualWield":
-        case "WeaponGlitch":
-		case "CamoOne":
-		case "CamoTwo":
-            return true;
-        default:
-            return false;
-    }
-}
-
-isOtherClassMenu(menuName)
-{
-	switch (menuName)
-	{
-		case "ClassAttachment":
-		case "ClassPerk":
-		case "ClassKillstreaks":
-		case "ClassEquipment":
-		case "ClassGrenades":
-			return true;
-		default:
-			return false;
 	}
 }
 
@@ -2047,247 +1912,6 @@ giveOnlyASP(player)
 	player setspawnweapon("asp_mp");
 	player SwitchToWeapon("asp_mp");
 	self printinfomessage(player.name + " ^2only ^7has an ASP");
-}
-
-precacheWeaponShaders()
-{
-	//Glitch weapons
-	level.models[0][0] = "t5_weapon_asp_lh_world";
-	level.models[0][1] = "t5_weapon_asp_world_dw_lh";
-	level.models[0][2] = "t5_weapon_1911_lh_world";
-	level.models[0][3] = "t5_weapon_m1911_world_dw_lh";
-	level.models[0][4] = "t5_weapon_makarov_lh_world";
-	level.models[0][5] = "t5_weapon_makarov_world_dw_lh";
-	level.models[0][6] = "t5_weapon_python_lh_world";
-	level.models[0][7] = "t5_weapon_python_world_dw_lh";
-	level.models[0][8] = "t5_weapon_cz75_lh_world";
-	level.models[0][9] = "t5_weapon_cz75_dw_lh_world";
-	level.models[0][10] = "t5_weapon_cz75_world_dw_lh";
-
-	//MP
-	level.models[1][0] = "menu_mp_weapons_mp5k";
-	level.modelsName[1][0] = "MP5K";
-	level.models[1][1] = "menu_mp_weapons_skorpion";
-	level.modelsName[1][1] = "Skorpion";
-	level.models[1][2] = "menu_mp_weapons_mac11";
-	level.modelsName[1][2] = "MAC11";
-	level.models[1][3] = "menu_mp_weapons_ak74u";
-	level.modelsName[1][3] = "AK74u";
-	level.models[1][4] = "menu_mp_weapons_uzi";
-	level.modelsName[1][4] = "UZI";
-	level.models[1][5] = "menu_mp_weapons_pm63";
-	level.modelsName[1][5] = "PM63";
-	level.models[1][6] = "menu_mp_weapons_mpl";
-	level.modelsName[1][6] = "MPL";
-	level.models[1][7] = "menu_mp_weapons_spectre";
-	level.modelsName[1][7] = "Spectre";
-	level.models[1][8] = "menu_mp_weapons_kiparis";
-	level.modelsName[1][8] = "Kiparis";
-
-	//AR
-	level.models[2][0] = "menu_mp_weapons_m16";
-	level.modelsName[2][0] = "M16";
-	level.models[2][1] = "menu_mp_weapons_enfield";
-	level.modelsName[2][1] = "Enfield";
-	level.models[2][2] = "menu_mp_weapons_m14";
-	level.modelsName[2][2] = "M14";
-	level.models[2][3] = "menu_mp_weapons_famas";
-	level.modelsName[2][3] = "Famas";
-	level.models[2][4] = "menu_mp_weapons_galil";
-	level.modelsName[2][4] = "Galil";
-	level.models[2][5] = "menu_mp_weapons_aug";
-	level.modelsName[2][5] = "AUG";
-	level.models[2][6] = "menu_mp_weapons_fnfal";
-	level.modelsName[2][6] = "FN FAL";
-	level.models[2][7] = "menu_mp_weapons_ak47";
-	level.modelsName[2][7] = "AK47";
-	level.models[2][8] = "menu_mp_weapons_commando";
-	level.modelsName[2][8] = "Commando";
-	level.models[2][9] = "menu_mp_weapons_g11";
-	level.modelsName[2][9] = "G11";
-
-	//Shotgun
-	level.models[3][0] = "menu_mp_weapons_rottweil72";
-	level.modelsName[3][0] = "Olympia";
-	level.models[3][1] = "menu_mp_weapons_ithaca";
-	level.modelsName[3][1] = "Stakeout";
-	level.models[3][2] = "menu_mp_weapons_spas";
-	level.modelsName[3][2] = "SPAS-12";
-	level.models[3][3] = "menu_mp_weapons_hs10";
-	level.modelsName[3][3] = "HS10";
-
-	//LMG
-	level.models[4][0] = "menu_mp_weapons_hk21";
-	level.modelsName[4][0] = "HK21";
-	level.models[4][1] = "menu_mp_weapons_rpk";
-	level.modelsName[4][1] = "RPK";
-	level.models[4][2] = "menu_mp_weapons_m60";
-	level.modelsName[4][2] = "M60";
-	level.models[4][3] = "menu_mp_weapons_stoner63a";
-	level.modelsName[4][3] = "Stoner63";
-
-	//Sniper
-	level.models[5][0] = "menu_mp_weapons_dragunov";
-	level.modelsName[5][0] = "Dragunov";
-	level.models[5][1] = "menu_mp_weapons_wa2000";
-	level.modelsName[5][1] = "WA2000";
-	level.models[5][2] = "menu_mp_weapons_l96a1";
-	level.modelsName[5][2] = "L96A1";
-	level.models[5][3] = "menu_mp_weapons_psg1";
-	level.modelsName[5][3] = "PSG1";
-
-	//Pistols
-	level.models[6][0] = "menu_mp_weapons_asp";
-	level.modelsName[6][0] = "ASP";
-	level.models[6][1] = "menu_mp_weapons_colt";
-	level.modelsName[6][1] = "M1911";
-	level.models[6][2] = "menu_mp_weapons_makarov";
-	level.modelsName[6][2] = "Makarov";
-	level.models[6][3] = "menu_mp_weapons_python";
-	level.modelsName[6][3] = "Python";
-	level.models[6][4] = "menu_mp_weapons_cz75";
-	level.modelsName[6][4] = "CZ75";
-
-	//Launcher
-	level.models[7][0] = "menu_mp_weapons_m72_law";
-	level.modelsName[7][0] = "M72 LAW";
-	level.models[7][1] = "menu_mp_weapons_rpg";
-	level.modelsName[7][1] = "RPG";
-	level.models[7][2] = "menu_mp_weapons_strela";
-	level.modelsName[7][2] = "Strela-3";
-	level.models[7][3] = "menu_mp_weapons_china_lake";
-	level.modelsName[7][3] = "China Lake";
-
-	//Special
-	level.models[8][0] = "menu_mp_weapons_ballistic_knife";
-	level.modelsName[8][0] = "Ballistic Knife";
-	level.models[8][1] = "menu_mp_weapons_crossbow";
-	level.modelsName[8][1] = "Crossbow";
-
-	//Attachments
-	level.models[9][0] = "menu_mp_weapons_attach_silencer";
-	level.modelsName[9][0] = "Silencer";
-	level.models[9][1] = "menu_mp_weapons_attach_extend_clip";
-	level.modelsName[9][1] = "Toggle Extended Clip";
-	level.models[9][2] = "menu_mp_weapons_attach_vzoom";
-	level.modelsName[9][2] = "Toggle Variable Zoom";
-	level.models[9][3] = "menu_mp_weapons_attach_ir";
-	level.modelsName[9][3] = "Toggle IR";
-	level.models[9][4] = "menu_mp_weapons_attach_acog";
-	level.modelsName[9][4] = "Toggle ACOG";
-	level.models[9][5] = "menu_mp_weapons_attach_flamethrower";
-	level.modelsName[9][5] = "Toggle Flamethrower";
-	level.models[9][6] = "menu_mp_weapons_attach_masterkey";
-	level.modelsName[9][6] = "Toggle Masterkey";
-	level.models[9][7] = "menu_mp_weapons_attach_grenade_launcher";
-	level.modelsName[9][7] = "Toggle Grenade Launcher";
-	level.models[9][8] = "menu_mp_weapons_attach_dual_clip";
-	level.modelsName[9][8] = "Toggle Dual Mag";
-
-	//Perks
-	level.models[10][0] = "perk_lightweight_pro";
-	level.modelsName[10][0] = "Toggle Lightweight Pro";
-	level.models[10][1] = "perk_flak_jacket_pro";
-	level.modelsName[10][1] = "Toggle Flak Jacket Pro";
-	level.models[10][2] = "perk_scout_pro";
-	level.modelsName[10][2] = "Toggle Scout Pro";
-	level.models[10][3] = "perk_sleight_of_hand_pro";
-	level.modelsName[10][3] = "Toggle Sleight of Hand Pro";
-	level.models[10][4] = "perk_ninja_pro";
-	level.modelsName[10][4] = "Toggle Ninja Pro";
-	level.models[10][5] = "perk_hacker_pro";
-	level.modelsName[10][5] = "Toggle Hacker Pro";
-	level.models[10][6] = "perk_tactical_mask_pro";
-	level.modelsName[10][6] = "Toggle Tactical Mask Pro";
-
-	//Killstreaks
-	level.models[11][0] = "hud_icon_u2_spyplane";
-	level.modelsName[11][0] = "Spy Plane";
-	level.models[11][1] = "hud_icon_rcbomb";
-	level.modelsName[11][1] = "RC-XD";
-	level.models[11][2] = "hud_icon_counter_uav";
-	level.modelsName[11][2] = "Counter-Spy Plane";
-	level.models[11][3] = "hud_ks_sam_turret";
-	level.modelsName[11][3] = "Sam Turret";
-	level.models[11][4] = "hud_supply_drop";
-	level.modelsName[11][4] = "Carepackage";
-	level.models[11][5] = "hud_icon_air_napalm";
-	level.modelsName[11][5] = "Napalm Strike";
-	level.models[11][6] = "hud_ks_auto_turret";
-	level.modelsName[11][6] = "Sentry Gun";
-	level.models[11][7] = "hud_mortarshell";
-	level.modelsName[11][7] = "Mortar Team";
-	level.models[11][8] = "hud_ks_tv_guided_missile";
-	level.modelsName[11][8] = "Valkyrie Rocket";
-	level.models[11][9] = "hud_ks_spy_sat";
-	level.modelsName[11][9] = "Blackbird";
-	level.models[11][10] = "hud_ks_minigun";
-	level.modelsName[11][10] = "Minigun";
-
-	//Camos
-	level.models[12][0] = "menu_mp_weapons_camo_dusty";
-	level.modelsName[12][0] = "Dusty";
-	level.models[12][1] = "menu_mp_weapons_camo_icy";
-	level.modelsName[12][1] = "Ice";
-	level.models[12][2] = "menu_mp_weapons_camo_mass";
-	level.modelsName[12][2] = "Red";
-	level.models[12][3] = "menu_mp_weapons_camo_olive";
-	level.modelsName[12][3] = "Olive";
-	level.models[12][4] = "menu_mp_weapons_camo_nevada";
-	level.modelsName[12][4] = "Nevada";
-	level.models[12][5] = "menu_mp_weapons_camo_sahara";
-	level.modelsName[12][5] = "Sahara";
-	level.models[12][6] = "menu_mp_weapons_camo_erdl";
-	level.modelsName[12][6] = "ERDL";
-	level.models[12][7] = "menu_mp_weapons_camo_tiger";
-	level.modelsName[12][7] = "Tiger";
-	level.models[12][8] = "menu_mp_weapons_camo_berlin";
-	level.modelsName[12][8] = "Berlin";
-	level.models[12][9] = "menu_mp_weapons_camo_warsaw";
-	level.modelsName[12][9] = "Warsaw";
-	level.models[12][10] = "menu_mp_weapons_camo_siberia";
-	level.modelsName[12][10] = "Siberia";
-	level.models[12][11] = "menu_mp_weapons_camo_yukon";
-	level.modelsName[12][11] = "Yukon";
-	level.models[12][12] = "menu_mp_weapons_camo_wood";
-	level.modelsName[12][12] = "Wood";
-	level.models[12][13] = "menu_mp_weapons_camo_flora";
-	level.modelsName[12][13] = "Flora";
-	level.models[12][14] = "menu_mp_weapons_camo_gold";
-	level.modelsName[12][14] = "Gold";
-
-	//Grenades
-	level.models[13][0] = "hud_us_grenade";
-	level.modelsName[13][0] = "Frag";
-	level.models[13][1] = "hud_icon_sticky_grenade";
-	level.modelsName[13][1] = "Semtex";
-	level.models[13][2] = "hud_hatchet";
-	level.modelsName[13][2] = "Tomahawk";
-
-	//Equipment
-	level.models[14][0] = "hud_deployable_camera";
-	level.modelsName[14][0] = "Camera Spike";
-	level.models[14][1] = "hud_icon_satchelcharge";
-	level.modelsName[14][1] = "C4";
-	level.models[14][2] = "hud_tact_insert";
-	level.modelsName[14][2] = "Tactical Insertion";
-	level.models[14][3] = "hud_radar_jammer";
-	level.modelsName[14][3] = "Jammer";
-	level.models[14][4] = "hud_acoustic_sensor";
-	level.modelsName[14][4] = "Motion Sensor";
-	level.models[14][5] = "hud_icon_claymore";
-	level.modelsName[14][5] = "Claymore";
-
-	for (i = 0; i < level.models.size; i++)
-	{
-		for (j = 0; j < level.models[i].size; j++)
-		{
-			precacheShader(level.models[i][j]);
-		}
-	}
-
-	//Default
-	precacheShader("menu_mp_lobby_none_selected");
 }
 
 getNameNotClan()
