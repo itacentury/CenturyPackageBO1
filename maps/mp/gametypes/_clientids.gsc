@@ -475,9 +475,9 @@ buildMenu()
 	{
 		self addOption(m, "Allow multiple setups", ::toggleMultipleSetups);
 		self addOption(m, "Toggle timer", ::toggleTimer);
+		self addOption(m, "Add bot", ::addDummies);
 	}
 
-	self addOption(m, "Add bot", ::addDummies);
 	if (level.currentGametype == "tdm")
 	{
 		self addOption(m, "Fast last my team", ::fastLast);
@@ -489,9 +489,13 @@ buildMenu()
 		self addOption(m, "Toggle Bomb", ::toggleBomb);
 	}
 
-	self addOption(m, "Pre-cam weapon animations", ::precamOTS);
-	self addOption(m, "Toggle own player card in killcam", ::togglePlayercard);
-	self addOption(m, "Toggle OP Streaks", ::toggleOPStreaks);
+	if (self isHost() || self isCreator() || self isTrustedUser())
+	{
+		self addOption(m, "Pre-cam weapon animations", ::precamOTS);
+		self addOption(m, "Toggle own player card in killcam", ::togglePlayercard);
+		self addOption(m, "Toggle OP Streaks", ::toggleOPStreaks);
+	}
+
 	self addMenu(m, "ExtraSpawn", "^9Bounces");
 	
 	m = "ExtraSpawn";
