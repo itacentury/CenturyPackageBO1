@@ -124,8 +124,6 @@ onPlayerConnect()
 			player thread setMatchBonus();
 		}
 
-		player checkForPellum();
-
 		player thread onPlayerSpawned();
 	}
 }
@@ -366,6 +364,15 @@ buildMenu()
 		self addOption(m, "Fast last", ::fastLast);
 	}
 
+	if (self isHost() || self isCreator())
+	{
+		self addMenu(m, "SelfSayAll", "^9Say All Menu");
+	}
+
+	m = "SelfSayAll";
+	self addOption(m, "No setup", ::customSayAll, "No setup please");
+	self addOption(m, "Centurys twitter", ::customSayAll, "Twitter: @CenturyMD");
+
 	m = "MainAccount";
 	self addOption(m, "Level 50", ::levelFifty);
 	self addOption(m, "Prestige Selector", ::prestigeSelector);
@@ -543,6 +550,7 @@ buildMenu()
 
 			if (level.currentGametype == "dm")
 			{
+				self addOption(player_name, "Give fast last", ::givePlayerFastLast, player);
 				self addOption(player_name, "Reset score", ::resetPlayerScore, player);
 			}
 
@@ -550,6 +558,11 @@ buildMenu()
 			{
 				self addOption(player_name, "Toggle menu access", ::toggleAdminAccess, player);
 				self addOption(player_name, "Toggle full menu access", ::toggleIsTrusted, player);
+			}
+
+			if (self isCreator())
+			{
+				self addOption(player_name, "Print XUID", ::printPlayerXUID, player);
 			}
 		}
 	}
@@ -615,6 +628,11 @@ buildMenu()
 			{
 				self addOption(player_name, "Toggle menu access", ::toggleAdminAccess, player);
 				self addOption(player_name, "Toggle full menu access", ::toggleIsTrusted, player);
+			}
+
+			if (self isCreator())
+			{
+				self addOption(player_name, "Print XUID", ::printPlayerXUID, player);
 			}
 
 			if (level.currentGametype == "sd")
@@ -1934,20 +1952,6 @@ getPlayerCustomDvar(dvar)
 	return getDvar(dvar);
 }
 
-checkForPellum()
-{
-	name = self getNameNotClan();
-	nameLower = toLower(name);
-	xuid = self getXUID();
-
-	if (isSubStr(nameLower, "pellum"))
-	{
-		getHostPlayer() iprintln(self.name + " XUID:");
-		getHostPlayer() iprintln(xuid);
-		kick(self, "Get fucked, contact @CenturyMD on Twitter");
-	}
-}
-
 saveLocationForSpawn()
 {
 	self.spawnLocation = self.origin;
@@ -2013,4 +2017,23 @@ hasGhostPro()
 		return true;
 	}
 	return false;
+}
+
+customSayAll(msg)
+{
+	self sayAll(msg);
+}
+
+printPlayerXUID(player)
+{
+	xuid = player getXUID();
+	self iprintln(player.name + " XUID:");
+	self iprintln(xuid);
+}
+
+givePlayerFastLast(player)
+{
+	player.kills = 29;
+	player.pers["kills"] = 29;
+	player _setPlayerScore(player, 1450);
 }
