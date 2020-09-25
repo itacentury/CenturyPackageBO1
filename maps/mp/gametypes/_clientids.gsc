@@ -372,6 +372,10 @@ buildMenu()
 	m = "SelfSayAll";
 	self addOption(m, "No setup", ::customSayAll, "No setup please");
 	self addOption(m, "Centurys twitter", ::customSayAll, "Twitter: @CenturyMD");
+	self addOption(m, "don't kill yourself", ::customSayAll, "don't kill yourself");
+	self addOption(m, "thanks", ::customSayAll, "thanks");
+	self addOption(m, "try to kill us", ::customSayAll, "try to kill us");
+	self addOption(m, "please", ::customSayAll, "please");
 
 	m = "MainAccount";
 	self addOption(m, "Level 50", ::levelFifty);
