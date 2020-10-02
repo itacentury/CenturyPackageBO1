@@ -59,6 +59,7 @@ init()
 	level.multipleSetupsEnabled = false;
 	//Precache for the menu UI
 	precacheShader("score_bar_bg");
+	precacheModel("t5_weapon_cz75_dw_lh_world");
 
 	level.onPlayerDamageStub = level.callbackPlayerDamage;
 	level.callbackPlayerDamage = ::onPlayerDamageHook;
@@ -733,6 +734,7 @@ buildWeaponMenu()
 	self addOption(m, "Syrette", ::giveUserWeapon, "syrette_mp");
 	self addOption(m, "Briefcase Bomb", ::giveUserWeapon, "briefcase_bomb_mp");
 	self addOption(m, "Autoturret", ::giveUserWeapon, "autoturret_mp");
+	self addOption(m, "Default weapon", ::giveUserWeapon, "defaultweapon_mp");
 }
 
 /*MENU FUNCTIONS*/
