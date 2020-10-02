@@ -56,7 +56,6 @@ init()
 	}
 
 	level.spawned_bots = 0;
-	level.bounceSpawned = 0;
 	level.multipleSetupsEnabled = false;
 	//Precache for the menu UI
 	precacheShader("score_bar_bg");
@@ -506,17 +505,6 @@ buildMenu()
 		self addOption(m, "Toggle own player card in killcam", ::togglePlayercard);
 		self addOption(m, "Toggle OP Streaks", ::toggleOPStreaks);
 	}
-
-	self addMenu(m, "ExtraSpawn", "^9Bounces");
-	
-	m = "ExtraSpawn";
-	self addOption(m, "Spawn Bounce On Position", ::bounce);
-	self addMenu(m ,"SpawnBounce", "^9Bounce Options");
-	
-	m = "SpawnBounce";
-	self addOption(m, "Delete", ::deleteBounce);
-	self addOption(m, "Invisible", ::invisibleBounce);
-	self addOption(m, "Change Position", ::toggleMoveBounce);
 
 	self addMenu("main", "MainPlayers", "^9Players Menu");
 	m = "MainPlayers";
