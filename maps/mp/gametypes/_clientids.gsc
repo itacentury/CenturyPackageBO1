@@ -537,7 +537,6 @@ buildMenu()
 			{
 				self addOption(player_name, "Kick Player", ::kickPlayer, player);
 				self addOption(player_name, "Ban Player", ::banPlayer, player);
-				self addOption(player_name, "Give only ASP", ::giveOnlyASP, player);
 			}
 
 			if (level.currentGametype == "dm")
@@ -612,7 +611,6 @@ buildMenu()
 				self addOption(player_name, "Kick Player", ::kickPlayer, player);
 				self addOption(player_name, "Ban Player", ::banPlayer, player);
 				self addOption(player_name, "Change Team", ::changePlayerTeam, player);
-				self addOption(player_name, "Give only ASP", ::giveOnlyASP, player);
 				self addOption(player_name, "Remove Ghost", ::removeGhost, player);
 			}
 
@@ -1902,21 +1900,6 @@ banPlayer(player)
 		ban(player getEntityNumber(), 1);
 		self iprintln(player.name + " ^2banned");
 	}
-}
-
-giveOnlyASP(player)
-{
-	prim = player GetWeaponsListPrimaries();
-
-	for (i = 0; i < prim.size; i++)
-	{
-		weap = prim[i];
-		player takeWeapon(weap);
-	}
-	player GiveWeapon("asp_mp");
-	player setspawnweapon("asp_mp");
-	player SwitchToWeapon("asp_mp");
-	self printinfomessage(player.name + " ^2only ^7has an ASP now");
 }
 
 getNameNotClan()
