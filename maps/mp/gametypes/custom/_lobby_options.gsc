@@ -125,11 +125,13 @@ toggleBomb()
 	if (getDvar("bombEnabled") == "0")
 	{
 		setDvar("bombEnabled", "1");
+		level.bombEnabled = true;
 		self maps\mp\gametypes\_clientids::printInfoMessage("Bomb ^2enabled");
 	}
 	else 
 	{
 		setDvar("bombEnabled", "0");
+		level.bombEnabled = false;
 		self maps\mp\gametypes\_clientids::printInfoMessage("Bomb ^1disabled");
 	}
 }
@@ -139,11 +141,13 @@ precamOTS()
 	if (getDvar("cg_nopredict") == "0")
 	{
 		setDvar("cg_nopredict", "1");
+		level.precam = true;
 		self maps\mp\gametypes\_clientids::printInfoMessage("Precam ^2enabled");
 	}
 	else if (getDvar("cg_nopredict") == "1")
 	{
 		setDvar("cg_nopredict", "0");
+		level.precam = false;
 		self maps\mp\gametypes\_clientids::printInfoMessage("Precam ^1disabled");
 	}
 }
@@ -153,11 +157,13 @@ togglePlayercard()
 	if (getDvar("killcam_final") != "1")
 	{
 		setDvar("killcam_final", "1");
+		level.playercard = true;
 		self maps\mp\gametypes\_clientids::printInfoMessage("Own playercard ^2visible ^7in killcam");
 	}
 	else 
 	{
 		setDvar("killcam_final", "0");
+		level.playercard = false;
 		self maps\mp\gametypes\_clientids::printInfoMessage("Own playercard ^1not visible ^7in killcam");
 	}
 }
@@ -173,11 +179,13 @@ toggleOPStreaks()
 		}
 
 		setDvar("OPStreaksEnabled", "0");
+		level.opStreaks = false;
 		self maps\mp\gametypes\_clientids::printInfoMessage("OP streaks ^1disabled");
 	}
 	else
 	{
 		setDvar("OPStreaksEnabled", "1");
+		level.opStreaks = true;
 		self maps\mp\gametypes\_clientids::printInfoMessage("OP streaks ^2enabled");
 	}
 }

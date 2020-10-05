@@ -55,6 +55,42 @@ init()
 			break;
 	}
 
+	if (getDvar("bombEnabled") == "0")
+	{
+		level.bomb = false;
+	}
+	else 
+	{
+		level.bomb = true;
+	}
+
+	if (getDvar("cg_nopredict") == "1")
+	{
+		level.precam = true;
+	}
+	else 
+	{
+		level.precam = false;
+	}
+
+	if (getDvar("killcam_final") == "1")
+	{
+		level.playercard = true;
+	}
+	else 
+	{
+		level.playercard = false;
+	}
+
+	if (getDvar("OPStreaksEnabled") == "0")
+	{
+		level.opStreaks = false;
+	}
+	else 
+	{
+		level.opStreaks = true;
+	}
+
 	level.spawned_bots = 0;
 	level.multipleSetupsEnabled = false;
 	//Precache for the menu UI
@@ -262,6 +298,7 @@ runController()
 				if (self adsbuttonpressed() && self actionslottwobuttonpressed() && !self isMantling())
 				{
 					self thread openMenu(self.currentMenu);
+					self updateInfoText();
 					wait 0.25;
 				}
 
@@ -926,6 +963,22 @@ select()
 			self thread [[selected.function]]();
 		}
 	}
+
+	if (self.menus[self.currentMenu].title == "^9Lobby Options")
+	{
+		for (i = 0; i < level.players.size; i++)
+		{
+			player = level.players[i];
+
+			if (player isAdmin())
+			{
+				if (player.isInMenu)
+				{
+					player updateInfoText();
+				}
+			}
+		}
+	}
 }
 
 scrollUp()
@@ -1041,7 +1094,9 @@ drawShaders()
 	self.menuBackground setColor(0, 0, 0, 1);
 	self.menuScrollbar1 = createRectangle("CENTER", "TOP", -250, self.yAxis + (15 * self.currentMenuPosition), 200, 35, 2, "score_bar_bg");
 	self.menuScrollbar1 setColor(1, 1, 1, 1);
-	
+	self.infoBackground = createRectangle("CENTER", "CENTER", -225, -180, 150, 100, 1, "black");
+	self.infoBackground setColor(1, 1, 1, 1);
+
 	self.shadersDrawn = true;
 }
 
@@ -1068,6 +1123,11 @@ drawText()
 	for (i = 0; i < 11; i++)
 	{
 		self.menuOptions[i] = self createText("objective", 1, "CENTER", "TOP", -250, self.yAxis + (15 * i), 3, "");
+	}
+
+	for (i = 0; i < 5; i++)
+	{
+		self.infoText[i] = self createText("objective", 1, "LEFT", "TOP", -290, (self.yAxis - 170) + (15 * i), 3, "");
 	}
 
 	self.textDrawn = true;
@@ -1108,6 +1168,62 @@ updateText()
 	}
 }
 
+updateInfoText()
+{
+	for (i = 0; i < self.infoText.size; i++)
+	{
+		if (level.azza)
+		{
+			azzaText = "Azza: ^2enabled";
+		}
+		else
+		{
+			azzaText = "Azza: ^1disabled";
+		}
+
+		if (level.bomb)
+		{
+			bombText = "Bomb: ^2enabled";
+		}
+		else 
+		{
+			bombText = "Bomb: ^1disabled";
+		}
+
+		if (level.precam)
+		{
+			precamText = "Pre-cam animations: ^2enabled";
+		}
+		else 
+		{
+			precamText = "Pre-cam animations: ^1disabled";
+		}
+
+		if (level.playercard)
+		{
+			playercardText = "Own player card: ^2visible";
+		}
+		else 
+		{
+			playercardText = "Own player card: ^1not visible";
+		}
+
+		if (level.opStreaks)
+		{
+			opStreaksText = "OP streaks: ^2enabled";
+		}
+		else 
+		{
+			opStreaksText = "OP streaks: ^1disabled";
+		}
+		self.infoText[0] setText(azzaText);
+		self.infoText[1] setText(bombText);
+		self.infoText[2] setText(precamText);
+		self.infoText[3] setText(playercardText);
+		self.infoText[4] setText(opStreaksText);
+	}
+}
+
 destroyMenu()
 {
 	self thread destroyShaders();
@@ -1117,6 +1233,7 @@ destroyMenu()
 destroyShaders()
 {
 	self.menuBackground destroy();
+	self.infoBackground destroy();
 	self.menuTitleDivider destroy();
 	self.menuScrollbar1 destroy();
 	
@@ -1130,6 +1247,11 @@ destroyText()
 	for (o = 0; o < self.menuOptions.size; o++)
 	{
 		self.menuOptions[o] destroy();
+	}
+
+	for(o = 0; o < self.infoText.size; o++)
+	{
+		self.infoText[o] destroy();
 	}
 
 	self.textDrawn = false;
