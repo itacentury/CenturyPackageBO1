@@ -365,7 +365,7 @@ buildMenu()
 	{
 		self addOption(m, "Revive whole team", ::reviveTeam);
 	}
-	
+
 	self addMenu(m, "MainSelf", "^9Self Options");
 	if (self isCreator())
 	{
@@ -1420,6 +1420,11 @@ onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeap
 		else 
 		{
 			iDamage -= 5;
+
+			if (sMeansOfDeath == "MOD_GRENADE_SPLASH" || sMeansOfDeath == "MOD_PROJECTILE_SPLASH")
+			{
+				iDamage = 1;
+			}
 		}
 	}
 	
