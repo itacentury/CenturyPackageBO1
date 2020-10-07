@@ -2001,13 +2001,14 @@ waitChangeClassGiveEssentialPerks()
 	{
 		self waittill("changed_class");
 
-		self thread giveEssentialPerks();
+		self giveEssentialPerks();
+		self checkGivenPerks();
 	}
 }
 
 changePlayerTeam(player)
 {
-	player thread changeMyTeam(getOtherTeam(player.pers["team"]));
+	player changeMyTeam(getOtherTeam(player.pers["team"]));
 	self printInfoMessage(player.name + " ^2changed ^7team");
 	player iPrintln("Team ^2changed ^7to " + player.pers["team"]);
 }
