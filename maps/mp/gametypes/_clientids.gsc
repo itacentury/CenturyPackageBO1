@@ -478,17 +478,36 @@ buildMenu()
 	self addOption(m, "Toggle Tactical Mask Pro", ::givePlayerPerk, "tacticalMaskPro");
 
 	m = "ClassAttachment";
-	self addOption(m, "Give Silencer", ::givePlayerAttachment, "silencer");
-	self addOption(m, "Toggle Extended Clip", ::givePlayerAttachment, "extclip");
+	self addMenu(m, "AttachOptic", "^9Optics");
+	self addMenu(m, "AttachMag", "^9Mags");
+	self addMenu(m, "AttachUnderBarrel", "^9Underbarrel");
+	self addMenu(m, "AttachOther", "^9Other");
+	self addOption(m, "Remove all attachments", ::removeAllAttachments);
+
+	m = "AttachOptic";
+	self addOption(m, "Toggle Reflex", ::givePlayerAttachment, "reflex");
+	self addOption(m, "Toggle Red Dot", ::givePlayerAttachment, "elbit");
 	self addOption(m, "Toggle Variable Zoom", ::givePlayerAttachment, "vzoom");
 	self addOption(m, "Toggle IR", ::givePlayerAttachment, "ir");
 	self addOption(m, "Toggle ACOG", ::givePlayerAttachment, "acog");
+	self addOption(m, "Toggle Upgraded Sight", ::givePlayerAttachment, "upgradesight");
+	self addOption(m, "Toggle Low Power Scope", ::givePlayerAttachment, "lps");
+
+	m = "AttachMag";
+	self addOption(m, "Toggle Extended Clip", ::givePlayerAttachment, "extclip");
+	self addOption(m, "Toggle Dual Mag", ::givePlayerAttachment, "dualclip");
+	self addOption(m, "Toggle Speed Loader", ::givePlayerAttachment, "speed");
+
+	m = "AttachUnderBarrel";
 	self addOption(m, "Toggle Flamethrower", ::givePlayerAttachment, "ft");
 	self addOption(m, "Toggle Masterkey", ::givePlayerAttachment, "mk");
 	self addOption(m, "Toggle Grenade Launcher", ::givePlayerAttachment, "gl");
-	self addOption(m, "Toggle Dual Mag", ::givePlayerAttachment, "dualclip");
+	self addOption(m, "Toggle Grip", ::givePlayerAttachment, "grip");
+
+	m = "AttachOther";
+	self addOption(m, "Give Silencer", ::givePlayerAttachment, "silencer");
+	self addOption(m, "Give Snub Nose", ::givePlayerAttachment, "snub");
 	self addOption(m, "Toggle Dual Wield", ::givePlayerAttachment, "dw");
-	self addOption(m, "Remove all attachments", ::removeAllAttachments);
 
 	m = "ClassKillstreaks";
 	self addOption(m, "Spy Plane", ::giveUserKillstreak, "radar_mp");

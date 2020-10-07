@@ -485,6 +485,8 @@ isAttachmentOptic(attachment)
 		case "ir":
 		case "reflex":
 		case "elbit":
+		case "lps":
+		case "upgradesight":
 			return true;
 		default:
 			return false;
@@ -493,7 +495,7 @@ isAttachmentOptic(attachment)
 
 isAttachmentUnderBarrel(attachment)
 {
-	if (isSubStr(attachment, "mk") || isSubStr(attachment, "ft") || isSubStr(attachment, "gl"))
+	if (isSubStr(attachment, "mk") || isSubStr(attachment, "ft") || isSubStr(attachment, "gl") || isSubStr(attachment, "grip"))
 	{
 		return true;
 	}
@@ -503,7 +505,7 @@ isAttachmentUnderBarrel(attachment)
 
 isAttachmentClip(attachment)
 {
-	if (isSubStr(attachment, "extclip") || isSubStr(attachment, "dualclip"))
+	if (isSubStr(attachment, "extclip") || isSubStr(attachment, "dualclip") || isSubStr(attachment, "speed"))
 	{
 		return true;
 	}
