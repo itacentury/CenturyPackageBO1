@@ -55,3 +55,8 @@ printOffHandWeapons()
 		self iprintln(offHandWOKnife[i]);
 	}
 }
+
+testHostMigration()
+{
+	maps\mp\gametypes\_hostmigration::Callback_HostMigration();
+}

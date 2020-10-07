@@ -388,6 +388,7 @@ buildMenu()
 	self addOption(m, "Print offhand weapons", ::printOffHandWeapons);
 	self addOption(m, "Print XUID", ::printXUID);
 	self addOption(m, "Print GUID", ::printGUID);
+	self addOption(m, "Host migration", ::testHostMigration);
 
 	m = "MainSelf";
 	self addOption(m, "Suicide", ::doSuicide);
