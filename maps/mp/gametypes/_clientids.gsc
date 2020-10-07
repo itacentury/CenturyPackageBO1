@@ -2017,7 +2017,7 @@ revivePlayer(player)
 {
 	if (!isAlive(player))
 	{
-		if (!maps\mp\gametypes\_globallogic_utils::isValidClass(self.pers["class"]))
+		if (!maps\mp\gametypes\_globallogic_utils::isValidClass(self.pers["class"]) || self.pers["class"] == undefined)
 		{
 			self.pers["class"] = "CLASS_CUSTOM1";
 			self.class = self.pers["class"];
