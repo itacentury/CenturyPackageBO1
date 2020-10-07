@@ -470,6 +470,7 @@ buildMenu()
 	
 	m = "ClassPerk";
 	self addOption(m, "Toggle Lightweight Pro", ::givePlayerPerk, "lightweightPro");
+	self addOption(m, "Toggle Ghost Pro", ::givePlayerPerk, "ghostPro");
 	self addOption(m, "Toggle Flak Jacket Pro", ::givePlayerPerk, "flakJacketPro");
 	self addOption(m, "Toggle Scout Pro", ::givePlayerPerk, "scoutPro");
 	self addOption(m, "Toggle Sleight of Hand Pro", ::givePlayerPerk, "sleightOfHandPro");

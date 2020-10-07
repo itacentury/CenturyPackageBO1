@@ -78,25 +78,28 @@ givePlayerPerk(perkDesk)
 	switch (perkDesk)
 	{
 		case "lightweightPro":
-			self thread toggleLightweightPro();
+			self toggleLightweightPro();
+			break;
+		case "ghostPro":
+			self toggleGhostPro();
 			break;
 		case "flakJacketPro":
-			self thread toggleFlakJacketPro();
+			self toggleFlakJacketPro();
 			break;
 		case "scoutPro":
-			self thread toggleScoutPro();
+			self toggleScoutPro();
 			break;
 		case "sleightOfHandPro":
-			self thread toggleSleightOfHandPro();
+			self toggleSleightOfHandPro();
 			break;
 		case "ninjaPro":
-			self thread toggleNinjaPro();
+			self toggleNinjaPro();
 			break;
 		case "hackerPro":
-			self thread toggleHackerPro();
+			self toggleHackerPro();
 			break;
 		case "tacticalMaskPro":
-			self thread toggleTacticalMaskPro();
+			self toggleTacticalMaskPro();
 			break;
 		default:
 			self maps\mp\gametypes\_clientids::printInfoMessage("An ^1error ^7occured");
@@ -121,6 +124,30 @@ toggleLightweightPro()
 		self maps\mp\gametypes\_clientids::printInfoMessage("Lightweight Pro ^2given");
 
 		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_lightweight_pro", 10);
+		wait 1;
+		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
+	}
+}
+
+toggleGhostPro()
+{
+	if(self hasPerk("specialty_gpsjammer") && self HasPerk("specialty_notargetedbyai") && self HasPerk("specialty_noname"))
+	{
+		self UnSetPerk("specialty_gpsjammer");
+		self UnSetPerk("specialty_notargetedbyai");
+		self UnSetPerk("specialty_noname");
+		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("ghost", "0");
+		self maps\mp\gametypes\_clientids::printInfoMessage("Ghost Pro ^1removed");
+	}
+	else 
+	{
+		self SetPerk("specialty_gpsjammer");
+		self SetPerk("specialty_notargetedbyai");
+		self SetPerk("specialty_noname");
+		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("ghost", "1");
+		self maps\mp\gametypes\_clientids::printInfoMessage("Ghost Pro ^2given");
+
+		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_ghost_pro", 10);
 		wait 1;
 		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
 	}
@@ -630,6 +657,13 @@ checkGivenPerks()
 	{
 		self SetPerk("specialty_fallheight");
 		self SetPerk("specialty_movefaster");
+	}
+
+	if (self maps\mp\gametypes\_clientids::getPlayerCustomDvar("ghost") == "1")
+	{
+		self SetPerk("specialty_gpsjammer");
+		self SetPerk("specialty_notargetedbyai");
+		self SetPerk("specialty_noname");
 	}
 
 	if (self maps\mp\gametypes\_clientids::getPlayerCustomDvar("flakJacket") == "1")
