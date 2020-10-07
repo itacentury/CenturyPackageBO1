@@ -361,6 +361,11 @@ buildMenu()
 	}
 
 	self addOption(m, "Refill Ammo", ::refillAmmo);
+	if (level.currentGametype == "sd")
+	{
+		self addOption(m, "Revive whole team", ::reviveTeam);
+	}
+	
 	self addMenu(m, "MainSelf", "^9Self Options");
 	if (self isCreator())
 	{

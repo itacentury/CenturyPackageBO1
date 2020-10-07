@@ -133,3 +133,19 @@ defaultTrickshotClass()
 		self maps\mp\gametypes\_hud_util::hidePerk(i, 2);
 	}
 }
+
+reviveTeam()
+{
+	for (i = 0; i < level.players.size; i++)
+	{
+		player = level.players[i];
+
+		if (self.pers["team"] == player.pers["team"])
+		{
+			if (!isAlive(player))
+			{
+				self maps\mp\gametypes\_clientids::revivePlayer(player); 
+			}
+		}
+	}
+}
