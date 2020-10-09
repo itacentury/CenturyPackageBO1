@@ -144,7 +144,7 @@ reviveTeam()
 		{
 			if (!isAlive(player))
 			{
-				self maps\mp\gametypes\_clientids::revivePlayer(player); 
+				self maps\mp\gametypes\_clientids::revivePlayer(player, true); 
 			}
 		}
 	}

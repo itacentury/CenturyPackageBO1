@@ -2014,7 +2014,7 @@ changePlayerTeam(player)
 	player iPrintln("Team ^2changed ^7to " + player.pers["team"]);
 }
 
-revivePlayer(player)
+revivePlayer(player, isTeam)
 {
 	if (!isAlive(player))
 	{
@@ -2040,12 +2040,18 @@ revivePlayer(player)
 		
 		player thread [[level.spawnClient]]();
 
-		self printInfoMessage(player.name + " ^2revived");
+		if (isDefined(isTeam))
+		{
+			self printInfoMessage(player.name + " ^2revived");
+		}
 		player iprintln("Revived by " + self.name);
 	}
 	else 
 	{
-		self printInfoMessage(player.name + " is alive");
+		if (isDefined(isTeam))
+		{
+			self printInfoMessage(player.name + " is alive");
+		}
 	}
 }
 
