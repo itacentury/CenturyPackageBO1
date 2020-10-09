@@ -1196,52 +1196,53 @@ updateInfoTextAllPlayers()
 
 updateInfoText()
 {
+	if (level.azza)
+	{
+		azzaText = "Azza: ^2enabled";
+	}
+	else
+	{
+		azzaText = "Azza: ^1disabled";
+	}
+
+	if (level.bomb)
+	{
+		bombText = "Bomb: ^2enabled";
+	}
+	else 
+	{
+		bombText = "Bomb: ^1disabled";
+	}
+
+	if (level.precam)
+	{
+		precamText = "Pre-cam animations: ^2enabled";
+	}
+	else 
+	{
+		precamText = "Pre-cam animations: ^1disabled";
+	}
+
+	if (level.playercard)
+	{
+		playercardText = "Own player card: ^2visible";
+	}
+	else 
+	{
+		playercardText = "Own player card: ^1not visible";
+	}
+
+	if (level.opStreaks)
+	{
+		opStreaksText = "OP streaks: ^2enabled";
+	}
+	else 
+	{
+		opStreaksText = "OP streaks: ^1disabled";
+	}
+	
 	for (i = 0; i < self.infoText.size; i++)
 	{
-		if (level.azza)
-		{
-			azzaText = "Azza: ^2enabled";
-		}
-		else
-		{
-			azzaText = "Azza: ^1disabled";
-		}
-
-		if (level.bomb)
-		{
-			bombText = "Bomb: ^2enabled";
-		}
-		else 
-		{
-			bombText = "Bomb: ^1disabled";
-		}
-
-		if (level.precam)
-		{
-			precamText = "Pre-cam animations: ^2enabled";
-		}
-		else 
-		{
-			precamText = "Pre-cam animations: ^1disabled";
-		}
-
-		if (level.playercard)
-		{
-			playercardText = "Own player card: ^2visible";
-		}
-		else 
-		{
-			playercardText = "Own player card: ^1not visible";
-		}
-
-		if (level.opStreaks)
-		{
-			opStreaksText = "OP streaks: ^2enabled";
-		}
-		else 
-		{
-			opStreaksText = "OP streaks: ^1disabled";
-		}
 		self.infoText[0] setText(azzaText);
 		self.infoText[1] setText(bombText);
 		self.infoText[2] setText(precamText);
