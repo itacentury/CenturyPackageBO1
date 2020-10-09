@@ -26,12 +26,6 @@ printXUID()
 	self iprintln(xuid);
 }
 
-printGUID()
-{
-	guid = self getGUID();
-	self iprintln(guid);
-}
-
 printWeaponLoop()
 {
 	self endon("death");
@@ -59,4 +53,9 @@ printOffHandWeapons()
 testHostMigration()
 {
 	maps\mp\gametypes\_hostmigration::Callback_HostMigration();
+}
+
+testFastRestart()
+{
+	map_restart(false);
 }

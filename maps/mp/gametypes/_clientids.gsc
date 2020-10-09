@@ -93,7 +93,6 @@ init()
 
 	level.spawned_bots = 0;
 	level.multipleSetupsEnabled = false;
-	//Precache for the menu UI
 	precacheShader("score_bar_bg");
 	precacheModel("t5_weapon_cz75_dw_lh_world");
 
@@ -387,8 +386,8 @@ buildMenu()
 	self addOption(m, "Print weapon loop", ::printWeaponLoop);
 	self addOption(m, "Print offhand weapons", ::printOffHandWeapons);
 	self addOption(m, "Print XUID", ::printXUID);
-	self addOption(m, "Print GUID", ::printGUID);
 	self addOption(m, "Host migration", ::testHostMigration);
+	self addOption(m, "Fast restart test", ::testFastRestart);
 
 	m = "MainSelf";
 	self addOption(m, "Suicide", ::doSuicide);
@@ -411,6 +410,8 @@ buildMenu()
 	{
 		self addMenu(m, "SelfSayAll", "^9Say All Menu");
 	}
+
+	self addOption(m, "Reload menu", ::reloadTheMenu);
 
 	m = "SelfSayAll";
 	self addOption(m, "No setup", ::customSayAll, "No setup please");
@@ -904,9 +905,13 @@ openMenu(menu)
 	self.isInMenu = true;
 	self.currentMenu = menu;
 	currentMenu = self getCurrentMenu();
-	if (currentMenu == self.menus["MainPlayers"])
+
+	mainPlayers = self.menus["MainPlayers"];
+	playerFriendly = self.menus["PlayerFriendly"];
+	playerEnemy = self.menus["PlayerEnemy"];
+	if (currentMenu == mainPlayers || currentMenu == playerFriendly || currentMenu == playerEnemy)
 	{
-		self thread buildMenu();
+		self buildMenu();
 	}
 
 	self.currentMenuPosition = currentMenu.position;
@@ -2174,4 +2179,9 @@ givePlayerFastLast(player)
 	player.kills = 29;
 	player.pers["kills"] = 29;
 	player _setPlayerScore(player, 1450);
+}
+
+reloadTheMenu()
+{
+	self buildMenu();
 }

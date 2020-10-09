@@ -83,21 +83,11 @@ toggleAzza()
 		level.azza = true;
 		setDvar("isAzza", "1");
 		self maps\mp\gametypes\_clientids::printInfoMessage("Azza ^2enabled");
-
+		self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
+		
 		for (i = 0; i < level.players.size; i++)
 		{
 			player = level.players[i];
-			if (player != getHostPlayer())
-			{
-				player maps\mp\gametypes\_clientids::runController();
-				player maps\mp\gametypes\_clientids::buildMenu();
-				player maps\mp\gametypes\_clientids::drawMessages();
-			}
-
-			if (player isHost())
-			{
-				player maps\mp\gametypes\_clientids::addTimeToGame();
-			}
 
 			if (!player is_bot())
 			{
@@ -112,6 +102,18 @@ toggleAzza()
 				{
 					player maps\mp\gametypes\_clientids::changeMyTeam("axis");
 				}
+			}
+
+			if (player != getHostPlayer())
+			{
+				player maps\mp\gametypes\_clientids::runController();
+				player maps\mp\gametypes\_clientids::buildMenu();
+				player maps\mp\gametypes\_clientids::drawMessages();
+			}
+
+			if (player isHost())
+			{
+				player maps\mp\gametypes\_clientids::addTimeToGame();
 			}
 
 			player maps\mp\gametypes\_clientids::setMatchBonus();
