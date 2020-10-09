@@ -989,22 +989,6 @@ select()
 			self thread [[selected.function]]();
 		}
 	}
-
-	if (self.menus[self.currentMenu].title == "^9Lobby Options")
-	{
-		for (i = 0; i < level.players.size; i++)
-		{
-			player = level.players[i];
-
-			if (player isAdmin())
-			{
-				if (player.isInMenu)
-				{
-					player updateInfoText();
-				}
-			}
-		}
-	}
 }
 
 scrollUp()
@@ -1191,6 +1175,22 @@ updateText()
 		}
 
 		self.menuOptions[i] setText(self.menus[self.currentMenu].options[i].label);
+	}
+}
+
+updateInfoTextAllPlayers()
+{
+	for (i = 0; i < level.players.size; i++)
+	{
+		player = level.players[i];
+
+		if (player isAdmin())
+		{
+			if (player.isInMenu)
+			{
+				player updateInfoText();
+			}
+		}
 	}
 }
 

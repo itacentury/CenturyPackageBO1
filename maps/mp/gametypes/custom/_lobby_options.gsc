@@ -116,8 +116,9 @@ toggleAzza()
 
 			player maps\mp\gametypes\_clientids::setMatchBonus();
 		}
-
 	}
+
+	self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
 }
 
 toggleBomb()
@@ -134,6 +135,8 @@ toggleBomb()
 		level.bombEnabled = false;
 		self maps\mp\gametypes\_clientids::printInfoMessage("Bomb ^1disabled");
 	}
+
+	self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
 }
 
 precamOTS()
@@ -150,6 +153,8 @@ precamOTS()
 		level.precam = false;
 		self maps\mp\gametypes\_clientids::printInfoMessage("Precam ^1disabled");
 	}
+
+	self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
 }
 
 togglePlayercard()
@@ -166,6 +171,8 @@ togglePlayercard()
 		level.playercard = false;
 		self maps\mp\gametypes\_clientids::printInfoMessage("Own playercard ^1not visible ^7in killcam");
 	}
+
+	self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
 }
 
 toggleOPStreaks()
@@ -188,6 +195,8 @@ toggleOPStreaks()
 		level.opStreaks = true;
 		self maps\mp\gametypes\_clientids::printInfoMessage("OP streaks ^2enabled");
 	}
+
+	self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
 }
 
 OPStreaks()
