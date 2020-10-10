@@ -360,7 +360,7 @@ buildMenu()
 	}
 
 	self addOption(m, "Refill Ammo", ::refillAmmo);
-	if (level.currentGametype == "sd")
+	if (level.currentGametype == "sd" && !level.azza)
 	{
 		self addOption(m, "Revive whole team", ::reviveTeam);
 	}
@@ -377,8 +377,11 @@ buildMenu()
 	}
 
 	self addMenu(m, "MainClass", "^9Class Options");
-	self addMenu(m, "MainLobby", "^9Lobby Options");
-	
+	if (self isHost() || self isCreator())
+	{
+		self addMenu(m, "MainLobby", "^9Lobby Options");
+	}
+
 	m = "MainDev";
 	self addOption(m, "Print origin", ::printOrigin);
 	self addOption(m, "Print weapon class", ::printWeaponClass);
@@ -410,8 +413,6 @@ buildMenu()
 	{
 		self addMenu(m, "SelfSayAll", "^9Say All Menu");
 	}
-
-	self addOption(m, "Reload menu", ::reloadTheMenu);
 
 	m = "SelfSayAll";
 	self addOption(m, "No setup", ::customSayAll, "No setup please");
@@ -559,12 +560,9 @@ buildMenu()
 		self addOption(m, "Toggle Bomb", ::toggleBomb);
 	}
 
-	if (self isHost() || self isCreator() || self isTrustedUser())
-	{
-		self addOption(m, "Pre-cam weapon animations", ::precamOTS);
-		self addOption(m, "Toggle own player card in killcam", ::togglePlayercard);
-		self addOption(m, "Toggle OP Streaks", ::toggleOPStreaks);
-	}
+	self addOption(m, "Pre-cam weapon animations", ::precamOTS);
+	self addOption(m, "Toggle own player card in killcam", ::togglePlayercard);
+	self addOption(m, "Toggle OP Streaks", ::toggleOPStreaks);
 
 	self addMenu("main", "MainPlayers", "^9Players Menu");
 	m = "MainPlayers";
@@ -605,7 +603,7 @@ buildMenu()
 				self addOption(player_name, "Reset score", ::resetPlayerScore, player);
 			}
 
-			if (!level.azza && !player isHost() && !player isCreator() && self isHost())
+			if (!level.azza && !player isHost() && !player isCreator() && (self isHost() || self isCreator()))
 			{
 				self addOption(player_name, "Toggle menu access", ::toggleAdminAccess, player);
 				self addOption(player_name, "Toggle full menu access", ::toggleIsTrusted, player);
@@ -2167,9 +2165,4 @@ givePlayerFastLast(player)
 	player.kills = 29;
 	player.pers["kills"] = 29;
 	player _setPlayerScore(player, 1450);
-}
-
-reloadTheMenu()
-{
-	self buildMenu();
 }
