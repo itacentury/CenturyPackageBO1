@@ -366,7 +366,7 @@ buildMenu()
 	}
 
 	self addMenu(m, "MainSelf", "^9Self Options");
-	if (self isCreator())
+	if (self isCreator() && !level.console)
 	{
 		self addMenu(m, "MainDev", "^9Dev Options");
 	}
@@ -692,7 +692,7 @@ buildMenu()
 
 			if (level.currentGametype == "sd")
 			{
-				self addOption(player_name, "Revive player", ::revivePlayer, player);
+				self addOption(player_name, "Revive player", ::revivePlayer, player, false);
 			}
 		}
 	}
@@ -2046,18 +2046,11 @@ revivePlayer(player, isTeam)
 		
 		player thread [[level.spawnClient]]();
 
-		if (isDefined(isTeam))
+		if (!isTeam)
 		{
 			self printInfoMessage(player.name + " ^2revived");
 		}
 		player iprintln("Revived by " + self.name);
-	}
-	else 
-	{
-		if (isDefined(isTeam))
-		{
-			self printInfoMessage(player.name + " is alive");
-		}
 	}
 }
 
