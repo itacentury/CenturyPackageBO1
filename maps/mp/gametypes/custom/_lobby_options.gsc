@@ -2,18 +2,6 @@
 #include maps\mp\_utility;
 #include common_scripts\utility;
 
-addMinuteToTimer()
-{
-	timeLimit = getDvarInt("scr_" + level.currentGametype + "_timelimit");
-	setDvar("scr_" + level.currentGametype + "_timelimit", timelimit + 1);
-}
-
-removeMinuteFromTimer()
-{
-	timeLimit = getDvarInt("scr_" + level.currentGametype + "_timelimit");
-	setDvar("scr_" + level.currentGametype + "_timelimit", timelimit - 1);
-}
-
 toggleTimer()
 {
 	if (!level.timerPaused)

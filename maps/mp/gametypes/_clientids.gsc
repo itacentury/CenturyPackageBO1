@@ -187,12 +187,12 @@ onPlayerSpawned()
 
 			if (level.azza && level.currentMapName == "mp_cosmodrome")
 			{
-				self thread launchRocketMonitor();
+				self launchRocketMonitor();
 			}
 
-			if (self isHost() && level.azza)
+			if (self isHost() && level.currentGametype == "sd")
 			{
-				self thread addTimeToGame();
+				self addTimeToGame();
 			}
 
 			if (level.console)
@@ -541,12 +541,7 @@ buildMenu()
 	self addOption(m, "Decoy", ::giveUserTacticals, "nightingale_mp");
 
 	m = "MainLobby";
-	if (!level.azza)
-	{
-		self addOption(m, "Add 1 minute", ::addMinuteToTimer);
-		self addOption(m, "Remove 1 minute", ::removeMinuteFromTimer);
-	}
-	else if (level.azza)
+	if (level.azza)
 	{
 		self addOption(m, "Allow multiple setups", ::toggleMultipleSetups);
 		self addOption(m, "Toggle timer", ::toggleTimer);
