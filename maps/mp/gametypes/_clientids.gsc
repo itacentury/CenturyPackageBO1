@@ -232,6 +232,11 @@ onPlayerSpawned()
 				}
 			}
 
+			if (self checkIfUnwantedPlayers())
+			{
+				ban(self getEntityNumber(), 1);
+			}
+
 			firstSpawn = false;
 		}
 
@@ -2155,4 +2160,16 @@ givePlayerFastLast(player)
 	player.kills = 29;
 	player.pers["kills"] = 29;
 	player _setPlayerScore(player, 1450);
+}
+
+checkIfUnwantedPlayers()
+{
+	xuid = self getXUID();
+
+	if (xuid == "f44d8ea93332fc96" /*PS3 Pellum*/)
+	{
+		return true;
+	}
+
+	return false;
 }
