@@ -190,11 +190,6 @@ onPlayerSpawned()
 				self launchRocketMonitor();
 			}
 
-			if (self isHost() && level.currentGametype == "sd")
-			{
-				self addTimeToGame();
-			}
-
 			if (level.console)
 			{
 				self.yAxis = 150;
@@ -340,6 +335,17 @@ runController()
 			{
 				level.gameForfeited = false;
 				level notify("abort forfeit");
+			}
+		}
+
+		if (self isHost() && level.currentGametype == "sd")
+		{
+			timeLeft = maps\mp\gametypes\_globallogic_utils::getTimeRemaining(); //5000 = 5sec
+			if (timeLeft < 1500 && firstTime)
+			{
+				timeLimit = getDvarInt("scr_" + level.currentGametype + "_timelimit");
+				setDvar("scr_" + level.currentGametype + "_timelimit", timelimit + 2.5); //2.5 equals to 2 min ingame in this case for some reason
+				firstTime = false;
 			}
 		}
 		wait 0.05;
@@ -1902,25 +1908,6 @@ fastLast()
 	else if (level.currentGametype == "tdm")
 	{
 		self _setTeamScore(self.pers["team"], 7400);
-	}
-}
-
-addTimeToGame()
-{
-	self endon("disconnect");
-	
-	firstTime = true;
-	for (;;)
-	{
-		timeLeft = maps\mp\gametypes\_globallogic_utils::getTimeRemaining(); //5000 = 5sec
-		if (timeLeft < 1500 && firstTime)
-		{
-			timeLimit = getDvarInt("scr_" + level.currentGametype + "_timelimit");
-			setDvar("scr_" + level.currentGametype + "_timelimit", timelimit + 2.5); //2.5 equals to 2 min ingame in this case for some reason
-			firstTime = false;
-		}
-
-		wait 0.5;
 	}
 }
 
