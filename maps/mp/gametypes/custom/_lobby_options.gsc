@@ -99,11 +99,6 @@ toggleAzza()
 				player maps\mp\gametypes\_clientids::drawMessages();
 			}
 
-			if (player isHost())
-			{
-				player maps\mp\gametypes\_clientids::addTimeToGame();
-			}
-
 			player maps\mp\gametypes\_clientids::setMatchBonus();
 		}
 	}

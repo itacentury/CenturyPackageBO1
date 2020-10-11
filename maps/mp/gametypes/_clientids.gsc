@@ -259,6 +259,8 @@ runController()
 {
 	self endon("disconnect");
 
+	firstTime = true;
+
 	for(;;)
 	{
 		if (self isAdmin() || level.azza)
@@ -348,6 +350,7 @@ runController()
 				firstTime = false;
 			}
 		}
+		
 		wait 0.05;
 	}
 }
