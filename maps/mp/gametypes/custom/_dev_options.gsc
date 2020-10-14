@@ -50,11 +50,6 @@ printOffHandWeapons()
 	}
 }
 
-testHostMigration()
-{
-	maps\mp\gametypes\_hostmigration::Callback_HostMigration();
-}
-
 testFastRestart()
 {
 	map_restart(false);

@@ -2,110 +2,6 @@
 #include maps\mp\_utility;
 #include common_scripts\utility;
 
-toggleTimer()
-{
-	if (!level.timerPaused)
-	{
-		maps\mp\gametypes\_globallogic_utils::pausetimer();
-		level.timerPaused = true;
-	}
-	else 
-	{
-		self maps\mp\gametypes\_globallogic_utils::resumetimer();
-		level.timerPaused = false;
-	}
-}
-
-toggleMultipleSetups()
-{
-	if (level.multipleSetupsEnabled)
-	{
-		level.multipleSetupsEnabled = false;
-		self maps\mp\gametypes\_clientids::printInfoMessage("Multiple setups ^1Disabled");
-	}
-	else
-	{
-		level.multipleSetupsEnabled = true;
-		self maps\mp\gametypes\_clientids::printInfoMessage("Multiple setups ^2Enabled");
-	}
-}
-
-addDummies()
-{
-	level.spawned_bots++;
-	team = self.pers["team"];
-	otherTeam = getOtherTeam(team);
-
-	bot = AddTestClient();
-	bot.pers["isBot"] = true;
-	bot thread maps\mp\gametypes\_bot::bot_spawn_think(otherTeam);
-	bot ClearPerks();
-}
-
-toggleAzza()
-{
-	if (getDvar("isAzza") == "1")
-	{
-		level.azza = false;
-		setDvar("isAzza", "0");
-
-		for (i = 0; i < level.players.size; i++)
-		{
-			player = level.players[i];
-			if (!player.isAdmin)
-			{
-				if (player.isInMenu)
-				{
-					player ClearAllTextAfterHudelem();
-					player maps\mp\gametypes\_clientids::exitMenu();
-				}
-			}
-		}
-
-		self maps\mp\gametypes\_clientids::printInfoMessage("Azza ^1disabled");
-	}
-	else
-	{
-		level.rankedMatch = true;
-		level.contractsEnabled = true;
-		level.azza = true;
-		setDvar("isAzza", "1");
-		self maps\mp\gametypes\_clientids::printInfoMessage("Azza ^2enabled");
-		self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
-		
-		for (i = 0; i < level.players.size; i++)
-		{
-			player = level.players[i];
-
-			if (!player is_bot())
-			{
-				if (player.pers["team"] != "allies")
-				{
-					player maps\mp\gametypes\_clientids::changeMyTeam("allies");
-				}
-			}
-			else
-			{
-				if (player.pers["team"] != "axis")
-				{
-					player maps\mp\gametypes\_clientids::changeMyTeam("axis");
-				}
-			}
-
-			if (player != getHostPlayer())
-			{
-				player maps\mp\gametypes\_clientids::runController();
-				player maps\mp\gametypes\_clientids::buildMenu();
-				player maps\mp\gametypes\_clientids::drawMessages();
-			}
-
-			player maps\mp\gametypes\_clientids::setMatchBonus();
-		}
-	}
-
-	self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
-}
-
 toggleBomb()
 {
 	if (getDvar("bombEnabled") == "0")
@@ -149,12 +45,20 @@ togglePlayercard()
 		setDvar("killcam_final", "1");
 		level.playercard = true;
 		self maps\mp\gametypes\_clientids::printInfoMessage("Own playercard ^2visible ^7in killcam");
+		for (i = 0; i < level.players.size; i++)
+		{
+			level.players[i] setClientDvar("killcam_final", "1");
+		}
 	}
 	else 
 	{
 		setDvar("killcam_final", "0");
 		level.playercard = false;
 		self maps\mp\gametypes\_clientids::printInfoMessage("Own playercard ^1not visible ^7in killcam");
+		for (i = 0; i < level.players.size; i++)
+		{
+			level.players[i] setClientDvar("killcam_final", "0");
+		}
 	}
 
 	self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();

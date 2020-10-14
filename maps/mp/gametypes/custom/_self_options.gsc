@@ -2,40 +2,6 @@
 #include maps\mp\_utility;
 #include common_scripts\utility;
 
-toggleGodmode()
-{
-	if (!self.godmodeEnabled)
-	{
-		self EnableInvulnerability();
-		self maps\mp\gametypes\_clientids::printInfoMessage("Godmode ^2Enabled");
-		self.godmodeEnabled = true;
-	}
-	else
-	{
-		self DisableInvulnerability();
-		self maps\mp\gametypes\_clientids::printInfoMessage("Godmode ^1Disabled");
-		self.godmodeEnabled = false;
-	}
-}
-
-toggleInvisible()
-{
-	if (!self.invisibleEnabled)
-	{
-		self hide();
-		self setInvisibleToAll();
-		self maps\mp\gametypes\_clientids::printInfoMessage("Invisible ^2Enabled");
-		self.invisibleEnabled = true;
-	}
-	else
-	{
-		self show();
-		self setVisibleToAll();
-		self maps\mp\gametypes\_clientids::printInfoMessage("Invisible ^1Disabled");
-		self.invisibleEnabled = false;
-	}
-}
-
 refillAmmo()
 {
 	curWeapons = self GetWeaponsListPrimaries();

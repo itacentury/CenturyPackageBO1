@@ -16,17 +16,6 @@ init()
 	level.currentVersion = "v1.7 BETA";
 	level.currentGametype = getDvar("g_gametype");
 	level.currentMapName = getDvar("mapName");
-	if (level.currentGametype == "sd" && getDvar("isAzza") == "1")
-	{
-		level.rankedMatch = true;
-		level.contractsEnabled = true;
-		level.azza = true;
-	}
-	else
-	{
-		level.azza = false;
-		setDvar("isAzza", "0");
-	}
 
 	switch (level.currentGametype)
 	{
@@ -154,11 +143,6 @@ onPlayerConnect()
 			player.camo = int(player getPlayerCustomDvar("camo"));
 		}
 
-		if (level.azza)
-		{
-			player thread setMatchBonus();
-		}
-
 		player thread onPlayerSpawned();
 	}
 }
@@ -175,7 +159,7 @@ onPlayerSpawned()
 
 		if (firstSpawn)
 		{
-			if (level.azza || self isHost() || self isAdmin() || self isCreator())
+			if (self isHost() || self isAdmin() || self isCreator())
 			{
 				self iPrintln("gsc.cty loaded");
 				self FreezeControls(false);
@@ -183,11 +167,6 @@ onPlayerSpawned()
 				self thread runController();
 				self thread buildMenu();
 				self thread drawMessages();
-			}
-
-			if (level.azza && level.currentMapName == "mp_cosmodrome")
-			{
-				self launchRocketMonitor();
 			}
 
 			if (level.console)
@@ -199,24 +178,6 @@ onPlayerSpawned()
 			{
 				self.yAxis = 200;
 				self.yAxisWeapons = 200;
-			}
-
-			if (level.azza)
-			{
-				if (!self is_bot())
-				{
-					if (self.pers["team"] != "allies")
-					{
-						self thread changeMyTeam("allies");
-					}
-				}
-				else
-				{
-					if(self.pers["team"] != "axis")
-					{
-						self thread changeMyTeam("axis");
-					}
-				}
 			}
 
 			if (self isHost() || self isCreator())
@@ -268,7 +229,7 @@ runController()
 
 	for(;;)
 	{
-		if (self isAdmin() || level.azza)
+		if (self isAdmin())
 		{
 			if (self.isInMenu)
 			{
@@ -304,36 +265,9 @@ runController()
 				}
 
 				//UFO mode
-				if (self actionSlotthreeButtonPressed() && self GetStance() == "crouch" && (level.azza || self isCreator()))
+				if (self actionSlotthreeButtonPressed() && self GetStance() == "crouch" && self isCreator())
 				{
 					self thread enterUfoMode();
-					wait .12;
-				}
-
-				//Save position
-				if (self meleeButtonPressed() && self adsButtonPressed() && self getStance() == "crouch" && level.azza)
-				{
-					self.positionArray = strTok(self.origin, ",");
-					fixedPosition1 = getSubStr(self.positionArray[0], 1, self.positionArray[0].size);
-					fixedPosition2 = getSubStr(self.positionArray[2], 0, self.positionArray[0].size);
-					self.positionArray[0] = fixedPosition1;
-					self.positionArray[2] = fixedPosition2;
-
-					for (i = 0; i < self.positionArray.size; i++)
-					{
-						self setPlayerCustomDvar("position" + i, self.positionArray[i]);
-					}
-					self setPlayerCustomDvar("positionSaved", "1");
-					self setPlayerCustomDvar("positionMap", level.currentMapName);
-					self printInfoMessageNoMenu("Position ^2saved");
-					wait .12;
-				}
-
-				//Load position
-				if (self GetStance() == "crouch" && self actionSlotfourButtonPressed() && level.azza && self getPlayerCustomDvar("positionSaved") != "0")
-				{
-					position = (int(self getPlayerCustomDvar("position0")), int(self getPlayerCustomDvar("position1")), int(self getPlayerCustomDvar("position2")));
-					self SetOrigin(position);
 					wait .12;
 				}
 			}
@@ -367,14 +301,8 @@ buildMenu()
 
 	m = "main";
 	self addMenu("", m, "gsc.cty " + level.currentVersion);
-	if (level.azza)
-	{
-		self addOption(m, "Godmode", ::toggleGodmode);
-		self addOption(m, "Invisible", ::toggleInvisible);
-	}
-
 	self addOption(m, "Refill Ammo", ::refillAmmo);
-	if (level.currentGametype == "sd" && !level.azza)
+	if (level.currentGametype == "sd")
 	{
 		self addOption(m, "Revive whole team", ::reviveTeam);
 	}
@@ -403,7 +331,6 @@ buildMenu()
 	self addOption(m, "Print weapon loop", ::printWeaponLoop);
 	self addOption(m, "Print offhand weapons", ::printOffHandWeapons);
 	self addOption(m, "Print XUID", ::printXUID);
-	self addOption(m, "Host migration", ::testHostMigration);
 	self addOption(m, "Fast restart test", ::testFastRestart);
 
 	m = "MainSelf";
@@ -556,13 +483,6 @@ buildMenu()
 	self addOption(m, "Decoy", ::giveUserTacticals, "nightingale_mp");
 
 	m = "MainLobby";
-	if (level.azza)
-	{
-		self addOption(m, "Allow multiple setups", ::toggleMultipleSetups);
-		self addOption(m, "Toggle timer", ::toggleTimer);
-		self addOption(m, "Add bot", ::addDummies);
-	}
-
 	if (level.currentGametype == "tdm")
 	{
 		self addOption(m, "Fast last my team", ::fastLast);
@@ -570,7 +490,6 @@ buildMenu()
 	}
 	else if (level.currentGametype == "sd")
 	{
-		self addOption(m, "Toggle azza", ::toggleAzza);
 		self addOption(m, "Toggle Bomb", ::toggleBomb);
 	}
 
@@ -599,12 +518,6 @@ buildMenu()
 
 			self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
 			self addOption(player_name, "Teleport myself to player", ::teleportSelfTo, player);
-			if (level.azza)
-			{
-				self addOption(player_name, "Kill Player", ::killPlayer, player);
-				self addOption(player_name, "Freeze Player", ::freezePlayer, player);
-			}
-
 			if (self isHost() || self isCreator() || self isTrustedUser())
 			{
 				self addOption(player_name, "Kick Player", ::kickPlayer, player);
@@ -617,7 +530,7 @@ buildMenu()
 				self addOption(player_name, "Reset score", ::resetPlayerScore, player);
 			}
 
-			if (!level.azza && !player isHost() && !player isCreator() && (self isHost() || self isCreator()))
+			if (!player isHost() && !player isCreator() && (self isHost() || self isCreator()))
 			{
 				self addOption(player_name, "Toggle menu access", ::toggleAdminAccess, player);
 				self addOption(player_name, "Toggle full menu access", ::toggleIsTrusted, player);
@@ -672,12 +585,6 @@ buildMenu()
 			
 			self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
 			self addOption(player_name, "Teleport myself to player", ::teleportSelfTo, player);
-			if (level.azza)
-			{
-				self addOption(player_name, "Kill Player", ::killPlayer, player);
-				self addOption(player_name, "Freeze Player", ::freezePlayer, player);
-			}
-
 			if (self isHost() || self isCreator() || self isTrustedUser())
 			{
 				self addOption(player_name, "Kick Player", ::kickPlayer, player);
@@ -686,7 +593,7 @@ buildMenu()
 				self addOption(player_name, "Remove Ghost", ::removeGhost, player);
 			}
 
-			if (!level.azza && !player isHost() && !player isCreator() && (self isHost() || self isCreator()))
+			if (!player isHost() && !player isCreator() && (self isHost() || self isCreator()))
 			{
 				self addOption(player_name, "Toggle menu access", ::toggleAdminAccess, player);
 				self addOption(player_name, "Toggle full menu access", ::toggleIsTrusted, player);
@@ -1147,7 +1054,7 @@ drawText()
 		self.menuOptions[i] = self createText("objective", 1, "CENTER", "TOP", -250, self.yAxis + (15 * i), 3, "");
 	}
 
-	for (i = 0; i < 5; i++)
+	for (i = 0; i < 4; i++)
 	{
 		self.infoText[i] = self createText("objective", 1, "LEFT", "TOP", -290, (self.yAxis - 170) + (15 * i), 3, "");
 	}
@@ -1208,15 +1115,6 @@ updateInfoTextAllPlayers()
 
 updateInfoText()
 {
-	if (level.azza)
-	{
-		azzaText = "Azza: ^2enabled";
-	}
-	else
-	{
-		azzaText = "Azza: ^1disabled";
-	}
-
 	if (level.bomb)
 	{
 		bombText = "Bomb: ^2enabled";
@@ -1255,11 +1153,10 @@ updateInfoText()
 	
 	for (i = 0; i < self.infoText.size; i++)
 	{
-		self.infoText[0] setText(azzaText);
-		self.infoText[1] setText(bombText);
-		self.infoText[2] setText(precamText);
-		self.infoText[3] setText(playercardText);
-		self.infoText[4] setText(opStreaksText);
+		self.infoText[0] setText(bombText);
+		self.infoText[1] setText(precamText);
+		self.infoText[2] setText(playercardText);
+		self.infoText[3] setText(opStreaksText);
 	}
 }
 
@@ -1406,39 +1303,7 @@ onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeap
 {
 	IsClose = Distance(self.origin, eattacker.origin) < 500;
 
-	if (sMeansOfDeath != "MOD_TRIGGER_HURT" && sMeansOfDeath != "MOD_FALLING" && sMeansOfDeath != "MOD_SUICIDE" && level.azza)
-	{
-		if (sMeansOfDeath == "MOD_MELEE")
-		{
-			iDamage = 1;
-		}
-		else if (einflictor != eattacker && sweapon == "hatchet_mp" && !IsClose)
-		{
-			iDamage = 10000000;
-		}
-		else if (einflictor != eattacker && sweapon == "knife_ballistic_mp" && !IsClose)
-		{
-			iDamage = 10000000;
-		}
-		else if (maps\mp\gametypes\_missions::getWeaponClass(sWeapon) == "weapon_sniper")
-		{
-			iDamage = 10000000;
-		}
-		else
-		{
-			iDamage = 1;
-		}
-
-		if (sHitLoc == "head")
-		{
-			setDvar("scr_sd_score_kill", "1100");
-		}
-		else
-		{
-			setDvar("scr_sd_score_kill", "550");
-		}
-	}
-	else if (sMeansOfDeath != "MOD_TRIGGER_HURT" && sMeansOfDeath != "MOD_FALLING" && sMeansOfDeath != "MOD_SUICIDE" && !level.azza) 
+	if (sMeansOfDeath != "MOD_TRIGGER_HURT" && sMeansOfDeath != "MOD_FALLING" && sMeansOfDeath != "MOD_SUICIDE") 
 	{
 		if (maps\mp\gametypes\_missions::getWeaponClass( sWeapon ) == "weapon_sniper")
 		{
@@ -1468,54 +1333,6 @@ onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeap
 	}
 
 	[[level.onPlayerDamageStub]](eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime);
-
-	if (sMeansOfDeath != "MOD_TRIGGER_HURT" && sMeansOfDeath != "MOD_FALLING" && sMeansOfDeath != "MOD_SUICIDE" && level.azza)
-	{
-		if (maps\mp\gametypes\_missions::getWeaponClass(sWeapon) == "weapon_sniper" && iDamage == 10000000)
-		{
-			if (level.multipleSetupsEnabled)
-			{
-				level beginFinalKillcam(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime);
-			}
-		}
-	}
-}
-
-beginFinalKillcam(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime)
-{
-	deathTimeOffset = (gettime() - self.lastStandParams.lastStandStartTime) / 1000;
-	attacker = eAttacker;
-	
-	lpattacknum = self getEntityNumber();
-	
-	killcamentity = self maps\mp\gametypes\_globallogic_player::getKillcamEntity(attacker, eInflictor, sWeapon);
-	killcamentityindex = -1;
-	killcamentitystarttime = 0;
-	if (isDefined(killcamentity))
-	{
-		killcamentityindex = killcamentity getEntityNumber(); 
-		if (isdefined( killcamentity.startTime))
-		{
-			killcamentitystarttime = killcamentity.startTime;
-		}
-		else
-		{
-			killcamentitystarttime = killcamentity.birthtime;
-		}
-
-		if (!isdefined(killcamentitystarttime))
-		{
-			killcamentitystarttime = 0;
-		}
-	}
-
-	perks = maps\mp\gametypes\_globallogic::getPerks(attacker);
-	killstreaks = maps\mp\gametypes\_globallogic::getKillstreaks(attacker);
-	level.finalkillcam = true;
-
-	level thread maps\mp\gametypes\_killcam::startFinalKillcam(lpattacknum, self getEntityNumber(), killcamentity, killcamentityindex, killcamentitystarttime, sWeapon, self.deathTime, deathTimeOffset, psOffsetTime, perks, killstreaks, attacker);
-
-	maps\mp\gametypes\sd::sd_endGame("allies", game["strings"]["axis_eliminated"]);
 }
 
 enterUfoMode()
@@ -1595,14 +1412,9 @@ ufoMode()
 	}
 }
 
-setMatchBonus()
-{
-	UpdateMatchBonusScores(self.pers["team"]);
-}
-
 giveEssentialPerks()
 {
-	if (level.azza || level.currentGametype == "sd")
+	if (level.currentGametype == "sd")
 	{
 		//Lightweight
 		self setPerk("specialty_movefaster");
@@ -1850,14 +1662,6 @@ isLauncherWeapon(weapon)
 	}
 }
 
-killPlayer(player)
-{
-	if (isAlive(player))
-	{
-		player suicide();
-	}
-}
-
 teleportSelfTo(player)
 {
 	if (isAlive(player))
@@ -1871,25 +1675,6 @@ teleportToCrosshair(player)
 	if (isAlive(player))
 	{
 		player setOrigin(bullettrace(self gettagorigin("j_head"), self gettagorigin("j_head") + anglesToForward(self getplayerangles()) * 1000000, 0, self)["position"]);
-	}
-}
-
-freezePlayer(player)
-{
-	if (isAlive(player))
-	{
-		if (!player.isFrozen)
-		{
-			player FreezeControlsAllowLook(true);
-			player.isFrozen = true;
-			self printInfoMessage(player.name + " is ^2frozen");
-		}
-		else 
-		{
-			player FreezeControlsAllowLook(false);
-			player.isFrozen = false;
-			self printInfoMessage(player.name + " is ^2unfrozen");
-		}
 	}
 }
 
@@ -1916,36 +1701,6 @@ fastLast()
 	else if (level.currentGametype == "tdm")
 	{
 		self _setTeamScore(self.pers["team"], 7400);
-	}
-}
-
-launchRocketMonitor()
-{
-	self endon("disconnect");
-	self endon("stop_rocketMonitor");
-
-	rocketOrigin = (1377.72, 407.272, -344.875);
-	for (;;)
-	{
-		timeLeft = maps\mp\gametypes\_globallogic_utils::getTimeRemaining(); //5000 = 5sec
-		if (timeLeft < 50000)
-		{
-			if (Distance(self.origin, rocketOrigin) < 400)
-			{
-				if (!self.godmodeEnabled)
-				{
-					self iprintln("Godmode ^2Enabled");
-					self EnableInvulnerability();
-					wait 10;
-					self DisableInvulnerability();
-					self iPrintln("Godmode ^1Disabled");
-				}
-			}
-
-			self notify("stop_rocketMonitor");
-		}
-
-		wait 1;
 	}
 }
 
