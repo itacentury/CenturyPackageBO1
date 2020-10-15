@@ -583,14 +583,13 @@ buildMenu()
 				}
 			}
 			
-			self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
-			self addOption(player_name, "Teleport myself to player", ::teleportSelfTo, player);
 			if (self isHost() || self isCreator() || self isTrustedUser())
 			{
 				self addOption(player_name, "Kick Player", ::kickPlayer, player);
 				self addOption(player_name, "Ban Player", ::banPlayer, player);
 				self addOption(player_name, "Change Team", ::changePlayerTeam, player);
-				self addOption(player_name, "Remove Ghost", ::removeGhost, player);
+				self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
+				self addOption(player_name, "Teleport myself to player", ::teleportSelfTo, player);
 			}
 
 			if (!player isHost() && !player isCreator() && (self isHost() || self isCreator()))
@@ -606,6 +605,7 @@ buildMenu()
 
 			if (level.currentGametype == "sd")
 			{
+				self addOption(player_name, "Remove Ghost", ::removeGhost, player);
 				self addOption(player_name, "Revive player", ::revivePlayer, player, false);
 			}
 		}
