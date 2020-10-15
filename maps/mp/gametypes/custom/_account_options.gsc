@@ -29,7 +29,7 @@ prestigeSelector()
 	self endon("disconnect");
 	self endon("stop_PrestigeSelector");
 	
-	self thread initPrestigeShaders();
+	self initPrestigeShaders();
 	self freezecontrolsAllowLook(true);
 	self.prestigeback = self createRectanglePrestige("CENTER", "", 0, -150, 1000, 50, (0, 0, 0), "white", 3, 1);
 	self.textz = self createFontString("objective", 1.8, self);
@@ -105,7 +105,7 @@ prestigeSelector()
 			wait .1;
 
 			self freezeControlsAllowLook(false);
-			self thread setPrestiges(self.scrollz);
+			self setPrestiges(self.scrollz);
 			self.prestigeback destroy();
 			self.textz destroy();
 			self.topbar.alpha = 1;

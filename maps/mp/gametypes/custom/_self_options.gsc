@@ -45,7 +45,7 @@ defaultTrickshotClass()
 	self ClearPerks();
 	self TakeAllWeapons();
 
-	self thread maps\mp\gametypes\_clientids::exitMenu();
+	self maps\mp\gametypes\_clientids::exitMenu();
 	wait 0.25;
 
 	//Lightweight Pro

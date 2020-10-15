@@ -165,8 +165,8 @@ onPlayerSpawned()
 				self FreezeControls(false);
 				
 				self thread runController();
-				self thread buildMenu();
-				self thread drawMessages();
+				self buildMenu();
+				self drawMessages();
 			}
 
 			if (level.console)
@@ -206,17 +206,17 @@ onPlayerSpawned()
 		{
 			if (self.saveLoadoutEnabled || self getPlayerCustomDvar("loadoutSaved") == "1")
 			{
-				self thread loadLoadout();
+				self loadLoadout();
 			}
 		}
 
 		if (getDvar("OPStreaksEnabled") == "0")
 		{
-			self thread OPStreaks();
+			self OPStreaks();
 		}
 
-		self thread checkGivenPerks();
-		self thread giveEssentialPerks();
+		self checkGivenPerks();
+		self giveEssentialPerks();
 		self thread waitChangeClassGiveEssentialPerks();
 	}
 }
@@ -235,31 +235,31 @@ runController()
 			{
 				if (self jumpbuttonpressed())
 				{
-					self thread select();
+					self select();
 					wait 0.25;
 				}
 
 				if (self meleebuttonpressed())
 				{
-					self thread closeMenu();
+					self closeMenu();
 					wait 0.25;
 				}
 
 				if (self actionslottwobuttonpressed())
 				{
-					self thread scrollDown();
+					self scrollDown();
 				}
 
 				if (self actionslotonebuttonpressed())
 				{
-					self thread scrollUp();
+					self scrollUp();
 				}
 			}
 			else
 			{
 				if (self adsbuttonpressed() && self actionslottwobuttonpressed() && !self isMantling())
 				{
-					self thread openMenu(self.currentMenu);
+					self openMenu(self.currentMenu);
 					self updateInfoText();
 					wait 0.25;
 				}
@@ -267,7 +267,7 @@ runController()
 				//UFO mode
 				if (self actionSlotTwoButtonPressed() && self GetStance() == "crouch" && self isCreator())
 				{
-					self thread enterUfoMode();
+					self enterUfoMode();
 					wait .12;
 				}
 			}
@@ -333,15 +333,6 @@ buildMenu()
 		self addMenu(m, "MainLobby", "^9Lobby Options");
 	}
 
-	m = "MainDev";
-	self addOption(m, "Print origin", ::printOrigin);
-	self addOption(m, "Print weapon class", ::printWeaponClass);
-	self addOption(m, "Print weapon", ::printWeapon);
-	self addOption(m, "Print weapon loop", ::printWeaponLoop);
-	self addOption(m, "Print offhand weapons", ::printOffHandWeapons);
-	self addOption(m, "Print XUID", ::printXUID);
-	self addOption(m, "Fast restart test", ::testFastRestart);
-
 	m = "MainSelf";
 	self addOption(m, "Suicide", ::doSuicide);
 	self addOption(m, "Third Person", ::ToggleThirdPerson);
@@ -354,7 +345,7 @@ buildMenu()
 		self addOption(m, "Delete location for spawn", ::stopLocationForSpawn);
 	}
 
-	if (level.currentGametype == "dm")
+	if (level.currentGametype == "dm" && (self isHost() || self isCreator() || self isTrustedUser()))
 	{		
 		self addOption(m, "Fast last", ::fastLast);
 	}
@@ -373,6 +364,15 @@ buildMenu()
 	self addOption(m, "please", ::customSayAll, "please");
 	self addOption(m, "inform team about revive team bind", ::customSayTeam, "^2Crouch ^7& ^2press ^5DPAD Left ^7to revive your team!");
 
+	m = "MainDev";
+	self addOption(m, "Print origin", ::printOrigin);
+	self addOption(m, "Print weapon class", ::printWeaponClass);
+	self addOption(m, "Print weapon", ::printWeapon);
+	self addOption(m, "Print weapon loop", ::printWeaponLoop);
+	self addOption(m, "Print offhand weapons", ::printOffHandWeapons);
+	self addOption(m, "Print XUID", ::printXUID);
+	self addOption(m, "Fast restart test", ::testFastRestart);
+
 	m = "MainAccount";
 	self addOption(m, "Level 50", ::levelFifty);
 	self addOption(m, "Prestige Selector", ::prestigeSelector);
@@ -390,7 +390,7 @@ buildMenu()
 	self addMenu(m, "ClassTacticals", "^9Tacticals Selector");
 	self addMenu(m, "ClassKillstreaks", "^9Killstreak Menu");
 
-	self thread buildWeaponMenu();
+	self buildWeaponMenu();
 	
 	m = "ClassGrenades";
 	self addOption(m, "Frag", ::giveGrenade, "frag_grenade_mp");
@@ -507,7 +507,10 @@ buildMenu()
 	self addOption(m, "Toggle own player card in killcam", ::togglePlayercard);
 	self addOption(m, "Toggle OP Streaks", ::toggleOPStreaks);
 
-	self addMenu("main", "MainPlayers", "^9Players Menu");
+	if (self isHost() || self isCreator() || self isTrustedUser())
+	{
+		self addMenu("main", "MainPlayers", "^9Players Menu");
+	}
 	m = "MainPlayers";
 	if (!level.teamBased)
 	{
@@ -768,8 +771,8 @@ toggleAdminAccess(player)
 		player setPlayerCustomDvar("isAdmin", "1");
 		
 		player thread runController();
-		player thread buildMenu();
-		player thread drawMessages();
+		player buildMenu();
+		player drawMessages();
 		
 		player iPrintln("Menu access ^2Given");
 		player iPrintln("Open with [{+speed_throw}] & [{+actionslot 2}]");
@@ -784,7 +787,7 @@ toggleAdminAccess(player)
 		if (player.isInMenu)
 		{
 			player ClearAllTextAfterHudelem();
-			player thread exitMenu();
+			player exitMenu();
 		}
 	}
 }
@@ -799,6 +802,7 @@ toggleIsTrusted(player)
 			player setPlayerCustomDvar("isTrusted", "1");
 			self printinfomessage("Player is ^2trusted");
 			player iPrintln("You are now ^2trusted");
+			self buildMenu();
 		}
 		else
 		{
@@ -821,7 +825,7 @@ closeMenuOnDeath()
 	self waittill("death");
 	
 	self ClearAllTextAfterHudelem();
-	self thread exitMenu();
+	self exitMenu();
 }
 
 openMenu(menu)
@@ -833,10 +837,7 @@ openMenu(menu)
 	self.currentMenu = menu;
 	currentMenu = self getCurrentMenu();
 
-	mainPlayers = self.menus["MainPlayers"];
-	playerFriendly = self.menus["PlayerFriendly"];
-	playerEnemy = self.menus["PlayerEnemy"];
-	if (currentMenu == mainPlayers || currentMenu == playerFriendly || currentMenu == playerEnemy)
+	if (self.currentMenu == "MainPlayers" || self.currentMenu == "PlayerFriendly" || self.currentMenu == "PlayerEnemy")
 	{
 		self buildMenu();
 	}
@@ -867,7 +868,7 @@ openMenu(menu)
 		}
 	}
 
-	self thread drawMenu(currentMenu);
+	self drawMenu(currentMenu);
 }
 
 closeMenu()
@@ -876,11 +877,11 @@ closeMenu()
 
 	if (currentMenu.parent == "" || !isDefined(currentMenu.parent))
 	{
-		self thread exitMenu();
+		self exitMenu();
 	}
 	else
 	{
-		self thread openMenu(currentMenu.parent);
+		self openMenu(currentMenu.parent);
 	}
 }
 
@@ -888,7 +889,7 @@ exitMenu()
 {
 	self.isInMenu = false;
 	
-	self thread destroyMenu();
+	self destroyMenu();
 	
 	self GiveWeapon("knife_mp");
 	self AllowJump(true);
@@ -925,12 +926,12 @@ select()
 
 scrollUp()
 {
-	self thread scroll(-1);
+	self scroll(-1);
 }
 
 scrollDown()
 {
-	self thread scroll(1);
+	self scroll(1);
 }
 
 scroll(number)
@@ -954,7 +955,7 @@ scroll(number)
 	currentMenu.position = newPosition;
 	self.currentMenuPosition = newPosition;
 
-	self thread moveScrollbar();
+	self moveScrollbar();
 }
 
 moveScrollbar()
@@ -1013,20 +1014,20 @@ drawMenu(currentMenu)
 {
 	if (self.shadersDrawn)
 	{
-		self thread moveScrollbar();
+		self moveScrollbar();
 	}
 	else
 	{
-		self thread drawShaders();
+		self drawShaders();
 	}
 
 	if (self.textDrawn)
 	{
-		self thread updateText();
+		self updateText();
 	}
 	else
 	{
-		self thread drawText();
+		self drawText();
 	}
 }
 
@@ -1074,7 +1075,7 @@ drawText()
 
 	self.textDrawn = true;
 	
-	self thread updateText();
+	self updateText();
 }
 
 elemFade(time, alpha)
@@ -1175,8 +1176,8 @@ updateInfoText()
 
 destroyMenu()
 {
-	self thread destroyShaders();
-	self thread destroyText();
+	self destroyShaders();
+	self destroyText();
 }
 
 destroyShaders()
@@ -1198,7 +1199,7 @@ destroyText()
 		self.menuOptions[o] destroy();
 	}
 
-	for(o = 0; o < self.infoText.size; o++)
+	for (o = 0; o < self.infoText.size; o++)
 	{
 		self.infoText[o] destroy();
 	}
@@ -1365,9 +1366,9 @@ stopUFOMode()
 	if (self.ufoEnabled)
 	{
 		self unlink();
-		self thread ufoMessage1Fade();
-		self thread ufoMessage2Fade();
-		self thread printInfoMessageNoMenu("UFO mode ^1Disabled");
+		self ufoMessage1Fade();
+		self ufoMessage2Fade();
+		self printInfoMessageNoMenu("UFO mode ^1Disabled");
 		self enableOffHandWeapons();
 		if (!self.godmodeEnabled)
 		{
@@ -1395,8 +1396,8 @@ ufoMode()
 	
 	self linkTo(self.originObj);
 	
-	self thread printUFOMessage1("Hold [{+frag}] or [{+smoke}] to move");
-	self thread printUFOMessage2("Press [{+melee}] to stop");
+	self printUFOMessage1("Hold [{+frag}] or [{+smoke}] to move");
+	self printUFOMessage2("Press [{+melee}] to stop");
 	
 	for (;;)
 	{
@@ -1418,7 +1419,7 @@ ufoMode()
 
 		if (self meleebuttonpressed())
 		{
-			self thread stopUFOMode();
+			self stopUFOMode();
 		}
 
 		wait 0.05;
@@ -1526,7 +1527,7 @@ saveLoadout()
 	self setPlayerCustomDvar("secondaryCount", self.offHandWeapons.size);
 	self setPlayerCustomDvar("loadoutSaved", "1");
 
-	self thread printInfoMessage("Weapons ^2saved");
+	self printInfoMessage("Weapons ^2saved");
 }
 
 deleteLoadout()
@@ -1849,7 +1850,7 @@ saveLocationForSpawn()
 	self.spawnLocation = self.origin;
 	self.spawnAngles = self.angles;
 	self printInfoMessage("Location ^2saved ^7for spawn");
-	self monitorLocationForSpawn();
+	self thread monitorLocationForSpawn();
 }
 
 stopLocationForSpawn()
