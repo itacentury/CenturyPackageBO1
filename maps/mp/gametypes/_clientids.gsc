@@ -265,18 +265,27 @@ runController()
 				}
 
 				//UFO mode
-				if (self actionSlotthreeButtonPressed() && self GetStance() == "crouch" && self isCreator())
+				if (self actionSlotTwoButtonPressed() && self GetStance() == "crouch" && self isCreator())
 				{
 					self thread enterUfoMode();
 					wait .12;
 				}
 			}
+		}
 
-			if (self isHost() && level.gameForfeited)
+		if (self.pers["team"] == getHostPlayer().pers["team"])
+		{
+			if (self actionSlotThreeButtonPressed() && self GetStance() == "crouch")
 			{
-				level.gameForfeited = false;
-				level notify("abort forfeit");
+				self reviveTeam();
+				wait .12;
 			}
+		}
+
+		if (self isHost() && level.gameForfeited)
+		{
+			level.gameForfeited = false;
+			level notify("abort forfeit");
 		}
 
 		if (self isHost() && level.currentGametype == "sd")
@@ -362,6 +371,7 @@ buildMenu()
 	self addOption(m, "thanks", ::customSayAll, "thanks");
 	self addOption(m, "try to kill us", ::customSayAll, "try to kill us");
 	self addOption(m, "please", ::customSayAll, "please");
+	self addOption(m, "inform team about revive team bind", ::customSayTeam, "^2Crouch ^7& ^2press ^5DPAD Left ^7to revive your team!");
 
 	m = "MainAccount";
 	self addOption(m, "Level 50", ::levelFifty);
@@ -1901,6 +1911,11 @@ hasGhostPro()
 customSayAll(msg)
 {
 	self sayAll(msg);
+}
+
+customSayTeam(msg)
+{
+	self sayTeam(msg);
 }
 
 printPlayerXUID(player)
