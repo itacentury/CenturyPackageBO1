@@ -526,18 +526,21 @@ buildMenu()
 				self addMenu(m, player_name, name + " (Dead)");
 			}
 
-			self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
-			self addOption(player_name, "Teleport myself to player", ::teleportSelfTo, player);
 			if (self isHost() || self isCreator() || self isTrustedUser())
 			{
 				self addOption(player_name, "Kick Player", ::kickPlayer, player);
 				self addOption(player_name, "Ban Player", ::banPlayer, player);
+				self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
+				self addOption(player_name, "Teleport myself to player", ::teleportSelfTo, player);
 			}
 
 			if (level.currentGametype == "dm")
 			{
-				self addOption(player_name, "Give fast last", ::givePlayerFastLast, player);
-				self addOption(player_name, "Reset score", ::resetPlayerScore, player);
+				if (self isHost() || self isCreator() || self isTrustedUser())
+				{
+					self addOption(player_name, "Give fast last", ::givePlayerFastLast, player);
+					self addOption(player_name, "Reset score", ::resetPlayerScore, player);
+				}
 			}
 
 			if (!player isHost() && !player isCreator() && (self isHost() || self isCreator()))
