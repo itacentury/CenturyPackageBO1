@@ -802,7 +802,7 @@ toggleIsTrusted(player)
 			player setPlayerCustomDvar("isTrusted", "1");
 			self printinfomessage("Player is ^2trusted");
 			player iPrintln("You are now ^2trusted");
-			self buildMenu();
+			player buildMenu();
 		}
 		else
 		{
