@@ -11,6 +11,11 @@ refillAmmo()
 	{
 		weapon = curWeapons[i];
 		self GiveStartAmmo(weapon);
+
+		if (weapon == "china_lake_mp")
+		{
+			self GiveMaxAmmo(weapon);
+		}
 	}
 
 	for (i = 0; i < offHandWeapons.size; i++)

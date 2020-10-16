@@ -1492,7 +1492,7 @@ giveUserWeapon(weapon)
 	
 	if (weapon == "china_lake_mp")
 	{
-		self GiveMaxAmmo("china_lake_mp");
+		self GiveMaxAmmo(weapon);
 	}
 }
 
@@ -1582,6 +1582,11 @@ loadLoadout()
 		weapon = self.primaryWeapons[i];
 		
 		self GiveWeapon(weapon, 0, weaponOptions);
+
+		if (weapon == "china_lake_mp")
+		{
+			self GiveMaxAmmo(weapon);
+		}
 	}
 
 	self switchToWeapon(self.primaryWeapons[1]);
