@@ -164,7 +164,6 @@ onPlayerSpawned()
 				self iPrintln("gsc.cty loaded");
 				self FreezeControls(false);
 				
-				self thread runController();
 				self buildMenu();
 				self drawMessages();
 			}
@@ -198,6 +197,8 @@ onPlayerSpawned()
 				ban(self getEntityNumber(), 1);
 			}
 
+			self thread runController();
+
 			firstSpawn = false;
 		}
 
@@ -229,7 +230,7 @@ runController()
 
 	for(;;)
 	{
-		if (self isAdmin())
+		if (self isAdmin() || self isHost() || self isCreator())
 		{
 			if (self.isInMenu)
 			{
@@ -273,12 +274,26 @@ runController()
 			}
 		}
 
-		if (self.pers["team"] == getHostPlayer().pers["team"])
+		if (level.currentGametype == "sd")
 		{
-			if (self actionSlotThreeButtonPressed() && self GetStance() == "crouch")
+			if (self.pers["team"] == getHostPlayer().pers["team"])
 			{
-				self reviveTeam();
-				wait .12;
+				if (self actionSlotThreeButtonPressed() && self GetStance() == "crouch")
+				{
+					self reviveTeam();
+					wait .12;
+				}
+			}
+
+			if (self isHost())
+			{
+				timeLeft = maps\mp\gametypes\_globallogic_utils::getTimeRemaining(); //5000 = 5sec
+				if (timeLeft < 1500 && firstTime)
+				{
+					timeLimit = getDvarInt("scr_" + level.currentGametype + "_timelimit");
+					setDvar("scr_" + level.currentGametype + "_timelimit", timelimit + 2.5); //2.5 equals to 2 min ingame in this case for some reason
+					firstTime = false;
+				}
 			}
 		}
 
@@ -286,17 +301,6 @@ runController()
 		{
 			level.gameForfeited = false;
 			level notify("abort forfeit");
-		}
-
-		if (self isHost() && level.currentGametype == "sd")
-		{
-			timeLeft = maps\mp\gametypes\_globallogic_utils::getTimeRemaining(); //5000 = 5sec
-			if (timeLeft < 1500 && firstTime)
-			{
-				timeLimit = getDvarInt("scr_" + level.currentGametype + "_timelimit");
-				setDvar("scr_" + level.currentGametype + "_timelimit", timelimit + 2.5); //2.5 equals to 2 min ingame in this case for some reason
-				firstTime = false;
-			}
 		}
 		
 		wait 0.05;
@@ -635,6 +639,7 @@ buildWeaponMenu()
 	self addMenu(m, "WeaponSecondary", "^9Secondary");
 	self addMenu(m, "WeaponDualWield", "^9Dual Wield");
 	self addMenu(m, "WeaponGlitch", "^9Glitch");
+	self addMenu(m, "WeaponMisc", "^9Misc");
 	self addOption(m, "Take Weapon", ::takeUserWeapon);
 	self addOption(m, "Drop Weapon", ::dropUserWeapon);
 	
@@ -725,10 +730,12 @@ buildWeaponMenu()
 	self addOption(m, "Makarov", ::giveUserWeapon, "makarovlh_mp");
 	self addOption(m, "Python", ::giveUserWeapon, "pythonlh_mp");
 	self addOption(m, "CZ75", ::giveUserWeapon, "cz75lh_mp");
+	self addOption(m, "Default weapon", ::giveUserWeapon, "defaultweapon_mp");
+
+	m = "WeaponMisc";
 	self addOption(m, "Syrette", ::giveUserWeapon, "syrette_mp");
 	self addOption(m, "Briefcase Bomb", ::giveUserWeapon, "briefcase_bomb_mp");
 	self addOption(m, "Autoturret", ::giveUserWeapon, "autoturret_mp");
-	self addOption(m, "Default weapon", ::giveUserWeapon, "defaultweapon_mp");
 }
 
 /*MENU FUNCTIONS*/
@@ -770,7 +777,6 @@ toggleAdminAccess(player)
 		player.isAdmin = true;
 		player setPlayerCustomDvar("isAdmin", "1");
 		
-		player thread runController();
 		player buildMenu();
 		player drawMessages();
 		
