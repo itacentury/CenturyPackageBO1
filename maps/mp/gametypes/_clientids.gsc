@@ -1489,6 +1489,11 @@ giveUserWeapon(weapon)
 	self GiveWeapon(weapon);
 	self GiveStartAmmo(weapon);
 	self SwitchToWeapon(weapon);
+	
+	if (weapon == "china_lake_mp")
+	{
+		self GiveMaxAmmo("china_lake_mp");
+	}
 }
 
 takeUserWeapon()
