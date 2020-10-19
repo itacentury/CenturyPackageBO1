@@ -112,3 +112,19 @@ isForbiddenStreak(streak)
 			return false;
 	}
 }
+
+toggleUnlimitedSniperDmg()
+{
+	if (!level.tdmUnlimitedDmg)
+	{
+		level.tdmUnlimitedDmg = true;
+		self maps\mp\gametypes\_clientids::printInfoMessage("Unlimited sniper damage ^2enabled");
+	}
+	else 
+	{
+		level.tdmUnlimitedDmg = false;
+		self maps\mp\gametypes\_clientids::printInfoMessage("Unlimited sniper damage ^1disabled");
+	}
+
+	self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
+}

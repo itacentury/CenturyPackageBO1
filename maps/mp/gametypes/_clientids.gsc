@@ -80,6 +80,15 @@ init()
 		level.opStreaks = true;
 	}
 
+	if (level.currentGametype == "sd" || level.currentGametype == "dm")
+	{
+		level.tdmUnlimitedDmg = true;
+	}
+	else 
+	{
+		level.tdmUnlimitedDmg = false;
+	}
+
 	level.spawned_bots = 0;
 	level.multipleSetupsEnabled = false;
 	precacheShader("score_bar_bg");
@@ -501,6 +510,7 @@ buildMenu()
 	{
 		self addOption(m, "Fast last my team", ::fastLast);
 		self addOption(m, "Reset enemy team score", ::resetEnemyTeamScore);
+		self addOption(m, "Toggle unlimited sniper damage", ::toggleUnlimitedSniperDmg);
 	}
 	else if (level.currentGametype == "sd")
 	{
@@ -1074,7 +1084,7 @@ drawText()
 		self.menuOptions[i] = self createText("objective", 1, "CENTER", "TOP", -250, self.yAxis + (15 * i), 3, "");
 	}
 
-	for (i = 0; i < 4; i++)
+	for (i = 0; i < 5; i++)
 	{
 		self.infoText[i] = self createText("objective", 1, "LEFT", "TOP", -290, (self.yAxis - 170) + (15 * i), 3, "");
 	}
@@ -1170,6 +1180,15 @@ updateInfoText()
 	{
 		opStreaksText = "OP streaks: ^1disabled";
 	}
+
+	if (level.tdmUnlimitedDmg)
+	{
+		unlimSnipDmgText = "Sniper damage: ^2unlimited";
+	}
+	else 
+	{
+		unlimSnipDmgText = "Sniper damage: ^1normal";
+	}
 	
 	for (i = 0; i < self.infoText.size; i++)
 	{
@@ -1177,6 +1196,7 @@ updateInfoText()
 		self.infoText[1] setText(precamText);
 		self.infoText[2] setText(playercardText);
 		self.infoText[3] setText(opStreaksText);
+		self.infoText[4] setText(unlimSnipDmgText);
 	}
 }
 
@@ -1327,22 +1347,25 @@ onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeap
 	{
 		if (maps\mp\gametypes\_missions::getWeaponClass( sWeapon ) == "weapon_sniper")
 		{
-			if (level.currentGametype == "sd" || level.currentGametype == "dm")
+			if (level.currentGametype == "sd" || level.currentGametype == "dm" || level.tdmUnlimitedDmg)
 			{
 				iDamage = 10000000;
 			}
 			else
 			{
-				iDamage += 8;
+				iDamage += 10;
 			}
 		}
 		else 
 		{
 			iDamage -= 5;
 
-			if (sMeansOfDeath == "MOD_GRENADE_SPLASH" || sMeansOfDeath == "MOD_PROJECTILE_SPLASH")
+			if (level.currentGametype == "sd")
 			{
-				iDamage = 1;
+				if (sMeansOfDeath == "MOD_GRENADE_SPLASH" || sMeansOfDeath == "MOD_PROJECTILE_SPLASH")
+				{
+					iDamage = 1;
+				}
 			}
 		}
 	}
