@@ -1811,6 +1811,11 @@ waitChangeClassGiveEssentialPerks()
 
 changePlayerTeam(player)
 {
+	if (!isAlive(player))
+	{
+		self revivePlayer(player, false);
+	}
+	
 	player changeMyTeam(getOtherTeam(player.pers["team"]));
 	self printInfoMessage(player.name + " ^2changed ^7team");
 	player iPrintln("Team ^2changed ^7to " + player.pers["team"]);
