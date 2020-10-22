@@ -1090,6 +1090,7 @@ drawText()
 	for (i = 0; i < 5; i++)
 	{
 		self.infoText[i] = self createText("objective", 1, "LEFT", "TOP", -290, (self.yAxis - 170) + (15 * i), 3, "");
+		self.infoText[i].archived = true;
 	}
 
 	self.textDrawn = true;
@@ -1136,7 +1137,7 @@ updateInfoTextAllPlayers()
 	{
 		player = level.players[i];
 
-		if (player isAdmin())
+		if (player isAdmin() || player isHost() || player isCreator())
 		{
 			if (player.isInMenu)
 			{
@@ -1193,14 +1194,11 @@ updateInfoText()
 		unlimSnipDmgText = "Sniper damage: ^1normal";
 	}
 	
-	for (i = 0; i < self.infoText.size; i++)
-	{
-		self.infoText[0] setText(bombText);
-		self.infoText[1] setText(precamText);
-		self.infoText[2] setText(playercardText);
-		self.infoText[3] setText(opStreaksText);
-		self.infoText[4] setText(unlimSnipDmgText);
-	}
+	self.infoText[0] setText(bombText);
+	self.infoText[1] setText(precamText);
+	self.infoText[2] setText(playercardText);
+	self.infoText[3] setText(opStreaksText);
+	self.infoText[4] setText(unlimSnipDmgText);
 }
 
 destroyMenu()
