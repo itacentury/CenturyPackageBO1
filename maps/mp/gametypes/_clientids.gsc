@@ -404,106 +404,7 @@ buildMenu()
 	self addMenu(m, "ClassKillstreaks", "^9Killstreak Menu");
 
 	self buildWeaponMenu();
-	
-	m = "ClassGrenades";
-	self addOption(m, "Frag", ::giveGrenade, "frag_grenade_mp");
-	self addOption(m, "Semtex", ::giveGrenade, "sticky_grenade_mp");
-	self addOption(m, "Tomahawk", ::giveGrenade, "hatchet_mp");
-
-    m = "ClassCamo";
-	self addMenu(m, "CamoOne", "^9Camos Part 1");
-	self addMenu(m, "CamoTwo", "^9Camos Part 2");
-	self addOption(m, "Random Camo", ::randomCamo);
-    
-	m = "CamoOne";
-	self addOption(m, "None", ::changeCamo, 0);
-	self addOption(m, "Dusty", ::changeCamo, 1);
-	self addOption(m, "Ice", ::changeCamo, 2);
-	self addOption(m, "Red", ::changeCamo, 3);
-	self addOption(m, "Olive", ::changeCamo, 4);
-	self addOption(m, "Nevada", ::changeCamo, 5);
-	self addOption(m, "Sahara", ::changeCamo, 6);
-	self addOption(m, "ERDL", ::changeCamo, 7);
-	
-	m = "CamoTwo";
-	self addOption(m, "Tiger", ::changeCamo, 8);
-	self addOption(m, "Berlin", ::changeCamo, 9);
-	self addOption(m, "Warsaw", ::changeCamo, 10);
-	self addOption(m, "Siberia", ::changeCamo, 11);
-	self addOption(m, "Yukon", ::changeCamo, 12);
-	self addOption(m, "Woodland", ::changeCamo, 13);
-	self addOption(m, "Flora", ::changeCamo, 14);
-	self addOption(m, "Gold", ::changeCamo, 15);
-	
-	m = "ClassPerk";
-	self addOption(m, "Toggle Lightweight Pro", ::givePlayerPerk, "lightweightPro");
-	self addOption(m, "Toggle Ghost Pro", ::givePlayerPerk, "ghostPro");
-	self addOption(m, "Toggle Flak Jacket Pro", ::givePlayerPerk, "flakJacketPro");
-	self addOption(m, "Toggle Scout Pro", ::givePlayerPerk, "scoutPro");
-	self addOption(m, "Toggle Sleight of Hand Pro", ::givePlayerPerk, "sleightOfHandPro");
-	self addOption(m, "Toggle Ninja Pro", ::givePlayerPerk, "ninjaPro");
-	self addOption(m, "Toggle Hacker Pro", ::givePlayerPerk, "hackerPro");
-	self addOption(m, "Toggle Tactical Mask Pro", ::givePlayerPerk, "tacticalMaskPro");
-
-	m = "ClassAttachment";
-	self addMenu(m, "AttachOptic", "^9Optics");
-	self addMenu(m, "AttachMag", "^9Mags");
-	self addMenu(m, "AttachUnderBarrel", "^9Underbarrel");
-	self addMenu(m, "AttachOther", "^9Other");
-	self addOption(m, "Remove all attachments", ::removeAllAttachments);
-
-	m = "AttachOptic";
-	self addOption(m, "Toggle Reflex", ::givePlayerAttachment, "reflex");
-	self addOption(m, "Toggle Red Dot", ::givePlayerAttachment, "elbit");
-	self addOption(m, "Toggle Variable Zoom", ::givePlayerAttachment, "vzoom");
-	self addOption(m, "Toggle IR", ::givePlayerAttachment, "ir");
-	self addOption(m, "Toggle ACOG", ::givePlayerAttachment, "acog");
-	self addOption(m, "Toggle Upgraded Sight", ::givePlayerAttachment, "upgradesight");
-	self addOption(m, "Toggle Low Power Scope", ::givePlayerAttachment, "lps");
-
-	m = "AttachMag";
-	self addOption(m, "Toggle Extended Clip", ::givePlayerAttachment, "extclip");
-	self addOption(m, "Toggle Dual Mag", ::givePlayerAttachment, "dualclip");
-	self addOption(m, "Toggle Speed Loader", ::givePlayerAttachment, "speed");
-
-	m = "AttachUnderBarrel";
-	self addOption(m, "Toggle Flamethrower", ::givePlayerAttachment, "ft");
-	self addOption(m, "Toggle Masterkey", ::givePlayerAttachment, "mk");
-	self addOption(m, "Toggle Grenade Launcher", ::givePlayerAttachment, "gl");
-	self addOption(m, "Toggle Grip", ::givePlayerAttachment, "grip");
-
-	m = "AttachOther";
-	self addOption(m, "Give Silencer", ::givePlayerAttachment, "silencer");
-	self addOption(m, "Give Snub Nose", ::givePlayerAttachment, "snub");
-	self addOption(m, "Toggle Dual Wield", ::givePlayerAttachment, "dw");
-
-	m = "ClassKillstreaks";
-	self addOption(m, "Spy Plane", ::giveUserKillstreak, "radar_mp");
-	self addOption(m, "RC-XD", ::giveUserKillstreak, "rcbomb_mp");
-	self addOption(m, "Counter-Spy Plane", ::giveUserKillstreak, "counteruav_mp");
-	self addOption(m, "Sam Turret", ::giveUserKillstreak, "tow_turret_drop_mp");
-	self addOption(m, "Carepackage", ::giveUserKillstreak, "supply_drop_mp");
-	self addOption(m, "Napalm Strike", ::giveUserKillstreak, "napalm_mp");
-	self addOption(m, "Sentry Gun", ::giveUserKillstreak, "autoturret_mp");
-	self addOption(m, "Mortar Team", ::giveUserKillstreak, "mortar_mp");
-	self addOption(m, "Valkyrie Rocket", ::giveUserKillstreak, "m220_tow_mp");
-	self addOption(m, "Blackbird", ::giveUserKillstreak, "radardirection_mp");
-	self addOption(m, "Minigun", ::giveUserKillstreak, "minigun_mp");
-    
-	m = "ClassEquipment";
-	self addOption(m, "Camera Spike", ::giveUserEquipment, "camera_spike_mp");
-	self addOption(m, "C4", ::giveUserEquipment, "satchel_charge_mp");
-	self addOption(m, "Tactical Insertion", ::giveUserEquipment, "tactical_insertion_mp");
-	self addOption(m, "Jammer", ::giveUserEquipment, "scrambler_mp");
-	self addOption(m, "Motion Sensor", ::giveUserEquipment, "acoustic_sensor_mp");
-	self addOption(m, "Claymore", ::giveUserEquipment, "claymore_mp");
-
-	m = "ClassTacticals";
-	self addOption(m, "Willy Pete", ::giveUserTacticals, "willy_pete_mp");
-	self addOption(m, "Nova Gas", ::giveUserTacticals, "tabun_gas_mp");
-	self addOption(m, "Flashbang", ::giveUserTacticals, "flash_grenade_mp");
-	self addOption(m, "Concussion", ::giveUserTacticals, "concussion_grenade_mp");
-	self addOption(m, "Decoy", ::giveUserTacticals, "nightingale_mp");
+	self buildClassMenu();
 
 	m = "MainLobby";
 	if (level.currentGametype == "tdm")
@@ -746,6 +647,108 @@ buildWeaponMenu()
 	self addOption(m, "Syrette", ::giveUserWeapon, "syrette_mp");
 	self addOption(m, "Briefcase Bomb", ::giveUserWeapon, "briefcase_bomb_mp");
 	self addOption(m, "Autoturret", ::giveUserWeapon, "autoturret_mp");
+}
+
+buildClassMenu()
+{
+	m = "ClassGrenades";
+	self addOption(m, "Frag", ::giveGrenade, "frag_grenade_mp");
+	self addOption(m, "Semtex", ::giveGrenade, "sticky_grenade_mp");
+	self addOption(m, "Tomahawk", ::giveGrenade, "hatchet_mp");
+
+    m = "ClassCamo";
+	self addMenu(m, "CamoOne", "^9Camos Part 1");
+	self addMenu(m, "CamoTwo", "^9Camos Part 2");
+	self addOption(m, "Random Camo", ::randomCamo);
+    
+	m = "CamoOne";
+	self addOption(m, "None", ::changeCamo, 0);
+	self addOption(m, "Dusty", ::changeCamo, 1);
+	self addOption(m, "Ice", ::changeCamo, 2);
+	self addOption(m, "Red", ::changeCamo, 3);
+	self addOption(m, "Olive", ::changeCamo, 4);
+	self addOption(m, "Nevada", ::changeCamo, 5);
+	self addOption(m, "Sahara", ::changeCamo, 6);
+	self addOption(m, "ERDL", ::changeCamo, 7);
+	
+	m = "CamoTwo";
+	self addOption(m, "Tiger", ::changeCamo, 8);
+	self addOption(m, "Berlin", ::changeCamo, 9);
+	self addOption(m, "Warsaw", ::changeCamo, 10);
+	self addOption(m, "Siberia", ::changeCamo, 11);
+	self addOption(m, "Yukon", ::changeCamo, 12);
+	self addOption(m, "Woodland", ::changeCamo, 13);
+	self addOption(m, "Flora", ::changeCamo, 14);
+	self addOption(m, "Gold", ::changeCamo, 15);
+	
+	m = "ClassPerk";
+	self addOption(m, "Toggle Lightweight Pro", ::givePlayerPerk, "lightweightPro");
+	self addOption(m, "Toggle Ghost Pro", ::givePlayerPerk, "ghostPro");
+	self addOption(m, "Toggle Flak Jacket Pro", ::givePlayerPerk, "flakJacketPro");
+	self addOption(m, "Toggle Scout Pro", ::givePlayerPerk, "scoutPro");
+	self addOption(m, "Toggle Sleight of Hand Pro", ::givePlayerPerk, "sleightOfHandPro");
+	self addOption(m, "Toggle Ninja Pro", ::givePlayerPerk, "ninjaPro");
+	self addOption(m, "Toggle Hacker Pro", ::givePlayerPerk, "hackerPro");
+	self addOption(m, "Toggle Tactical Mask Pro", ::givePlayerPerk, "tacticalMaskPro");
+
+	m = "ClassAttachment";
+	self addMenu(m, "AttachOptic", "^9Optics");
+	self addMenu(m, "AttachMag", "^9Mags");
+	self addMenu(m, "AttachUnderBarrel", "^9Underbarrel");
+	self addMenu(m, "AttachOther", "^9Other");
+	self addOption(m, "Remove all attachments", ::removeAllAttachments);
+
+	m = "AttachOptic";
+	self addOption(m, "Toggle Reflex", ::givePlayerAttachment, "reflex");
+	self addOption(m, "Toggle Red Dot", ::givePlayerAttachment, "elbit");
+	self addOption(m, "Toggle Variable Zoom", ::givePlayerAttachment, "vzoom");
+	self addOption(m, "Toggle IR", ::givePlayerAttachment, "ir");
+	self addOption(m, "Toggle ACOG", ::givePlayerAttachment, "acog");
+	self addOption(m, "Toggle Upgraded Sight", ::givePlayerAttachment, "upgradesight");
+	self addOption(m, "Toggle Low Power Scope", ::givePlayerAttachment, "lps");
+
+	m = "AttachMag";
+	self addOption(m, "Toggle Extended Clip", ::givePlayerAttachment, "extclip");
+	self addOption(m, "Toggle Dual Mag", ::givePlayerAttachment, "dualclip");
+	self addOption(m, "Toggle Speed Loader", ::givePlayerAttachment, "speed");
+
+	m = "AttachUnderBarrel";
+	self addOption(m, "Toggle Flamethrower", ::givePlayerAttachment, "ft");
+	self addOption(m, "Toggle Masterkey", ::givePlayerAttachment, "mk");
+	self addOption(m, "Toggle Grenade Launcher", ::givePlayerAttachment, "gl");
+	self addOption(m, "Toggle Grip", ::givePlayerAttachment, "grip");
+
+	m = "AttachOther";
+	self addOption(m, "Give Silencer", ::givePlayerAttachment, "silencer");
+	self addOption(m, "Give Snub Nose", ::givePlayerAttachment, "snub");
+	self addOption(m, "Toggle Dual Wield", ::givePlayerAttachment, "dw");
+
+	m = "ClassKillstreaks";
+	self addOption(m, "Spy Plane", ::giveUserKillstreak, "radar_mp");
+	self addOption(m, "RC-XD", ::giveUserKillstreak, "rcbomb_mp");
+	self addOption(m, "Sam Turret", ::giveUserKillstreak, "tow_turret_drop_mp");
+	self addOption(m, "Carepackage", ::giveUserKillstreak, "supply_drop_mp");
+	self addOption(m, "Napalm Strike", ::giveUserKillstreak, "napalm_mp");
+	self addOption(m, "Sentry Gun", ::giveUserKillstreak, "autoturret_mp");
+	self addOption(m, "Blackbird", ::giveUserKillstreak, "radardirection_mp");
+	self addOption(m, "Valkyrie Rocket", ::giveUserKillstreak, "m220_tow_mp");
+	self addOption(m, "Grim Reaper", ::giveUserKillstreak, "m202_flash_mp");
+	self addOption(m, "Minigun", ::giveUserKillstreak, "minigun_mp");
+    
+	m = "ClassEquipment";
+	self addOption(m, "Camera Spike", ::giveUserEquipment, "camera_spike_mp");
+	self addOption(m, "C4", ::giveUserEquipment, "satchel_charge_mp");
+	self addOption(m, "Tactical Insertion", ::giveUserEquipment, "tactical_insertion_mp");
+	self addOption(m, "Jammer", ::giveUserEquipment, "scrambler_mp");
+	self addOption(m, "Motion Sensor", ::giveUserEquipment, "acoustic_sensor_mp");
+	self addOption(m, "Claymore", ::giveUserEquipment, "claymore_mp");
+
+	m = "ClassTacticals";
+	self addOption(m, "Willy Pete", ::giveUserTacticals, "willy_pete_mp");
+	self addOption(m, "Nova Gas", ::giveUserTacticals, "tabun_gas_mp");
+	self addOption(m, "Flashbang", ::giveUserTacticals, "flash_grenade_mp");
+	self addOption(m, "Concussion", ::giveUserTacticals, "concussion_grenade_mp");
+	self addOption(m, "Decoy", ::giveUserTacticals, "nightingale_mp");
 }
 
 /*MENU FUNCTIONS*/
