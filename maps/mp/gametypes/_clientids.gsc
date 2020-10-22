@@ -1090,7 +1090,6 @@ drawText()
 	for (i = 0; i < 5; i++)
 	{
 		self.infoText[i] = self createText("objective", 1, "LEFT", "TOP", -290, (self.yAxis - 170) + (15 * i), 3, "");
-		self.infoText[i].archived = true;
 	}
 
 	self.textDrawn = true;
