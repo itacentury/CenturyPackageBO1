@@ -324,11 +324,6 @@ buildMenu()
 	m = "main";
 	self addMenu("", m, "gsc.cty " + level.currentVersion);
 	self addOption(m, "Refill Ammo", ::refillAmmo);
-	if (level.currentGametype == "sd")
-	{
-		self addOption(m, "Revive whole team", ::reviveTeam);
-	}
-
 	self addMenu(m, "MainSelf", "^9Self Options");
 	if (self isCreator() && !level.console)
 	{
@@ -344,6 +339,11 @@ buildMenu()
 	if (self isHost() || self isCreator())
 	{
 		self addMenu(m, "MainLobby", "^9Lobby Options");
+	}
+
+	if ((self isHost() || self isCreator() || self isTrustedUser()) && level.currentGametype == "sd")
+	{
+		self addMenu(m, "MainTeam", "^9Team Options");
 	}
 
 	m = "MainSelf";
@@ -365,6 +365,7 @@ buildMenu()
 
 	if (self isHost() || self isCreator())
 	{
+		self addOption(m, "Force Host", ::toggleForceHost);
 		self addMenu(m, "SelfSayAll", "^9Say All Menu");
 	}
 
@@ -422,10 +423,15 @@ buildMenu()
 	self addOption(m, "Toggle own player card in killcam", ::togglePlayercard);
 	self addOption(m, "Toggle OP Streaks", ::toggleOPStreaks);
 
+	m = "MainTeam";
+	self addOption(m, "Revive whole team", ::reviveTeam);
+	self addOption(m, "Kill whole team", ::killTeam);
+
 	if (self isHost() || self isCreator() || self isTrustedUser())
 	{
 		self addMenu("main", "MainPlayers", "^9Players Menu");
 	}
+
 	m = "MainPlayers";
 	if (!level.teamBased)
 	{
@@ -1990,4 +1996,73 @@ checkIfUnwantedPlayers()
 	}
 
 	return false;
+}
+
+toggleForceHost()
+{
+	if (getDvarInt("party_connectToOthers") == 1)
+	{
+		setDvar("party_host", 1);
+		setDvar("party_iAmHost", 1);
+		setDvar("party_connectToOthers", 0);
+		setDvar("onlineGameAndHost", 1);
+		setDvar("migration_msgTimeout", 0);
+		setDvar("migration_timeBetween", 999999);
+		setDvar("migrationPingTime", 0);
+		setDvar("party_minPlayers", 1);
+		setDvar("party_matchedPlayerCount", 0);
+		setDvar("party_connectTimeout", 1000);
+		setDvar("party_connectTimeout", 1);
+		setDvar("party_gameStartTimerLength", 5);
+		setDvar("party_maxTeamDiff", 12);
+		setDvar("party_minLobbyTime", 1);
+		setDvar("party_pregameStartTimerLength", 0);
+		setDvar("party_timer", 5);
+		setDvar("party_lobbyPlayerCount", 6);
+		setDvar("party_playerCount", 6);
+
+		setDvar("scr_teamBalance", 0);
+		setDvar("party_hostMigration", 0);
+		setDvar("migration_verboseBroadcastTime", 0);
+		setDvar("bandwidthtest_duration", 0);
+		setDvar("bandwidthtest_enable", 0);
+		setDvar("bandwidthtest_ingame_enable", 0);
+		setDvar("bandwidthtest_timeout", 0);
+		setDvar("cl_migrationTimeout", 0);
+		setDvar("lobby_partySearchWaitTime", 0);
+		setDvar("bandwidthtest_announceinterval", 0);
+		setDvar("partymigrate_broadcast_interval", 99999);
+		setDvar("partymigrate_pingtest_timeout", 0);
+		setDvar("partymigrate_timeout", 0);
+		setDvar("partymigrate_timeoutmax", 0);
+		setDvar("partymigrate_pingtest_retry", 0);
+		setDvar("badhost_endGameIfISuck", 0);
+		setDvar("badhost_maxDoISuckFrames", 0);
+		setDvar("badhost_maxHappyPingTime", 99999);
+		setDvar("badhost_minTotalClientsForHappyTest", 99999);
+
+		self iprintln("Force Host ^2Enabled");
+	}
+	else if (getDvarInt("party_connectToOthers") == 0)
+	{
+		setDvar("party_host", 0);
+		setDvar("party_iAmHost", 0);
+		setDvar("party_connectToOthers", 1);
+	}
+}
+
+killTeam()
+{
+	for (i = 0; i < level.players.size; i++)
+	{
+		player = level.players[i];
+
+		if (player.pers["team"] == self.pers["team"])
+		{
+			if (isAlive(player))
+			{
+				player suicide();
+			}
+		}
+	}
 }
