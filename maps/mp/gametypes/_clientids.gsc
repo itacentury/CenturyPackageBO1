@@ -365,7 +365,7 @@ buildMenu()
 
 	if (self isHost() || self isCreator())
 	{
-		self addOption(m, "Force Host", ::toggleForceHost);
+		self addOption(m, "Toggle Force Host", ::toggleForceHost);
 		self addMenu(m, "SelfSayAll", "^9Say All Menu");
 	}
 
@@ -2012,14 +2012,14 @@ toggleForceHost()
 		setDvar("party_minPlayers", 1);
 		setDvar("party_matchedPlayerCount", 0);
 		setDvar("party_connectTimeout", 1000);
-		setDvar("party_connectTimeout", 1);
+		//setDvar("party_connectTimeout", 1);
 		setDvar("party_gameStartTimerLength", 5);
 		setDvar("party_maxTeamDiff", 12);
 		setDvar("party_minLobbyTime", 1);
-		setDvar("party_pregameStartTimerLength", 0);
-		setDvar("party_timer", 5);
-		setDvar("party_lobbyPlayerCount", 6);
-		setDvar("party_playerCount", 6);
+		//setDvar("party_pregameStartTimerLength", 0);
+		//setDvar("party_timer", 5);
+		//setDvar("party_lobbyPlayerCount", 6);
+		//setDvar("party_playerCount", 6);
 
 		setDvar("scr_teamBalance", 0);
 		setDvar("party_hostMigration", 0);
@@ -2041,13 +2041,16 @@ toggleForceHost()
 		setDvar("badhost_maxHappyPingTime", 99999);
 		setDvar("badhost_minTotalClientsForHappyTest", 99999);
 
-		self iprintln("Force Host ^2Enabled");
+		self iprintln("Force Host ^2enabled");
 	}
-	else if (getDvarInt("party_connectToOthers") == 0)
+	else
 	{
 		setDvar("party_host", 0);
 		setDvar("party_iAmHost", 0);
 		setDvar("party_connectToOthers", 1);
+		setDvar("onlineGameAndHost", 0);
+
+		self iprintln("Force Host ^1disabled");
 	}
 }
 
