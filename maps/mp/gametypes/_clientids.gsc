@@ -457,7 +457,6 @@ buildMenu()
 			if (level.currentGametype == "dm")
 			{
 				self addOption(player_name, "Give fast last", ::givePlayerFastLast, player);
-				self addOption(player_name, "Reset score", ::resetPlayerScore, player);
 			}
 
 			if (!player isHost() && !player isCreator() && (self isHost() || self isCreator()))
@@ -1751,12 +1750,6 @@ fastLast()
 	{
 		self _setTeamScore(self.pers["team"], 7400);
 	}
-}
-
-resetPlayerScore(player)
-{
-	player.kills = 0;
-	player _setPlayerScore(player, 0);
 }
 
 changeMyTeam(team)
