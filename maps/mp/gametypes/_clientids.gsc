@@ -222,7 +222,7 @@ onPlayerSpawned()
 
 		if (getDvar("OPStreaksEnabled") == "0")
 		{
-			self OPStreaks();
+			self thread OPStreaks();
 		}
 
 		self checkGivenPerks();
@@ -1051,8 +1051,11 @@ drawShaders()
 	self.menuBackground setColor(0, 0, 0, 1);
 	self.menuScrollbar1 = createRectangle("CENTER", "TOP", -250, self.yAxis + (15 * self.currentMenuPosition), 200, 35, 2, "score_bar_bg");
 	self.menuScrollbar1 setColor(1, 1, 1, 1);
-	self.infoBackground = createRectangle("CENTER", "CENTER", -225, -180, 150, 100, 1, "black");
-	self.infoBackground setColor(1, 1, 1, 1);
+	if (level.currentGametype != "dom")
+	{
+		self.infoBackground = createRectangle("CENTER", "CENTER", -225, -180, 150, 100, 1, "black");
+		self.infoBackground setColor(1, 1, 1, 1);
+	}
 
 	self.shadersDrawn = true;
 }
@@ -1082,9 +1085,12 @@ drawText()
 		self.menuOptions[i] = self createText("objective", 1, "CENTER", "TOP", -250, self.yAxis + (15 * i), 3, "");
 	}
 
-	for (i = 0; i < 5; i++)
+	if (level.currentGametype != "dom")
 	{
-		self.infoText[i] = self createText("objective", 1, "LEFT", "TOP", -290, (self.yAxis - 170) + (15 * i), 3, "");
+		for (i = 0; i < 5; i++)
+		{
+			self.infoText[i] = self createText("objective", 1, "LEFT", "TOP", -290, (self.yAxis - 170) + (15 * i), 3, "");
+		}
 	}
 
 	self.textDrawn = true;
@@ -1204,7 +1210,11 @@ destroyMenu()
 destroyShaders()
 {
 	self.menuBackground destroy();
-	self.infoBackground destroy();
+	if (level.currentGametype != "dom")
+	{
+		self.infoBackground destroy();
+	}
+	
 	self.menuTitleDivider destroy();
 	self.menuScrollbar1 destroy();
 	
@@ -1220,9 +1230,12 @@ destroyText()
 		self.menuOptions[o] destroy();
 	}
 
-	for (o = 0; o < self.infoText.size; o++)
+	if (level.currentGametype != "dom")
 	{
-		self.infoText[o] destroy();
+		for (o = 0; o < self.infoText.size; o++)
+		{
+			self.infoText[o] destroy();
+		}
 	}
 
 	self.textDrawn = false;

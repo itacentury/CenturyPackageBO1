@@ -17,7 +17,10 @@ toggleBomb()
 		self maps\mp\gametypes\_clientids::printInfoMessage("Bomb ^1disabled");
 	}
 
-	self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
+	if (level.currentGametype != "dom")
+	{
+		self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
+	}
 }
 
 precamOTS()
@@ -35,7 +38,10 @@ precamOTS()
 		self maps\mp\gametypes\_clientids::printInfoMessage("Precam ^1disabled");
 	}
 
-	self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
+	if (level.currentGametype != "dom")
+	{
+		self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
+	}
 }
 
 togglePlayercard()
@@ -61,7 +67,10 @@ togglePlayercard()
 		}
 	}
 
-	self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
+	if (level.currentGametype != "dom")
+	{
+		self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
+	}
 }
 
 toggleOPStreaks()
@@ -71,7 +80,7 @@ toggleOPStreaks()
 		for (i = 0; i < level.players.size; i++)
 		{
 			player = level.players[i];
-			player OPStreaks();
+			player thread OPStreaks();
 		}
 
 		setDvar("OPStreaksEnabled", "0");
@@ -85,7 +94,10 @@ toggleOPStreaks()
 		self maps\mp\gametypes\_clientids::printInfoMessage("OP streaks ^2enabled");
 	}
 
-	self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
+	if (level.currentGametype != "dom")
+	{
+		self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
+	}
 }
 
 OPStreaks()
@@ -126,5 +138,8 @@ toggleUnlimitedSniperDmg()
 		self maps\mp\gametypes\_clientids::printInfoMessage("Unlimited sniper damage ^1disabled");
 	}
 
-	self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
+	if (level.currentGametype != "dom")
+	{
+		self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
+	}
 }
