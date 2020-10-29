@@ -411,7 +411,6 @@ buildMenu()
 	if (level.currentGametype == "tdm")
 	{
 		self addOption(m, "Fast last my team", ::fastLast);
-		self addOption(m, "Reset enemy team score", ::resetEnemyTeamScore);
 		self addOption(m, "Toggle unlimited sniper damage", ::toggleUnlimitedSniperDmg);
 	}
 	else if (level.currentGametype == "sd")
@@ -1758,11 +1757,6 @@ resetPlayerScore(player)
 {
 	player.kills = 0;
 	player _setPlayerScore(player, 0);
-}
-
-resetEnemyTeamScore()
-{
-	self _setTeamScore(getOtherTeam(self.pers["team"]), 0);
 }
 
 changeMyTeam(team)
