@@ -40,6 +40,10 @@ Callback_PlayerConnect()
 		{
 			iprintln("big dick akeel joined the game");
 		}
+		else if (isSubStr(nameLower, "grams"))
+		{
+			iprintln("Grams joined the game #AscentForever");
+		}
 		else
 		{
 			iPrintLn(&"MP_CONNECTED", self);
