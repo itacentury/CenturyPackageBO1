@@ -450,21 +450,15 @@ buildMenu()
 				self addMenu(m, player_name, name + " (Dead)");
 			}
 
-			if (self isHost() || self isCreator() || self isTrustedUser())
-			{
-				self addOption(player_name, "Kick Player", ::kickPlayer, player);
-				self addOption(player_name, "Ban Player", ::banPlayer, player);
-				self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
-				self addOption(player_name, "Teleport myself to player", ::teleportSelfTo, player);
-			}
+			self addOption(player_name, "Kick Player", ::kickPlayer, player);
+			self addOption(player_name, "Ban Player", ::banPlayer, player);
+			self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
+			self addOption(player_name, "Teleport myself to player", ::teleportSelfTo, player);
 
 			if (level.currentGametype == "dm")
 			{
-				if (self isHost() || self isCreator() || self isTrustedUser())
-				{
-					self addOption(player_name, "Give fast last", ::givePlayerFastLast, player);
-					self addOption(player_name, "Reset score", ::resetPlayerScore, player);
-				}
+				self addOption(player_name, "Give fast last", ::givePlayerFastLast, player);
+				self addOption(player_name, "Reset score", ::resetPlayerScore, player);
 			}
 
 			if (!player isHost() && !player isCreator() && (self isHost() || self isCreator()))
@@ -520,14 +514,11 @@ buildMenu()
 				}
 			}
 			
-			if (self isHost() || self isCreator() || self isTrustedUser())
-			{
-				self addOption(player_name, "Kick Player", ::kickPlayer, player);
-				self addOption(player_name, "Ban Player", ::banPlayer, player);
-				self addOption(player_name, "Change Team", ::changePlayerTeam, player);
-				self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
-				self addOption(player_name, "Teleport myself to player", ::teleportSelfTo, player);
-			}
+			self addOption(player_name, "Kick Player", ::kickPlayer, player);
+			self addOption(player_name, "Ban Player", ::banPlayer, player);
+			self addOption(player_name, "Change Team", ::changePlayerTeam, player);
+			self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
+			self addOption(player_name, "Teleport myself to player", ::teleportSelfTo, player);
 
 			if (!player isHost() && !player isCreator() && (self isHost() || self isCreator()))
 			{
