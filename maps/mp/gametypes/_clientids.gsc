@@ -13,7 +13,7 @@ init()
 {
 	level.clientid = 0;
 
-	level.currentVersion = "v1.7 BETA";
+	level.currentVersion = "v2.0 BETA";
 	level.currentGametype = getDvar("g_gametype");
 	level.currentMapName = getDvar("mapName");
 
@@ -365,7 +365,7 @@ buildMenu()
 
 	if (self isHost() || self isCreator())
 	{
-		self addOption(m, "Toggle Force Host", ::toggleForceHost);
+		//self addOption(m, "Toggle Force Host", ::toggleForceHost);
 		self addMenu(m, "SelfSayAll", "^9Say All Menu");
 	}
 
@@ -1822,10 +1822,10 @@ revivePlayer(player, isTeam)
 {
 	if (!isAlive(player))
 	{
-		if (!maps\mp\gametypes\_globallogic_utils::isValidClass(self.pers["class"]) || self.pers["class"] == undefined)
+		if (player.pers["class"] == undefined || player.class == undefined)
 		{
-			self.pers["class"] = "CLASS_CUSTOM1";
-			self.class = self.pers["class"];
+			player.pers["class"] = "CLASS_CUSTOM1";
+			player.class = player.pers["class"];
 		}
 		
 		if (player.hasSpawned)
@@ -1993,34 +1993,38 @@ toggleForceHost()
 {
 	if (getDvarInt("party_connectToOthers") == 1)
 	{
+		self setClientDvar("party_host", 1);
+		self setClientDvar("party_iAmHost", 1);
+		self setClientDvar("party_connectToOthers", 0);
+		self setClientDvar("party_connectTimeout", 1000);
+		self setClientDvar("party_gameStartTimerLength", 5);
+		self setClientDvar("party_maxTeamDiff", 12);
+		self setClientDvar("party_minLobbyTime", 1);
+		self setClientDvar("party_hostMigration", 0);
+		self setClientDvar("party_minPlayers", 1);
+		
 		setDvar("party_host", 1);
 		setDvar("party_iAmHost", 1);
 		setDvar("party_connectToOthers", 0);
+		setDvar("party_connectTimeout", 1000);
+		setDvar("party_gameStartTimerLength", 5);
+		setDvar("party_maxTeamDiff", 12);
+		setDvar("party_minLobbyTime", 1);
+		setDvar("party_hostMigration", 0);
+		setDvar("party_minPlayers", 1);
 		setDvar("onlineGameAndHost", 1);
 		setDvar("migration_msgTimeout", 0);
 		setDvar("migration_timeBetween", 999999);
 		setDvar("migrationPingTime", 0);
-		setDvar("party_minPlayers", 1);
-		setDvar("party_matchedPlayerCount", 0);
-		setDvar("party_connectTimeout", 1000);
-		//setDvar("party_connectTimeout", 1);
-		setDvar("party_gameStartTimerLength", 5);
-		setDvar("party_maxTeamDiff", 12);
-		setDvar("party_minLobbyTime", 1);
-		//setDvar("party_pregameStartTimerLength", 0);
-		//setDvar("party_timer", 5);
-		//setDvar("party_lobbyPlayerCount", 6);
-		//setDvar("party_playerCount", 6);
 
 		setDvar("scr_teamBalance", 0);
-		setDvar("party_hostMigration", 0);
 		setDvar("migration_verboseBroadcastTime", 0);
+		setDvar("lobby_partySearchWaitTime", 0);
+		setDvar("cl_migrationTimeout", 0);
 		setDvar("bandwidthtest_duration", 0);
 		setDvar("bandwidthtest_enable", 0);
 		setDvar("bandwidthtest_ingame_enable", 0);
 		setDvar("bandwidthtest_timeout", 0);
-		setDvar("cl_migrationTimeout", 0);
-		setDvar("lobby_partySearchWaitTime", 0);
 		setDvar("bandwidthtest_announceinterval", 0);
 		setDvar("partymigrate_broadcast_interval", 99999);
 		setDvar("partymigrate_pingtest_timeout", 0);
