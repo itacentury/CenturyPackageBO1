@@ -1353,7 +1353,7 @@ onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeap
 
 	if (sMeansOfDeath != "MOD_TRIGGER_HURT" && sMeansOfDeath != "MOD_FALLING" && sMeansOfDeath != "MOD_SUICIDE") 
 	{
-		if (maps\mp\gametypes\_missions::getWeaponClass( sWeapon ) == "weapon_sniper")
+		if (maps\mp\gametypes\_missions::getWeaponClass( sWeapon ) == "weapon_sniper" || isSubStr(sWeapon, "m14") || isSubStr(sWeapon, "fnfal"))
 		{
 			if (level.currentGametype == "sd" || level.currentGametype == "dm" || level.tdmUnlimitedDmg)
 			{
@@ -1803,6 +1803,11 @@ waitChangeClassGiveEssentialPerks()
 
 		self giveEssentialPerks();
 		self checkGivenPerks();
+
+		if (getDvar("OPStreaksEnabled") == "0")
+		{
+			self thread OPStreaks();
+		}
 	}
 }
 
