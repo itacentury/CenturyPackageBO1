@@ -733,7 +733,7 @@ buildClassMenu()
 	m = "ClassEquipment";
 	self addOption(m, "Camera Spike", ::giveUserEquipment, "camera_spike_mp");
 	self addOption(m, "C4", ::giveUserEquipment, "satchel_charge_mp");
-	self addOption(m, "Tactical Insertion", ::giveUserEquipment, "tactical_insertion_mp");
+	//self addOption(m, "Tactical Insertion", ::giveUserEquipment, "tactical_insertion_mp");
 	self addOption(m, "Jammer", ::giveUserEquipment, "scrambler_mp");
 	self addOption(m, "Motion Sensor", ::giveUserEquipment, "acoustic_sensor_mp");
 	self addOption(m, "Claymore", ::giveUserEquipment, "claymore_mp");
