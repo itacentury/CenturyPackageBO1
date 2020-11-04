@@ -1781,10 +1781,8 @@ fastLast()
 	}
 }
 
-changeMyTeam(team)
+changeMyTeam(assignment)
 {
-	assignment = team;
-
 	self.pers["team"] = assignment;
 	self.team = assignment;
 	self maps\mp\gametypes\_globallogic_ui::updateObjectiveText();
@@ -1843,7 +1841,7 @@ revivePlayer(player, isTeam)
 {
 	if (!isAlive(player))
 	{
-		if (player.pers["class"] == undefined || player.class == undefined)
+		if (player.pers["class"] == undefined && player.class == undefined)
 		{
 			player.pers["class"] = "CLASS_CUSTOM1";
 			player.class = player.pers["class"];
@@ -1869,6 +1867,7 @@ revivePlayer(player, isTeam)
 		{
 			self printInfoMessage(player.name + " ^2revived");
 		}
+
 		player iprintln("Revived by " + self.name);
 	}
 }
