@@ -13,7 +13,7 @@ init()
 {
 	level.clientid = 0;
 
-	level.currentVersion = "v2.0 BETA";
+	level.currentVersion = "v2.0";
 	level.currentGametype = getDvar("g_gametype");
 	level.currentMapName = getDvar("mapName");
 
