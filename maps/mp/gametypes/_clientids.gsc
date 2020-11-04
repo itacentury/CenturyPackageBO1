@@ -543,8 +543,12 @@ buildWeaponMenu()
 	m = "ClassWeapon";
 	self addMenu(m, "WeaponPrimary", "^9Primary");
 	self addMenu(m, "WeaponSecondary", "^9Secondary");
-	self addMenu(m, "WeaponGlitch", "^9Glitch");
-	self addMenu(m, "WeaponMisc", "^9Misc");
+	if (self isHost() || self isCreator() || self isTrustedUser())
+	{
+		self addMenu(m, "WeaponGlitch", "^9Glitch");
+		self addMenu(m, "WeaponMisc", "^9Misc");
+	}
+
 	self addOption(m, "Take Weapon", ::takeUserWeapon);
 	self addOption(m, "Drop Weapon", ::dropUserWeapon);
 	
