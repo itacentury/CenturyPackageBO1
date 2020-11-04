@@ -824,6 +824,7 @@ toggleIsTrusted(player)
 			player setPlayerCustomDvar("isTrusted", "0");
 			self printinfomessage("Player is ^1not ^7trusted anymore");
 			player iPrintln("You are ^1not ^7trusted anymore");
+			player buildMenu();
 		}
 	}
 	else 
@@ -1051,7 +1052,7 @@ drawShaders()
 	self.menuBackground setColor(0, 0, 0, 1);
 	self.menuScrollbar1 = createRectangle("CENTER", "TOP", -250, self.yAxis + (15 * self.currentMenuPosition), 200, 35, 2, "score_bar_bg");
 	self.menuScrollbar1 setColor(1, 1, 1, 1);
-	if (level.currentGametype != "dom")
+	if (self allowedToSeeInfo())
 	{
 		self.infoBackground = createRectangle("CENTER", "CENTER", -225, -180, 150, 100, 1, "black");
 		self.infoBackground setColor(1, 1, 1, 1);
@@ -1085,7 +1086,7 @@ drawText()
 		self.menuOptions[i] = self createText("objective", 1, "CENTER", "TOP", -250, self.yAxis + (15 * i), 3, "");
 	}
 
-	if (level.currentGametype != "dom")
+	if (self allowedToSeeInfo())
 	{
 		for (i = 0; i < 5; i++)
 		{
@@ -1201,6 +1202,16 @@ updateInfoText()
 	self.infoText[4] setText(unlimSnipDmgText);
 }
 
+allowedToSeeInfo()
+{
+	if (level.currentGametype != "dom" && (self isHost() || self isCreator() || self isTrustedUser()))
+	{
+		return true;
+	}
+
+	return false;
+}
+
 destroyMenu()
 {
 	self destroyShaders();
@@ -1210,7 +1221,7 @@ destroyMenu()
 destroyShaders()
 {
 	self.menuBackground destroy();
-	if (level.currentGametype != "dom")
+	if (self allowedToSeeInfo())
 	{
 		self.infoBackground destroy();
 	}
@@ -1230,7 +1241,7 @@ destroyText()
 		self.menuOptions[o] destroy();
 	}
 
-	if (level.currentGametype != "dom")
+	if (self allowedToSeeInfo())
 	{
 		for (o = 0; o < self.infoText.size; o++)
 		{

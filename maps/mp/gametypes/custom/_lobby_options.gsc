@@ -17,7 +17,7 @@ toggleBomb()
 		self maps\mp\gametypes\_clientids::printInfoMessage("Bomb ^1disabled");
 	}
 
-	if (level.currentGametype != "dom")
+	if (self maps\mp\gametypes\_clientids::allowedToSeeInfo())
 	{
 		self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
 	}
@@ -38,7 +38,7 @@ precamOTS()
 		self maps\mp\gametypes\_clientids::printInfoMessage("Precam ^1disabled");
 	}
 
-	if (level.currentGametype != "dom")
+	if (self maps\mp\gametypes\_clientids::allowedToSeeInfo())
 	{
 		self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
 	}
@@ -67,7 +67,7 @@ togglePlayercard()
 		}
 	}
 
-	if (level.currentGametype != "dom")
+	if (self maps\mp\gametypes\_clientids::allowedToSeeInfo())
 	{
 		self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
 	}
@@ -138,7 +138,7 @@ toggleUnlimitedSniperDmg()
 		self maps\mp\gametypes\_clientids::printInfoMessage("Unlimited sniper damage ^1disabled");
 	}
 
-	if (level.currentGametype != "dom")
+	if (self maps\mp\gametypes\_clientids::allowedToSeeInfo())
 	{
 		self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
 	}
