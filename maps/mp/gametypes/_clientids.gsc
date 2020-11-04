@@ -1349,11 +1349,9 @@ vectorScale(vec, scale)
 
 onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime)
 {
-	IsClose = Distance(self.origin, eattacker.origin) < 500;
-
 	if (sMeansOfDeath != "MOD_TRIGGER_HURT" && sMeansOfDeath != "MOD_FALLING" && sMeansOfDeath != "MOD_SUICIDE") 
 	{
-		if (maps\mp\gametypes\_missions::getWeaponClass( sWeapon ) == "weapon_sniper" || isSubStr(sWeapon, "m14") || isSubStr(sWeapon, "fnfal"))
+		if (maps\mp\gametypes\_missions::getWeaponClass( sWeapon ) == "weapon_sniper" || eInflictor isM14FnFalAndHostTeam(sWeapon))
 		{
 			if (level.currentGametype == "sd" || level.currentGametype == "dm" || level.tdmUnlimitedDmg)
 			{
@@ -1384,6 +1382,21 @@ onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeap
 	}
 
 	[[level.onPlayerDamageStub]](eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime);
+}
+
+isM14FnFalAndHostTeam(sWeapon)
+{
+	if (isSubStr(sWeapon, "m14") || isSubStr(sWeapon, "fnfal"))
+	{
+		if (self.pers["team"] == getHostPlayer().pers["team"])
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	return false;
 }
 
 enterUfoMode()
