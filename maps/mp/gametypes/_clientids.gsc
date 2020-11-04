@@ -543,7 +543,6 @@ buildWeaponMenu()
 	m = "ClassWeapon";
 	self addMenu(m, "WeaponPrimary", "^9Primary");
 	self addMenu(m, "WeaponSecondary", "^9Secondary");
-	self addMenu(m, "WeaponDualWield", "^9Dual Wield");
 	self addMenu(m, "WeaponGlitch", "^9Glitch");
 	self addMenu(m, "WeaponMisc", "^9Misc");
 	self addOption(m, "Take Weapon", ::takeUserWeapon);
@@ -618,17 +617,6 @@ buildWeaponMenu()
 	m = "SecondarySpecial";
 	self addOption(m, "Ballistic Knife", ::giveUserWeapon, "knife_ballistic_mp");
 	self addOption(m, "Crossbow", ::giveUserWeapon, "crossbow_explosive_mp");
-	
-	m = "WeaponDualWield";
-	self addOption(m, "ASP", ::giveUserWeapon, "aspdw_mp");
-	self addOption(m, "Makarov", ::giveUserWeapon, "makarovdw_mp");
-	self addOption(m, "M1911", ::giveUserWeapon, "m1911dw_mp");
-	self addOption(m, "Python", ::giveUserWeapon, "pythondw_mp");
-	self addOption(m, "CZ75", ::giveUserWeapon, "cz75dw_mp");
-	self addOption(m, "HS10", ::giveUserWeapon, "hs10dw_mp");
-	self addOption(m, "Skorpion", ::giveUserWeapon, "skorpiondw_mp");
-	self addOption(m, "PM63", ::giveUserWeapon, "pm63dw_mp");
-	self addOption(m, "Kiparis", ::giveUserWeapon, "kiparisdw_mp");
 
 	m = "WeaponGlitch";
 	self addOption(m, "ASP", ::giveUserWeapon, "asplh_mp");
