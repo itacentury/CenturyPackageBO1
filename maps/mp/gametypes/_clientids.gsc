@@ -330,7 +330,7 @@ buildMenu()
 		self addMenu(m, "MainDev", "^9Dev Options");
 	}
 
-	if (self isHost() && level.players.size == 1)
+	if (self isHost() && level.players.size == 1 && level.console)
 	{
 		self addMenu(m, "MainAccount", "^9Account Options");
 	}
