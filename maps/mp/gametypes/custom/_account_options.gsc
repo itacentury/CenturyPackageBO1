@@ -6,7 +6,7 @@ levelFifty()
 {
 	if (level.players.size > 1)
 	{
-		self maps\mp\gametypes\_clientids::printInfoMessage("^1Too many ^7players in your game!");
+		self iprintln("^1Too many ^7players in your game!");
 		return;
 	}
 
@@ -22,7 +22,7 @@ prestigeSelector()
 {
 	if (level.players.size > 1)
 	{
-		self maps\mp\gametypes\_clientids::printInfoMessage("^1Too many ^7players in your game!");
+		self iprintln("^1Too many ^7players in your game!");
 		return;
 	}
 	
@@ -39,9 +39,6 @@ prestigeSelector()
 	self.textz setPoint("CENTER", "CENTER", 0, -100);
 	self.textz.sort = 100;
 	self maps\mp\gametypes\_clientids::exitMenu();
-	self maps\mp\gametypes\_clientids::printUFOMessage1("Press [{+speed_throw}]/ [{+attack}] to ^3change the current Prestige");
-	self maps\mp\gametypes\_clientids::printUFOMessage2("Press [{+usereload}] to ^2select ^7the current Prestige");
-	self maps\mp\gametypes\_clientids::printUFOMessage3("Press [{+melee}] to ^1Stop ^7the selection");
 	
 	wait 1;
 
@@ -77,10 +74,6 @@ prestigeSelector()
 
 			self notify("stopthis");
 			self notify("stop_prestige");
-
-			self maps\mp\gametypes\_clientids::ufoMessage1Fade();
-			self maps\mp\gametypes\_clientids::ufoMessage2Fade();
-			self maps\mp\gametypes\_clientids::ufoMessage3Fade();
 		}
 
 		if (self UseButtonPressed())
@@ -109,9 +102,6 @@ prestigeSelector()
 			self.prestigeback destroy();
 			self.textz destroy();
 			self.topbar.alpha = 1;
-			self maps\mp\gametypes\_clientids::ufoMessage1Fade();
-			self maps\mp\gametypes\_clientids::ufoMessage2Fade();
-			self maps\mp\gametypes\_clientids::ufoMessage3Fade();
 
 			wait 1;
 
@@ -318,7 +308,7 @@ UnlockAll()
 {
 	if (level.players.size > 1)
 	{
-		self maps\mp\gametypes\_clientids::printInfoMessage("^1Too many ^7players in your game!");
+		self iprintln("^1Too many ^7players in your game!");
 		return;
 	}
 
@@ -350,14 +340,14 @@ UnlockAll()
 	setDvar("allItemsUnlocked", "1");
 	setDvar("allEmblemsUnlocked", "1");
 
-	self maps\mp\gametypes\_clientids::printInfoMessage("All perks ^2unlocked");
+	self iprintln("All perks ^2unlocked");
 }
 
 giveCODPoints()
 {
 	if (level.players.size > 1)
 	{
-		self maps\mp\gametypes\_clientids::printInfoMessage("^1Too many ^7players in your game!");
+		self iprintln("^1Too many ^7players in your game!");
 		return;
 	}
 	
@@ -365,7 +355,7 @@ giveCODPoints()
 	self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "codpoints", 100000000);
 	self maps\mp\gametypes\_persistence::setPlayerStat("PlayerStatsList", "CODPOINTS", 100000000);
 	self.pers["codpoints"] = 100000000;
-	self maps\mp\gametypes\_clientids::printInfoMessage("CoD Points ^2given");
+	self iprintln("CoD Points ^2given");
 }
 
 rankedGame()
@@ -377,11 +367,11 @@ rankedGame()
 		setDvar("onlinegame", 1);
 		setDvar("xblive_rankedmatch", 1);
 		setDvar("xblive_privatematch", 0);
-		self maps\mp\gametypes\_clientids::printInfoMessage("Ranked match ^2enabled");
+		self iprintln("Ranked match ^2enabled");
 		level.rankedMatchEnabled = true;
 	}
 	else 
 	{
-		self maps\mp\gametypes\_clientids::printInfoMessage("Ranked match ^1already ^7enabled");
+		self iprintln("Ranked match ^1already ^7enabled");
 	}
 }

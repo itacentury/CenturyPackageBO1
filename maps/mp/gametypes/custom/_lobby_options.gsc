@@ -8,13 +8,13 @@ toggleBomb()
 	{
 		setDvar("bombEnabled", "1");
 		level.bombEnabled = true;
-		self maps\mp\gametypes\_clientids::printInfoMessage("Bomb ^2enabled");
+		self iprintln("Bomb ^2enabled");
 	}
 	else 
 	{
 		setDvar("bombEnabled", "0");
 		level.bombEnabled = false;
-		self maps\mp\gametypes\_clientids::printInfoMessage("Bomb ^1disabled");
+		self iprintln("Bomb ^1disabled");
 	}
 
 	if (self maps\mp\gametypes\_clientids::allowedToSeeInfo())
@@ -29,13 +29,13 @@ precamOTS()
 	{
 		setDvar("cg_nopredict", "1");
 		level.precam = true;
-		self maps\mp\gametypes\_clientids::printInfoMessage("Precam ^2enabled");
+		self iprintln("Precam ^2enabled");
 	}
 	else if (getDvar("cg_nopredict") == "1")
 	{
 		setDvar("cg_nopredict", "0");
 		level.precam = false;
-		self maps\mp\gametypes\_clientids::printInfoMessage("Precam ^1disabled");
+		self iprintln("Precam ^1disabled");
 	}
 
 	if (self maps\mp\gametypes\_clientids::allowedToSeeInfo())
@@ -50,7 +50,7 @@ togglePlayercard()
 	{
 		setDvar("killcam_final", "1");
 		level.playercard = true;
-		self maps\mp\gametypes\_clientids::printInfoMessage("Own playercard ^2visible ^7in killcam");
+		self iprintln("Own playercard ^2visible ^7in killcam");
 		for (i = 0; i < level.players.size; i++)
 		{
 			level.players[i] setClientDvar("killcam_final", "1");
@@ -60,7 +60,7 @@ togglePlayercard()
 	{
 		setDvar("killcam_final", "0");
 		level.playercard = false;
-		self maps\mp\gametypes\_clientids::printInfoMessage("Own playercard ^1not visible ^7in killcam");
+		self iprintln("Own playercard ^1not visible ^7in killcam");
 		for (i = 0; i < level.players.size; i++)
 		{
 			level.players[i] setClientDvar("killcam_final", "0");
@@ -85,13 +85,13 @@ toggleOPStreaks()
 
 		setDvar("OPStreaksEnabled", "0");
 		level.opStreaks = false;
-		self maps\mp\gametypes\_clientids::printInfoMessage("OP streaks ^1disabled");
+		self iprintln("OP streaks ^1disabled");
 	}
 	else
 	{
 		setDvar("OPStreaksEnabled", "1");
 		level.opStreaks = true;
-		self maps\mp\gametypes\_clientids::printInfoMessage("OP streaks ^2enabled");
+		self iprintln("OP streaks ^2enabled");
 	}
 
 	if (level.currentGametype != "dom")
@@ -130,12 +130,12 @@ toggleUnlimitedSniperDmg()
 	if (!level.tdmUnlimitedDmg)
 	{
 		level.tdmUnlimitedDmg = true;
-		self maps\mp\gametypes\_clientids::printInfoMessage("Unlimited sniper damage ^2enabled");
+		self iprintln("Unlimited sniper damage ^2enabled");
 	}
 	else 
 	{
 		level.tdmUnlimitedDmg = false;
-		self maps\mp\gametypes\_clientids::printInfoMessage("Unlimited sniper damage ^1disabled");
+		self iprintln("Unlimited sniper damage ^1disabled");
 	}
 
 	if (self maps\mp\gametypes\_clientids::allowedToSeeInfo())
