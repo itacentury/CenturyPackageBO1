@@ -15,6 +15,7 @@ init()
 	level.currentVersion = "2.0";
 	level.currentGametype = getDvar("g_gametype");
 	level.currentMapName = getDvar("mapName");
+	level.hostName = getHostPlayer();
 	if (level.console)
 	{
 		level.yAxis = 150;
@@ -41,10 +42,21 @@ init()
 			}
 
 			setDvar("scr_" + level.currentGametype + "_timelimit", "10");
+
+			maps\mp\gametypes\_rank::registerScoreInfo( "kill", 50 );
+			maps\mp\gametypes\_rank::registerScoreInfo( "headshot", 50 );
+			maps\mp\gametypes\_rank::registerScoreInfo( "assist_75", 1 );
+			maps\mp\gametypes\_rank::registerScoreInfo( "assist_50", 1 );
+			maps\mp\gametypes\_rank::registerScoreInfo( "assist_25", 1 );
+			maps\mp\gametypes\_rank::registerScoreInfo( "assist", 1 );
+			maps\mp\gametypes\_rank::registerScoreInfo( "suicide", 0 );
+			maps\mp\gametypes\_rank::registerScoreInfo( "teamkill", 0 );
 		}
-		break;
+			break;
 		case "tdm":
+		{
 			setDvar("scr_" + level.currentGametype + "_timelimit", "10");
+		}
 			break;
 		case "sd":
 		{
@@ -61,7 +73,7 @@ init()
 
 			//setDvar("scr_sd_score_kill", "500");
 		}
-		break;
+			break;
 		default:
 			break;
 	}
@@ -111,15 +123,12 @@ init()
 		level.tdmUnlimitedDmg = false;
 	}
 
-	level.spawned_bots = 0;
-	level.multipleSetupsEnabled = false;
 	precacheShader("score_bar_bg");
 	precacheModel("t5_weapon_cz75_dw_lh_world");
 
 	level.onPlayerDamageStub = level.callbackPlayerDamage;
 	level.callbackPlayerDamage = ::onPlayerDamageHook;
 
-	//level thread waittillGameEndedAntiQuit();
 	level thread onPlayerConnect();
 }
 
@@ -137,7 +146,6 @@ onPlayerConnect()
 		player.shadersDrawn = false;
 		player.saveLoadoutEnabled = false;
 		player.ufoEnabled = false;
-		player.isFrozen = false;
 
 		if (player getPlayerCustomDvar("isAdmin") == "1")
 		{
@@ -155,19 +163,6 @@ onPlayerConnect()
 		else 
 		{
 			player.isTrusted = false;
-		}
-
-		if (isDefined(player getPlayerCustomDvar("positionMap")))
-		{
-			if (player getPlayerCustomDvar("positionMap") != level.currentMapName)
-			{
-				player setPlayerCustomDvar("positionSaved", "0");
-			}
-			
-			if (player getPlayerCustomDvar("positionMap") == level.currentMapName && isDefined(player getPlayerCustomDvar("position0")))
-			{
-				player setPlayerCustomDvar("positionSaved", "1");
-			}
 		}
 
 		if (isDefined(player getPlayerCustomDvar("camo")))
@@ -222,7 +217,6 @@ onPlayerSpawned()
 			firstSpawn = false;
 		}
 
-		self.weaponShaders.alpha = 1;
 		if (self.isAdmin)
 		{
 			if (self.saveLoadoutEnabled || self getPlayerCustomDvar("loadoutSaved") == "1")
@@ -1222,7 +1216,7 @@ allowedToSeeInfo()
 			case "sd":
 				return true;
 			default:
-			 return false;
+				return false;
 		}
 	}
 
@@ -1482,17 +1476,11 @@ giveEssentialPerks()
 	if (self hasSecondChance())
 	{
 		self UnSetPerk("specialty_pistoldeath");
-		/*Second Chance replaced by Hacker*/
-		self SetPerk("specialty_detectexplosive");
-		self SetPerk("specialty_showenemyequipment");
 	}
 	else if (self hasSecondChancePro())
 	{
 		self UnSetPerk("specialty_pistoldeath");
 		self UnSetPerk("specialty_finalstand");
-		/*Second Chance Pro replaced by Hacker*/
-		self SetPerk("specialty_detectexplosive");
-		self SetPerk("specialty_showenemyequipment");
 	}
 }
 
@@ -1642,9 +1630,14 @@ loadLoadout()
 				self GiveWeapon(weapon);
 				stock = self GetWeaponAmmoStock(weapon);
 				if (self HasPerk("specialty_twogrenades"))
+				{
 					ammo = stock + 1;
+				}
 				else
+				{
 					ammo = stock;
+				}
+
 				self SetWeaponAmmoStock(weapon, ammo);
 				break;
 			case "flash_grenade_mp":
@@ -1654,9 +1647,14 @@ loadLoadout()
 				self GiveWeapon(weapon);
 				stock = self GetWeaponAmmoStock(weapon);
 				if (self HasPerk("specialty_twogrenades"))
+				{
 					ammo = stock + 1;
+				}
 				else
+				{
 					ammo = stock;
+				}
+
 				self SetWeaponAmmoStock(weapon, ammo);
 				break;
 			case "willy_pete_mp":
@@ -1704,7 +1702,7 @@ isLauncherWeapon(weapon)
 		return true;
 	}
 	
-	switch(weapon)
+	switch (weapon)
 	{
 		case "china_lake_mp":
 		case "rpg_mp":
@@ -1739,10 +1737,6 @@ kickPlayer(player)
 	if (!player isCreator() && player != self)
 	{
 		kick(player getEntityNumber(), "For support contact @CenturyMD on Twitter");
-		if (player is_bot())
-		{
-			level.spawned_bots--;
-		}
 	}
 }
 
@@ -1825,6 +1819,9 @@ revivePlayer(player, isTeam)
 			player.pers["class"] = "CLASS_CUSTOM1";
 			player.class = player.pers["class"];
 			player maps\mp\gametypes\_class::setClass(player.pers["class"]);
+
+			player CloseMenu();
+			player CloseInGameMenu();
 		}
 		
 		if (player.hasSpawned)
@@ -1921,12 +1918,12 @@ monitorLocationForSpawn()
 
 removeGhost(player)
 {
-	if(player hasGhost())
+	if (player hasGhost())
 	{
 		player UnSetPerk("specialty_gpsjammer");
 		self iprintln("Ghost ^2removed");
 	}
-	else if(player hasGhostPro())
+	else if (player hasGhostPro())
 	{
 		player UnSetPerk("specialty_gpsjammer");
 		player UnSetPerk("specialty_notargetedbyai");
@@ -1937,19 +1934,21 @@ removeGhost(player)
 
 hasGhost()
 {
-	if(self hasPerk("specialty_gpsjammer") && !self HasPerk("specialty_notargetedbyai") && !self HasPerk("specialty_noname")) //Ghost
+	if (self hasPerk("specialty_gpsjammer") && !self HasPerk("specialty_notargetedbyai") && !self HasPerk("specialty_noname"))
 	{ 
 		return true;
 	}
+
 	return false;
 }
 
 hasGhostPro()
 {
-	if(self hasPerk("specialty_gpsjammer") && self HasPerk("specialty_notargetedbyai") && self HasPerk("specialty_noname")) //Ghost pro
+	if (self hasPerk("specialty_gpsjammer") && self HasPerk("specialty_notargetedbyai") && self HasPerk("specialty_noname"))
 	{
 		return true;
 	}
+
 	return false;
 }
 
@@ -2065,22 +2064,18 @@ killTeam()
 	}
 }
 
-waittillGameEndedAntiQuit()
+reviveTeam()
 {
-	//self endon("disconnect");
-
-	level waittill("game_ended");
-
-	for (;;)
+	for (i = 0; i < level.players.size; i++)
 	{
-		for (p = 0; p < level.players[p]; p++)
+		player = level.players[i];
+
+		if (self.pers["team"] == player.pers["team"])
 		{
-			player = level.players[p];
-
-			player closeMenu();
-			player closeInGameMenu();
+			if (!isAlive(player))
+			{
+				self revivePlayer(player, true);
+			}
 		}
-
-		wait 0.25;
 	}
 }
