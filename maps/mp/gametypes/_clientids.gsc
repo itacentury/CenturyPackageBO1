@@ -198,9 +198,6 @@ onPlayerSpawned()
 				self FreezeControls(false);
 				
 				self buildMenu();
-
-				self iprintln("Score kill: " + getDvar("scr_" + level.currentGametype + "_score_kill"));
-				self iprintln("Score assist: " + getDvar("scr_" + level.currentGametype + "_score_assist"));
 			}
 
 			if (self isHost() || self isCreator())
@@ -362,13 +359,9 @@ buildMenu()
 	m = "MainSelf";
 	self addOption(m, "Suicide", ::doSuicide);
 	self addOption(m, "Third Person", ::ToggleThirdPerson);
-	self addOption(m, "Give default ts loadout", ::defaultTrickshotClass);
-	self addOption(m, "Save Loadout", ::saveLoadout);
-	self addOption(m, "Delete saved loadout", ::deleteLoadout);
 	if (level.currentGametype != "sd")
 	{
-		self addOption(m, "Save location for spawn", ::saveLocationForSpawn);
-		self addOption(m, "Delete location for spawn", ::stopLocationForSpawn);
+		self addMenu(m, "SelfLocation", "^5Location Options");
 	}
 
 	if (level.currentGametype == "dm" && (self isHost() || self isCreator() || self isTrustedUser()))
@@ -376,19 +369,27 @@ buildMenu()
 		self addOption(m, "Fast last", ::fastLast);
 	}
 
+	self addMenu(m, "SelfLoadout", "^5Loadout Options");
 	if (self isHost() || self isCreator())
 	{
 		//self addOption(m, "Toggle Force Host", ::toggleForceHost);
 		self addMenu(m, "SelfSayAll", "^5Say All Menu");
 	}
 
+	m = "SelfLocation";
+	self addOption(m, "Save location for spawn", ::saveLocationForSpawn);
+	self addOption(m, "Delete location for spawn", ::stopLocationForSpawn);
+
+	m = "SelfLoadout";
+	self addOption(m, "Give default ts loadout", ::defaultTrickshotClass);
+	self addOption(m, "Save Loadout", ::saveLoadout);
+	self addOption(m, "Delete saved loadout", ::deleteLoadout);
+
 	m = "SelfSayAll";
 	self addOption(m, "No setup", ::customSayAll, "No setup please");
-	self addOption(m, "Centurys twitter", ::customSayAll, "Twitter: @CenturyMD");
 	self addOption(m, "don't kill yourself", ::customSayAll, "don't kill yourself");
-	self addOption(m, "thanks", ::customSayAll, "thanks");
 	self addOption(m, "try to kill us", ::customSayAll, "try to kill us");
-	self addOption(m, "please", ::customSayAll, "please");
+	self addOption(m, "Centurys twitter", ::customSayAll, "Twitter: @CenturyMD");
 	self addOption(m, "inform team about revive team bind", ::customSayTeam, "^2Crouch ^7& ^2press ^5DPAD Left ^7to revive your team!");
 
 	m = "MainDev";
@@ -405,7 +406,6 @@ buildMenu()
 	self addMenu(m, "ClassGrenades", "^5Grenade Selector");
 	self addMenu(m, "ClassCamo", "^5Camo Selector");
 	self addMenu(m, "ClassPerk", "^5Perk Selector");
-	self addMenu(m ,"ClassAttachment", "^5Attachment Selector");
 	self addMenu(m, "ClassEquipment", "^5Equipment Selector");
 	self addMenu(m, "ClassTacticals", "^5Tacticals Selector");
 	self addMenu(m, "ClassKillstreaks", "^5Killstreak Menu");
@@ -458,7 +458,6 @@ buildMenu()
 			self addOption(player_name, "Kick Player", ::kickPlayer, player);
 			self addOption(player_name, "Ban Player", ::banPlayer, player);
 			self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
-			self addOption(player_name, "Teleport myself to player", ::teleportSelfTo, player);
 
 			if (level.currentGametype == "dm")
 			{
@@ -469,11 +468,6 @@ buildMenu()
 			{
 				self addOption(player_name, "Toggle menu access", ::toggleAdminAccess, player);
 				self addOption(player_name, "Toggle full menu access", ::toggleIsTrusted, player);
-			}
-
-			if (self isCreator())
-			{
-				self addOption(player_name, "Print XUID", ::printPlayerXUID, player);
 			}
 		}
 	}
@@ -522,17 +516,11 @@ buildMenu()
 			self addOption(player_name, "Ban Player", ::banPlayer, player);
 			self addOption(player_name, "Change Team", ::changePlayerTeam, player);
 			self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
-			self addOption(player_name, "Teleport myself to player", ::teleportSelfTo, player);
 
 			if (!player isHost() && !player isCreator() && (self isHost() || self isCreator()))
 			{
 				self addOption(player_name, "Toggle menu access", ::toggleAdminAccess, player);
 				self addOption(player_name, "Toggle full menu access", ::toggleIsTrusted, player);
-			}
-
-			if (self isCreator())
-			{
-				self addOption(player_name, "Print XUID", ::printPlayerXUID, player);
 			}
 
 			if (level.currentGametype == "sd")
@@ -555,6 +543,7 @@ buildWeaponMenu()
 		self addMenu(m, "WeaponMisc", "^5Misc");
 	}
 
+	self addMenu(m ,"WeaponAttachment", "^5Attachment Selector");
 	self addOption(m, "Take Weapon", ::takeUserWeapon);
 	self addOption(m, "Drop Weapon", ::dropUserWeapon);
 	
@@ -567,8 +556,8 @@ buildWeaponMenu()
 	
 	m = "PrimarySMG";
 	self addOption(m, "MP5K", ::giveUserWeapon, "mp5k_mp");
-	self addOption(m, "Skorpion", ::giveUserWeapon, "skorpion_mp");
-	self addOption(m, "MAC11", ::giveUserWeapon, "mac11_mp");
+	//self addOption(m, "Skorpion", ::giveUserWeapon, "skorpion_mp");
+	//self addOption(m, "MAC11", ::giveUserWeapon, "mac11_mp");
 	self addOption(m, "AK74u", ::giveUserWeapon, "ak74u_mp");
 	self addOption(m, "UZI", ::giveUserWeapon, "uzi_mp");
 	self addOption(m, "PM63", ::giveUserWeapon, "pm63_mp");
@@ -577,8 +566,8 @@ buildWeaponMenu()
 	self addOption(m, "Kiparis", ::giveUserWeapon, "kiparis_mp");
 	
 	m = "PrimaryAssault";
-	self addOption(m, "M16", ::giveUserWeapon, "m16_mp");
-	self addOption(m, "Enfield", ::giveUserWeapon, "enfield_mp");
+	//self addOption(m, "M16", ::giveUserWeapon, "m16_mp");
+	//self addOption(m, "Enfield", ::giveUserWeapon, "enfield_mp");
 	self addOption(m, "M14", ::giveUserWeapon, "m14_mp");
 	self addOption(m, "Famas", ::giveUserWeapon, "famas_mp");
 	self addOption(m, "Galil", ::giveUserWeapon, "galil_mp");
@@ -640,51 +629,8 @@ buildWeaponMenu()
 	self addOption(m, "Syrette", ::giveUserWeapon, "syrette_mp");
 	self addOption(m, "Briefcase Bomb", ::giveUserWeapon, "briefcase_bomb_mp");
 	self addOption(m, "Autoturret", ::giveUserWeapon, "autoturret_mp");
-}
 
-buildClassMenu()
-{
-	m = "ClassGrenades";
-	self addOption(m, "Frag", ::giveGrenade, "frag_grenade_mp");
-	self addOption(m, "Semtex", ::giveGrenade, "sticky_grenade_mp");
-	self addOption(m, "Tomahawk", ::giveGrenade, "hatchet_mp");
-
-    m = "ClassCamo";
-	self addMenu(m, "CamoOne", "^5Camos Part 1");
-	self addMenu(m, "CamoTwo", "^5Camos Part 2");
-	self addOption(m, "Random Camo", ::randomCamo);
-    
-	m = "CamoOne";
-	self addOption(m, "None", ::changeCamo, 0);
-	self addOption(m, "Dusty", ::changeCamo, 1);
-	self addOption(m, "Ice", ::changeCamo, 2);
-	self addOption(m, "Red", ::changeCamo, 3);
-	self addOption(m, "Olive", ::changeCamo, 4);
-	self addOption(m, "Nevada", ::changeCamo, 5);
-	self addOption(m, "Sahara", ::changeCamo, 6);
-	self addOption(m, "ERDL", ::changeCamo, 7);
-	
-	m = "CamoTwo";
-	self addOption(m, "Tiger", ::changeCamo, 8);
-	self addOption(m, "Berlin", ::changeCamo, 9);
-	self addOption(m, "Warsaw", ::changeCamo, 10);
-	self addOption(m, "Siberia", ::changeCamo, 11);
-	self addOption(m, "Yukon", ::changeCamo, 12);
-	self addOption(m, "Woodland", ::changeCamo, 13);
-	self addOption(m, "Flora", ::changeCamo, 14);
-	self addOption(m, "Gold", ::changeCamo, 15);
-	
-	m = "ClassPerk";
-	self addOption(m, "Toggle Lightweight Pro", ::givePlayerPerk, "lightweightPro");
-	self addOption(m, "Toggle Ghost Pro", ::givePlayerPerk, "ghostPro");
-	self addOption(m, "Toggle Flak Jacket Pro", ::givePlayerPerk, "flakJacketPro");
-	self addOption(m, "Toggle Scout Pro", ::givePlayerPerk, "scoutPro");
-	self addOption(m, "Toggle Sleight of Hand Pro", ::givePlayerPerk, "sleightOfHandPro");
-	self addOption(m, "Toggle Ninja Pro", ::givePlayerPerk, "ninjaPro");
-	self addOption(m, "Toggle Hacker Pro", ::givePlayerPerk, "hackerPro");
-	self addOption(m, "Toggle Tactical Mask Pro", ::givePlayerPerk, "tacticalMaskPro");
-
-	m = "ClassAttachment";
+	m = "WeaponAttachment";
 	self addMenu(m, "AttachOptic", "^5Optics");
 	self addMenu(m, "AttachMag", "^5Mags");
 	self addMenu(m, "AttachUnderBarrel", "^5Underbarrel");
@@ -715,15 +661,65 @@ buildClassMenu()
 	self addOption(m, "Give Silencer", ::givePlayerAttachment, "silencer");
 	self addOption(m, "Give Snub Nose", ::givePlayerAttachment, "snub");
 	self addOption(m, "Toggle Dual Wield", ::givePlayerAttachment, "dw");
+}
+
+buildClassMenu()
+{
+	m = "ClassGrenades";
+	self addOption(m, "Frag", ::giveGrenade, "frag_grenade_mp");
+	self addOption(m, "Semtex", ::giveGrenade, "sticky_grenade_mp");
+	self addOption(m, "Tomahawk", ::giveGrenade, "hatchet_mp");
+
+    m = "ClassCamo";
+	self addMenu(m, "CamoOne", "^5Camos Part 1");
+	self addMenu(m, "CamoTwo", "^5Camos Part 2");
+	self addMenu(m, "CamoThree", "^5Camos Part 3");
+	self addOption(m, "Random Camo", ::randomCamo);
+    
+	m = "CamoOne";
+	self addOption(m, "None", ::changeCamo, 0);
+	self addOption(m, "Dusty", ::changeCamo, 1);
+	self addOption(m, "Ice", ::changeCamo, 2);
+	self addOption(m, "Red", ::changeCamo, 3);
+	self addOption(m, "Olive", ::changeCamo, 4);
+	
+	m = "CamoTwo";
+	self addOption(m, "Nevada", ::changeCamo, 5);
+	self addOption(m, "Sahara", ::changeCamo, 6);
+	self addOption(m, "ERDL", ::changeCamo, 7);
+	self addOption(m, "Tiger", ::changeCamo, 8);
+	self addOption(m, "Berlin", ::changeCamo, 9);
+
+	m = "CamoThree";
+	self addOption(m, "Warsaw", ::changeCamo, 10);
+	self addOption(m, "Siberia", ::changeCamo, 11);
+	self addOption(m, "Yukon", ::changeCamo, 12);
+	self addOption(m, "Woodland", ::changeCamo, 13);
+	self addOption(m, "Flora", ::changeCamo, 14);
+	self addOption(m, "Gold", ::changeCamo, 15);
+	
+	m = "ClassPerk";
+	self addOption(m, "Toggle Lightweight Pro", ::givePlayerPerk, "lightweightPro");
+	self addOption(m, "Toggle Flak Jacket Pro", ::givePlayerPerk, "flakJacketPro");
+	self addOption(m, "Toggle Scout Pro", ::givePlayerPerk, "scoutPro");
+	self addOption(m, "Toggle Sleight of Hand Pro", ::givePlayerPerk, "sleightOfHandPro");
+	self addOption(m, "Toggle Ninja Pro", ::givePlayerPerk, "ninjaPro");
+	self addOption(m, "Toggle Tactical Mask Pro", ::givePlayerPerk, "tacticalMaskPro");
 
 	m = "ClassKillstreaks";
+	self addMenu(m, "KillstreaksSupport", "^5Support");
+	self addMenu(m, "KillstreaksLethal", "^5Lethal");
+
+	m = "KillstreaksSupport";
 	self addOption(m, "Spy Plane", ::giveUserKillstreak, "radar_mp");
-	self addOption(m, "RC-XD", ::giveUserKillstreak, "rcbomb_mp");
 	self addOption(m, "Sam Turret", ::giveUserKillstreak, "tow_turret_drop_mp");
 	self addOption(m, "Carepackage", ::giveUserKillstreak, "supply_drop_mp");
+	self addOption(m, "Blackbird", ::giveUserKillstreak, "radardirection_mp");
+
+	m = "KillstreaksLethal";
+	self addOption(m, "RC-XD", ::giveUserKillstreak, "rcbomb_mp");
 	self addOption(m, "Napalm Strike", ::giveUserKillstreak, "napalm_mp");
 	self addOption(m, "Sentry Gun", ::giveUserKillstreak, "autoturret_mp");
-	self addOption(m, "Blackbird", ::giveUserKillstreak, "radardirection_mp");
 	self addOption(m, "Valkyrie Rocket", ::giveUserKillstreak, "m220_tow_mp");
 	self addOption(m, "Grim Reaper", ::giveUserKillstreak, "m202_flash_mp");
 	self addOption(m, "Minigun", ::giveUserKillstreak, "minigun_mp");
@@ -1725,14 +1721,6 @@ isLauncherWeapon(weapon)
 	}
 }
 
-teleportSelfTo(player)
-{
-	if (isAlive(player))
-	{
-		self SetOrigin(player.origin);
-	}
-}
-
 teleportToCrosshair(player)
 {
 	if (isAlive(player))
@@ -1969,13 +1957,6 @@ customSayAll(msg)
 customSayTeam(msg)
 {
 	self sayTeam(msg);
-}
-
-printPlayerXUID(player)
-{
-	xuid = player getXUID();
-	self iprintln(player.name + " XUID:");
-	self iprintln(xuid);
 }
 
 givePlayerFastLast(player)

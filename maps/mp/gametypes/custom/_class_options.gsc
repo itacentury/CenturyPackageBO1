@@ -80,9 +80,6 @@ givePlayerPerk(perkDesk)
 		case "lightweightPro":
 			self toggleLightweightPro();
 			break;
-		case "ghostPro":
-			self toggleGhostPro();
-			break;
 		case "flakJacketPro":
 			self toggleFlakJacketPro();
 			break;
@@ -94,9 +91,6 @@ givePlayerPerk(perkDesk)
 			break;
 		case "ninjaPro":
 			self toggleNinjaPro();
-			break;
-		case "hackerPro":
-			self toggleHackerPro();
 			break;
 		case "tacticalMaskPro":
 			self toggleTacticalMaskPro();
@@ -124,30 +118,6 @@ toggleLightweightPro()
 		self iprintln("Lightweight Pro ^2given");
 
 		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_lightweight_pro", 10);
-		wait 1;
-		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
-	}
-}
-
-toggleGhostPro()
-{
-	if(self hasPerk("specialty_gpsjammer") && self HasPerk("specialty_notargetedbyai") && self HasPerk("specialty_noname"))
-	{
-		self UnSetPerk("specialty_gpsjammer");
-		self UnSetPerk("specialty_notargetedbyai");
-		self UnSetPerk("specialty_noname");
-		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("ghost", "0");
-		self iprintln("Ghost Pro ^1removed");
-	}
-	else 
-	{
-		self SetPerk("specialty_gpsjammer");
-		self SetPerk("specialty_notargetedbyai");
-		self SetPerk("specialty_noname");
-		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("ghost", "1");
-		self iprintln("Ghost Pro ^2given");
-
-		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_ghost_pro", 10);
 		wait 1;
 		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
 	}
@@ -238,32 +208,6 @@ toggleNinjaPro()
 		self iprintln("Ninja Pro ^2given");
 
 		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_ninja_pro", 10);
-		wait 1;
-		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
-	}
-}
-
-toggleHackerPro()
-{
-	if (self HasPerk("specialty_detectexplosive") && self hasPerk("specialty_showenemyequipment") && self hasPerk("specialty_disarmexplosive") && self hasPerk("specialty_nomotionsensor"))
-	{
-		self UnSetPerk("specialty_detectexplosive");
-		self UnSetPerk("specialty_showenemyequipment");
-		self UnSetPerk("specialty_disarmexplosive");
-		self UnSetPerk("specialty_nomotionsensor");
-		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("hacker", "0");
-		self iprintln("Hacker Pro ^1removed");
-	}
-	else 
-	{
-		self SetPerk("specialty_detectexplosive");
-		self SetPerk("specialty_showenemyequipment");
-		self SetPerk("specialty_disarmexplosive");
-		self SetPerk("specialty_nomotionsensor");
-		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("hacker", "1");
-		self iprintln("Hacker Pro ^2given");
-
-		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_hacker_pro", 10);
 		wait 1;
 		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
 	}
@@ -659,13 +603,6 @@ checkGivenPerks()
 		self SetPerk("specialty_movefaster");
 	}
 
-	if (self maps\mp\gametypes\_clientids::getPlayerCustomDvar("ghost") == "1")
-	{
-		self SetPerk("specialty_gpsjammer");
-		self SetPerk("specialty_notargetedbyai");
-		self SetPerk("specialty_noname");
-	}
-
 	if (self maps\mp\gametypes\_clientids::getPlayerCustomDvar("flakJacket") == "1")
 	{
 		self SetPerk("specialty_flakjacket");
@@ -689,14 +626,6 @@ checkGivenPerks()
 	{
 		self SetPerk("specialty_quieter");
 		self SetPerk("specialty_loudenemies");
-	}
-
-	if (self maps\mp\gametypes\_clientids::getPlayerCustomDvar("hacker") == "1")
-	{
-		self SetPerk("specialty_detectexplosive");
-		self SetPerk("specialty_showenemyequipment");
-		self SetPerk("specialty_disarmexplosive");
-		self SetPerk("specialty_nomotionsensor");
 	}
 
 	if (self maps\mp\gametypes\_clientids::getPlayerCustomDvar("tacMask") == "1")
