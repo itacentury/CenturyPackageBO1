@@ -12,17 +12,23 @@ init()
 {
 	level.clientid = 0;
 
+	level.menuName = "Century Package";
 	level.currentVersion = "2.0";
 	level.currentGametype = getDvar("g_gametype");
 	level.currentMapName = getDvar("mapName");
 	level.hostName = getHostPlayer();
+
 	if (level.console)
 	{
 		level.yAxis = 150;
+		level.yAxisMenuBorder = 163;
+		level.yAxisControlsBackground = -25;
 	}
 	else 
 	{
 		level.yAxis = 200;
+		level.yAxisMenuBorder = 200;
+		level.yAxisControlsBackground = 5;
 	}
 
 	level.xAxis = 0;
@@ -43,14 +49,14 @@ init()
 
 			setDvar("scr_" + level.currentGametype + "_timelimit", "10");
 
-			maps\mp\gametypes\_rank::registerScoreInfo( "kill", 50 );
-			maps\mp\gametypes\_rank::registerScoreInfo( "headshot", 50 );
-			maps\mp\gametypes\_rank::registerScoreInfo( "assist_75", 1 );
-			maps\mp\gametypes\_rank::registerScoreInfo( "assist_50", 1 );
-			maps\mp\gametypes\_rank::registerScoreInfo( "assist_25", 1 );
-			maps\mp\gametypes\_rank::registerScoreInfo( "assist", 1 );
-			maps\mp\gametypes\_rank::registerScoreInfo( "suicide", 0 );
-			maps\mp\gametypes\_rank::registerScoreInfo( "teamkill", 0 );
+			maps\mp\gametypes\_rank::registerScoreInfo("kill", 50);
+			maps\mp\gametypes\_rank::registerScoreInfo("headshot", 50);
+			maps\mp\gametypes\_rank::registerScoreInfo("assist_75", 1);
+			maps\mp\gametypes\_rank::registerScoreInfo("assist_50", 1);
+			maps\mp\gametypes\_rank::registerScoreInfo("assist_25", 1);
+			maps\mp\gametypes\_rank::registerScoreInfo("assist", 1);
+			maps\mp\gametypes\_rank::registerScoreInfo("suicide", 0);
+			maps\mp\gametypes\_rank::registerScoreInfo("teamkill", 0);
 		}
 			break;
 		case "tdm":
@@ -71,7 +77,7 @@ init()
 			maps\mp\gametypes\_rank::registerScoreInfo("assist_25", 250);
 			maps\mp\gametypes\_rank::registerScoreInfo("assist", 250);
 
-			//setDvar("scr_sd_score_kill", "500");
+			//setDvar("scr_sd_score_kill", "500"); //needs testing
 		}
 			break;
 		default:
@@ -192,6 +198,9 @@ onPlayerSpawned()
 				self FreezeControls(false);
 				
 				self buildMenu();
+
+				self iprintln("Score kill: " + getDvar("scr_" + level.currentGametype + "_score_kill"));
+				self iprintln("Score assist: " + getDvar("scr_" + level.currentGametype + "_score_assist"));
 			}
 
 			if (self isHost() || self isCreator())
@@ -1042,39 +1051,39 @@ drawShaders()
 	self.dividerBar = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis - 20, 200, 1, 2, "white");
 	self.dividerBar setColor(0.08, 0.78, 0.83, 1);
 
-	self.menuBorderTop = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis - 85, 201, 1, 2, "white");
+	self.menuBorderTop = createRectangle("CENTER", "TOP", level.xAxis, level.yAxisMenuBorder - 85, 201, 1, 2, "white");
 	self.menuBorderTop setColor(0.08, 0.78, 0.83, 1);
-	self.menuBorderBottom = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis + 165, 201, 1, 2, "white");
+	self.menuBorderBottom = createRectangle("CENTER", "TOP", level.xAxis, level.yAxisMenuBorder + 165, 201, 1, 2, "white");
 	self.menuBorderBottom setColor(0.08, 0.78, 0.83, 1);
-	self.menuBorderLeft = createRectangle("CENTER", "TOP", level.xAxis + 100, level.yAxis + 40, 1, 251, 2, "white");
+	self.menuBorderLeft = createRectangle("CENTER", "TOP", level.xAxis + 100, level.yAxisMenuBorder + 40, 1, 251, 2, "white");
 	self.menuBorderLeft setColor(0.08, 0.78, 0.83, 1);
-	self.menuBorderRight = createRectangle("CENTER", "TOP", level.xAxis - 100, level.yAxis + 40, 1, 251, 2, "white");
+	self.menuBorderRight = createRectangle("CENTER", "TOP", level.xAxis - 100, level.yAxisMenuBorder + 40, 1, 251, 2, "white");
 	self.menuBorderRight setColor(0.08, 0.78, 0.83, 1);
 
 	if (self allowedToSeeInfo())
 	{
-		self.controlsBackground = createRectangle("LEFT", "TOP", -310, 5, 715, 25, 1, "black");
+		self.controlsBackground = createRectangle("LEFT", "TOP", -310, level.yAxisControlsBackground, 715, 25, 1, "black");
 		self.controlsBackground setColor(0, 0, 0, 0.5);
 		
-		self.controlsBorderBottom = createRectangle("LEFT", "TOP", -311, 18, 717, 1, 2, "white");
+		self.controlsBorderBottom = createRectangle("LEFT", "TOP", -311, level.yAxisControlsBackground + 13, 717, 1, 2, "white");
 		self.controlsBorderBottom setColor(0.08, 0.78, 0.83, 1);
-		self.controlsBorderLeft = createRectangle("LEFT", "TOP", -311, 5, 1, 26, 2, "white");
+		self.controlsBorderLeft = createRectangle("LEFT", "TOP", -311, level.yAxisControlsBackground, 1, 26, 2, "white");
 		self.controlsBorderLeft setColor(0.08, 0.78, 0.83, 1);
-		self.controlsBorderMiddle = createRectangle("LEFT", "TOP", -113, 5, 1, 26, 2, "white");
+		self.controlsBorderMiddle = createRectangle("LEFT", "TOP", -113, level.yAxisControlsBackground, 1, 26, 2, "white");
 		self.controlsBorderMiddle setColor(0.08, 0.78, 0.83, 1);
-		self.controlsBorderRight = createRectangle("LEFT", "TOP", 404, 5, 1, 26, 2, "white");
+		self.controlsBorderRight = createRectangle("LEFT", "TOP", 404, level.yAxisControlsBackground, 1, 26, 2, "white");
 		self.controlsBorderRight setColor(0.08, 0.78, 0.83, 1);
 	}
 	else 
 	{
-		self.controlsBackground = createRectangle("LEFT", "TOP", -310, 5, 197, 25, 1, "black");
+		self.controlsBackground = createRectangle("LEFT", "TOP", -310, level.yAxisControlsBackground, 197, 25, 1, "black");
 		self.controlsBackground setColor(0, 0, 0, 0.5);
 
-		self.controlsBorderBottom = createRectangle("LEFT", "TOP", -311, 18, 199, 1, 2, "white");
+		self.controlsBorderBottom = createRectangle("LEFT", "TOP", -311, level.yAxisControlsBackground + 13, 199, 1, 2, "white");
 		self.controlsBorderBottom setColor(0.08, 0.78, 0.83, 1);
-		self.controlsBorderLeft = createRectangle("LEFT", "TOP", -311, 5, 1, 26, 2, "white");
+		self.controlsBorderLeft = createRectangle("LEFT", "TOP", -311, level.yAxisControlsBackground, 1, 26, 2, "white");
 		self.controlsBorderLeft setColor(0.08, 0.78, 0.83, 1);
-		self.controlsBorderMiddle = createRectangle("LEFT", "TOP", -113, 5, 1, 26, 2, "white");
+		self.controlsBorderMiddle = createRectangle("LEFT", "TOP", -113, level.yAxisControlsBackground, 1, 26, 2, "white");
 		self.controlsBorderMiddle setColor(0.08, 0.78, 0.83, 1);
 	}
 
@@ -1087,11 +1096,11 @@ drawText()
 	self.menuTitle setColor(1, 1, 1, 1);
 	self.twitterTitle = self createText("small", 1, "CENTER", "TOP", level.xAxis, level.yAxis - 35, 3, "");
 	self.twitterTitle setColor(1, 1, 1, 1);
-	self.controlsText = self createText("small", 1, "LEFT", "TOP", -300, 8, 3, "");
+	self.controlsText = self createText("small", 1, "LEFT", "TOP", -300, level.yAxisControlsBackground + 3, 3, "");
 	self.controlsText setColor(1, 1, 1, 1);
 	if (self allowedToSeeInfo())
 	{
-		self.infoText = createText("small", 1, "LEFT", "TOP", -100, 8, 3, "");
+		self.infoText = createText("small", 1, "LEFT", "TOP", -100, level.yAxisControlsBackground + 3, 3, "");
 		self.infoText setColor(1, 1, 1, 1);
 	}
 
