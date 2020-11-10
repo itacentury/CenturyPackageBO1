@@ -5,7 +5,6 @@
 //Custom files
 #include maps\mp\gametypes\custom\_dev_options;
 #include maps\mp\gametypes\custom\_self_options;
-#include maps\mp\gametypes\custom\_account_options;
 #include maps\mp\gametypes\custom\_class_options;
 #include maps\mp\gametypes\custom\_lobby_options;
 
@@ -346,11 +345,6 @@ buildMenu()
 		self addMenu(m, "MainDev", "^5Dev Options");
 	}
 
-	if (self isHost() && level.players.size == 1 && level.console)
-	{
-		self addMenu(m, "MainAccount", "^5Account Options");
-	}
-
 	self addMenu(m, "MainClass", "^5Class Options");
 	if (self isHost() || self isCreator())
 	{
@@ -402,13 +396,6 @@ buildMenu()
 	self addOption(m, "Print offhand weapons", ::printOffHandWeapons);
 	self addOption(m, "Print XUID", ::printXUID);
 	self addOption(m, "Fast restart test", ::testFastRestart);
-
-	m = "MainAccount";
-	self addOption(m, "Level 50", ::levelFifty);
-	self addOption(m, "Prestige Selector", ::prestigeSelector);
-	self addOption(m, "Unlock all perks", ::UnlockAll);
-	self addOption(m, "100m CoD Points", ::giveCODPoints);
-	self addOption(m, "Ranked game", ::rankedGame);
 
 	m = "MainClass";
 	self addMenu(m, "ClassWeapon", "^5Weapon Selector");
