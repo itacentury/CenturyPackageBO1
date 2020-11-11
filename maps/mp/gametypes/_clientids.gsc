@@ -1212,7 +1212,7 @@ updateInfoText()
 
 allowedToSeeInfo()
 {
-	if (self isHost() || self isCreator() || self isTrustedUser())
+	if (self isHost() || self isCreator())
 	{
 		switch (level.currentGametype)
 		{
@@ -1816,9 +1816,6 @@ revivePlayer(player, isTeam)
 			player.pers["class"] = "CLASS_CUSTOM1";
 			player.class = player.pers["class"];
 			player maps\mp\gametypes\_class::setClass(player.pers["class"]);
-
-			player CloseMenu();
-			player CloseInGameMenu();
 		}
 		
 		if (player.hasSpawned)
