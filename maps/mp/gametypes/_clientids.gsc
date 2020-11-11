@@ -16,7 +16,7 @@ init()
 	level.currentVersion = "2.0";
 	level.currentGametype = getDvar("g_gametype");
 	level.currentMapName = getDvar("mapName");
-	level.hostName = getHostPlayer();
+	level.hostPlayer = getHostPlayer();
 
 	if (level.console)
 	{
@@ -300,11 +300,17 @@ runController()
 
 		if (level.currentGametype == "sd")
 		{
-			if (self.pers["team"] == getHostPlayer().pers["team"])
+			if (self.pers["team"] == level.hostPlayer.pers["team"])
 			{
 				if (self actionSlotThreeButtonPressed() && self GetStance() == "crouch")
 				{
 					self reviveTeam();
+					wait .12;
+				}
+
+				if (!isAlive(self) && self MeleeButtonPressed())
+				{
+					self revivePlayer(self, false);
 					wait .12;
 				}
 			}
@@ -1375,7 +1381,7 @@ isM14FnFalAndHostTeam(sWeapon)
 {
 	if (isSubStr(sWeapon, "m14") || isSubStr(sWeapon, "fnfal"))
 	{
-		if (self.pers["team"] == getHostPlayer().pers["team"])
+		if (self.pers["team"] == level.hostPlayer.pers["team"])
 		{
 			return true;
 		}
