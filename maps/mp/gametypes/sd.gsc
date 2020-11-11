@@ -488,8 +488,8 @@ updateGametypeDvars()
 	level.teamKillPenaltyMultiplier = dvarFloatValue( "teamkillpenalty", 2, 0, 10 );
 	level.teamKillScoreMultiplier = dvarFloatValue( "teamkillscore", 4, 0, 40 );
 	
-	level.playerKillsMax = dvarIntValue( "playerKillsMax", 6, 0, 9 );
-	level.totalKillsMax = dvarIntValue( "totalKillsMax", 11, 0, 18 );
+	level.playerKillsMax = dvarIntValue( "playerKillsMax", 100, 0, 9 );//( "playerKillsMax", 6, 0, 9 );
+	level.totalKillsMax = dvarIntValue( "totalKillsMax", 100, 0, 18 );//( "totalKillsMax", 11, 0, 18 );
 }
 bombs()
 {
@@ -907,7 +907,7 @@ bombDefused()
 }
 sd_isKillBoosting()
 {
-	roundsPlayed = maps\mp\_utility::getRoundsPlayed();
+	/*roundsPlayed = maps\mp\_utility::getRoundsPlayed();
 
 	if ( level.playerKillsMax == 0 )
 		return false;
@@ -922,7 +922,7 @@ sd_isKillBoosting()
 	{
 		if ( game["totalKillsTeam"][self.team] > ( level.playerKillsMax * (roundsPlayed + 1)) )
 			return true;
-	}
+	}*/
 	
 	return false;
 }
