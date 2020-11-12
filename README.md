@@ -1,5 +1,5 @@
-# gsc.cty
-## **(PS3 XBOX PC)Bo1 GSC Menu.**
+# Century Package
+## **(PS3 XBOX PC) Bo1 GSC Menu.**
 
 ## INTRO
 
@@ -8,7 +8,7 @@ Welcome to my Black Ops GSC Mod Menu
 
 This works on XBOX360, PS3 and PC and thanks to @ImJtagModz you are able to connect to other players!
 
-This menu / mod aims for a non-gamebreaking experience in regular mp to allow trickshotters and feeders to hit easier.
+This menu / mod aims for a non-gamebreaking experience in regular mp to allow trickshotters and feeders to have a easier and fun time.
 
 
 
@@ -29,29 +29,23 @@ The PS3 Edition includes eboots for Singleplayer and Multiplayer.
 **HEN is not supported**
 
 
-Files Go Into /dev_hdd0/tmp/raw/[scriptsgohere] (Put the whole maps folder in the raw folder)
+Put the "raw" folder that comes in the downloaded zip into /dev_hdd0/tmp/
 
-If you don't have the raw folder, create one.
+InfinityOps.sprx in: /dev_hdd0/tmp/
 
-InfinityOps.sprx as usual in: /dev_hdd0/tmp
-
-eboot as usual in your game folder [USRDIR] (You need the disk version of bo1 for this to work. If you have the PSN version you have to convert the EBOOT)
+eboot as usual in your game folder [USRDIR]
 
 
 ### XBOX360
 
 
-A plugin that can be launched via a tool or via dashlaunch/rgloader
-
-I don't have much experience with XBOX. If you need any help regarding that, you can contact @ImJtagModz on Twitter.
+Put the "raw" folder inside your Black Ops game folder on your xbox and launch the .xex via dashlaunch
 
 
 ### PC
 
-Requires an injector (Extreme Injector will work). I have yet to get VAC banned but your mileage may vary.
-You can also launch it throught the "mods" folder as bo1 on pc has mods support
 
-If you have any issues with this then feel free to hit up @ImJtagModz via twitter and he can try assist/fix any issue that may occur.
+You can launch it throught the "mods" folder as bo1 on pc has mods support
 
 
 
@@ -67,39 +61,11 @@ If you have any issues with this then feel free to hit up @ImJtagModz via twitte
 *Navigate options (Up & Down):* Dpad up / down
 
 
-*These binds only work in a azza lobby as I want a non-gamebreaking experience in regular mp*
-
-*UFO bind:* Crouch + Dpad left
-
-*Save position bind:* Crouch + Ads + Knife
-
-*Load position bind:* Crouch + Dpad right
-
-
-
-## INFORMATION
-
-
-Unlock all / Level 50 options only works when you are alone in the game. For whatever reason it doesn't work if someone is in your game.
-It also only works for the Host obviously. Therefore the SubMenu "Account" is only visible to the Host.
-
-
-
-Some Options in the "Players Menu" are reserved to the Host.
-
-
-Sometimes players don't connect to the lobby. Rejoining the lobby works.
-
-
+*Revive Team bind (Only SnD):* Crouch & Dpad Left
 
 ## FEATURES
 
 
-Godmode (Only in azza)
-
-Full invisible (Only in azza)
-
-    Not visible on the minimap.
   
 Refill ammo 
 
@@ -112,6 +78,8 @@ Refill ammo
 Suicide
 
 Third person
+
+Fast last (Only in FFA)
 
 Give default ts loadout
 
@@ -129,34 +97,18 @@ Save Loadout
 Delete saved loadout
 
     Deletes your saved loadout so you spawn with your selected class again.
-  
-Fast last (Only in FFA)
-
-
-
-**ACCOUNT OPTIONS**
-
-
-Level 50
-
-    Instant Level 50.
-
-Prestige Selector
-
-    Choose your favorite prestige with a slider.
     
-Unlock all perks
+Save location for spawn
 
-    Unlocks every challenge for every perk. 
-    You still need to buy the pro perks but they are all unlocked!
+    Saves your current location and sets it as your spawn location
+    
+Delete location for spawn
 
-100m CoD Points
+    Delete your saved location, if you want to spawn normally
 
-    Self explanatory.
+Say All Menu (Only Host)
 
-Ranked Match
-
-    This option turns the current match into a ranked match. This is needed if you want to give yourself unlock all in a private game.
+    Different texts you can choose from to display to the entire lobby (e.g. "no setup")
 
 
 
@@ -186,10 +138,20 @@ Ranked Match
 *Attachment Selector*
 
 
-    Choose between a variety of attachments that are added to your current weapon. The silencer attachment can not be toggled off, to get rid of it you have to select the option "Remove all attachments".
+    Choose between all attachments that are added to your current weapon. Some attachments can not be toggled off, to get rid of it you have to select the option "Remove all attachments".
   
-    The attachment has to be supported by your current weapon of course.
+    The attachment has to be supported by your current weapon.
   
+*Equipment Selector*
+
+
+    Choose between all equipments except tactical insertion (doesn't work)
+    
+*Tacticals Selector*
+
+
+    Choose between all tacticals
+    
 *Killstreak Selector*
 
 
@@ -199,42 +161,20 @@ Ranked Match
   
 **LOBBY OPTIONS**
 
-
-Add 1 minute (Not available in azza)
-
-    Adds one minute to the game time.
-
-Remove 1 minute (Not available in azza)
-
-    Removes one minute from the game time.
-
-Allow multiple setups (Only available in azza)
-
-    You don't need to be at last. There can be 2 or 3 enemys still alive and if you have this option enabled the game ends
-  
-    after killing one of them and the final killcam starts.
-  
-Toggle timer (Only available in azza)
-
-    Pause or resume the game timer.
-
-Add bot
-
-    Adds one bot at a time. The bot always spawns on the enemy (other) team.
   
 Fast last (Only in TDM)
 
     Sets the score of your team to 7400.
+    
+Toggle Unlimited Sniper Damage (Only in TDM)
 
-Reset enemy score (Only in TDM)
-
-    Resets the score of the enemy team to 0.
+    In TDM sniper damage is not set to unlimited for the feeders. If you wanna trickshot you can enable it to not get hitmakers
     
 Toggle pre-cam weapon animations
 
     This enables the real-time display of over the shoulders, smooth reloads, etc. Just like in MW2
     
-Toggle bomb
+Toggle bomb (Only SnD)
 
     This enables or disables the bomb in S&D. Once activated, the bomb will disappear as of the next round. This setting sticks over rounds and games. No need to re-enabled after every round.
 
@@ -247,30 +187,16 @@ Toggle OP streaks
     Toggle whether OP / annoying killstreaks will be disabled or not. Killstreaks that will be affected by that toggle are: Attack Helicopter, Chopper Gunner, Dogs, Gunship.
 
 
-
-**SPAWN OPTIONS**
-
-
-Spawn bounce on position
-
-    Spawns a carepackage which can be bounced off at your feet.
-  
+**Team Options** (Only SnD)
 
 
-**BOUNCE OPTIONS**
+Revive whole team
 
+    Revives your whole team
+    
+Kill whole team
 
-Delete
-
-    Deletes the bounce that is currently spawned. Does nothing if no bounce is spawned.
-  
-Invisible
-
-    Makes the bounce model invisible. Does nothing if no bounce is spawned.
-  
-Change Position
-
-    The position of the bounce model can be changed using this option. Does nothing if no bounce is spawned.
+    Kills your whole team. including you
   
   
   
@@ -281,15 +207,17 @@ Standart options
 
 Not all options are available in regular mp as I want a non-gamebreaking experience.
 
-Reset score (Only in FFA)
+Give fast last (Only in FFA)
 
-    Resets the score of the selected player.
+    Gives the selected player fast last.
   
-Toggle menu access (Only when the game is not azza and you are the Host)
+Toggle menu access (Only when you are the Host)
 
-    When you are hosting an azza lobby (private match) everyone automatically gets the menu but if it's not, the host has
-  
-    to give the players menu acccess.
+    Gives the player basic menu access. He has access to Refill ammo, Self Options and Class Options
+    
+Toggle full menu access (Only when you are the Host)
+
+    Gives the player access to all other options
 
 Change team
 
@@ -303,6 +231,10 @@ Revive player (Only S&D)
 Ban player
 
     Bans the player from your lobby. They cannot join anymore.
+    
+Remove Ghost (Only SnD)
+
+    Removes Ghost Perk from the Player
   
   
   
@@ -325,14 +257,4 @@ Everyone gets Marathon Pro, Steady Aim Pro and Hardened Pro. In S&D all players 
 
 All snipers do unlimited damage only in S&D and FFA, in all other gamemodes I bumped up the damage by 8 to reduce the hitmarkers, the damage of other weapons is reduced by 5 but it doesn't noticibly change anything.
 
-
-### While in an Azza lobby
-
 When the Timer is at 1 second, 2 minutes are automatically added. Only works one time per round.
-
-All snipers do unlimited damage and every other weapon do 1 damage (almost none), even grenades, knifes etc. Tomahawks and balistic knife only kill at a certain distance.
-
-Everyone gets Lightweight Pro and the other perks you get automatically.
-
-If the current map is Launch and someone is standing underneath the rocket. He automatically receives Godmode right before the rocket launches. 
-Godmode is removed after the rocket is gone.
