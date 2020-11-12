@@ -307,12 +307,6 @@ runController()
 					self reviveTeam();
 					wait .12;
 				}
-
-				if (!isAlive(self) && self MeleeButtonPressed())
-				{
-					self revivePlayer(self, false);
-					wait .12;
-				}
 			}
 
 			if (self isHost())
@@ -365,14 +359,14 @@ buildMenu()
 	m = "MainSelf";
 	self addOption(m, "Suicide", ::doSuicide);
 	self addOption(m, "Third Person", ::ToggleThirdPerson);
-	if (level.currentGametype != "sd")
-	{
-		self addMenu(m, "SelfLocation", "^5Location Options");
-	}
-
 	if (level.currentGametype == "dm" && (self isHost() || self isCreator() || self isTrustedUser()))
 	{		
 		self addOption(m, "Fast last", ::fastLast);
+	}
+	
+	if (level.currentGametype != "sd")
+	{
+		self addMenu(m, "SelfLocation", "^5Location Options");
 	}
 
 	self addMenu(m, "SelfLoadout", "^5Loadout Options");
