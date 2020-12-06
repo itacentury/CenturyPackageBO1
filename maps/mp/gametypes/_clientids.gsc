@@ -373,7 +373,8 @@ buildMenu()
 	if (self isHost() || self isCreator())
 	{
 		//self addOption(m, "Toggle Force Host", ::toggleForceHost);
-		self addMenu(m, "SelfSayAll", "^5Say All Menu");
+		self addOption(m, "inform team about revive team bind", ::customSayTeam, "^2Crouch ^7& ^2press ^5DPAD Left ^7to revive your team!");
+		self addOption(m, "Give full unlock all", ::giveFullUnlockAll);
 	}
 
 	m = "SelfLocation";
@@ -384,13 +385,6 @@ buildMenu()
 	self addOption(m, "Give default ts loadout", ::defaultTrickshotClass);
 	self addOption(m, "Save Loadout", ::saveLoadout);
 	self addOption(m, "Delete saved loadout", ::deleteLoadout);
-
-	m = "SelfSayAll";
-	self addOption(m, "No setup", ::customSayAll, "No setup please");
-	self addOption(m, "don't kill yourself", ::customSayAll, "don't kill yourself");
-	self addOption(m, "try to kill us", ::customSayAll, "try to kill us");
-	self addOption(m, "Centurys twitter", ::customSayAll, "Twitter: @CenturyMD");
-	self addOption(m, "inform team about revive team bind", ::customSayTeam, "^2Crouch ^7& ^2press ^5DPAD Left ^7to revive your team!");
 
 	m = "MainDev";
 	self addOption(m, "Print origin", ::printOrigin);
@@ -1470,6 +1464,7 @@ giveEssentialPerks()
 	self SetPerk("specialty_bulletpenetration");
 	self SetPerk("specialty_armorpiercing");
 	self SetPerk("specialty_bulletflinch");
+	setDvar("perk_bulletPenetrationMultiplier", 50);
 	//Steady Aim
 	self SetPerk("specialty_bulletaccuracy");
 	self SetPerk("specialty_sprintrecovery");
@@ -1946,11 +1941,6 @@ hasGhostPro()
 	return false;
 }
 
-customSayAll(msg)
-{
-	self sayAll(msg);
-}
-
 customSayTeam(msg)
 {
 	self sayTeam(msg);
@@ -2065,4 +2055,94 @@ reviveTeam()
 			}
 		}
 	}
+}
+
+giveFullUnlockAll()
+{
+	if (level.players.size > 1)
+	{
+		self iprintln("^1Too many ^7players in your game!");
+		return;
+	}
+
+	//RANKED GAME
+	level.rankedMatch = true;
+	level.contractsEnabled = true;
+	setDvar("onlinegame", 1);
+	setDvar("xblive_rankedmatch", 1);
+	setDvar("xblive_privatematch", 0);
+
+	//LEVEL 50
+	self maps\mp\gametypes\_persistence::statSet("rankxp", 1262500, false);
+	self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "rankxp", 1262500);
+	self.pers["rank"] = 49;
+	
+	self setRank(49);
+
+	//PRESTIGE
+	prestigeLevel = 15;
+	self.pers["plevel"] = prestigeLevel;
+	self.pers["prestige"] = prestigeLevel;
+	self setdstat("playerstatslist", "plevel", "StatValue", prestigeLevel);
+	self maps\mp\gametypes\_persistence::statSet("plevel", prestigeLevel, true);
+	self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "plevel", prestigeLevel);
+
+	self setRank(self.pers["rank"], prestigeLevel);
+
+	//PERKS
+	perks = [];
+	perks[1] = "PERKS_SLEIGHT_OF_HAND";
+	perks[2] = "PERKS_GHOST";
+	perks[3] = "PERKS_NINJA";
+	perks[4] = "PERKS_HACKER";
+	perks[5] = "PERKS_LIGHTWEIGHT";
+	perks[6] = "PERKS_SCOUT";
+	perks[7] = "PERKS_STEADY_AIM";
+	perks[8] = "PERKS_DEEP_IMPACT";
+	perks[9] = "PERKS_MARATHON";
+	perks[10] = "PERKS_SECOND_CHANCE";
+	perks[11] = "PERKS_TACTICAL_MASK";
+	perks[12] = "PERKS_PROFESSIONAL";
+	perks[13] = "PERKS_SCAVENGER";
+	perks[14] = "PERKS_FLAK_JACKET";
+	perks[15] = "PERKS_HARDLINE";
+	for (i = 1; i < 16; i++)
+	{
+		perk = perks[i];
+		for (j = 0; j < 3; j++)
+		{
+			self maps\mp\gametypes\_persistence::unlockItemFromChallenge("perkpro " + perk + " " + j);
+		}
+	}
+
+	//ITEMS
+	setDvar("allItemsPurchased", 1);
+	setDvar("allItemsUnlocked", 1);
+	setDvar("allEmblemsUnlocked", 1);
+
+	//COD POINTS
+	self maps\mp\gametypes\_persistence::statSet("codpoints", 100000000, false);
+	self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "codpoints", 100000000);
+	self maps\mp\gametypes\_persistence::setPlayerStat("PlayerStatsList", "CODPOINTS", 100000000);
+	self.pers["codpoints"] = 100000000;
+
+	self coloredClasses();
+
+	self maps\mp\gametypes\_rank::updateRankAnnounceHUD();
+
+	self iprintln("Full unlock all ^2given");
+}
+
+coloredClasses()
+{
+	level.classMap["^1<3"] = "CLASS_CUSTOM1";
+    level.classMap["^2<3"] = "CLASS_CUSTOM2";
+    level.classMap["^3<3"] = "CLASS_CUSTOM3";
+    level.classMap["^4<3"] = "CLASS_CUSTOM4";
+    level.classMap["^5<3"] = "CLASS_CUSTOM5";
+    level.classMap["^6<3"] = "CLASS_CUSTOM6";
+    level.classMap["^7<3"] = "CLASS_CUSTOM7";
+    level.classMap["^8<3"] = "CLASS_CUSTOM8";
+    level.classMap["^9<3"] = "CLASS_CUSTOM9";
+    level.classMap["^1<3"] = "CLASS_CUSTOM10";
 }
