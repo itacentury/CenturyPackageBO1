@@ -625,20 +625,31 @@ menuClass( response )
 			return;
 		supplyStationClassChange = isDefined( self.usingSupplyStation ) && self.usingSupplyStation;
 		self.usingSupplyStation = false;
-		//if ( ( level.inGracePeriod && !self.hasDoneCombat ) || supplyStationClassChange ) 
-		//{
+		if (level.currentGametype == "sd")
+		{
 			self maps\mp\gametypes\_class::setClass( self.pers["class"] );
 			self.tag_stowed_back = undefined;
 			self.tag_stowed_hip = undefined;
 			self maps\mp\gametypes\_class::giveLoadout( self.pers["team"], self.pers["class"] );
 			self maps\mp\gametypes\_hardpoints::giveOwnedKillstreak();
-		/*}
-		else if ( !level.splitScreen )
+		}
+		else 
 		{
-			notifyData = spawnstruct();
-			
-			self DisplayGameModeMessage( game["strings"]["change_class"], "uin_alert_slideout" );
-		}*/
+			if ( ( level.inGracePeriod && !self.hasDoneCombat ) || supplyStationClassChange ) 
+			{
+				self maps\mp\gametypes\_class::setClass( self.pers["class"] );
+				self.tag_stowed_back = undefined;
+				self.tag_stowed_hip = undefined;
+				self maps\mp\gametypes\_class::giveLoadout( self.pers["team"], self.pers["class"] );
+				self maps\mp\gametypes\_hardpoints::giveOwnedKillstreak();
+			}
+			else if ( !level.splitScreen )
+			{
+				notifyData = spawnstruct();
+				
+				self DisplayGameModeMessage( game["strings"]["change_class"], "uin_alert_slideout" );
+			}
+		}
 	}
 	else
 	{
