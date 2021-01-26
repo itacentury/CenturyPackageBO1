@@ -13,10 +13,9 @@ init()
 	level.clientid = 0;
 
 	level.menuName = "Century Package";
-	level.currentVersion = "2.0";
+	level.currentVersion = "2.1";
 	level.currentGametype = getDvar("g_gametype");
 	level.currentMapName = getDvar("mapName");
-	level.hostPlayer = getHostPlayer();
 
 	if (level.console)
 	{
@@ -194,9 +193,12 @@ onPlayerSpawned()
 		{
 			if (self isHost() || self isAdmin() || self isCreator())
 			{
-				self iPrintln("Century Package loaded");
-				self FreezeControls(false);
-				
+				if (level.currentGametype == "sd")
+				{
+					self iPrintln("Century Package loaded");
+					self FreezeControls(false);
+				}
+
 				self buildMenu();
 			}
 
@@ -234,6 +236,11 @@ onPlayerSpawned()
 		if (getDvar("OPStreaksEnabled") == "0")
 		{
 			self thread OPStreaks();
+		}
+
+		if (self GetCurrentWeapon() == "china_lake_mp")
+		{
+			self GiveMaxAmmo("china_lake_mp");
 		}
 
 		self checkGivenPerks();
@@ -300,7 +307,7 @@ runController()
 
 		if (level.currentGametype == "sd")
 		{
-			if (self.pers["team"] == level.hostPlayer.pers["team"])
+			if (self.pers["team"] == getHostPlayer().pers["team"])
 			{
 				if (self actionSlotThreeButtonPressed() && self GetStance() == "crouch")
 				{
@@ -337,6 +344,7 @@ buildMenu()
 	self.menus = [];
 
 	m = "main";
+	//start main
 	self addMenu("", m, "Century Package " + level.currentVersion);
 	self addOption(m, "Refill Ammo", ::refillAmmo);
 	self addMenu(m, "MainSelf", "^5Self Options");
@@ -355,7 +363,9 @@ buildMenu()
 	{
 		self addMenu(m, "MainTeam", "^5Team Options");
 	}
+	//end main
 
+	//start self
 	m = "MainSelf";
 	self addOption(m, "Suicide", ::doSuicide);
 	self addOption(m, "Third Person", ::ToggleThirdPerson);
@@ -372,20 +382,32 @@ buildMenu()
 	self addMenu(m, "SelfLoadout", "^5Loadout Options");
 	if (self isHost() || self isCreator())
 	{
-		//self addOption(m, "Toggle Force Host", ::toggleForceHost);
-		self addOption(m, "inform team about revive team bind", ::customSayTeam, "^2Crouch ^7& ^2press ^5DPAD Left ^7to revive your team!");
-		self addOption(m, "Give full unlock all", ::giveFullUnlockAll);
+		//self addOption(m, "Toggle Force Host", ::toggleForceHost); //not working properly
+		if (level.currentGametype == "sd")
+		{
+			self addOption(m, "inform team about revive team bind", ::customSayTeam, "^2Crouch ^7& ^2press ^5DPAD Left ^7to revive your team!");
+		}
+		if (level.players.size == 1)
+		{
+			self addOption(m, "Give unlock all", ::giveUnlockAll);
+		}
 	}
 
+	//start location
 	m = "SelfLocation";
 	self addOption(m, "Save location for spawn", ::saveLocationForSpawn);
 	self addOption(m, "Delete location for spawn", ::stopLocationForSpawn);
+	//end location
 
+	//start loadout
 	m = "SelfLoadout";
 	self addOption(m, "Give default ts loadout", ::defaultTrickshotClass);
 	self addOption(m, "Save Loadout", ::saveLoadout);
 	self addOption(m, "Delete saved loadout", ::deleteLoadout);
+	//end loadout
+	//end self
 
+	//start dev
 	m = "MainDev";
 	self addOption(m, "Print origin", ::printOrigin);
 	self addOption(m, "Print weapon class", ::printWeaponClass);
@@ -394,7 +416,9 @@ buildMenu()
 	self addOption(m, "Print offhand weapons", ::printOffHandWeapons);
 	self addOption(m, "Print XUID", ::printXUID);
 	self addOption(m, "Fast restart test", ::testFastRestart);
+	//end dev
 
+	//start class
 	m = "MainClass";
 	self addMenu(m, "ClassWeapon", "^5Weapon Selector");
 	self addMenu(m, "ClassGrenades", "^5Grenade Selector");
@@ -406,7 +430,9 @@ buildMenu()
 
 	self buildWeaponMenu();
 	self buildClassMenu();
+	//end class
 
+	//start lobby
 	m = "MainLobby";
 	if (level.currentGametype == "tdm")
 	{
@@ -421,16 +447,23 @@ buildMenu()
 	self addOption(m, "Pre-cam weapon animations", ::precamOTS);
 	self addOption(m, "Toggle own player card in killcam", ::togglePlayercard);
 	self addOption(m, "Toggle OP Streaks", ::toggleOPStreaks);
+	//end lobby
 
+	//start team
 	m = "MainTeam";
 	self addOption(m, "Revive whole team", ::reviveTeam);
 	self addOption(m, "Kill whole team", ::killTeam);
+	//end team
 
+	//start main
+	m = "main";
 	if (self isHost() || self isCreator() || self isTrustedUser())
 	{
-		self addMenu("main", "MainPlayers", "^5Players Menu");
+		self addMenu(m, "MainPlayers", "^5Players Menu");
 	}
+	//end main
 
+	//start players
 	m = "MainPlayers";
 	if (!level.teamBased)
 	{
@@ -524,6 +557,7 @@ buildMenu()
 			}
 		}
 	}
+	//end players
 }
 
 buildWeaponMenu()
@@ -1118,7 +1152,7 @@ updateText()
 	self.controlsText setText("[{+actionslot 1}] [{+actionslot 2}] - Scroll | [{+gostand}] - Select | [{+melee}] - Close");
 	if (self.menus[self.currentMenu].title == "Century Package " + level.currentVersion)
 	{
-		self.twitterTitle setText("@CenturyMD");
+		self.twitterTitle setText("@CenturyGHK");
 	}
 	else 
 	{
@@ -1332,7 +1366,7 @@ onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeap
 {
 	if (sMeansOfDeath != "MOD_TRIGGER_HURT" && sMeansOfDeath != "MOD_FALLING" && sMeansOfDeath != "MOD_SUICIDE") 
 	{
-		if (maps\mp\gametypes\_missions::getWeaponClass( sWeapon ) == "weapon_sniper" || eInflictor isM14FnFalAndHostTeam(sWeapon))
+		if (maps\mp\gametypes\_missions::getWeaponClass( sWeapon ) == "weapon_sniper" || self isM14FnFalAndHostTeam(sWeapon))
 		{
 			if (level.currentGametype == "sd" || level.currentGametype == "dm" || level.tdmUnlimitedDmg)
 			{
@@ -1367,14 +1401,9 @@ onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeap
 
 isM14FnFalAndHostTeam(sWeapon)
 {
-	if (isSubStr(sWeapon, "m14") || isSubStr(sWeapon, "fnfal"))
+	if ((isSubStr(sWeapon, "m14") || isSubStr(sWeapon, "fnfal")) && self.pers["team"] == getHostPlayer().pers["team"])
 	{
-		if (self.pers["team"] == level.hostPlayer.pers["team"])
-		{
-			return true;
-		}
-
-		return false;
+		return true;
 	}
 
 	return false;
@@ -1458,17 +1487,17 @@ giveEssentialPerks()
 		//Lightweight
 		self setPerk("specialty_movefaster");
 		self setPerk("specialty_fallheight");
+		//Steady Aim
+		self SetPerk("specialty_bulletaccuracy");
+		self SetPerk("specialty_sprintrecovery");
+		self SetPerk("specialty_fastmeleerecovery");
 	}
 
 	//Hardened
 	self SetPerk("specialty_bulletpenetration");
 	self SetPerk("specialty_armorpiercing");
 	self SetPerk("specialty_bulletflinch");
-	setDvar("perk_bulletPenetrationMultiplier", 50);
-	//Steady Aim
-	self SetPerk("specialty_bulletaccuracy");
-	self SetPerk("specialty_sprintrecovery");
-	self SetPerk("specialty_fastmeleerecovery");
+	setDvar("perk_bulletPenetrationMultiplier", 100);
 	//Marathon
 	self SetPerk("specialty_unlimitedsprint");
 
@@ -1787,6 +1816,11 @@ waitChangeClassGiveEssentialPerks()
 		{
 			self thread OPStreaks();
 		}
+
+		if (self GetCurrentWeapon() == "china_lake_mp")
+		{
+			self GiveMaxAmmo("china_lake_mp");
+		}
 	}
 }
 
@@ -2057,7 +2091,7 @@ reviveTeam()
 	}
 }
 
-giveFullUnlockAll()
+giveUnlockAll()
 {
 	if (level.players.size > 1)
 	{
@@ -2115,34 +2149,35 @@ giveFullUnlockAll()
 		}
 	}
 
-	//ITEMS
-	setDvar("allItemsPurchased", 1);
-	setDvar("allItemsUnlocked", 1);
-	setDvar("allEmblemsUnlocked", 1);
-
 	//COD POINTS
-	self maps\mp\gametypes\_persistence::statSet("codpoints", 100000000, false);
-	self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "codpoints", 100000000);
-	self maps\mp\gametypes\_persistence::setPlayerStat("PlayerStatsList", "CODPOINTS", 100000000);
-	self.pers["codpoints"] = 100000000;
+	points = 1000000000;
+	self maps\mp\gametypes\_persistence::statSet("codpoints", points, false);
+	self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "codpoints", points);
+	self maps\mp\gametypes\_persistence::setPlayerStat("PlayerStatsList", "CODPOINTS", points);
+	self.pers["codpoints"] = points;
 
-	self coloredClasses();
+	//ITEMS
+	setDvar("allItemsPurchased", true);
+	setDvar("allItemsUnlocked", true);
+
+	//EMBLEMS
+	setDvar("allEmblemsPurchased", true);
+	setDvar("allEmblemsUnlocked", true);
+
+	setDvar("ui_items_no_cost", "1");
+	setDvar("lb_prestige", true);
+	
+	//ITEMS
+	self setClientDvar("allItemsPurchased", true);
+	self setClientDvar("allItemsUnlocked", true);
+	
+	//EMBLEMS
+	self setClientDvar("allEmblemsPurchased", true);
+	self setClientDvar("allEmblemsUnlocked", true);
+	
+	self setClientDvar("ui_items_no_cost", "1");
+	self setClientDvar("lb_prestige", true);
 
 	self maps\mp\gametypes\_rank::updateRankAnnounceHUD();
-
 	self iprintln("Full unlock all ^2given");
-}
-
-coloredClasses()
-{
-	level.classMap["^1<3"] = "CLASS_CUSTOM1";
-    level.classMap["^2<3"] = "CLASS_CUSTOM2";
-    level.classMap["^3<3"] = "CLASS_CUSTOM3";
-    level.classMap["^4<3"] = "CLASS_CUSTOM4";
-    level.classMap["^5<3"] = "CLASS_CUSTOM5";
-    level.classMap["^6<3"] = "CLASS_CUSTOM6";
-    level.classMap["^7<3"] = "CLASS_CUSTOM7";
-    level.classMap["^8<3"] = "CLASS_CUSTOM8";
-    level.classMap["^9<3"] = "CLASS_CUSTOM9";
-    level.classMap["^1<3"] = "CLASS_CUSTOM10";
 }
