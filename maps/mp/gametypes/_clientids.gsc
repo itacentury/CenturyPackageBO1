@@ -1374,13 +1374,11 @@ onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeap
 			}
 			else
 			{
-				iDamage += 10;
+				iDamage += 12;
 			}
 		}
 		else 
 		{
-			iDamage -= 5;
-
 			if (level.currentGametype == "sd")
 			{
 				if (sMeansOfDeath == "MOD_GRENADE_SPLASH" || sMeansOfDeath == "MOD_PROJECTILE_SPLASH")
@@ -1401,9 +1399,14 @@ onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeap
 
 isM14FnFalAndHostTeam(sWeapon)
 {
-	if ((isSubStr(sWeapon, "m14") || isSubStr(sWeapon, "fnfal")) && self.pers["team"] == getHostPlayer().pers["team"])
+	if ((isSubStr(sWeapon, "m14") || isSubStr(sWeapon, "fnfal")))
 	{
-		return true;
+		if (self.pers["team"] == getHostPlayer().pers["team"])
+		{
+			return true;
+		}
+		
+		return false;
 	}
 
 	return false;
