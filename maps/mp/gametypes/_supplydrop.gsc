@@ -14,7 +14,7 @@ init()
 	level.supplyDropHelicopterEnemy = "vehicle_ch46e_mp_dark";
 	level.suppyDropHelicopterVehicleInfo = "heli_supplydrop_mp";
 	
-	level.crateOwnerUseTime = 3000;
+	level.crateOwnerUseTime = 1000; //3000
 	level.crateNonOwnerUseTime = 3000;
 	level.crate_headicon_offset = (0, 0, 15);
 
