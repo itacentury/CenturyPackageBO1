@@ -16,6 +16,9 @@ init()
 	level.currentVersion = "2.1";
 	level.currentGametype = getDvar("g_gametype");
 	level.currentMapName = getDvar("mapName");
+	
+	setDvar("OPStreaksEnabled", "0");
+	setDvar("killcam_final", "1");
 
 	if (level.console)
 	{
