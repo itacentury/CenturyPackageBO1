@@ -106,7 +106,10 @@ OPStreaks()
 	{
 		if (isForbiddenStreak(self.killstreak[i]))
 		{
-			self.killstreak[i] = "killstreak_null";
+			if (isDefined(self.killstreak[i]))
+			{
+				self.killstreak[i] = "killstreak_null";
+			}
 		}
 	}
 }
