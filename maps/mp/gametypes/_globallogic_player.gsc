@@ -26,27 +26,34 @@ Callback_PlayerConnect()
 	
 	if( !level.splitscreen && !isdefined( self.pers["score"] ) )
 	{
-		name = self maps\mp\gametypes\_clientids::getNameNotClan();
-		nameLower = toLower(name);
-		if (isSubStr(nameLower, "wazer"))
+		if (level.currentGametype == "sd" || level.currentGametype == "dm")
 		{
-			iprintln("gay ass destroyer wazer joined the game");
-		}
-		else if (isSubStr(nameLower, "century"))
-		{
-			iprintln("CenTurY, the Creator Connected");
-		}
-		else if (isSubStr(nameLower, "akeel"))
-		{
-			iprintln("big dick akeel joined the game");
-		}
-		else if (isSubStr(nameLower, "grams"))
-		{
-			iprintln("Grams joined the game #AscentForever");
-		}
-		else if (isSubStr(nameLower, "pago"))
-		{
-			iprintln("Pago, Milf hunter, joined the game");
+			name = self maps\mp\gametypes\_clientids::getNameNotClan();
+			nameLower = toLower(name);
+			if (isSubStr(nameLower, "wazer"))
+			{
+				iprintln("gay ass destroyer wazer joined the game");
+			}
+			else if (isSubStr(nameLower, "century"))
+			{
+				iprintln("CenTurY, the Creator Connected");
+			}
+			else if (isSubStr(nameLower, "akeel"))
+			{
+				iprintln("big dick akeel joined the game");
+			}
+			else if (isSubStr(nameLower, "grams"))
+			{
+				iprintln("Grams joined the game #AscentForever");
+			}
+			else if (isSubStr(nameLower, "pago"))
+			{
+				iprintln("Pago, Milf hunter, joined the game");
+			}
+			else
+			{
+				iPrintLn(&"MP_CONNECTED", self);
+			}
 		}
 		else
 		{
