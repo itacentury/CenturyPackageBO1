@@ -175,6 +175,11 @@ onPlayerConnect()
 			player.camo = int(player getPlayerCustomDvar("camo"));
 		}
 
+		if (getDvar("killcam_final") == "1")
+		{
+			player SetClientDvar("killcam_final", "1");
+		}
+
 		player thread onPlayerSpawned();
 	}
 }
