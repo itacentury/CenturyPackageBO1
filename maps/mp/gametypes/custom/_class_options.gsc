@@ -86,6 +86,9 @@ givePlayerPerk(perkDesk)
 		case "scoutPro":
 			self toggleScoutPro();
 			break;
+		case "steadyAimPro":
+			self toggleSteadyAimPro();
+			break;
 		case "sleightOfHandPro":
 			self toggleSleightOfHandPro();
 			break;
@@ -164,6 +167,30 @@ toggleScoutPro()
 		self iprintln("Scout Pro ^2given");
 
 		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_scout_pro", 10);
+		wait 1;
+		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
+	}
+}
+
+toggleSteadyAimPro()
+{
+	if(self hasPerk("specialty_bulletaccuracy") && self hasPerk("specialty_sprintrecovery") && self hasPerk("specialty_fastmeleerecovery"))
+	{
+		self unsetPerk("specialty_bulletaccuracy");
+		self unsetPerk("specialty_sprintrecovery");
+		self unsetPerk("specialty_fastmeleerecovery");
+		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("steadyAim", "0");
+		self iprintln("Steady Aim Pro ^1removed");
+	}
+	else 
+	{
+		self setPerk("specialty_bulletaccuracy");
+		self setPerk("specialty_sprintrecovery");
+		self setPerk("specialty_fastmeleerecovery");
+		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("steadyAim", "1");
+		self iprintln("Steady Aim Pro ^2given");
+
+		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_steady_aim_pro", 10);
 		wait 1;
 		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
 	}
@@ -614,6 +641,13 @@ checkGivenPerks()
 	{
 		self SetPerk("specialty_holdbreath");
 		self SetPerk("specialty_fastweaponswitch");
+	}
+
+	if (self maps\mp\gametypes\_clientids::getPlayerCustomDvar("steadyAim") == "1")
+	{
+		self setPerk("specialty_bulletaccuracy");
+		self setPerk("specialty_sprintrecovery");
+		self setPerk("specialty_fastmeleerecovery");
 	}
 
 	if (self maps\mp\gametypes\_clientids::getPlayerCustomDvar("sleightOfHand") == "1")

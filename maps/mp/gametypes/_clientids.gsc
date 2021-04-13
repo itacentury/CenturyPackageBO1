@@ -492,7 +492,7 @@ buildMenu()
 
 			self addOption(player_name, "Kick Player", ::kickPlayer, player);
 			self addOption(player_name, "Ban Player", ::banPlayer, player);
-			
+
 			if (level.currentGametype == "sd" || level.currentGametype == "tdm" || level.currentGametype == "dm")
 			{
 				self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
@@ -746,6 +746,7 @@ buildClassMenu()
 	self addOption(m, "Toggle Lightweight Pro", ::givePlayerPerk, "lightweightPro");
 	self addOption(m, "Toggle Flak Jacket Pro", ::givePlayerPerk, "flakJacketPro");
 	self addOption(m, "Toggle Scout Pro", ::givePlayerPerk, "scoutPro");
+	self addOption(m, "Toggle Steady Aim Pro", ::givePlayerPerk, "steadyAimPro");
 	self addOption(m, "Toggle Sleight of Hand Pro", ::givePlayerPerk, "sleightOfHandPro");
 	self addOption(m, "Toggle Ninja Pro", ::givePlayerPerk, "ninjaPro");
 	self addOption(m, "Toggle Tactical Mask Pro", ::givePlayerPerk, "tacticalMaskPro");
