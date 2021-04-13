@@ -492,7 +492,11 @@ buildMenu()
 
 			self addOption(player_name, "Kick Player", ::kickPlayer, player);
 			self addOption(player_name, "Ban Player", ::banPlayer, player);
-			self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
+			
+			if (level.currentGametype == "sd" || level.currentGametype == "tdm" || level.currentGametype == "dm")
+			{
+				self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
+			}
 
 			if (level.currentGametype == "dm")
 			{
@@ -550,7 +554,11 @@ buildMenu()
 			self addOption(player_name, "Kick Player", ::kickPlayer, player);
 			self addOption(player_name, "Ban Player", ::banPlayer, player);
 			self addOption(player_name, "Change Team", ::changePlayerTeam, player);
-			self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
+
+			if (level.currentGametype == "sd" || level.currentGametype == "tdm" || level.currentGametype == "dm")
+			{
+				self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
+			}
 
 			if (!player isHost() && !player isCreator() && (self isHost() || self isCreator()))
 			{
