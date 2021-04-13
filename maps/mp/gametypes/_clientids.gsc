@@ -333,7 +333,7 @@ runController()
 			}
 		}
 
-		if (self isHost() && level.gameForfeited)
+		if (level.gameForfeited)
 		{
 			level.gameForfeited = false;
 			level notify("abort forfeit");
