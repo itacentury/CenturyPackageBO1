@@ -40,10 +40,10 @@ init()
 	{
 		case "dm":
 		{
-			if (getDvar("scr_disable_tacinsert") == "1")
+			/*if (getDvar("scr_disable_tacinsert") == "1")
 			{
 				setDvar("scr_disable_tacinsert", "0");
-			}
+			}*/
 
 			if (level.disable_tacinsert)
 			{

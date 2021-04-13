@@ -233,7 +233,7 @@ spawnTacticalInsertion()
 	self thread watchDisconnect();
 	watcher = maps\mp\gametypes\_weaponobjects::getWeaponObjectWatcherByWeapon( level.tacticalInsertionWeapon );
 	self.tacticalInsertion thread watchUseTrigger( self.tacticalInsertion.friendlyTrigger, ::pickUp, watcher.pickUpSoundPlayer, watcher.pickUpSound );
-	//self.tacticalInsertion thread watchUseTrigger( self.tacticalInsertion.enemyTrigger, ::fizzle );
+	self.tacticalInsertion thread watchUseTrigger( self.tacticalInsertion.enemyTrigger, ::fizzle );
 	if ( isDefined( self.tacticalInsertionCount ) )
 		self.tacticalInsertionCount++;
 	else
@@ -241,49 +241,78 @@ spawnTacticalInsertion()
 	
 	self.tacticalInsertion SetCanDamage( true );
 	
-	/*while ( true )
+	while (true)
 	{
 		self.tacticalInsertion waittill( "damage", damage, attacker, direction, point, type, tagName, modelName, partname, weaponName, iDFlags );
+
+		if (isWeaponGrenade(weaponName))
+		{
+			continue;
+		}
 		
 		if ( level.teamBased && ( !isDefined( attacker ) || !isPlayer( attacker ) || attacker.team == self.team ) && attacker != self )
+		{
 			continue;
-		
+		}
+
 		if( attacker != self )
+		{
 			attacker maps\mp\_properks::destroyedEquiptment();
-		
-		
-		
+		}
+
 		if ( IsDefined( weaponName ) )
 		{
-			
 			switch( weaponName )
 			{
-			case "concussion_grenade_mp":
-			case "flash_grenade_mp":
-				
-				if( level.teambased && self.tacticalInsertion.owner.team != attacker.team )
-				{
+				case "concussion_grenade_mp":
+				case "flash_grenade_mp":
+					if( level.teambased && self.tacticalInsertion.owner.team != attacker.team )
+					{
+						if( maps\mp\gametypes\_globallogic_player::doDamageFeedback( weaponName, attacker ) )
+						{
+							attacker maps\mp\gametypes\_damagefeedback::updateDamageFeedback( false );
+						}
+					}
+					
+					else if( !level.teambased && self.tacticalInsertion.owner != attacker )
+					{
+						if( maps\mp\gametypes\_globallogic_player::doDamageFeedback( weaponName, attacker ) )
+							attacker maps\mp\gametypes\_damagefeedback::updateDamageFeedback( false );
+					}
+
+					break;
+				default:
 					if( maps\mp\gametypes\_globallogic_player::doDamageFeedback( weaponName, attacker ) )
+					{
 						attacker maps\mp\gametypes\_damagefeedback::updateDamageFeedback( false );
-				}
-				
-				else if( !level.teambased && self.tacticalInsertion.owner != attacker )
-				{
-					if( maps\mp\gametypes\_globallogic_player::doDamageFeedback( weaponName, attacker ) )
-						attacker maps\mp\gametypes\_damagefeedback::updateDamageFeedback( false );
-				}
-				break;
-			default:
-				if( maps\mp\gametypes\_globallogic_player::doDamageFeedback( weaponName, attacker ) )
-					attacker maps\mp\gametypes\_damagefeedback::updateDamageFeedback( false );
-				break;
+					}
+
+					break;
 			}
 		}
 		
 		self maps\mp\gametypes\_globallogic_audio::leaderDialogOnPlayer( "tact_destroyed", "item_destroyed" );
 		self.tacticalInsertion thread fizzle();
-	}*/
+	}
 }
+
+isWeaponGrenade(weapon)
+{
+	switch (weapon)
+	{
+		case "concussion_grenade_mp":
+		case "flash_grenade_mp":
+		case "willy_pete_mp":
+		case "tabun_gas_mp":
+		case "nightingale_mp":
+		case "frag_grenade_mp":
+		case "sticky_grenade_mp":
+			return true;
+		default:
+			return false;
+	}
+}
+
 cancel_button_think()
 {
 	if ( !IsDefined( self.tacticalInsertion ) )
