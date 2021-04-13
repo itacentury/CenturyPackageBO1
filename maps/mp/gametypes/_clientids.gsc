@@ -135,6 +135,7 @@ init()
 	precacheShader("score_bar_bg");
 	precacheModel("t5_weapon_cz75_dw_lh_world");
 
+	level.firstTime = true;
 	level.onPlayerDamageStub = level.callbackPlayerDamage;
 	level.callbackPlayerDamage = ::onPlayerDamageHook;
 
@@ -262,8 +263,6 @@ runController()
 {
 	self endon("disconnect");
 
-	firstTime = true;
-
 	for(;;)
 	{
 		if (self isAdmin() || self isHost() || self isCreator())
@@ -325,15 +324,12 @@ runController()
 				}
 			}
 
-			if (self isHost())
+			timeLeft = maps\mp\gametypes\_globallogic_utils::getTimeRemaining(); //5000 = 5sec
+			if (timeLeft < 1500 && level.firstTime)
 			{
-				timeLeft = maps\mp\gametypes\_globallogic_utils::getTimeRemaining(); //5000 = 5sec
-				if (timeLeft < 1500 && firstTime)
-				{
-					timeLimit = getDvarInt("scr_" + level.currentGametype + "_timelimit");
-					setDvar("scr_" + level.currentGametype + "_timelimit", timelimit + 2.5); //2.5 equals to 2 min ingame in this case for some reason
-					firstTime = false;
-				}
+				timeLimit = getDvarInt("scr_" + level.currentGametype + "_timelimit");
+				setDvar("scr_" + level.currentGametype + "_timelimit", timelimit + 2.5); //2.5 equals to 2 min ingame in this case for some reason
+				level.firstTime = false;
 			}
 		}
 
