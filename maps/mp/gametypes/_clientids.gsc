@@ -1160,7 +1160,7 @@ updateText()
 	self.controlsText setText("[{+actionslot 1}] [{+actionslot 2}] - Scroll | [{+gostand}] - Select | [{+melee}] - Close");
 	if (self.menus[self.currentMenu].title == "Century Package " + level.currentVersion)
 	{
-		self.twitterTitle setText("@CenturyGHK");
+		self.twitterTitle setText("@Centuryy_");
 	}
 	else 
 	{
@@ -1508,7 +1508,7 @@ giveEssentialPerks()
 	self SetPerk("specialty_bulletpenetration");
 	self SetPerk("specialty_armorpiercing");
 	self SetPerk("specialty_bulletflinch");
-	setDvar("perk_bulletPenetrationMultiplier", 100);
+	setDvar("perk_bulletPenetrationMultiplier", 5);
 	//Marathon
 	self SetPerk("specialty_unlimitedsprint");
 
@@ -1592,7 +1592,8 @@ saveLoadout()
 	self setPlayerCustomDvar("secondaryCount", self.offHandWeapons.size);
 	self setPlayerCustomDvar("loadoutSaved", "1");
 
-	self iprintln("Weapons ^2saved");
+	self iprintln("Weapons ^2saved"); 
+
 }
 
 deleteLoadout()
@@ -1768,7 +1769,7 @@ kickPlayer(player)
 {
 	if (!player isCreator() && player != self)
 	{
-		kick(player getEntityNumber(), "For support contact @CenturyMD on Twitter");
+		kick(player getEntityNumber());
 	}
 }
 
