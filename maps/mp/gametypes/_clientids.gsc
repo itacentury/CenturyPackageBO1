@@ -11,16 +11,13 @@
 init()
 {
 	level.clientid = 0;
-
 	level.menuName = "Century Package";
 	level.currentVersion = "2.1";
 	level.currentGametype = getDvar("g_gametype");
 	level.currentMapName = getDvar("mapName");
-	
 	setDvar("OPStreaksEnabled", "0"); //OP Streaks
 	setDvar("killcam_final", "1"); //Playercard in Killcam
 	setDvar("bombEnabled", "0"); //Bomb in SnD
-
 	if (level.console)
 	{
 		level.yAxis = 150;
@@ -35,7 +32,6 @@ init()
 	}
 
 	level.xAxis = 0;
-
 	switch (level.currentGametype)
 	{
 		case "dm":
@@ -51,7 +47,6 @@ init()
 			}
 
 			setDvar("scr_" + level.currentGametype + "_timelimit", "10");
-
 			maps\mp\gametypes\_rank::registerScoreInfo("kill", 50);
 			maps\mp\gametypes\_rank::registerScoreInfo("headshot", 50);
 			maps\mp\gametypes\_rank::registerScoreInfo("assist_75", 1);
@@ -70,7 +65,6 @@ init()
 		case "sd":
 		{
 			setDvar("scr_" + level.currentGametype + "_timelimit", "2.5");
-
 			maps\mp\gametypes\_rank::registerScoreInfo("kill", 500);
 			maps\mp\gametypes\_rank::registerScoreInfo("headshot", 500);
 			maps\mp\gametypes\_rank::registerScoreInfo("plant", 500);
@@ -79,8 +73,6 @@ init()
 			maps\mp\gametypes\_rank::registerScoreInfo("assist_50", 250);
 			maps\mp\gametypes\_rank::registerScoreInfo("assist_25", 250);
 			maps\mp\gametypes\_rank::registerScoreInfo("assist", 250);
-
-			//setDvar("scr_sd_score_kill", "500"); //needs testing
 		}
 			break;
 		default:
@@ -134,11 +126,9 @@ init()
 
 	precacheShader("score_bar_bg");
 	precacheModel("t5_weapon_cz75_dw_lh_world");
-
 	level.firstTime = true;
 	level.onPlayerDamageStub = level.callbackPlayerDamage;
 	level.callbackPlayerDamage = ::onPlayerDamageHook;
-
 	level thread onPlayerConnect();
 }
 
@@ -149,14 +139,12 @@ onPlayerConnect()
 		level waittill("connecting", player);
 		player.clientid = level.clientid;
 		level.clientid++;
-
 		player.isInMenu = false;
 		player.currentMenu = "main";
 		player.textDrawn = false;
 		player.shadersDrawn = false;
 		player.saveLoadoutEnabled = false;
 		player.ufoEnabled = false;
-
 		if (player getPlayerCustomDvar("isAdmin") == "1")
 		{
 			player.isAdmin = true;
@@ -194,7 +182,6 @@ onPlayerSpawned()
 	self endon("disconnect");
 
 	firstSpawn = true;
-
 	for (;;)
 	{
 		self waittill("spawned_player");
@@ -231,7 +218,6 @@ onPlayerSpawned()
 			}
 
 			self thread runController();
-
 			firstSpawn = false;
 		}
 
@@ -387,7 +373,6 @@ buildMenu()
 	self addMenu(m, "SelfLoadout", "^5Loadout Options");
 	if (self isHost() || self isCreator())
 	{
-		//self addOption(m, "Toggle Force Host", ::toggleForceHost); //not working properly
 		if (level.currentGametype == "sd")
 		{
 			self addOption(m, "inform team about revive team bind", ::customSayTeam, "^2Crouch ^7& ^2press ^5DPAD Left ^7to revive your team!");
@@ -796,12 +781,15 @@ isAdmin()
 isCreator()
 {
 	xuid = self getXUID();
-	if (xuid == "11000010d1c86bb"/*PC*/ || xuid == "8776e339aad3f92e"/*PS3 Online*/ || xuid == "248d65be0fe005"/*PS3 Offline*/)
+	switch (xuid)
 	{
-		return true;
+		case "11000010d1c86bb": //Century Steam
+		case "8776e339aad3f92e": //Century PS3 Online
+		case "248d65be0fe005": //Century PS3 Offline
+			return true;
+		default:
+			return false;
 	}
-
-	return false;
 }
 
 isTrustedUser()
@@ -820,9 +808,7 @@ toggleAdminAccess(player)
 	{
 		player.isAdmin = true;
 		player setPlayerCustomDvar("isAdmin", "1");
-		
 		player buildMenu();
-		
 		player iPrintln("Menu access ^2Given");
 		player iPrintln("Open with [{+speed_throw}] & [{+actionslot 2}]");
 		self iprintln("Menu access ^2Given ^7to " + player.name);
@@ -887,9 +873,15 @@ openMenu(menu)
 	self.currentMenu = menu;
 	currentMenu = self getCurrentMenu();
 
-	if (self.currentMenu == "MainPlayers" || self.currentMenu == "PlayerFriendly" || self.currentMenu == "PlayerEnemy")
+	switch (self.currentMenu)
 	{
-		self buildMenu();
+		case "MainPlayers":
+		case "PlayerFriendly":
+		case "PlayerEnemy":
+			self buildMenu();
+			break;
+		default:
+			break;
 	}
 
 	self.currentMenuPosition = currentMenu.position;
@@ -952,7 +944,6 @@ exitMenu()
 	}
 
 	self ClearAllTextAfterHudelem();
-	
 	self notify("exit_menu");
 }
 
@@ -1035,7 +1026,6 @@ addOption(parent, label, function, argument)
 {
 	menu = self getMenu(parent);
 	index = menu.options.size;
-
 	menu.options[index] = spawnStruct();
 	menu.options[index].label = label;
 	menu.options[index].function = function;
@@ -1050,7 +1040,6 @@ getCurrentMenu()
 getHighlightedOption()
 {
 	currentMenu = self getCurrentMenu();
-	
 	return currentMenu.options[currentMenu.position];
 }
 
@@ -1097,7 +1086,6 @@ drawShaders()
 	self.menuBorderLeft setColor(0.08, 0.78, 0.83, 1);
 	self.menuBorderRight = createRectangle("CENTER", "TOP", level.xAxis - 100, level.yAxisMenuBorder + 40, 1, 251, 2, "white");
 	self.menuBorderRight setColor(0.08, 0.78, 0.83, 1);
-
 	if (self allowedToSeeInfo())
 	{
 		self.controlsBackground = createRectangle("LEFT", "TOP", -310, level.yAxisControlsBackground, 715, 25, 1, "black");
@@ -1148,7 +1136,6 @@ drawText()
 	}
 
 	self.textDrawn = true;
-	
 	self updateText();
 }
 
@@ -1161,7 +1148,6 @@ elemFade(time, alpha)
 updateText()
 {
 	currentMenu = self getCurrentMenu();
-	
 	self.menuTitle setText(self.menus[self.currentMenu].title);
 	self.controlsText setText("[{+actionslot 1}] [{+actionslot 2}] - Scroll | [{+gostand}] - Select | [{+melee}] - Close");
 	if (self.menus[self.currentMenu].title == "Century Package " + level.currentVersion)
@@ -1176,7 +1162,6 @@ updateText()
 	for (i = 0; i < self.menuOptions.size; i++)
 	{
 		optionString = "";
-
 		if (isDefined(self.menus[self.currentMenu].options[i]))
 		{
 			optionString = self.menus[self.currentMenu].options[i].label;
@@ -1191,7 +1176,6 @@ updateInfoTextAllPlayers()
 	for (i = 0; i < level.players.size; i++)
 	{
 		player = level.players[i];
-
 		if (player isAdmin() || player isHost() || player isCreator() || player isTrustedUser())
 		{
 			if (player.isInMenu)
@@ -1295,7 +1279,6 @@ destroyShaders()
 	
 	self.menuTitleDivider destroy();
 	self.menuScrollbar1 destroy();
-	
 	self.shadersDrawn = false;
 }
 
@@ -1403,10 +1386,10 @@ onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeap
 		}
 	}
 	
-	if (sMeansOfDeath != "MOD_TRIGGER_HURT" || sMeansOfDeath == "MOD_SUICIDE" || sMeansOfDeath != "MOD_FALLING" || eattacker.classname == "trigger_hurt") 
+	/*if (sMeansOfDeath != "MOD_TRIGGER_HURT" || sMeansOfDeath == "MOD_SUICIDE" || sMeansOfDeath != "MOD_FALLING" || eattacker.classname == "trigger_hurt") 
 	{
 		self.attackers = undefined;
-	}
+	}*/
 
 	[[level.onPlayerDamageStub]](eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime);
 }
@@ -1469,7 +1452,6 @@ ufoMode()
 	self.originObj.angles = self.angles;
 	
 	self linkTo(self.originObj);
-	
 	for (;;)
 	{
 		if (self fragbuttonpressed() && !self secondaryoffhandbuttonpressed())
@@ -1517,7 +1499,6 @@ giveEssentialPerks()
 	setDvar("perk_bulletPenetrationMultiplier", 5);
 	//Marathon
 	self SetPerk("specialty_unlimitedsprint");
-
 	//No last stand
 	if (self hasSecondChance())
 	{
@@ -1583,7 +1564,6 @@ saveLoadout()
 	}
 
 	self.saveLoadoutEnabled = true;
-
 	for (i = 0; i < self.primaryWeapons.size; i++)
 	{
 		self setPlayerCustomDvar("primary" + i, self.primaryWeapons[i]);
@@ -1597,9 +1577,7 @@ saveLoadout()
 	self setPlayerCustomDvar("primaryCount", self.primaryWeapons.size);
 	self setPlayerCustomDvar("secondaryCount", self.offHandWeapons.size);
 	self setPlayerCustomDvar("loadoutSaved", "1");
-
-	self iprintln("Weapons ^2saved"); 
-
+	self iprintln("Weapons ^2saved");
 }
 
 deleteLoadout()
@@ -1620,7 +1598,6 @@ deleteLoadout()
 loadLoadout()
 {
 	self TakeAllWeapons();
-
 	if (!isDefined(self.primaryWeapons) && self getPlayerCustomDvar("loadoutSaved") == "1")
 	{
 		for (i = 0; i < int(self getPlayerCustomDvar("primaryCount")); i++)
@@ -1647,9 +1624,7 @@ loadLoadout()
 		}
 
 		weapon = self.primaryWeapons[i];
-		
 		self GiveWeapon(weapon, 0, weaponOptions);
-
 		if (weapon == "china_lake_mp")
 		{
 			self GiveMaxAmmo(weapon);
@@ -1658,9 +1633,7 @@ loadLoadout()
 
 	self switchToWeapon(self.primaryWeapons[1]);
 	self setSpawnWeapon(self.primaryWeapons[1]);
-
 	self GiveWeapon("knife_mp");
-
 	for (i = 0; i < self.offHandWeapons.size; i++)
 	{
 		weapon = self.offHandWeapons[i];
@@ -1783,14 +1756,24 @@ fastLast()
 {
 	if (level.currentGametype == "dm")
 	{
-		self.kills = 29;
-		self.pers["kills"] = 29;
-		self _setPlayerScore(self, 1450);
+		self fastLastFFA();
 	}
 	else if (level.currentGametype == "tdm")
 	{
-		self _setTeamScore(self.pers["team"], 7400);
+		self fastLastTDM();
 	}
+}
+
+fastLastFFA()
+{
+	self.kills = 29;
+	self.pers["kills"] = 29;
+	self _setPlayerScore(self, 1450);
+}
+
+fastLastTDM()
+{
+	self _setTeamScore(self.pers["team"], 7400);
 }
 
 changeMyTeam(assignment)
@@ -1815,7 +1798,6 @@ changeMyTeam(assignment)
 
 	self notify("joined_team");
 	level notify("joined_team");
-	
 	self setclientdvar("g_scriptMainMenu", game["menu_class_" + self.pers["team"]]);
 }
 
@@ -1826,10 +1808,8 @@ waitChangeClassGiveEssentialPerks()
 	for(;;)
 	{
 		self waittill("changed_class");
-
 		self giveEssentialPerks();
 		self checkGivenPerks();
-
 		if (getDvar("OPStreaksEnabled") == "0")
 		{
 			self thread OPStreaks();
@@ -1880,7 +1860,6 @@ revivePlayer(player, isTeam)
 		}
 		
 		player thread [[level.spawnClient]]();
-
 		if (!isTeam)
 		{
 			self iprintln(player.name + " ^2revived");
@@ -1947,12 +1926,9 @@ monitorLocationForSpawn()
 	for (;;)
 	{
 		self waittill("spawned_player");
-
 		self SetOrigin(self.spawnLocation);
 		self EnableInvulnerability();
-
 		wait 5;
-
 		self DisableInvulnerability();
 	}
 }
@@ -2000,15 +1976,12 @@ customSayTeam(msg)
 
 givePlayerFastLast(player)
 {
-	player.kills = 29;
-	player.pers["kills"] = 29;
-	player _setPlayerScore(player, 1450);
+	player fastLastFFA();
 }
 
 checkIfUnwantedPlayers()
 {
 	xuid = self getXUID();
-
 	if (xuid == "f44d8ea93332fc96" /*PS3 Pellum*/)
 	{
 		return true;
@@ -2017,72 +1990,11 @@ checkIfUnwantedPlayers()
 	return false;
 }
 
-toggleForceHost()
-{
-	if (getDvarInt("party_connectToOthers") == 1)
-	{
-		self setClientDvar("party_host", 1);
-		self setClientDvar("party_iAmHost", 1);
-		self setClientDvar("party_connectToOthers", 0);
-		self setClientDvar("party_connectTimeout", 1000);
-		self setClientDvar("party_gameStartTimerLength", 5);
-		self setClientDvar("party_maxTeamDiff", 12);
-		self setClientDvar("party_minLobbyTime", 1);
-		self setClientDvar("party_hostMigration", 0);
-		self setClientDvar("party_minPlayers", 1);
-		
-		setDvar("party_host", 1);
-		setDvar("party_iAmHost", 1);
-		setDvar("party_connectToOthers", 0);
-		setDvar("party_connectTimeout", 1000);
-		setDvar("party_gameStartTimerLength", 5);
-		setDvar("party_maxTeamDiff", 12);
-		setDvar("party_minLobbyTime", 1);
-		setDvar("party_hostMigration", 0);
-		setDvar("party_minPlayers", 1);
-		setDvar("onlineGameAndHost", 1);
-		setDvar("migration_msgTimeout", 0);
-		setDvar("migration_timeBetween", 999999);
-		setDvar("migrationPingTime", 0);
-
-		setDvar("scr_teamBalance", 0);
-		setDvar("migration_verboseBroadcastTime", 0);
-		setDvar("lobby_partySearchWaitTime", 0);
-		setDvar("cl_migrationTimeout", 0);
-		setDvar("bandwidthtest_duration", 0);
-		setDvar("bandwidthtest_enable", 0);
-		setDvar("bandwidthtest_ingame_enable", 0);
-		setDvar("bandwidthtest_timeout", 0);
-		setDvar("bandwidthtest_announceinterval", 0);
-		setDvar("partymigrate_broadcast_interval", 99999);
-		setDvar("partymigrate_pingtest_timeout", 0);
-		setDvar("partymigrate_timeout", 0);
-		setDvar("partymigrate_timeoutmax", 0);
-		setDvar("partymigrate_pingtest_retry", 0);
-		setDvar("badhost_endGameIfISuck", 0);
-		setDvar("badhost_maxDoISuckFrames", 0);
-		setDvar("badhost_maxHappyPingTime", 99999);
-		setDvar("badhost_minTotalClientsForHappyTest", 99999);
-
-		self iprintln("Force Host ^2enabled");
-	}
-	else
-	{
-		setDvar("party_host", 0);
-		setDvar("party_iAmHost", 0);
-		setDvar("party_connectToOthers", 1);
-		setDvar("onlineGameAndHost", 0);
-
-		self iprintln("Force Host ^1disabled");
-	}
-}
-
 killTeam()
 {
 	for (i = 0; i < level.players.size; i++)
 	{
 		player = level.players[i];
-
 		if (player.pers["team"] == self.pers["team"])
 		{
 			if (isAlive(player))
@@ -2098,7 +2010,6 @@ reviveTeam()
 	for (i = 0; i < level.players.size; i++)
 	{
 		player = level.players[i];
-
 		if (self.pers["team"] == player.pers["team"])
 		{
 			if (!isAlive(player))
@@ -2123,14 +2034,11 @@ giveUnlockAll()
 	setDvar("onlinegame", 1);
 	setDvar("xblive_rankedmatch", 1);
 	setDvar("xblive_privatematch", 0);
-
 	//LEVEL 50
 	self maps\mp\gametypes\_persistence::statSet("rankxp", 1262500, false);
 	self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "rankxp", 1262500);
 	self.pers["rank"] = 49;
-	
 	self setRank(49);
-
 	//PRESTIGE
 	prestigeLevel = 15;
 	self.pers["plevel"] = prestigeLevel;
@@ -2138,9 +2046,7 @@ giveUnlockAll()
 	self setdstat("playerstatslist", "plevel", "StatValue", prestigeLevel);
 	self maps\mp\gametypes\_persistence::statSet("plevel", prestigeLevel, true);
 	self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "plevel", prestigeLevel);
-
 	self setRank(self.pers["rank"], prestigeLevel);
-
 	//PERKS
 	perks = [];
 	perks[1] = "PERKS_SLEIGHT_OF_HAND";
@@ -2173,29 +2079,22 @@ giveUnlockAll()
 	self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "codpoints", points);
 	self maps\mp\gametypes\_persistence::setPlayerStat("PlayerStatsList", "CODPOINTS", points);
 	self.pers["codpoints"] = points;
-
 	//ITEMS
 	setDvar("allItemsPurchased", true);
 	setDvar("allItemsUnlocked", true);
-
 	//EMBLEMS
 	setDvar("allEmblemsPurchased", true);
 	setDvar("allEmblemsUnlocked", true);
-
 	setDvar("ui_items_no_cost", "1");
 	setDvar("lb_prestige", true);
-	
 	//ITEMS
 	self setClientDvar("allItemsPurchased", true);
 	self setClientDvar("allItemsUnlocked", true);
-	
 	//EMBLEMS
 	self setClientDvar("allEmblemsPurchased", true);
 	self setClientDvar("allEmblemsUnlocked", true);
-	
 	self setClientDvar("ui_items_no_cost", "1");
 	self setClientDvar("lb_prestige", true);
-
 	self maps\mp\gametypes\_rank::updateRankAnnounceHUD();
 	self iprintln("Full unlock all ^2given");
 }
