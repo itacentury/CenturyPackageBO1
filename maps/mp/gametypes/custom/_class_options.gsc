@@ -7,7 +7,6 @@ giveGrenade(grenade)
 	primaryWeapons = self GetWeaponsListPrimaries();
 	offHandWeapons = array_exclude(self GetWeaponsList(), primaryWeapons);
 	offHandWeapons = array_remove(offHandWeapons, "knife_mp");
-
 	for (i = 0; i < offHandWeapons.size; i++)
 	{
 		weapon = offHandWeapons[i];
@@ -35,18 +34,14 @@ giveGrenade(grenade)
 randomCamo()
 {
 	numEro = randomIntRange(1, 16);
-	
 	weap = self getCurrentWeapon();
-	
 	myclip = self getWeaponAmmoClip(weap);
     mystock = self getWeaponAmmoStock(weap);
-	
 	self takeWeapon(weap);
 	weaponOptions = self calcWeaponOptions(numEro, 0, 0, 0, 0);
 	self GiveWeapon(weap, 0, weaponOptions);
 	self switchToWeapon(weap);
 	self setSpawnWeapon(weap);
-	
 	self setweaponammoclip(weap, myclip);
     self setweaponammostock(weap, mystock);
 	self.camo = numEro;
@@ -56,19 +51,15 @@ randomCamo()
 changeCamo(num)
 {
 	weap = self getCurrentWeapon();
-	
 	myclip = self getWeaponAmmoClip(weap);
     mystock = self getWeaponAmmoStock(weap);
-	
 	self takeWeapon(weap);
 	weaponOptions = self calcWeaponOptions(num, 0, 0, 0, 0);
 	self GiveWeapon(weap, 0, weaponOptions);
 	self switchToWeapon(weap);
 	self setSpawnWeapon(weap);
-	
 	self setweaponammoclip(weap, myclip);
     self setweaponammostock(weap, mystock);
-	
 	self.camo = num;
 	self maps\mp\gametypes\_clientids::setPlayerCustomDvar("camo", self.camo);
 }
@@ -119,7 +110,6 @@ toggleLightweightPro()
 		self SetPerk("specialty_movefaster");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("lightweight", "1");
 		self iprintln("Lightweight Pro ^2given");
-
 		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_lightweight_pro", 10);
 		wait 1;
 		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
@@ -143,7 +133,6 @@ toggleFlakJacketPro()
 		self SetPerk("specialty_pin_back");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("flakJacket", "1");
 		self iprintln("Flak Jacket Pro ^2given");
-
 		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_flak_jacket_pro", 10);
 		wait 1;
 		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
@@ -165,7 +154,6 @@ toggleScoutPro()
 		self SetPerk("specialty_fastweaponswitch");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("scout", "1");
 		self iprintln("Scout Pro ^2given");
-
 		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_scout_pro", 10);
 		wait 1;
 		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
@@ -189,7 +177,6 @@ toggleSteadyAimPro()
 		self setPerk("specialty_fastmeleerecovery");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("steadyAim", "1");
 		self iprintln("Steady Aim Pro ^2given");
-
 		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_steady_aim_pro", 10);
 		wait 1;
 		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
@@ -211,7 +198,6 @@ toggleSleightOfHandPro()
 		self SetPerk("specialty_fastads");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("sleightOfHand", "1");
 		self iprintln("Sleight of Hand Pro ^2given");
-
 		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_sleight_of_hand_pro", 10);
 		wait 1;
 		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
@@ -233,7 +219,6 @@ toggleNinjaPro()
 		self SetPerk("specialty_loudenemies");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("ninja", "1");
 		self iprintln("Ninja Pro ^2given");
-
 		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_ninja_pro", 10);
 		wait 1;
 		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
@@ -257,7 +242,6 @@ toggleTacticalMaskPro()
 		self SetPerk("specialty_shades");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("tacMask", "1");
 		self iprintln("Tactical Mask Pro ^2given");
-
 		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_tactical_mask_pro", 10);
 		wait 1;
 		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
@@ -267,17 +251,14 @@ toggleTacticalMaskPro()
 givePlayerAttachment(attachment)
 {
     weapon = self GetCurrentWeapon();
-
     opticAttach = "";
     underBarrelAttach = "";
     clipAttach = "";
 	attachmentAttach = "";
-
     opticWeap = "";
     underBarrelWeap = "";
     clipWeap = "";
 	attachmentWeap = "";
-
 	weaponToArray = strTok(weapon, "_");
 	for (i = 0; i < weaponToArray.size; i++)
 	{
@@ -304,7 +285,6 @@ givePlayerAttachment(attachment)
 
 	baseWeapon = weaponToArray[0];
 	number = weaponNameToNumber(baseWeapon);
-
 	itemRow = tableLookupRowNum("mp/statsTable.csv", level.cac_numbering, number);
 	compatibleAttachments = tableLookupColumnForRow("mp/statstable.csv", itemRow, level.cac_cstring);
 	if (!isSubStr(compatibleAttachments, attachment))
@@ -325,7 +305,6 @@ givePlayerAttachment(attachment)
 	if (isSubStr(attachment, "dw"))
 	{
 		newWeapon = baseWeapon + "dw_mp";
-
 		if (isDefined(self.camo))
 		{
 			weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
@@ -412,9 +391,7 @@ givePlayerAttachment(attachment)
     }
 	
     self takeWeapon(weapon);
-
 	newWeapon = baseWeapon + "_" + opticWeap + underBarrelWeap + clipWeap + attachmentWeap + weaponToArray[weaponToArray.size - 1];
-    
 	if (isDefined(self.camo))
 	{
 		weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
@@ -432,16 +409,13 @@ givePlayerAttachment(attachment)
 removeAllAttachments()
 {
 	weapon = self GetCurrentWeapon();
-
 	weaponToArray = strTok(weapon, "_");
 	baseWeapon = weaponToArray[0];
 	newWeapon = baseWeapon + "_mp";
-
 	if (isSubStr(baseWeapon, "dw"))
 	{
 		baseWeaponOnly = getSubStr(baseWeapon, 0, baseWeapon.size - 2);
 		newWeapon = baseWeaponOnly + "_mp";
-
 		if (isDefined(self.camo))
 		{
 			weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
@@ -459,7 +433,6 @@ removeAllAttachments()
 	}
 
 	self TakeWeapon(weapon);
-
 	if (isDefined(self.camo))
 	{
 		weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
@@ -674,7 +647,6 @@ giveUserTacticals(tactical)
 {
 	prim = self GetWeaponsListPrimaries();
 	offHand = array_exclude(self GetWeaponsList(), prim);
-
 	for (i = 0; i < offHand.size; i++)
 	{
 		weap = offHand[i];
