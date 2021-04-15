@@ -216,7 +216,7 @@ spawnTacticalInsertion()
 	self.tacticalInsertion setOwner(self);
 	self.tacticalInsertion thread maps\mp\gametypes\_weaponobjects::attachReconModel("t5_weapon_tactical_insertion_world_detect", self);
 	self.tacticalInsertion endon("delete");
-	
+
 	triggerHeight = 64;
 	triggerRadius = 128;
 	self.tacticalInsertion.friendlyTrigger = spawn("trigger_radius_use", self.tacticalInsertion.origin);
@@ -258,7 +258,7 @@ spawnTacticalInsertion()
 	for (;;)
 	{
 		self.tacticalInsertion waittill("damage", damage, attacker, direction, point, type, tagName, modelName, partname, weaponName, iDFlags);
-		if (isWeaponGrenade(weaponName))
+		if (hasWeaponSplashDamage(weaponName))
 		{
 			continue;
 		}
@@ -310,7 +310,7 @@ spawnTacticalInsertion()
 	}
 }
 
-isWeaponGrenade(weapon)
+hasWeaponSplashDamage(weapon)
 {
 	switch (weapon)
 	{
@@ -321,6 +321,12 @@ isWeaponGrenade(weapon)
 		case "nightingale_mp":
 		case "frag_grenade_mp":
 		case "sticky_grenade_mp":
+		case "rpg_mp":
+		case "m72_law_mp":
+		case "china_lake_mp":
+		case "crossbow_explosive_mp":
+		case "satchel_charge_mp":
+		case "claymore_mp":
 			return true;
 		default:
 			return false;
