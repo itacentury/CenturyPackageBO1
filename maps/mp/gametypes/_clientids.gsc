@@ -3,10 +3,11 @@
 #include common_scripts\utility;
 #include maps\mp\gametypes\_globallogic_score;
 //Custom files
-#include maps\mp\gametypes\custom\_dev_options;
-#include maps\mp\gametypes\custom\_self_options;
-#include maps\mp\gametypes\custom\_class_options;
-#include maps\mp\gametypes\custom\_lobby_options;
+#include maps\mp\gametypes\century\_dev_options;
+#include maps\mp\gametypes\century\_self_options;
+#include maps\mp\gametypes\century\_class_options;
+#include maps\mp\gametypes\century\_lobby_options;
+#include maps\mp\gametypes\century\_player_menu;
 
 init()
 {
@@ -47,14 +48,6 @@ init()
 			}
 
 			setDvar("scr_" + level.currentGametype + "_timelimit", "10");
-			maps\mp\gametypes\_rank::registerScoreInfo("kill", 50);
-			maps\mp\gametypes\_rank::registerScoreInfo("headshot", 50);
-			maps\mp\gametypes\_rank::registerScoreInfo("assist_75", 1);
-			maps\mp\gametypes\_rank::registerScoreInfo("assist_50", 1);
-			maps\mp\gametypes\_rank::registerScoreInfo("assist_25", 1);
-			maps\mp\gametypes\_rank::registerScoreInfo("assist", 1);
-			maps\mp\gametypes\_rank::registerScoreInfo("suicide", 0);
-			maps\mp\gametypes\_rank::registerScoreInfo("teamkill", 0);
 		}
 			break;
 		case "tdm":
@@ -65,14 +58,6 @@ init()
 		case "sd":
 		{
 			setDvar("scr_" + level.currentGametype + "_timelimit", "2.5");
-			maps\mp\gametypes\_rank::registerScoreInfo("kill", 500);
-			maps\mp\gametypes\_rank::registerScoreInfo("headshot", 500);
-			maps\mp\gametypes\_rank::registerScoreInfo("plant", 500);
-			maps\mp\gametypes\_rank::registerScoreInfo("defuse", 500);
-			maps\mp\gametypes\_rank::registerScoreInfo("assist_75", 250);
-			maps\mp\gametypes\_rank::registerScoreInfo("assist_50", 250);
-			maps\mp\gametypes\_rank::registerScoreInfo("assist_25", 250);
-			maps\mp\gametypes\_rank::registerScoreInfo("assist", 250);
 		}
 			break;
 		default:
@@ -185,7 +170,6 @@ onPlayerSpawned()
 	for (;;)
 	{
 		self waittill("spawned_player");
-
 		if (firstSpawn)
 		{
 			if (self isHost() || self isAdmin() || self isCreator())
@@ -290,7 +274,6 @@ runController()
 					wait 0.25;
 				}
 
-				//UFO mode
 				if (self actionSlotTwoButtonPressed() && self GetStance() == "crouch" && self isCreator())
 				{
 					self enterUfoMode();
@@ -333,7 +316,6 @@ runController()
 buildMenu()
 {
 	self.menus = [];
-
 	m = "main";
 	//start main
 	self addMenu("", m, "Century Package " + level.currentVersion);
@@ -354,9 +336,7 @@ buildMenu()
 	{
 		self addMenu(m, "MainTeam", "^5Team Options");
 	}
-	//end main
 
-	//start self
 	m = "MainSelf";
 	self addOption(m, "Suicide", ::doSuicide);
 	self addOption(m, "Third Person", ::ToggleThirdPerson);
@@ -383,21 +363,13 @@ buildMenu()
 		}
 	}
 
-	//start location
 	m = "SelfLocation";
 	self addOption(m, "Save location for spawn", ::saveLocationForSpawn);
 	self addOption(m, "Delete location for spawn", ::stopLocationForSpawn);
-	//end location
-
-	//start loadout
 	m = "SelfLoadout";
 	self addOption(m, "Give default ts loadout", ::defaultTrickshotClass);
 	self addOption(m, "Save Loadout", ::saveLoadout);
 	self addOption(m, "Delete saved loadout", ::deleteLoadout);
-	//end loadout
-	//end self
-
-	//start dev
 	m = "MainDev";
 	self addOption(m, "Print origin", ::printOrigin);
 	self addOption(m, "Print weapon class", ::printWeaponClass);
@@ -406,9 +378,6 @@ buildMenu()
 	self addOption(m, "Print offhand weapons", ::printOffHandWeapons);
 	self addOption(m, "Print XUID", ::printXUID);
 	self addOption(m, "Fast restart test", ::testFastRestart);
-	//end dev
-
-	//start class
 	m = "MainClass";
 	self addMenu(m, "ClassWeapon", "^5Weapon Selector");
 	self addMenu(m, "ClassGrenades", "^5Grenade Selector");
@@ -417,12 +386,8 @@ buildMenu()
 	self addMenu(m, "ClassEquipment", "^5Equipment Selector");
 	self addMenu(m, "ClassTacticals", "^5Tacticals Selector");
 	self addMenu(m, "ClassKillstreaks", "^5Killstreak Menu");
-
 	self buildWeaponMenu();
 	self buildClassMenu();
-	//end class
-
-	//start lobby
 	m = "MainLobby";
 	if (level.currentGametype == "tdm")
 	{
@@ -437,23 +402,15 @@ buildMenu()
 	self addOption(m, "Pre-cam weapon animations", ::precamOTS);
 	self addOption(m, "Toggle own player card in killcam", ::togglePlayercard);
 	self addOption(m, "Toggle OP Streaks", ::toggleOPStreaks);
-	//end lobby
-
-	//start team
 	m = "MainTeam";
 	self addOption(m, "Revive whole team", ::reviveTeam);
 	self addOption(m, "Kill whole team", ::killTeam);
-	//end team
-
-	//start main
 	m = "main";
 	if (self isHost() || self isCreator() || self isTrustedUser())
 	{
 		self addMenu(m, "MainPlayers", "^5Players Menu");
 	}
-	//end main
 
-	//start players
 	m = "MainPlayers";
 	if (!level.teamBased)
 	{
@@ -462,7 +419,6 @@ buildMenu()
 			player = level.players[p];
 			name = player.name;
 			player_name = "player_" + name;
-
 			if (isAlive(player))
 			{
 				self addMenu(m, player_name, name + " (Alive)");
@@ -474,7 +430,6 @@ buildMenu()
 
 			self addOption(player_name, "Kick Player", ::kickPlayer, player);
 			self addOption(player_name, "Ban Player", ::banPlayer, player);
-
 			if (level.currentGametype == "sd" || level.currentGametype == "tdm" || level.currentGametype == "dm")
 			{
 				self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
@@ -496,16 +451,13 @@ buildMenu()
 	{
 		myTeam = self.pers["team"];
 		otherTeam = getOtherTeam(myTeam);
-		
 		self addMenu(m, "PlayerFriendly", "^5Friendly players");
 		self addMenu(m, "PlayerEnemy", "^5Enemy players");
-
 		for (p = 0; p < level.players.size; p++)
 		{
 			player = level.players[p];
 			name = player.name;
 			player_name = "player_" + name;
-
 			if (player.pers["team"] == myTeam)
 			{
 				m = "PlayerFriendly";
@@ -536,7 +488,6 @@ buildMenu()
 			self addOption(player_name, "Kick Player", ::kickPlayer, player);
 			self addOption(player_name, "Ban Player", ::banPlayer, player);
 			self addOption(player_name, "Change Team", ::changePlayerTeam, player);
-
 			if (level.currentGametype == "sd" || level.currentGametype == "tdm" || level.currentGametype == "dm")
 			{
 				self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
@@ -572,28 +523,21 @@ buildWeaponMenu()
 	self addMenu(m ,"WeaponAttachment", "^5Attachment Selector");
 	self addOption(m, "Take Weapon", ::takeUserWeapon);
 	self addOption(m, "Drop Weapon", ::dropUserWeapon);
-	
 	m = "WeaponPrimary";
 	self addMenu(m, "PrimarySMG", "^5SMG");
 	self addMenu(m, "PrimaryAssault", "^5Assault");
 	self addMenu(m, "PrimaryShotgun", "^5Shotgun");
 	self addMenu(m, "PrimaryLMG", "^5LMG");
 	self addMenu(m, "PrimarySniper", "^5Sniper");
-	
 	m = "PrimarySMG";
 	self addOption(m, "MP5K", ::giveUserWeapon, "mp5k_mp");
-	//self addOption(m, "Skorpion", ::giveUserWeapon, "skorpion_mp");
-	//self addOption(m, "MAC11", ::giveUserWeapon, "mac11_mp");
 	self addOption(m, "AK74u", ::giveUserWeapon, "ak74u_mp");
 	self addOption(m, "UZI", ::giveUserWeapon, "uzi_mp");
 	self addOption(m, "PM63", ::giveUserWeapon, "pm63_mp");
 	self addOption(m, "MPL", ::giveUserWeapon, "mpl_mp");
 	self addOption(m, "Spectre", ::giveUserWeapon, "spectre_mp");
 	self addOption(m, "Kiparis", ::giveUserWeapon, "kiparis_mp");
-	
 	m = "PrimaryAssault";
-	//self addOption(m, "M16", ::giveUserWeapon, "m16_mp");
-	//self addOption(m, "Enfield", ::giveUserWeapon, "enfield_mp");
 	self addOption(m, "M14", ::giveUserWeapon, "m14_mp");
 	self addOption(m, "Famas", ::giveUserWeapon, "famas_mp");
 	self addOption(m, "Galil", ::giveUserWeapon, "galil_mp");
@@ -602,47 +546,39 @@ buildWeaponMenu()
 	self addOption(m, "AK47", ::giveUserWeapon, "ak47_mp");
 	self addOption(m, "Commando", ::giveUserWeapon, "commando_mp");
 	self addOption(m, "G11", ::giveUserWeapon, "g11_mp");
-	
 	m = "PrimaryShotgun";
 	self addOption(m, "Olympia", ::giveUserWeapon, "rottweil72_mp");
 	self addOption(m, "Stakeout", ::giveUserWeapon, "ithaca_grip_mp");
 	self addOption(m, "SPAS-12", ::giveUserWeapon, "spas_mp");
 	self addOption(m, "HS10", ::giveUserWeapon, "hs10_mp");
-	
 	m = "PrimaryLMG";
 	self addOption(m, "HK21", ::giveUserWeapon, "hk21_mp");
 	self addOption(m, "RPK", ::giveUserWeapon, "rpk_mp");
 	self addOption(m, "M60", ::giveUserWeapon, "m60_mp");
 	self addOption(m, "Stoner63", ::giveUserWeapon, "stoner63_mp");
-	
 	m = "PrimarySniper";
 	self addOption(m, "Dragunov", ::giveUserWeapon, "dragunov_mp");
 	self addOption(m, "WA2000", ::giveUserWeapon, "wa2000_mp");
 	self addOption(m, "L96A1", ::giveUserWeapon, "l96a1_mp");
 	self addOption(m, "PSG1", ::giveUserWeapon, "psg1_mp");
-	
 	m = "WeaponSecondary";
 	self addMenu(m, "SecondaryPistol", "^5Pistol");
 	self addMenu(m, "SecondaryLauncher", "^5Launcher");
 	self addMenu(m, "SecondarySpecial", "^5Special");
-	
 	m = "SecondaryPistol";
 	self addOption(m, "ASP", ::giveUserWeapon, "asp_mp");
 	self addOption(m, "M1911", ::giveUserWeapon, "m1911_mp");
 	self addOption(m, "Makarov", ::giveUserWeapon, "makarov_mp");
 	self addOption(m, "Python", ::giveUserWeapon, "python_mp");
 	self addOption(m, "CZ75", ::giveUserWeapon, "cz75_mp");
-	
 	m = "SecondaryLauncher";
 	self addOption(m, "M72 LAW", ::giveUserWeapon, "m72_law_mp");
 	self addOption(m, "RPG", ::giveUserWeapon, "rpg_mp");
 	self addOption(m, "Strela-3", ::giveUserWeapon, "strela_mp");
 	self addOption(m, "China Lake", ::giveUserWeapon, "china_lake_mp");
-	
 	m = "SecondarySpecial";
 	self addOption(m, "Ballistic Knife", ::giveUserWeapon, "knife_ballistic_mp");
 	self addOption(m, "Crossbow", ::giveUserWeapon, "crossbow_explosive_mp");
-
 	m = "WeaponGlitch";
 	self addOption(m, "ASP", ::giveUserWeapon, "asplh_mp");
 	self addOption(m, "M1911", ::giveUserWeapon, "m1911lh_mp");
@@ -650,19 +586,16 @@ buildWeaponMenu()
 	self addOption(m, "Python", ::giveUserWeapon, "pythonlh_mp");
 	self addOption(m, "CZ75", ::giveUserWeapon, "cz75lh_mp");
 	self addOption(m, "Default weapon", ::giveUserWeapon, "defaultweapon_mp");
-
 	m = "WeaponMisc";
 	self addOption(m, "Syrette", ::giveUserWeapon, "syrette_mp");
 	self addOption(m, "Briefcase Bomb", ::giveUserWeapon, "briefcase_bomb_mp");
 	self addOption(m, "Autoturret", ::giveUserWeapon, "autoturret_mp");
-
 	m = "WeaponAttachment";
 	self addMenu(m, "AttachOptic", "^5Optics");
 	self addMenu(m, "AttachMag", "^5Mags");
 	self addMenu(m, "AttachUnderBarrel", "^5Underbarrel");
 	self addMenu(m, "AttachOther", "^5Other");
 	self addOption(m, "Remove all attachments", ::removeAllAttachments);
-
 	m = "AttachOptic";
 	self addOption(m, "Toggle Reflex", ::givePlayerAttachment, "reflex");
 	self addOption(m, "Toggle Red Dot", ::givePlayerAttachment, "elbit");
@@ -671,18 +604,15 @@ buildWeaponMenu()
 	self addOption(m, "Toggle ACOG", ::givePlayerAttachment, "acog");
 	self addOption(m, "Toggle Upgraded Sight", ::givePlayerAttachment, "upgradesight");
 	self addOption(m, "Toggle Low Power Scope", ::givePlayerAttachment, "lps");
-
 	m = "AttachMag";
 	self addOption(m, "Toggle Extended Clip", ::givePlayerAttachment, "extclip");
 	self addOption(m, "Toggle Dual Mag", ::givePlayerAttachment, "dualclip");
 	self addOption(m, "Toggle Speed Loader", ::givePlayerAttachment, "speed");
-
 	m = "AttachUnderBarrel";
 	self addOption(m, "Toggle Flamethrower", ::givePlayerAttachment, "ft");
 	self addOption(m, "Toggle Masterkey", ::givePlayerAttachment, "mk");
 	self addOption(m, "Toggle Grenade Launcher", ::givePlayerAttachment, "gl");
 	self addOption(m, "Toggle Grip", ::givePlayerAttachment, "grip");
-
 	m = "AttachOther";
 	self addOption(m, "Give Silencer", ::givePlayerAttachment, "silencer");
 	self addOption(m, "Give Snub Nose", ::givePlayerAttachment, "snub");
@@ -695,27 +625,23 @@ buildClassMenu()
 	self addOption(m, "Frag", ::giveGrenade, "frag_grenade_mp");
 	self addOption(m, "Semtex", ::giveGrenade, "sticky_grenade_mp");
 	self addOption(m, "Tomahawk", ::giveGrenade, "hatchet_mp");
-
     m = "ClassCamo";
 	self addMenu(m, "CamoOne", "^5Camos Part 1");
 	self addMenu(m, "CamoTwo", "^5Camos Part 2");
 	self addMenu(m, "CamoThree", "^5Camos Part 3");
 	self addOption(m, "Random Camo", ::randomCamo);
-    
 	m = "CamoOne";
 	self addOption(m, "None", ::changeCamo, 0);
 	self addOption(m, "Dusty", ::changeCamo, 1);
 	self addOption(m, "Ice", ::changeCamo, 2);
 	self addOption(m, "Red", ::changeCamo, 3);
 	self addOption(m, "Olive", ::changeCamo, 4);
-	
 	m = "CamoTwo";
 	self addOption(m, "Nevada", ::changeCamo, 5);
 	self addOption(m, "Sahara", ::changeCamo, 6);
 	self addOption(m, "ERDL", ::changeCamo, 7);
 	self addOption(m, "Tiger", ::changeCamo, 8);
 	self addOption(m, "Berlin", ::changeCamo, 9);
-
 	m = "CamoThree";
 	self addOption(m, "Warsaw", ::changeCamo, 10);
 	self addOption(m, "Siberia", ::changeCamo, 11);
@@ -723,7 +649,6 @@ buildClassMenu()
 	self addOption(m, "Woodland", ::changeCamo, 13);
 	self addOption(m, "Flora", ::changeCamo, 14);
 	self addOption(m, "Gold", ::changeCamo, 15);
-	
 	m = "ClassPerk";
 	self addOption(m, "Toggle Lightweight Pro", ::givePlayerPerk, "lightweightPro");
 	self addOption(m, "Toggle Flak Jacket Pro", ::givePlayerPerk, "flakJacketPro");
@@ -732,17 +657,14 @@ buildClassMenu()
 	self addOption(m, "Toggle Sleight of Hand Pro", ::givePlayerPerk, "sleightOfHandPro");
 	self addOption(m, "Toggle Ninja Pro", ::givePlayerPerk, "ninjaPro");
 	self addOption(m, "Toggle Tactical Mask Pro", ::givePlayerPerk, "tacticalMaskPro");
-
 	m = "ClassKillstreaks";
 	self addMenu(m, "KillstreaksSupport", "^5Support");
 	self addMenu(m, "KillstreaksLethal", "^5Lethal");
-
 	m = "KillstreaksSupport";
 	self addOption(m, "Spy Plane", ::giveUserKillstreak, "radar_mp");
 	self addOption(m, "Sam Turret", ::giveUserKillstreak, "tow_turret_drop_mp");
 	self addOption(m, "Carepackage", ::giveUserKillstreak, "supply_drop_mp");
 	self addOption(m, "Blackbird", ::giveUserKillstreak, "radardirection_mp");
-
 	m = "KillstreaksLethal";
 	self addOption(m, "RC-XD", ::giveUserKillstreak, "rcbomb_mp");
 	self addOption(m, "Napalm Strike", ::giveUserKillstreak, "napalm_mp");
@@ -750,15 +672,12 @@ buildClassMenu()
 	self addOption(m, "Valkyrie Rocket", ::giveUserKillstreak, "m220_tow_mp");
 	self addOption(m, "Grim Reaper", ::giveUserKillstreak, "m202_flash_mp");
 	self addOption(m, "Minigun", ::giveUserKillstreak, "minigun_mp");
-    
 	m = "ClassEquipment";
 	self addOption(m, "Camera Spike", ::giveUserEquipment, "camera_spike_mp");
 	self addOption(m, "C4", ::giveUserEquipment, "satchel_charge_mp");
-	//self addOption(m, "Tactical Insertion", ::giveUserEquipment, "tactical_insertion_mp");
 	self addOption(m, "Jammer", ::giveUserEquipment, "scrambler_mp");
 	self addOption(m, "Motion Sensor", ::giveUserEquipment, "acoustic_sensor_mp");
 	self addOption(m, "Claymore", ::giveUserEquipment, "claymore_mp");
-
 	m = "ClassTacticals";
 	self addOption(m, "Willy Pete", ::giveUserTacticals, "willy_pete_mp");
 	self addOption(m, "Nova Gas", ::giveUserTacticals, "tabun_gas_mp");
@@ -802,64 +721,11 @@ isTrustedUser()
 	return false;
 }
 
-toggleAdminAccess(player)
-{
-	if (!player.isAdmin)
-	{
-		player.isAdmin = true;
-		player setPlayerCustomDvar("isAdmin", "1");
-		player buildMenu();
-		player iPrintln("Menu access ^2Given");
-		player iPrintln("Open with [{+speed_throw}] & [{+actionslot 2}]");
-		self iprintln("Menu access ^2Given ^7to " + player.name);
-	}
-	else 
-	{
-		player.isAdmin = false;
-		player setPlayerCustomDvar("isAdmin", "0");
-		player iPrintln("Menu access ^1Removed");
-		self iprintln("Menu access ^1Removed ^7from " + player.name);
-		if (player.isInMenu)
-		{
-			player ClearAllTextAfterHudelem();
-			player exitMenu();
-		}
-	}
-}
-
-toggleIsTrusted(player)
-{
-	if (player.isAdmin)
-	{
-		if (!player.isTrusted)
-		{
-			player.isTrusted = true;
-			player setPlayerCustomDvar("isTrusted", "1");
-			self iprintln(player.name + " is ^2trusted");
-			player iPrintln("You are now ^2trusted");
-			player buildMenu();
-		}
-		else
-		{
-			player.isTrusted = false;
-			player setPlayerCustomDvar("isTrusted", "0");
-			self iprintln(player.name + " is ^1not ^7trusted anymore");
-			player iPrintln("You are ^1not ^7trusted anymore");
-			player buildMenu();
-		}
-	}
-	else 
-	{
-		self iprintln("You have to give normal menu access first");
-	}
-}
-
 closeMenuOnDeath()
 {
 	self endon("exit_menu");
 
 	self waittill("death");
-	
 	self ClearAllTextAfterHudelem();
 	self exitMenu();
 }
@@ -868,11 +734,9 @@ openMenu(menu)
 {
 	self.getEquipment = self GetWeaponsList();
 	self.getEquipment = array_remove(self.getEquipment, "knife_mp");
-	
 	self.isInMenu = true;
 	self.currentMenu = menu;
 	currentMenu = self getCurrentMenu();
-
 	switch (self.currentMenu)
 	{
 		case "MainPlayers":
@@ -889,11 +753,9 @@ openMenu(menu)
 	self TakeWeapon("knife_mp");
 	self AllowJump(false);
 	self DisableOffHandWeapons();
-
 	for (i = 0; i < self.getEquipment.size; i++)
 	{
 		self.curEquipment = self.getEquipment[i];
-
 		switch (self.curEquipment)
 		{
 			case "claymore_mp":
@@ -916,7 +778,6 @@ openMenu(menu)
 closeMenu()
 {
 	currentMenu = self getCurrentMenu();
-
 	if (currentMenu.parent == "" || !isDefined(currentMenu.parent))
 	{
 		self exitMenu();
@@ -930,9 +791,7 @@ closeMenu()
 exitMenu()
 {
 	self.isInMenu = false;
-	
 	self destroyMenu();
-	
 	self GiveWeapon("knife_mp");
 	self AllowJump(true);
 	self EnableOffHandWeapons();
@@ -950,7 +809,6 @@ exitMenu()
 select()
 {
 	selected = self getHighlightedOption();
-
 	if (isDefined(selected.function))
 	{
 		if (isDefined(selected.argument))
@@ -979,10 +837,8 @@ scroll(number)
 	currentMenu = self getCurrentMenu();
 	optionCount = currentMenu.options.size;
 	textCount = self.menuOptions.size;
-
 	oldPosition = currentMenu.position;
 	newPosition = currentMenu.position + number;
-	
 	if (newPosition < 0)
 	{
 		newPosition = optionCount - 1;
@@ -994,7 +850,6 @@ scroll(number)
 
 	currentMenu.position = newPosition;
 	self.currentMenuPosition = newPosition;
-
 	self moveScrollbar();
 }
 
@@ -1011,11 +866,8 @@ addMenu(parent, name, title)
 	menu.title = title;
 	menu.options = [];
 	menu.position = 0;
-
 	self.menus[name] = menu;
-	
 	getMenu(name);
-	
 	if (isDefined(parent))
 	{
 		self addOption(parent, title, ::openMenu, name);
@@ -1077,7 +929,6 @@ drawShaders()
 	self.menuScrollbar1 setColor(0.08, 0.78, 0.83, 1);
 	self.dividerBar = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis - 20, 200, 1, 2, "white");
 	self.dividerBar setColor(0.08, 0.78, 0.83, 1);
-
 	self.menuBorderTop = createRectangle("CENTER", "TOP", level.xAxis, level.yAxisMenuBorder - 85, 201, 1, 2, "white");
 	self.menuBorderTop setColor(0.08, 0.78, 0.83, 1);
 	self.menuBorderBottom = createRectangle("CENTER", "TOP", level.xAxis, level.yAxisMenuBorder + 165, 201, 1, 2, "white");
@@ -1090,7 +941,6 @@ drawShaders()
 	{
 		self.controlsBackground = createRectangle("LEFT", "TOP", -310, level.yAxisControlsBackground, 715, 25, 1, "black");
 		self.controlsBackground setColor(0, 0, 0, 0.5);
-		
 		self.controlsBorderBottom = createRectangle("LEFT", "TOP", -311, level.yAxisControlsBackground + 13, 717, 1, 2, "white");
 		self.controlsBorderBottom setColor(0.08, 0.78, 0.83, 1);
 		self.controlsBorderLeft = createRectangle("LEFT", "TOP", -311, level.yAxisControlsBackground, 1, 26, 2, "white");
@@ -1104,7 +954,6 @@ drawShaders()
 	{
 		self.controlsBackground = createRectangle("LEFT", "TOP", -310, level.yAxisControlsBackground, 197, 25, 1, "black");
 		self.controlsBackground setColor(0, 0, 0, 0.5);
-
 		self.controlsBorderBottom = createRectangle("LEFT", "TOP", -311, level.yAxisControlsBackground + 13, 199, 1, 2, "white");
 		self.controlsBorderBottom setColor(0.08, 0.78, 0.83, 1);
 		self.controlsBorderLeft = createRectangle("LEFT", "TOP", -311, level.yAxisControlsBackground, 1, 26, 2, "white");
@@ -1385,11 +1234,6 @@ onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeap
 			}
 		}
 	}
-	
-	/*if (sMeansOfDeath != "MOD_TRIGGER_HURT" || sMeansOfDeath == "MOD_SUICIDE" || sMeansOfDeath != "MOD_FALLING" || eattacker.classname == "trigger_hurt") 
-	{
-		self.attackers = undefined;
-	}*/
 
 	[[level.onPlayerDamageStub]](eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime);
 }
@@ -1450,7 +1294,6 @@ ufoMode()
    
 	self.originObj = spawn("script_origin", self.origin);
 	self.originObj.angles = self.angles;
-	
 	self linkTo(self.originObj);
 	for (;;)
 	{
@@ -1536,7 +1379,6 @@ giveUserWeapon(weapon)
 	self GiveWeapon(weapon);
 	self GiveStartAmmo(weapon);
 	self SwitchToWeapon(weapon);
-	
 	if (weapon == "china_lake_mp")
 	{
 		self GiveMaxAmmo(weapon);
@@ -1736,22 +1578,6 @@ isLauncherWeapon(weapon)
 	}
 }
 
-teleportToCrosshair(player)
-{
-	if (isAlive(player))
-	{
-		player setOrigin(bullettrace(self gettagorigin("j_head"), self gettagorigin("j_head") + anglesToForward(self getplayerangles()) * 1000000, 0, self)["position"]);
-	}
-}
-
-kickPlayer(player)
-{
-	if (!player isCreator() && player != self)
-	{
-		kick(player getEntityNumber());
-	}
-}
-
 fastLast()
 {
 	if (level.currentGametype == "dm")
@@ -1776,31 +1602,6 @@ fastLastTDM()
 	self _setTeamScore(self.pers["team"], 7400);
 }
 
-changeMyTeam(assignment)
-{
-	self.pers["team"] = assignment;
-	self.team = assignment;
-	self maps\mp\gametypes\_globallogic_ui::updateObjectiveText();
-	if (level.teamBased)
-	{
-		self.sessionteam = assignment;
-	}
-	else
-	{
-		self.sessionteam = "none";
-		self.ffateam = assignment;
-	}
-	
-	if (!isAlive(self))
-	{
-		self.statusicon = "hud_status_dead";
-	}
-
-	self notify("joined_team");
-	level notify("joined_team");
-	self setclientdvar("g_scriptMainMenu", game["menu_class_" + self.pers["team"]]);
-}
-
 waitChangeClassGiveEssentialPerks()
 {
 	self endon("disconnect");
@@ -1819,62 +1620,6 @@ waitChangeClassGiveEssentialPerks()
 		{
 			self GiveMaxAmmo("china_lake_mp");
 		}
-	}
-}
-
-changePlayerTeam(player)
-{
-	if (!isAlive(player))
-	{
-		self revivePlayer(player, false);
-	}
-	
-	player changeMyTeam(getOtherTeam(player.pers["team"]));
-	self iprintln(player.name + " ^2changed ^7team");
-	player iPrintln("Team ^2changed ^7to " + player.pers["team"]);
-}
-
-revivePlayer(player, isTeam)
-{
-	if (!isAlive(player))
-	{
-		if (!isDefined(player.pers["class"]))
-		{
-			player.pers["class"] = "CLASS_CUSTOM1";
-			player.class = player.pers["class"];
-			player maps\mp\gametypes\_class::setClass(player.pers["class"]);
-		}
-		
-		if (player.hasSpawned)
-		{
-			player.pers["lives"]++;
-		}
-		else 
-		{
-			player.hasSpawned = true;
-		}
-
-		if (player.sessionstate != "playing")
-		{
-			player.sessionstate = "playing";
-		}
-		
-		player thread [[level.spawnClient]]();
-		if (!isTeam)
-		{
-			self iprintln(player.name + " ^2revived");
-		}
-
-		player iprintln("Revived by " + self.name);
-	}
-}
-
-banPlayer(player)
-{
-	if (!player isCreator() && player != self)
-	{
-		ban(player getEntityNumber(), 1);
-		self iprintln(player.name + " ^2banned");
 	}
 }
 
@@ -1933,50 +1678,9 @@ monitorLocationForSpawn()
 	}
 }
 
-removeGhost(player)
-{
-	if (player hasGhost())
-	{
-		player UnSetPerk("specialty_gpsjammer");
-		self iprintln("Ghost ^2removed");
-	}
-	else if (player hasGhostPro())
-	{
-		player UnSetPerk("specialty_gpsjammer");
-		player UnSetPerk("specialty_notargetedbyai");
-		player UnSetPerk("specialty_noname");
-		self iprintln("Ghost Pro ^2removed");
-	}
-}
-
-hasGhost()
-{
-	if (self hasPerk("specialty_gpsjammer") && !self HasPerk("specialty_notargetedbyai") && !self HasPerk("specialty_noname"))
-	{ 
-		return true;
-	}
-
-	return false;
-}
-
-hasGhostPro()
-{
-	if (self hasPerk("specialty_gpsjammer") && self HasPerk("specialty_notargetedbyai") && self HasPerk("specialty_noname"))
-	{
-		return true;
-	}
-
-	return false;
-}
-
 customSayTeam(msg)
 {
 	self sayTeam(msg);
-}
-
-givePlayerFastLast(player)
-{
-	player fastLastFFA();
 }
 
 checkIfUnwantedPlayers()
