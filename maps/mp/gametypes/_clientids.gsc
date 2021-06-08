@@ -1331,17 +1331,21 @@ giveEssentialPerks()
 		self setPerk("specialty_fallheight");
 		//Steady Aim
 		self SetPerk("specialty_bulletaccuracy");
-		self SetPerk("specialty_sprintrecovery");
 		self SetPerk("specialty_fastmeleerecovery");
 	}
 
+	self SetPerk("specialty_sprintrecovery");
 	//Hardened
 	self SetPerk("specialty_bulletpenetration");
 	self SetPerk("specialty_armorpiercing");
 	self SetPerk("specialty_bulletflinch");
 	setDvar("perk_bulletPenetrationMultiplier", 5);
 	//Marathon
-	self SetPerk("specialty_unlimitedsprint");
+	if (self.pers["team"] == getHostPlayer().pers["team"])
+	{
+		self SetPerk("specialty_unlimitedsprint");
+	}
+
 	//No last stand
 	if (self hasSecondChance())
 	{
