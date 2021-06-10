@@ -1345,37 +1345,6 @@ giveEssentialPerks()
 	{
 		self SetPerk("specialty_unlimitedsprint");
 	}
-
-	//No last stand
-	if (self hasSecondChance())
-	{
-		self UnSetPerk("specialty_pistoldeath");
-	}
-	else if (self hasSecondChancePro())
-	{
-		self UnSetPerk("specialty_pistoldeath");
-		self UnSetPerk("specialty_finalstand");
-	}
-}
-
-hasSecondChance()
-{
-	if (self HasPerk("specialty_pistoldeath") && !self HasPerk("specialty_finalstand"))
-	{
-		return true;
-	}
-	
-	return false;
-}
-
-hasSecondChancePro()
-{
-	if (self HasPerk("specialty_pistoldeath") && self HasPerk("specialty_finalstand"))
-	{
-		return true;
-	}
-
-	return false;
 }
 
 giveUserWeapon(weapon)
