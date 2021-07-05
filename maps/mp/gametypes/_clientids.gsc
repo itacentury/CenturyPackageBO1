@@ -19,6 +19,7 @@ init()
 	setDvar("OPStreaksEnabled", "0"); //OP Streaks
 	setDvar("killcam_final", "1"); //Playercard in Killcam
 	setDvar("bombEnabled", "0"); //Bomb in SnD
+	setDvar("cg_drawFriendInColor", "1"); //Draw Friends in Blue
 	if (level.console)
 	{
 		level.yAxis = 150;
