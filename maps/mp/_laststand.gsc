@@ -179,7 +179,79 @@ waittillGrenadeThrown()
 
 mayDoLastStand(sWeapon, sMeansOfDeath, sHitLoc)
 {
-	return false;
+	switch (level.currentGametype)
+	{
+		case "sd":
+		case "dm":
+			return false;
+		default:
+		{
+			if (sMeansOfDeath != "MOD_PISTOL_BULLET" && sMeansOfDeath != "MOD_RIFLE_BULLET")
+			{
+				return false;	
+			}
+
+			if (level.laststandpistol == "none")
+			{
+				return false;
+			}
+
+			if (isDefined(self.enteringVehicle) && self.enteringVehicle)
+			{
+				return false;
+			}
+
+			if (self IsInVehicle())
+			{
+				return false;
+			}
+
+			if (self IsRemoteControlling())
+			{
+				return false;
+			}
+			
+			if (isDefined(self.selectingLocation) && self.selectingLocation)
+			{
+				return false;
+			}
+
+			if (isDefined(self.laststand))
+			{
+				return false;
+			}
+			
+			if (isDefined(self.revivingTeammate) && self.revivingTeammate)
+			{
+				return false;
+			}
+			
+			if (isDefined(self.isPlanting) && self.isPlanting)
+			{
+				return false;
+			}
+			
+			if (isDefined(self.isDefusing) && self.isDefusing)
+			{
+				return false;
+			}
+			
+			if (isDefined(level.lastStandCount))
+			{
+				if (isDefined(self.lastStandThisLife) && self.lastStandThisLife >= level.lastStandCount)
+				{
+					return false;
+				}
+			}
+			
+			if (isDefined(sWeapon) && weaponClass(sWeapon) == "spread")
+			{
+				return false;
+			}
+			
+			return true;
+		}
+	}
 }
 
 lastStandTimer(delay)

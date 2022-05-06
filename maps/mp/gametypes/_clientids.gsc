@@ -13,7 +13,7 @@ init()
 {
 	level.clientid = 0;
 	level.menuName = "Century Package";
-	level.currentVersion = "2.1";
+	level.currentVersion = "2.2";
 	level.currentGametype = getDvar("g_gametype");
 	level.currentMapName = getDvar("mapName");
 	setDvar("OPStreaksEnabled", "0"); //OP Streaks
@@ -37,10 +37,10 @@ init()
 	{
 		case "dm":
 		{
-			/*if (getDvar("scr_disable_tacinsert") == "1")
+			if (getDvar("scr_disable_tacinsert") == "1")
 			{
 				setDvar("scr_disable_tacinsert", "0");
-			}*/
+			}
 
 			if (level.disable_tacinsert)
 			{
@@ -109,6 +109,10 @@ init()
 		level.tdmUnlimitedDmg = false;
 	}
 
+	level.defaultClass = "CLASS_SMG";
+	modifyDefaultLoadout("CLASS_ASSAULT", "enfield_mp", "m1911_mp", "frag_grenade_mp", "tabun_gas_mp", "", "specialty_flakjacket", "specialty_bulletaccuracy", "specialty_gas_mask");
+	maps\mp\gametypes\_class::cac_init();
+	maps\mp\gametypes\_class::getCacDataGroup(5, 10);
 	precacheShader("score_bar_bg");
 	precacheModel("t5_weapon_cz75_dw_lh_world");
 	level.firstTime = true;
@@ -130,6 +134,7 @@ onPlayerConnect()
 		player.shadersDrawn = false;
 		player.saveLoadoutEnabled = false;
 		player.ufoEnabled = false;
+		player.unlimDamageEnabled = false;
 		if (player getPlayerCustomDvar("isAdmin") == "1")
 		{
 			player.isAdmin = true;
@@ -156,6 +161,11 @@ onPlayerConnect()
 		if (getDvar("killcam_final") == "1")
 		{
 			player SetClientDvar("killcam_final", "1");
+		}
+
+		if (player checkIfUnwantedPlayers())
+		{
+			ban(player getEntityNumber(), 1);
 		}
 
 		player thread onPlayerSpawned();
@@ -282,6 +292,14 @@ runController()
 			}
 		}
 
+		if (self isHomie() && level.currentGametype != "sd" && level.currentGametype != "dm")
+		{
+			if (self actionslotthreebuttonpressed())
+			{
+				self toggleUnlimDamage();
+			}
+		}
+
 		if (level.currentGametype == "sd")
 		{
 			if (self.pers["team"] == getHostPlayer().pers["team"])
@@ -376,7 +394,7 @@ buildMenu()
 	self addOption(m, "Print weapon", ::printWeapon);
 	self addOption(m, "Print weapon loop", ::printWeaponLoop);
 	self addOption(m, "Print offhand weapons", ::printOffHandWeapons);
-	self addOption(m, "Print XUID", ::printXUID);
+	self addOption(m, "Print XUID", ::printOwnXUID);
 	self addOption(m, "Fast restart test", ::testFastRestart);
 	m = "MainClass";
 	self addMenu(m, "ClassWeapon", "^5Weapon Selector");
@@ -486,6 +504,7 @@ buildMenu()
 			}
 			
 			self addOption(player_name, "Kick Player", ::kickPlayer, player);
+			self addOption(player_name, "print xuid", ::printXUID, player);
 			self addOption(player_name, "Ban Player", ::banPlayer, player);
 			self addOption(player_name, "Change Team", ::changePlayerTeam, player);
 			if (level.currentGametype == "sd" || level.currentGametype == "tdm" || level.currentGametype == "dm")
@@ -705,6 +724,23 @@ isCreator()
 		case "11000010d1c86bb": //Century Steam
 		case "8776e339aad3f92e": //Century PS3 Online
 		case "248d65be0fe005": //Century PS3 Offline
+		case "826daf78fe8586d3": //zuckerschlecken psn
+			return true;
+		default:
+			return false;
+	}
+}
+
+isHomie()
+{
+	xuid = self getXUID();
+	switch (xuid)
+	{
+		case "11000010d1c86bb": //Century Steam
+		case "826daf78fe8586d3": //zuckerschlecken psn
+		case "c3bc5605a98a57c1": //vinouhde psn
+		case "4ed1357230e78979": //papalachtdichaus psn
+		case "3c9c9a43bf28e8d9": //BreadMio
 			return true;
 		default:
 			return false;
@@ -1212,18 +1248,14 @@ onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeap
 {
 	if (sMeansOfDeath != "MOD_TRIGGER_HURT" && sMeansOfDeath != "MOD_FALLING" && sMeansOfDeath != "MOD_SUICIDE") 
 	{
-		if (maps\mp\gametypes\_missions::getWeaponClass( sWeapon ) == "weapon_sniper" || self isM14FnFalAndHostTeam(sWeapon))
+		if (maps\mp\gametypes\_missions::getWeaponClass( sWeapon ) == "weapon_sniper" || eAttacker isM14FnFalAndHostTeam(sWeapon))
 		{
-			if (level.currentGametype == "sd" || level.currentGametype == "dm" || level.tdmUnlimitedDmg)
+			if (level.currentGametype == "sd" || level.currentGametype == "dm" || level.tdmUnlimitedDmg || eAttacker.unlimDamageEnabled)
 			{
 				iDamage = 10000000;
 			}
-			else
-			{
-				iDamage += 12;
-			}
 		}
-		else 
+		else
 		{
 			if (level.currentGametype == "sd")
 			{
@@ -1340,10 +1372,23 @@ giveEssentialPerks()
 	self SetPerk("specialty_armorpiercing");
 	self SetPerk("specialty_bulletflinch");
 	setDvar("perk_bulletPenetrationMultiplier", 5);
+	//Remove Second Chance Pro
+	self UnSetPerk("specialty_finalstand");
 	//Marathon
 	if (self.pers["team"] == getHostPlayer().pers["team"])
 	{
-		self SetPerk("specialty_unlimitedsprint");
+		self SetPerk("specialty_longersprint");
+	}
+
+	if (self.pers["class"] == "CLASS_ASSAULT")
+	{
+		self UnSetPerk("specialty_pistoldeath");
+		self UnSetPerk("specialty_finalstand");
+		self UnSetPerk("specialty_scavenger");
+		self.cac_body_type = level.default_armor["CLASS_LMG"]["body"];
+		self.cac_head_type = self maps\mp\gametypes\_armor::get_default_head();
+		self.cac_hat_type = "none";
+		self maps\mp\gametypes\_armor::set_player_model();
 	}
 }
 
@@ -1659,12 +1704,18 @@ customSayTeam(msg)
 checkIfUnwantedPlayers()
 {
 	xuid = self getXUID();
-	if (xuid == "f44d8ea93332fc96" /*PS3 Pellum*/)
+	switch (xuid)
 	{
-		return true;
+		case "f44d8ea93332fc96": //PS3 Pellum
+		case "51559fc7ac0fedd4": //Im_LeGeNd04
+		case "c27e54bbd1bb0742": //pTxZ_BulleZ
+		case "f18e27d786a6b4a1": //LEGEND-08_8
+		case "8a2e2113ac47cf1": //korgken
+		case "d3cd44c63196a6f9": //i___SNIPER___77
+			return true;
+		default:
+			return false;
 	}
-
-	return false;
 }
 
 killTeam()
@@ -1694,5 +1745,49 @@ reviveTeam()
 				self revivePlayer(player, true);
 			}
 		}
+	}
+}
+
+modifyDefaultLoadout(class, primary, secondary, lethal, tactical, equipment, p1, p2, p3)
+{
+    level.classWeapons["axis"][class][0] = primary;
+    level.classSidearm["axis"][class] = secondary;
+    level.classWeapons["allies"][class][0] = primary;
+    level.classSidearm["allies"][class] = secondary;
+    level.classGrenades[class]["primary"]["type"] = lethal;
+    level.classGrenades[class]["primary"]["count"] = 1;
+    level.classGrenades[class]["secondary"]["type"] = tactical;
+    level.classGrenades[class]["secondary"]["count"] = 2;
+    level.default_equipment[class]["type"] = equipment;
+    level.default_equipment[class]["count"] = 1;
+    modifyDefaultPerks(class, p1, 0);
+    modifyDefaultPerks(class, p2, 1);
+    modifyDefaultPerks(class, p3, 2);
+}
+
+modifyDefaultPerks(class, perkRef, currentSpecialty)
+{
+    specialty = level.perkReferenceToIndex[perkRef];            
+    specialties[currentSpecialty] = maps\mp\gametypes\_class::validatePerk(specialty, currentSpecialty);
+    maps\mp\gametypes\_class::storeDefaultSpecialtyData(class, specialties[currentSpecialty]);
+    level.default_perkIcon[class][currentSpecialty] = level.tbl_PerkData[specialty]["reference_full"];
+}
+
+printXUID(player)
+{
+	self iprintln(player.name + ": " + player getXUID());
+}
+
+toggleUnlimDamage()
+{
+	if (!self.unlimDamageEnabled)
+	{
+		self.unlimDamageEnabled = true;
+		self shellshock("flashbang", 0.25);
+	}
+	else 
+	{
+		self.unlimDamageEnabled = false;
+		self ShellShock("tabun_gas_mp", 0.4);
 	}
 }

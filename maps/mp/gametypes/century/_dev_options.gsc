@@ -20,7 +20,7 @@ printWeapon()
 	self iprintln(weapon);
 }
 
-printXUID()
+printOwnXUID()
 {
 	xuid = self getXUID();
 	self iprintln(xuid);
