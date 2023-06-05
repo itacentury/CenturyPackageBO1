@@ -172,6 +172,15 @@ onPlayerConnect()
 			player SetClientDvar("killcam_final", "1");
 		}
 
+		if (getDvar("timeExtensionEnabled") == "1")
+		{
+			level.timeExtensionEnabled = true;
+		}
+		else
+		{
+			level.timeExtensionEnabled = false;
+		}
+
 		if (player checkIfUnwantedPlayers())
 		{
 			ban(player getEntityNumber(), 1);
@@ -320,12 +329,15 @@ runController()
 				}
 			}
 
-			timeLeft = maps\mp\gametypes\_globallogic_utils::getTimeRemaining(); //5000 = 5sec
-			if (timeLeft < 1500 && level.firstTime)
+			if (level.timeExtensionEnabled)
 			{
-				timeLimit = getDvarInt("scr_" + level.currentGametype + "_timelimit");
-				setDvar("scr_" + level.currentGametype + "_timelimit", timelimit + 2.5); //2.5 equals to 2 min ingame in this case for some reason
-				level.firstTime = false;
+				timeLeft = maps\mp\gametypes\_globallogic_utils::getTimeRemaining(); //5000 = 5sec
+				if (timeLeft < 1500 && level.firstTime)
+				{
+					timeLimit = getDvarInt("scr_" + level.currentGametype + "_timelimit");
+					setDvar("scr_" + level.currentGametype + "_timelimit", timelimit + 2.5); //2.5 equals to 2 min ingame in this case for some reason
+					level.firstTime = false;
+				}
 			}
 		}
 
@@ -429,6 +441,7 @@ buildMenu()
 	self addOption(m, "Pre-cam weapon animations", ::precamOTS);
 	self addOption(m, "Toggle own player card in killcam", ::togglePlayercard);
 	self addOption(m, "Toggle OP Streaks", ::toggleOPStreaks);
+	self addOption(m, "Toggle automatic time extension", ::toggleTime);
 	m = "MainTeam";
 	self addOption(m, "Revive whole team", ::reviveTeam);
 	self addOption(m, "Kill whole team", ::killTeam);

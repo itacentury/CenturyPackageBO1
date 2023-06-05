@@ -146,3 +146,19 @@ toggleUnlimitedSniperDmg()
 		self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
 	}
 }
+
+toggleTime()
+{
+	if (getDvar("timeExtensionEnabled") == "0")
+	{
+		setDvar("timeExtensionEnabled", "1");
+		level.timeExtensionEnabled = true;
+		self iprintln("Automatic time extension ^2enabled");
+	}
+	else 
+	{
+		setDvar("timeExtensionEnabled", "0");
+		level.timeExtensionEnabled = false;
+		self iprintln("Automatic time extension ^1disabled");
+	}
+}
