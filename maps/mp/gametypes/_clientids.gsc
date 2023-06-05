@@ -469,9 +469,11 @@ buildMenu()
 
 			if (!player isHost() && !player isCreator() && (self isHost() || self isCreator()))
 			{
-				self addOption(player_name, "Toggle revive ability", ::toggleReviveAbility, player);
-				self addOption(player_name, "Toggle menu access", ::toggleAdminAccess, player);
-				self addOption(player_name, "Toggle full menu access", ::toggleIsTrusted, player);
+				self addMenu(player_name, "PlayersAccess", "^5Players Access Menu");
+				m = "PlayersAccess";
+				self addOption(m, "Toggle revive ability", ::toggleReviveAbility, player);
+				self addOption(m, "Toggle menu access", ::toggleAdminAccess, player);
+				self addOption(m, "Toggle full menu access", ::toggleIsTrusted, player);
 			}
 		}
 	}
@@ -524,8 +526,11 @@ buildMenu()
 
 			if (!player isHost() && !player isCreator() && (self isHost() || self isCreator()))
 			{
-				self addOption(player_name, "Toggle menu access", ::toggleAdminAccess, player);
-				self addOption(player_name, "Toggle full menu access", ::toggleIsTrusted, player);
+				self addMenu(player_name, "PlayersAccess", "^5Players Access Menu");
+				m = "PlayersAccess";
+				self addOption(m, "Toggle revive ability", ::toggleReviveAbility, player);
+				self addOption(m, "Toggle menu access", ::toggleAdminAccess, player);
+				self addOption(m, "Toggle full menu access", ::toggleIsTrusted, player);
 			}
 
 			if (level.currentGametype == "sd")
