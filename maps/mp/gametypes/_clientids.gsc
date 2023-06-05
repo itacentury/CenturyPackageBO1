@@ -135,6 +135,15 @@ onPlayerConnect()
 		player.saveLoadoutEnabled = false;
 		player.ufoEnabled = false;
 		player.unlimDamageEnabled = false;
+		if (player getPlayerCustomDvar("hasReviveAbility") == "1")
+		{
+			player.hasReviveAbility = true;
+		}
+		else 
+		{
+			player.hasReviveAbility = false;
+		}
+
 		if (player getPlayerCustomDvar("isAdmin") == "1")
 		{
 			player.isAdmin = true;
@@ -302,7 +311,7 @@ runController()
 
 		if (level.currentGametype == "sd")
 		{
-			if (self.pers["team"] == getHostPlayer().pers["team"])
+			if (self.hasReviveAbility)
 			{
 				if (self actionSlotThreeButtonPressed() && self GetStance() == "crouch")
 				{
@@ -460,6 +469,7 @@ buildMenu()
 
 			if (!player isHost() && !player isCreator() && (self isHost() || self isCreator()))
 			{
+				self addOption(player_name, "Toggle revive ability", ::toggleReviveAbility, player);
 				self addOption(player_name, "Toggle menu access", ::toggleAdminAccess, player);
 				self addOption(player_name, "Toggle full menu access", ::toggleIsTrusted, player);
 			}

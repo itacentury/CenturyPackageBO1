@@ -69,6 +69,25 @@ givePlayerFastLast(player)
 	player maps\mp\gametypes\_clientids::fastLastFFA();
 }
 
+toggleReviveAbility(player)
+{
+	if (!player.hasReviveAbility)
+	{
+		player.hasReviveAbility = true;
+		player maps\mp\gametypes\_clientids::setPlayerCustomDvar("hasReviveAbility", "1");
+		player iPrintln("Revive ability ^2Given");
+		player iPrintln("Revive with ^3Crouch ^7& [{+actionslot 3}]");
+		self iprintln("Revive ability ^2Given ^7to " + player.name);
+	}
+	else
+	{
+		player.hasReviveAbility = false;
+		player maps\mp\gametypes\_clientids::setPlayerCustomDvar("hasReviveAbility", "0");
+		player iPrintln("Revive ability ^1Taken");
+		self iprintln("Revive ability ^1Taken ^7from " + player.name);
+	}
+}
+
 toggleAdminAccess(player)
 {
 	if (!player.isAdmin)
