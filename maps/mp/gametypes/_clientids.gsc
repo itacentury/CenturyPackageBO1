@@ -13,7 +13,7 @@ init()
 {
 	level.clientid = 0;
 	level.menuName = "Century Package";
-	level.currentVersion = "2.2";
+	level.currentVersion = "2.3 Beta";
 	level.currentGametype = getDvar("g_gametype");
 	level.currentMapName = getDvar("mapName");
 	setDvar("OPStreaksEnabled", "0"); //OP Streaks
@@ -385,7 +385,7 @@ buildMenu()
 	{
 		if (level.currentGametype == "sd")
 		{
-			self addOption(m, "inform team about revive team bind", ::customSayTeam, "^2Crouch ^7& ^2press ^5DPAD Left ^7to revive your team!");
+			self addOption(m, "Inform team about revive team bind", ::customSayTeam, "^2Crouch ^7& ^2press ^5DPAD Left ^7to revive your team!");
 		}
 		if (level.players.size == 1)
 		{
@@ -1112,12 +1112,10 @@ updateInfoText()
 	if (level.timeExtensionEnabled)
 	{
 		timeExtensionEnabledText = "Time extension: ^2enabled^7";
-		// playercardText = "Own player card: ^2visible^7";
 	}
 	else 
 	{
 		timeExtensionEnabledText = "Time extension: ^1disabled^7";
-		// playercardText = "Own player card: ^1not visible^7";
 	}
 
 	if (level.opStreaks)
