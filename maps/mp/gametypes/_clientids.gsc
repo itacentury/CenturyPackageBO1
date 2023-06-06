@@ -208,6 +208,11 @@ onPlayerSpawned()
 				{
 					self.isAdmin = true;
 				}
+
+				if (!self.hasReviveAbility)
+				{
+					self.hasReviveAbility = true;
+				}
 				
 				if (level.currentGametype == "sd")
 				{
