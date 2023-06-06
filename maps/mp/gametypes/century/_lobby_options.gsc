@@ -44,35 +44,6 @@ precamOTS()
 	}
 }
 
-togglePlayercard()
-{
-	if (getDvar("killcam_final") != "1")
-	{
-		setDvar("killcam_final", "1");
-		level.playercard = true;
-		self iprintln("Own playercard ^2visible ^7in killcam");
-		for (i = 0; i < level.players.size; i++)
-		{
-			level.players[i] setClientDvar("killcam_final", "1");
-		}
-	}
-	else 
-	{
-		setDvar("killcam_final", "0");
-		level.playercard = false;
-		self iprintln("Own playercard ^1not visible ^7in killcam");
-		for (i = 0; i < level.players.size; i++)
-		{
-			level.players[i] setClientDvar("killcam_final", "0");
-		}
-	}
-
-	if (self maps\mp\gametypes\_clientids::allowedToSeeInfo())
-	{
-		self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
-	}
-}
-
 toggleOPStreaks()
 {
 	if (getDvar("OPStreaksEnabled") != "0")
@@ -160,5 +131,10 @@ toggleTime()
 		setDvar("timeExtensionEnabled", "0");
 		level.timeExtensionEnabled = false;
 		self iprintln("Automatic time extension ^1disabled");
+	}
+
+	if (self maps\mp\gametypes\_clientids::allowedToSeeInfo())
+	{
+		self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
 	}
 }

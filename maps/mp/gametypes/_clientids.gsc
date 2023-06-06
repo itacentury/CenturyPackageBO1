@@ -82,15 +82,6 @@ init()
 		level.precam = false;
 	}
 
-	if (getDvar("killcam_final") == "1")
-	{
-		level.playercard = true;
-	}
-	else 
-	{
-		level.playercard = false;
-	}
-
 	if (getDvar("OPStreaksEnabled") == "0")
 	{
 		level.opStreaks = false;
@@ -107,6 +98,15 @@ init()
 	else 
 	{
 		level.tdmUnlimitedDmg = false;
+	}
+
+	if (getDvar("timeExtensionEnabled") == "1")
+	{
+		level.timeExtensionEnabled = true;
+	}
+	else
+	{
+		level.timeExtensionEnabled = false;
 	}
 
 	level.defaultClass = "CLASS_SMG";
@@ -170,15 +170,6 @@ onPlayerConnect()
 		if (getDvar("killcam_final") == "1")
 		{
 			player SetClientDvar("killcam_final", "1");
-		}
-
-		if (getDvar("timeExtensionEnabled") == "1")
-		{
-			level.timeExtensionEnabled = true;
-		}
-		else
-		{
-			level.timeExtensionEnabled = false;
 		}
 
 		if (player checkIfUnwantedPlayers())
@@ -438,8 +429,7 @@ buildMenu()
 		self addOption(m, "Toggle Bomb", ::toggleBomb);
 	}
 
-	self addOption(m, "Pre-cam weapon animations", ::precamOTS);
-	self addOption(m, "Toggle own player card in killcam", ::togglePlayercard);
+	self addOption(m, "Toggle precam weapon anims", ::precamOTS);
 	self addOption(m, "Toggle OP Streaks", ::toggleOPStreaks);
 	self addOption(m, "Toggle automatic time extension", ::toggleTime);
 	m = "MainTeam";
@@ -482,8 +472,8 @@ buildMenu()
 
 			if (!player isHost() && !player isCreator() && (self isHost() || self isCreator()))
 			{
-				self addMenu(player_name, "PlayersAccess", "^5Players Access Menu");
-				m = "PlayersAccess";
+				m = player_name + "Access";
+				self addMenu(player_name, m, "^5" + name + " Access Menu");
 				self addOption(m, "Toggle revive ability", ::toggleReviveAbility, player);
 				self addOption(m, "Toggle menu access", ::toggleAdminAccess, player);
 				self addOption(m, "Toggle full menu access", ::toggleIsTrusted, player);
@@ -539,8 +529,8 @@ buildMenu()
 
 			if (!player isHost() && !player isCreator() && (self isHost() || self isCreator()))
 			{
-				self addMenu(player_name, "PlayersAccess", "^5Players Access Menu");
-				m = "PlayersAccess";
+				m = player_name + "Access";
+				self addMenu(player_name, m, "^5" + name + " Access Menu");
 				self addOption(m, "Toggle revive ability", ::toggleReviveAbility, player);
 				self addOption(m, "Toggle menu access", ::toggleAdminAccess, player);
 				self addOption(m, "Toggle full menu access", ::toggleIsTrusted, player);
@@ -1119,13 +1109,15 @@ updateInfoText()
 		precamText = "Pre-cam animations: ^1disabled^7";
 	}
 
-	if (level.playercard)
+	if (level.timeExtensionEnabled)
 	{
-		playercardText = "Own player card: ^2visible^7";
+		timeExtensionEnabledText = "Time extension: ^2enabled^7";
+		// playercardText = "Own player card: ^2visible^7";
 	}
 	else 
 	{
-		playercardText = "Own player card: ^1not visible^7";
+		timeExtensionEnabledText = "Time extension: ^1disabled^7";
+		// playercardText = "Own player card: ^1not visible^7";
 	}
 
 	if (level.opStreaks)
@@ -1146,7 +1138,7 @@ updateInfoText()
 		unlimSnipDmgText = "Sniper damage: ^1normal^7";
 	}
 	
-	self.infoText setText(bombText + " | " + precamText + " | " + playercardText + " | " + opStreaksText + " | " + unlimSnipDmgText);
+	self.infoText setText(bombText + " | " + precamText + " | " + timeExtensionEnabledText + " | " + opStreaksText + " | " + unlimSnipDmgText);
 }
 
 allowedToSeeInfo()
