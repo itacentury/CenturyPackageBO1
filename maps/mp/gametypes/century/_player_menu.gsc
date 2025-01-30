@@ -240,6 +240,11 @@ revivePlayer(player, isTeam)
 	}
 }
 
+printXUID(player)
+{
+	self iprintln(player.name + ": " + player getXUID());
+}
+
 changeToSpectator(player)
 {
     player changeMyTeam("spectator");
