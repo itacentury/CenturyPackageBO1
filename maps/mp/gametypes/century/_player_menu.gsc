@@ -27,12 +27,41 @@ changePlayerTeam(player)
 	}
 	
 	player changeMyTeam(getOtherTeam(player.pers["team"]));
-	self iPrintln(player.name + " ^2changed ^7team");
+	self iPrintln(player.name + " ^2changed ^7team to " + player.pers["team"]);
 	player iPrintln("Team ^2changed ^7to " + player.pers["team"]);
 }
 
 changeMyTeam(assignment)
 {
+    if (assignment == "spectator")
+    {
+        if (isAlive(self))
+		{
+			self.switching_teams = true;
+			self.joining_team = assignment;
+			self.leaving_team = self.pers["team"];
+			self suicide();
+		}
+
+		self.pers["team"] = assignment;
+		self.team = assignment;
+		self.pers["class"] = undefined;
+		self.class = undefined;
+		self.pers["weapon"] = undefined;
+		self.pers["savedmodel"] = undefined;
+		self maps\mp\gametypes\_globallogic_ui::updateObjectiveText();
+		self.sessionteam = assignment;
+		if (!level.teamBased)
+		{
+			self.ffateam = assignment;
+		}
+
+		[[level.spawnSpectator]]();
+		self setclientdvar("g_scriptMainMenu", game["menu_team"]);
+		self notify("joined_spectators");
+        return;
+    }
+
 	self.pers["team"] = assignment;
 	self.team = assignment;
 	self maps\mp\gametypes\_globallogic_ui::updateObjectiveText();
@@ -209,4 +238,11 @@ revivePlayer(player, isTeam)
 
 		player iprintln("Revived by " + self.name);
 	}
+}
+
+changeToSpectator(player)
+{
+    player changeMyTeam("spectator");
+    self iPrintln(player.name + " ^2changed ^7team to " + player.pers["team"]);
+	player iPrintln("Team ^2changed ^7to " + player.pers["team"]);
 }
