@@ -348,52 +348,44 @@ runController()
 }
 
 /*MENU*/
-buildMenu()
-{
+buildMenu() {
 	self.menus = [];
 	m = "main";
 	//start main
 	self addMenu("", m, "Century Package " + level.currentVersion);
 	self addOption(m, "Refill Ammo", ::refillAmmo);
 	self addMenu(m, "MainSelf", "^5Self Options");
-	if (self isCreator() && !level.console)
-	{
+	if (self isCreator() && !level.console) {
 		self addMenu(m, "MainDev", "^5Dev Options");
 	}
 
 	self addMenu(m, "MainClass", "^5Class Options");
-	if (self isHost() || self isCreator())
-	{
+	if (self isHost() || self isCreator()) {
 		self addMenu(m, "MainLobby", "^5Lobby Options");
 	}
 
-	if ((self isHost() || self isCreator() || self isTrustedUser()) && level.currentGametype == "sd")
-	{
+	if ((self isHost() || self isCreator() || self isTrustedUser()) && level.currentGametype == "sd") {
 		self addMenu(m, "MainTeam", "^5Team Options");
 	}
 
 	m = "MainSelf";
 	self addOption(m, "Suicide", ::doSuicide);
 	self addOption(m, "Third Person", ::ToggleThirdPerson);
-	if (level.currentGametype == "dm" && (self isHost() || self isCreator() || self isTrustedUser()))
-	{		
+	if (level.currentGametype == "dm" && (self isHost() || self isCreator() || self isTrustedUser())) {
 		self addOption(m, "Fast last", ::fastLast);
 	}
 	
-	if (level.currentGametype != "sd")
-	{
+	if (level.currentGametype != "sd") {
 		self addMenu(m, "SelfLocation", "^5Location Options");
 	}
 
 	self addMenu(m, "SelfLoadout", "^5Loadout Options");
-	if (self isHost() || self isCreator())
-	{
-		if (level.currentGametype == "sd")
-		{
+	if (self isHost() || self isCreator()) {
+		if (level.currentGametype == "sd") {
 			self addOption(m, "Inform team about revive team bind", ::customSayTeam, "^2Crouch ^7& ^2press ^5DPAD Left ^7to revive your team!");
 		}
-		if (level.players.size == 1)
-		{
+
+		if (level.players.size == 1) {
 			self addOption(m, "Give unlock all", ::giveUnlockAll);
 		}
 	}
@@ -424,13 +416,11 @@ buildMenu()
 	self buildWeaponMenu();
 	self buildClassMenu();
 	m = "MainLobby";
-	if (level.currentGametype == "tdm")
-	{
+	if (level.currentGametype == "tdm") {
 		self addOption(m, "Fast last my team", ::fastLast);
 		self addOption(m, "Toggle unlimited sniper damage", ::toggleUnlimitedSniperDmg);
 	}
-	else if (level.currentGametype == "sd")
-	{
+	else if (level.currentGametype == "sd") {
 		self addOption(m, "Toggle Bomb", ::toggleBomb);
 	}
 
@@ -441,113 +431,72 @@ buildMenu()
 	self addOption(m, "Revive whole team", ::reviveTeam);
 	self addOption(m, "Kill whole team", ::killTeam);
 	m = "main";
-	if (self isHost() || self isCreator() || self isTrustedUser())
-	{
+	if (self isHost() || self isCreator() || self isTrustedUser()) {
 		self addMenu(m, "MainPlayers", "^5Players Menu");
 	}
 
 	m = "MainPlayers";
-	if (!level.teamBased)
-	{
-		for (p = 0; p < level.players.size; p++)
-		{
-			player = level.players[p];
-			name = player.name;
-			player_name = "player_" + name;
-			if (isAlive(player))
-			{
-				self addMenu(m, player_name, name + " (Alive)");
-			}
-			else if (!isAlive(player))
-			{
-				self addMenu(m, player_name, name + " (Dead)");
-			}
-
-			self addOption(player_name, "Kick Player", ::kickPlayer, player);
-			self addOption(player_name, "Ban Player", ::banPlayer, player);
-			if (level.currentGametype == "sd" || level.currentGametype == "tdm" || level.currentGametype == "dm")
-			{
-				self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
-			}
-
-			if (level.currentGametype == "dm")
-			{
-				self addOption(player_name, "Give fast last", ::givePlayerFastLast, player);
-			}
-
-			if (!player isHost() && !player isCreator() && (self isHost() || self isCreator()))
-			{
-				m = player_name + "Access";
-				self addMenu(player_name, m, "^5" + name + " Access Menu");
-				self addOption(m, "Toggle revive ability", ::toggleReviveAbility, player);
-				self addOption(m, "Toggle menu access", ::toggleAdminAccess, player);
-				self addOption(m, "Toggle full menu access", ::toggleIsTrusted, player);
-			}
-		}
-	}
-	else if (level.teamBased)
-	{
-		myTeam = self.pers["team"];
-		otherTeam = getOtherTeam(myTeam);
+    myTeam = self.pers["team"];
+    otherTeam = getOtherTeam(myTeam);
+    if (level.teamBased) {
 		self addMenu(m, "PlayerFriendly", "^5Friendly players");
 		self addMenu(m, "PlayerEnemy", "^5Enemy players");
-		for (p = 0; p < level.players.size; p++)
-		{
-			player = level.players[p];
-			name = player.name;
-			player_name = "player_" + name;
-			if (player.pers["team"] == myTeam)
-			{
+        self addMenu(m, "PlayerOther", "^5Other players");
+    }
+
+    for (p = 0; p < level.players.size; p++) {
+        player = level.players[p];
+        name = player.name;
+        player_name = "player_" + name;
+
+        deadOrAlive = " (Dead)";
+        if (isAlive(player)) {
+            deadOrAlive = " (Alive)";
+        }
+
+        if (level.teamBased) {
+            if (player.pers["team"] == myTeam) {
 				m = "PlayerFriendly";
-
-				if (isAlive(player))
-				{
-					self addMenu(m, player_name, name + " (Alive)");
-				}
-				else if (!isAlive(player))
-				{
-					self addMenu(m, player_name, name + " (Dead)");
-				}
 			}
-			else if (player.pers["team"] == otherTeam)
-			{
+			else if (player.pers["team"] == otherTeam) {
 				m = "PlayerEnemy";
+			}
+            else {
+                m = "PlayerOther";
+            }
+        }
+        
+        self addMenu(m, player_name, name + deadOrAlive);
 
-				if (isAlive(player))
-				{
-					self addMenu(m, player_name, name + " (Alive)");
-				}
-				else if (!isAlive(player))
-				{
-					self addMenu(m, player_name, name + " (Dead)");
-				}
-			}
-			
-			self addOption(player_name, "Kick Player", ::kickPlayer, player);
-			self addOption(player_name, "print xuid", ::printXUID, player);
-			self addOption(player_name, "Ban Player", ::banPlayer, player);
-			self addOption(player_name, "Change Team", ::changePlayerTeam, player);
-			if (level.currentGametype == "sd" || level.currentGametype == "tdm" || level.currentGametype == "dm")
-			{
-				self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
-			}
+        self addOption(player_name, "Kick player", ::kickPlayer, player);
+        self addOption(player_name, "Print XUID", ::printXUID, player);
+        self addOption(player_name, "Ban player", ::banPlayer, player);
+        self addOption(player_name, "Change team to spectator", ::changeToSpectator, player);
+        if (level.teamBased) {
+            self addOption(player_name, "Change team", ::changePlayerTeam, player);
+        }
 
-			if (!player isHost() && !player isCreator() && (self isHost() || self isCreator()))
-			{
-				m = player_name + "Access";
-				self addMenu(player_name, m, "^5" + name + " Access Menu");
-				self addOption(m, "Toggle revive ability", ::toggleReviveAbility, player);
-				self addOption(m, "Toggle menu access", ::toggleAdminAccess, player);
-				self addOption(m, "Toggle full menu access", ::toggleIsTrusted, player);
-			}
+        if (level.currentGametype == "sd" || level.currentGametype == "tdm" || level.currentGametype == "dm") {
+            self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
+        }
 
-			if (level.currentGametype == "sd")
-			{
-				self addOption(player_name, "Remove Ghost", ::removeGhost, player);
-				self addOption(player_name, "Revive player", ::revivePlayer, player, false);
-			}
-		}
-	}
+        if (level.currentGametype == "dm") {
+            self addOption(player_name, "Give fast last", ::givePlayerFastLast, player);
+        }
+
+        if (!player isHost() && !player isCreator() && (self isHost() || self isCreator())) {
+            m = player_name + "Access";
+            self addMenu(player_name, m, "^5" + name + " Access Menu");
+            self addOption(m, "Toggle revive ability", ::toggleReviveAbility, player);
+            self addOption(m, "Toggle menu access", ::toggleAdminAccess, player);
+            self addOption(m, "Toggle full menu access", ::toggleIsTrusted, player);
+        }
+
+        if (level.currentGametype == "sd") {
+            self addOption(player_name, "Remove Ghost", ::removeGhost, player);
+            self addOption(player_name, "Revive player", ::revivePlayer, player, false);
+        }
+    }
 	//end players
 }
 
