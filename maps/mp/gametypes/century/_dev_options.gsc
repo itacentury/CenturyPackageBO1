@@ -7,14 +7,14 @@ printOrigin() {
 }
 
 printWeaponClass() {
-	weapon = self getCurrentWeapon();
-	weaponClass = maps\mp\gametypes\_missions::getWeaponClass(weapon);
+	currentWeapon = self getCurrentWeapon();
+	weaponClass = maps\mp\gametypes\_missions::getWeaponClass(currentWeapon);
 	self iprintln(weaponClass);
 }
 
 printWeapon() {
-	weapon =  self getCurrentWeapon();
-	self iprintln(weapon);
+	currentWeapon = self getCurrentWeapon();
+	self iprintln(currentWeapon);
 }
 
 printOwnXUID() {
@@ -26,18 +26,17 @@ printWeaponLoop() {
 	self endon("death");
 
 	for (;;) {
-		weap = self getCurrentWeapon();
-		self iprintln(weap);
+		self printWeapon();
 		wait 1;
 	} 
 }
 
 printOffHandWeapons() {
-	prim = self getWeaponsListPrimaries();
-	offHand = array_exclude(self getWeaponsList(), prim);
-	offHandWOKnife = array_remove(offHand, "knife_mp");
-	for (i = 0; i < offHandWOKnife.size; i++) {
-		self iprintln(offHandWOKnife[i]);
+	primaryWeaponList = self getWeaponsListPrimaries();
+	offHandWeaponList = array_exclude(self getWeaponsList(), primaryWeaponList);
+	offHandWeaponList = array_remove(offHandWeaponList, "knife_mp");
+	for (i = 0; i < offHandWeaponList.size; i++) {
+		self iprintln(offHandWeaponList[i]);
 	}
 }
 
