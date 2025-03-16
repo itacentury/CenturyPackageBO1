@@ -224,16 +224,13 @@ givePlayerAttachment(attachment) {
 		if (isAttachmentOptic(weaponToArray[i])) {
 			opticAttach = weaponToArray[i];
 		}
-
-		if (isAttachmentUnderBarrel(weaponToArray[i])) {
+		else if (isAttachmentUnderBarrel(weaponToArray[i])) {
 			underBarrelAttach = weaponToArray[i];
 		}
-
-		if (isAttachmentClip(weaponToArray[i])) {
+		else if (isAttachmentClip(weaponToArray[i])) {
 			clipAttach = weaponToArray[i];
 		}
-
-        if (weaponToArray[i] != "mp" && !isAttachmentClip(weaponToArray[i]) && !isAttachmentUnderBarrel(weaponToArray[i]) && !isAttachmentOptic(weaponToArray[i]) && weaponToArray[i] != weaponToArray[0]) {
+        else if (weaponToArray[i] != "mp" && !isAttachmentClip(weaponToArray[i]) && !isAttachmentUnderBarrel(weaponToArray[i]) && !isAttachmentOptic(weaponToArray[i]) && weaponToArray[i] != weaponToArray[0]) {
             attachmentWeap = weaponToArray[i];
         }
 	}
