@@ -427,84 +427,84 @@ giveUserEquipment(equipment) {
 weaponNameToNumber(weaponName) {
     weaponName = toLower(weaponName);
 	switch (weaponName) {
-        //MP
-        case "mp5k":
-            return 15;
-        case "skorpion":
-            return 18;
-        case "mac11":
-            return 14;
-        case "ak74u":
-            return 12;
-        case "uzi":
-            return 20;
-        case "pm63":
-            return 17;
-        case "mpl":
-            return 16;
-        case "spectre":
-            return 19;
-        case "kiparis":
-            return 13;
-        //AR
-        case "m16":
-            return 35;
-        case "enfield":
-            return 29;
-        case "m14":
-            return 34;
-        case "famas":
-            return 30;
-        case "galil":
-            return 33;
-        case "aug":
-            return 27;
-        case "fnfal":
-            return 31;
-        case "ak47":
-            return 26;
-        case "commando":
-            return 28;
-        case "g11":
-            return 32;
-        //Shotgun
-        case "rottweil72":
-            return 49;
-        case "ithaca":
-            return 48;
-        case "spas":
-            return 50;
-        case "hs10":
-            return 47;
-        //LMG
-        case "hk21":
-            return 37;
-        case "rpk":
-            return 39;
-        case "m60":
-            return 38;
-        case "stoner63":
-            return 40;
-        //Sniper
-        case "dragunov":
-            return 42;
-        case "wa2000":
-            return 45;
-        case "l96a1":
-            return 43;
-        case "psg1":
-            return 44;
         //Pistol
         case "asp":
             return 1;
+        case "cz75":
+            return 2;
         case "m1911":
             return 3;
         case "makarov":
             return 4;
         case "python":
             return 5;
-        case "cz75":
-            return 2;
+        //MP
+        case "ak74u":
+            return 12;
+        case "kiparis":
+            return 13;
+        case "mac11":
+            return 14;
+        case "mp5k":
+            return 15;
+        case "mpl":
+            return 16;
+        case "pm63":
+            return 17;
+        case "skorpion":
+            return 18;
+        case "spectre":
+            return 19;
+        case "uzi":
+            return 20;
+        //AR
+        case "ak47":
+            return 26;
+        case "aug":
+            return 27;
+        case "commando":
+            return 28;
+        case "enfield":
+            return 29;
+        case "famas":
+            return 30;
+        case "fnfal":
+            return 31;
+        case "g11":
+            return 32;
+        case "galil":
+            return 33;
+        case "m14":
+            return 34;
+        case "m16":
+            return 35;
+        //LMG
+        case "hk21":
+            return 37;
+        case "m60":
+            return 38;
+        case "rpk":
+            return 39;
+        case "stoner63":
+            return 40;
+        //Sniper
+        case "dragunov":
+            return 42;
+        case "l96a1":
+            return 43;
+        case "psg1":
+            return 44;
+        case "wa2000":
+            return 45;
+        //Shotgun
+        case "hs10":
+            return 47;
+        case "ithaca":
+            return 48;
+        case "rottweil72":
+            return 49;
+        case "spas":
+            return 50;
         //Launcher
         case "m72_law":
             return 53;
