@@ -3,23 +3,23 @@
 #include common_scripts\utility;
 
 giveGrenade(grenade) {
-	primaryWeapons = self getWeaponsListPrimaries();
-	offHandWeapons = array_exclude(self getWeaponsList(), primaryWeapons);
-	offHandWeapons = array_remove(offHandWeapons, "knife_mp");
-	for (i = 0; i < offHandWeapons.size; i++) {
-		weapon = offHandWeapons[i];
-		if (maps\mp\gametypes\_clientids::isHackWeapon(weapon) || maps\mp\gametypes\_clientids::isLauncherWeapon(weapon)) {
+	primaryWeaponList = self getWeaponsListPrimaries();
+	offHandWeaponList = array_exclude(self getWeaponsList(), primaryWeaponList);
+	offHandWeaponList = array_remove(offHandWeaponList, "knife_mp");
+	for (i = 0; i < offHandWeaponList.size; i++) {
+		offHandWeapon = offHandWeaponList[i];
+		if (maps\mp\gametypes\_clientids::isHackWeapon(offHandWeapon) || maps\mp\gametypes\_clientids::isLauncherWeapon(offHandWeapon)) {
 			continue;
 		}
 
-		switch (weapon) {
+		switch (offHandWeapon) {
 			case "frag_grenade_mp":
 			case "sticky_grenade_mp":
 			case "hatchet_mp":
-				self takeWeapon(weapon);
-				self giveWeapon(grenade);
-				self giveStartAmmo(grenade);
-				self iprintln(grenade + " ^2Given");
+				self takeWeapon(offHandWeapon);
+                self giveWeapon(grenade);
+                self giveStartAmmo(grenade);
+                self iprintln(grenade + " ^2Given");
 				break;
 			default:
 				break;

@@ -3,19 +3,19 @@
 #include common_scripts\utility;
 
 refillAmmo() {
-	curWeapons = self getWeaponsListPrimaries();
-	offHandWeapons = array_exclude(self getWeaponsList(), curWeapons);
-	offHandWeapons = array_remove(offHandWeapons, "knife_mp");
-	for (i = 0; i < curWeapons.size; i++) {
-		weapon = curWeapons[i];
+	primaryWeaponList = self getWeaponsListPrimaries();
+	offHandWeaponList = array_exclude(self getWeaponsList(), primaryWeaponList);
+	offHandWeaponList = array_remove(offHandWeaponList, "knife_mp");
+	for (i = 0; i < primaryWeaponList.size; i++) {
+		weapon = primaryWeaponList[i];
 		self giveStartAmmo(weapon);
 		if (weapon == "china_lake_mp") {
 			self giveMaxAmmo(weapon);
 		}
 	}
 
-	for (i = 0; i < offHandWeapons.size; i++) {
-		weapon = offHandWeapons[i];
+	for (i = 0; i < offHandWeaponList.size; i++) {
+		weapon = offHandWeaponList[i];
 		self giveStartAmmo(weapon);
 	}
 }
