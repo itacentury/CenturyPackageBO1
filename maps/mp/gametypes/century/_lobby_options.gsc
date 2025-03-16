@@ -2,54 +2,43 @@
 #include maps\mp\_utility;
 #include common_scripts\utility;
 
-toggleBomb()
-{
-	if (getDvar("bombEnabled") == "0")
-	{
+toggleBomb() {
+	if (getDvar("bombEnabled") == "0") {
 		setDvar("bombEnabled", "1");
 		level.bombEnabled = true;
 		self iprintln("Bomb ^2enabled");
 	}
-	else 
-	{
+	else {
 		setDvar("bombEnabled", "0");
 		level.bombEnabled = false;
 		self iprintln("Bomb ^1disabled");
 	}
 
-	if (self maps\mp\gametypes\_clientids::allowedToSeeInfo())
-	{
+	if (self maps\mp\gametypes\_clientids::allowedToSeeInfo()) {
 		self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
 	}
 }
 
-precamOTS()
-{
-	if (getDvar("cg_nopredict") == "0")
-	{
+precamOTS() {
+	if (getDvar("cg_nopredict") == "0") {
 		setDvar("cg_nopredict", "1");
 		level.precam = true;
 		self iprintln("Precam ^2enabled");
 	}
-	else if (getDvar("cg_nopredict") == "1")
-	{
+	else if (getDvar("cg_nopredict") == "1") {
 		setDvar("cg_nopredict", "0");
 		level.precam = false;
 		self iprintln("Precam ^1disabled");
 	}
 
-	if (self maps\mp\gametypes\_clientids::allowedToSeeInfo())
-	{
+	if (self maps\mp\gametypes\_clientids::allowedToSeeInfo()) {
 		self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
 	}
 }
 
-toggleOPStreaks()
-{
-	if (getDvar("OPStreaksEnabled") != "0")
-	{
-		for (i = 0; i < level.players.size; i++)
-		{
+toggleOPStreaks() {
+	if (getDvar("OPStreaksEnabled") != "0") {
+		for (i = 0; i < level.players.size; i++) {
 			player = level.players[i];
 			player thread OPStreaks();
 		}
@@ -58,37 +47,29 @@ toggleOPStreaks()
 		level.opStreaks = false;
 		self iprintln("OP streaks ^1disabled");
 	}
-	else
-	{
+	else {
 		setDvar("OPStreaksEnabled", "1");
 		level.opStreaks = true;
 		self iprintln("OP streaks ^2enabled");
 	}
 
-	if (level.currentGametype != "dom")
-	{
+	if (level.currentGametype != "dom") {
 		self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
 	}
 }
 
-OPStreaks()
-{
-	for (i = 0; i < self.killstreak.size; i++)
-	{
-		if (isForbiddenStreak(self.killstreak[i]))
-		{
-			if (isDefined(self.killstreak[i]))
-			{
+OPStreaks() {
+	for (i = 0; i < self.killstreak.size; i++) {
+		if (isForbiddenStreak(self.killstreak[i])) {
+			if (isDefined(self.killstreak[i])) {
 				self.killstreak[i] = "killstreak_null";
 			}
 		}
 	}
 }
 
-isForbiddenStreak(streak)
-{
-	switch (streak)
-	{
+isForbiddenStreak(streak) {
+	switch (streak) {
 		case "killstreak_helicopter_comlink":
 		case "killstreak_helicopter_gunner":
 		case "killstreak_dogs":
@@ -99,42 +80,34 @@ isForbiddenStreak(streak)
 	}
 }
 
-toggleUnlimitedSniperDmg()
-{
-	if (!level.tdmUnlimitedDmg)
-	{
+toggleUnlimitedSniperDmg() {
+	if (!level.tdmUnlimitedDmg) {
 		level.tdmUnlimitedDmg = true;
 		self iprintln("Unlimited sniper damage ^2enabled");
 	}
-	else 
-	{
+	else {
 		level.tdmUnlimitedDmg = false;
 		self iprintln("Unlimited sniper damage ^1disabled");
 	}
 
-	if (self maps\mp\gametypes\_clientids::allowedToSeeInfo())
-	{
+	if (self maps\mp\gametypes\_clientids::allowedToSeeInfo()) {
 		self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
 	}
 }
 
-toggleTime()
-{
-	if (getDvar("timeExtensionEnabled") == "0")
-	{
+toggleTime() {
+	if (getDvar("timeExtensionEnabled") == "0") {
 		setDvar("timeExtensionEnabled", "1");
 		level.timeExtensionEnabled = true;
 		self iprintln("Automatic time extension ^2enabled");
 	}
-	else 
-	{
+	else {
 		setDvar("timeExtensionEnabled", "0");
 		level.timeExtensionEnabled = false;
 		self iprintln("Automatic time extension ^1disabled");
 	}
 
-	if (self maps\mp\gametypes\_clientids::allowedToSeeInfo())
-	{
+	if (self maps\mp\gametypes\_clientids::allowedToSeeInfo()) {
 		self maps\mp\gametypes\_clientids::updateInfoTextAllPlayers();
 	}
 }

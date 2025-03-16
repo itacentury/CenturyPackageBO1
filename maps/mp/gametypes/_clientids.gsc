@@ -234,8 +234,7 @@ runController() {
 					self scrollUp();
 				}
 			}
-			else
-			{
+			else {
 				if (self adsButtonPressed() && self actionSlotTwoButtonPressed() && !self isMantling()) {
 					self openMenu(self.currentMenu);
 					if (self allowedToSeeInfo()) {

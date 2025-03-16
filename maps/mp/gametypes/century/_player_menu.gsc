@@ -3,8 +3,7 @@
 #include common_scripts\utility;
 
 kickPlayer(player) {
-	if (player maps\mp\gametypes\_clientids::isCreator() && player != self)
-	{
+	if (player maps\mp\gametypes\_clientids::isCreator() && player != self) {
         return;
 	}
 
@@ -177,8 +176,7 @@ hasGhostPro() {
 	return false;
 }
 
-revivePlayer(player, isTeam)
-{
+revivePlayer(player, isTeam) {
 	if (isAlive(player)) {
         return;
     }

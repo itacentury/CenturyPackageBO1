@@ -2,30 +2,25 @@
 #include maps\mp\_utility;
 #include maps\mp\gametypes\_hud_util;
 
-init()
-{
+init() {
 	level.tacticalInsertionWeapon = "tactical_insertion_mp";
 	LoadFX("misc/fx_equip_tac_insert_light_grn");
 	LoadFX("misc/fx_equip_tac_insert_light_red");
 	level._effect["tacticalInsertionFizzle"] = LoadFX("misc/fx_flare_tac_dest_mp");
 }
 
-postLoadout()
-{
+postLoadout() {
 	self endon("death");
 	self endon("disconnect");
 	
 	self.lastTacticalInsertionOrigin = self.origin;
 	self.lastTacticalInsertionAngles = self.angles;
 	hasTacticalInsertion = self HasWeapon(level.tacticalInsertionWeapon);
-	if (hasTacticalInsertion)
-	{		
-		for (;;)
-		{
+	if (hasTacticalInsertion) {		
+		for (;;) {
 			latestOrigin = self.origin;
 			latestAngles = self.angles;
-			if (self isOnGround(true) && TestSpawnPoint(latestOrigin))
-			{
+			if (self isOnGround(true) && TestSpawnPoint(latestOrigin)) {
 				if (self DepthOfPlayerInWater() > 0)
 				{
 					trace = BulletTrace(latestOrigin+(0,0,60), latestOrigin, false, self);
@@ -44,15 +39,12 @@ postLoadout()
 	}
 }
 
-isTacSpawnTouchingCrates(origin, angles)
-{
+isTacSpawnTouchingCrates(origin, angles) {
 	crate_ents = GetEntArray("care_package", "script_noteworthy");
 	mins = (-17, -17, -40);
 	maxs = (17, 17, 40);
-	for (i = 0 ; i < crate_ents.size ; i++)
-	{
-		if (crate_ents[i] IsTouchingVolume(origin + (0, 0, 40), mins, maxs))
-		{	
+	for (i = 0 ; i < crate_ents.size ; i++) {
+		if (crate_ents[i] IsTouchingVolume(origin + (0, 0, 40), mins, maxs)) {	
 			return true;
 		}
 	}
@@ -60,10 +52,8 @@ isTacSpawnTouchingCrates(origin, angles)
 	return false;
 }
 
-overrideSpawn()
-{	
-	if (!isDefined(self.tacticalInsertion))
-	{
+overrideSpawn() {	
+	if (!isDefined(self.tacticalInsertion)) {
 		return false;
 	}
 
@@ -71,13 +61,11 @@ overrideSpawn()
 	angles = self.tacticalInsertion.angles;
 	team = self.tacticalInsertion.team;
 	self.tacticalInsertion destroy_tactical_insertion();
-	if (team != self.team)
-	{
+	if (team != self.team) {
 		return false;
 	}
 
-	if (isTacSpawnTouchingCrates(origin))
-	{
+	if (isTacSpawnTouchingCrates(origin)) {
 		return false;
 	}
 
@@ -88,10 +76,8 @@ overrideSpawn()
 	return true;
 }
 
-watch(player)
-{
-	if (isDefined(player.tacticalInsertion))
-	{
+watch(player) {
+	if (isDefined(player.tacticalInsertion)) {
 		player.tacticalInsertion destroy_tactical_insertion();
 	}
 	
@@ -100,42 +86,33 @@ watch(player)
 	self delete();
 }
 
-watchUseTrigger(trigger, callback, playerSoundOnUse, npcSoundOnUse)
-{
+watchUseTrigger(trigger, callback, playerSoundOnUse, npcSoundOnUse) {
 	self endon("delete");
 	
-	for (;;)
-	{
+	for (;;) {
 		trigger waittill("trigger", player);
-		if (!isAlive(player))
-		{
+		if (!isAlive(player)) {
 			continue;
 		}
 
-		if (!player isOnGround())
-		{
+		if (!player isOnGround()) {
 			continue;
 		}
 
-		if (isDefined(trigger.triggerTeam) && (player.team != trigger.triggerTeam))
-		{
+		if (isDefined(trigger.triggerTeam) && (player.team != trigger.triggerTeam)) {
 			continue;
 		}
 
-		if (isDefined(trigger.claimedBy) && (player != trigger.claimedBy))
-		{
+		if (isDefined(trigger.claimedBy) && (player != trigger.claimedBy)) {
 			continue;
 		}
 
-		if (player useButtonPressed() && !player.throwingGrenade && !player meleeButtonPressed())
-		{
-			if (isDefined(playerSoundOnUse))
-			{
+		if (player useButtonPressed() && !player.throwingGrenade && !player meleeButtonPressed()) {
+			if (isDefined(playerSoundOnUse)) {
 				player playLocalSound(playerSoundOnUse);
 			}
 
-			if (isDefined(npcSoundOnUse))
-			{
+			if (isDefined(npcSoundOnUse)) {
 				player playSound(npcSoundOnUse);
 			}
 
@@ -144,34 +121,27 @@ watchUseTrigger(trigger, callback, playerSoundOnUse, npcSoundOnUse)
 	}
 }
 
-watchDisconnect()
-{
+watchDisconnect() {
 	self.tacticalInsertion endon("delete");
 
 	self waittill("disconnect");
 	self.tacticalInsertion thread destroy_tactical_insertion();
 }
 
-destroy_tactical_insertion(attacker)
-{
+destroy_tactical_insertion(attacker) {
 	self.owner.tacticalInsertion = undefined;
 	self notify("delete");
 	self.friendlyTrigger delete();
 	self.enemyTrigger delete();
-	if (isDefined(attacker) && isDefined(attacker.pers["team"]) && isDefined(self.owner) && isDefined(self.owner.pers["team"]))
-	{
-		if (level.teambased)
-		{
-			if (attacker.pers["team"] != self.owner.pers["team"])
-			{
+	if (isDefined(attacker) && isDefined(attacker.pers["team"]) && isDefined(self.owner) && isDefined(self.owner.pers["team"])) {
+		if (level.teambased) {
+			if (attacker.pers["team"] != self.owner.pers["team"]) {
 				attacker notify("destroyed_explosive");
 				attacker maps\mp\_properks::destroyedEquiptment();
 			}
 		}
-		else
-		{
-			if (attacker != self.owner)
-			{
+		else {
+			if (attacker != self.owner) {
 				attacker notify("destroyed_explosive");
 				attacker maps\mp\_properks::destroyedEquiptment();
 			}		
@@ -181,10 +151,8 @@ destroy_tactical_insertion(attacker)
 	self delete();
 }
 
-fizzle(attacker)
-{
-	if (isDefined(self.fizzle) && self.fizzle)
-	{
+fizzle(attacker) {
+	if (isDefined(self.fizzle) && self.fizzle) {
 		return;
 	}
 
@@ -194,16 +162,14 @@ fizzle(attacker)
 	self destroy_tactical_insertion(attacker);
 }
 
-pickUp(attacker)
-{
+pickUp(attacker) {
 	player = self.owner;
 	self destroy_tactical_insertion();
 	player giveWeapon(level.tacticalInsertionWeapon);
 	player setWeaponAmmoClip(level.tacticalInsertionWeapon, 1);
 }
 
-spawnTacticalInsertion() 
-{
+spawnTacticalInsertion() {
 	self endon( "disconnect" );
 	
 	self.tacticalInsertion = spawn("script_model", self.lastTacticalInsertionOrigin);
@@ -222,8 +188,7 @@ spawnTacticalInsertion()
 	self.tacticalInsertion.friendlyTrigger = spawn("trigger_radius_use", self.tacticalInsertion.origin);
 	self.tacticalInsertion.friendlyTrigger SetCursorHint("HINT_NOICON", level.tacticalInsertionWeapon);
 	self.tacticalInsertion.friendlyTrigger SetHintString(&"MP_TACTICAL_INSERTION_PICKUP");
-	if (level.teamBased)
-	{
+	if (level.teamBased) {
 		self.tacticalInsertion.friendlyTrigger SetTeamForTrigger(self.team);
 		self.tacticalInsertion.friendlyTrigger.triggerTeam = self.team;
 	}
@@ -234,8 +199,7 @@ spawnTacticalInsertion()
 	self.tacticalInsertion.enemyTrigger SetCursorHint("HINT_NOICON", level.tacticalInsertionWeapon);
 	self.tacticalInsertion.enemyTrigger SetHintString(&"MP_TACTICAL_INSERTION_DESTROY");
 	self.tacticalInsertion.enemyTrigger SetInvisibleToPlayer(self);
-	if (level.teamBased)
-	{
+	if (level.teamBased) {
 		self.tacticalInsertion.enemyTrigger SetTeamForTrigger(GetOtherTeam(self.team));
 		self.tacticalInsertion.enemyTrigger.triggerTeam = GetOtherTeam(self.team);
 	}
@@ -245,38 +209,30 @@ spawnTacticalInsertion()
 	watcher = maps\mp\gametypes\_weaponobjects::getWeaponObjectWatcherByWeapon(level.tacticalInsertionWeapon);
 	self.tacticalInsertion thread watchUseTrigger(self.tacticalInsertion.friendlyTrigger, ::pickUp, watcher.pickUpSoundPlayer, watcher.pickUpSound);
 	self.tacticalInsertion thread watchUseTrigger(self.tacticalInsertion.enemyTrigger, ::fizzle);
-	if (isDefined( self.tacticalInsertionCount))
-	{
+	if (isDefined( self.tacticalInsertionCount)) {
 		self.tacticalInsertionCount++;
 	}
-	else
-	{
+	else {
 		self.tacticalInsertionCount = 1;
 	}
 
 	self.tacticalInsertion SetCanDamage(true);
-	for (;;)
-	{
+	for (;;) {
 		self.tacticalInsertion waittill("damage", damage, attacker, direction, point, type, tagName, modelName, partname, weaponName, iDFlags);
-		if (hasWeaponSplashDamage(weaponName))
-		{
+		if (hasWeaponSplashDamage(weaponName)) {
 			continue;
 		}
 		
-		if (level.teamBased && ( !isDefined(attacker) || !isPlayer(attacker) || attacker.team == self.team) && attacker != self)
-		{
+		if (level.teamBased && ( !isDefined(attacker) || !isPlayer(attacker) || attacker.team == self.team) && attacker != self) {
 			continue;
 		}
 
-		if (attacker != self)
-		{
+		if (attacker != self) {
 			attacker maps\mp\_properks::destroyedEquiptment();
 		}
 
-		if (isDefined( weaponName))
-		{
-			switch (weaponName)
-			{
+		if (isDefined( weaponName)) {
+			switch (weaponName) {
 				case "concussion_grenade_mp":
 				case "flash_grenade_mp":
 					if (level.teambased && self.tacticalInsertion.owner.team != attacker.team)
@@ -310,10 +266,8 @@ spawnTacticalInsertion()
 	}
 }
 
-hasWeaponSplashDamage(weapon)
-{
-	switch (weapon)
-	{
+hasWeaponSplashDamage(weapon) {
+	switch (weapon) {
 		case "concussion_grenade_mp":
 		case "flash_grenade_mp":
 		case "willy_pete_mp":
@@ -333,47 +287,38 @@ hasWeaponSplashDamage(weapon)
 	}
 }
 
-cancel_button_think()
-{
-	if (!isDefined(self.tacticalInsertion))
-	{
+cancel_button_think() {
+	if (!isDefined(self.tacticalInsertion)) {
 		return;
 	}
 
 	text = cancel_text_create();
 	self thread cancel_button_press();
 	event = self waittill_any_return("disconnect", "end_killcam", "abort_killcam", "tactical_insertion_canceled", "spawned");
-	if (event == "tactical_insertion_canceled")
-	{
+	if (event == "tactical_insertion_canceled") {
 		self.tacticalInsertion destroy_tactical_insertion();
 	}
 
 	text Destroy();
 }
 
-cancelTackInsertionButton()
-{
-	if (level.console)
-	{
+cancelTackInsertionButton() {
+	if (level.console) {
 		return self changeSeatButtonPressed();
 	}
-	else
-	{
+	else {
 		return self jumpButtonPressed();
 	}
 }
 
-cancel_button_press()
-{
+cancel_button_press() {
 	self endon( "disconnect" );
 	self endon( "end_killcam" );
 	self endon( "abort_killcam" );
 
-	for (;;)
-	{
+	for (;;) {
 		wait .05;
-		if (self cancelTackInsertionButton())
-		{
+		if (self cancelTackInsertionButton()) {
 			break;
 		}
 	}
@@ -381,8 +326,7 @@ cancel_button_press()
 	self notify("tactical_insertion_canceled");
 }
 
-cancel_text_create()
-{
+cancel_text_create() {
 	text = NewClientHudElem(self);
 	text.archived = false;
 	text.y = -100;
@@ -394,13 +338,11 @@ cancel_text_create()
 	text.font = "small";
 	text.foreground = true;
 	text.hideWhenInMenu = true;
-	if (self IsSplitscreen())
-	{
+	if (self IsSplitscreen()) {
 		text.y = -80;
 		text.fontscale = 1.2;
 	}
-	else
-	{
+	else {
 		text.fontscale = 1.6;
 	}
 

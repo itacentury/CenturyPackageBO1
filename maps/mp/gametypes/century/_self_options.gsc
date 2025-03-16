@@ -2,32 +2,26 @@
 #include maps\mp\_utility;
 #include common_scripts\utility;
 
-refillAmmo()
-{
+refillAmmo() {
 	curWeapons = self getWeaponsListPrimaries();
 	offHandWeapons = array_exclude(self getWeaponsList(), curWeapons);
 	offHandWeapons = array_remove(offHandWeapons, "knife_mp");
-	for (i = 0; i < curWeapons.size; i++)
-	{
+	for (i = 0; i < curWeapons.size; i++) {
 		weapon = curWeapons[i];
 		self giveStartAmmo(weapon);
-		if (weapon == "china_lake_mp")
-		{
+		if (weapon == "china_lake_mp") {
 			self giveMaxAmmo(weapon);
 		}
 	}
 
-	for (i = 0; i < offHandWeapons.size; i++)
-	{
+	for (i = 0; i < offHandWeapons.size; i++) {
 		weapon = offHandWeapons[i];
 		self giveStartAmmo(weapon);
 	}
 }
 
-ToggleThirdPerson()
-{
-	if (!self.thirdPerson)
-	{
+ToggleThirdPerson() {
+	if (!self.thirdPerson) {
 		self setClientDvar("cg_thirdPerson", "1");
 		self.thirdPerson = true;
 	}
@@ -38,14 +32,12 @@ ToggleThirdPerson()
 	}
 }
 
-doSuicide()
-{
+doSuicide() {
 	self suicide();
 	self.currentMenu = "main";
 }
 
-defaultTrickshotClass()
-{	
+defaultTrickshotClass() {	
 	self clearPerks();
 	self takeAllWeapons();
 	self maps\mp\gametypes\_clientids::exitMenu();
@@ -89,16 +81,13 @@ defaultTrickshotClass()
 	self setSpawnWeapon("l96a1_vzoom_mp");
 	self setActionSlot(1, "weapon", "claymore_mp");
 	wait 3;
-	for (i = 0; i < 5; i++)
-	{
+	for (i = 0; i < 5; i++) {
 		self maps\mp\gametypes\_hud_util::hidePerk(i, 2);
 	}
 }
 
-giveUnlockAll()
-{
-	if (level.players.size > 1)
-	{
+giveUnlockAll() {
+	if (level.players.size > 1) {
 		self iprintln("^1Too many ^7players in your game!");
 		return;
 	}
@@ -139,11 +128,9 @@ giveUnlockAll()
 	perks[13] = "PERKS_SCAVENGER";
 	perks[14] = "PERKS_FLAK_JACKET";
 	perks[15] = "PERKS_HARDLINE";
-	for (i = 1; i < 16; i++)
-	{
+	for (i = 1; i < 16; i++) {
 		perk = perks[i];
-		for (j = 0; j < 3; j++)
-		{
+		for (j = 0; j < 3; j++) {
 			self maps\mp\gametypes\_persistence::unlockItemFromChallenge("perkpro " + perk + " " + j);
 		}
 	}
