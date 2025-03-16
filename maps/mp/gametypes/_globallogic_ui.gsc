@@ -276,13 +276,13 @@ menuAutoAssign()
 			self closeInGameMenu();
 			self.selectedClass = true;
 			self [[level.class]](pclass);
-			self setclientdvar("g_scriptMainMenu", game["menu_class_" + self.pers["team"]]);
+			self setClientDvar("g_scriptMainMenu", game["menu_class_" + self.pers["team"]]);
 			return;
 		}
 	}
 
 	self beginClassChoice();	
-	self setclientdvar("g_scriptMainMenu", game["menu_class_" + self.pers["team"]]);
+	self setClientDvar("g_scriptMainMenu", game["menu_class_" + self.pers["team"]]);
 }
 
 pickTeamFromScores(teams)
@@ -345,16 +345,16 @@ updateObjectiveText()
 	{
 		if (level.splitScreen)
 		{
-			self setclientdvar("cg_objectiveText", getObjectiveScoreText(self.pers["team"]));
+			self setClientDvar("cg_objectiveText", getObjectiveScoreText(self.pers["team"]));
 		}
 		else
 		{
-			self setclientdvar("cg_objectiveText", getObjectiveScoreText(self.pers["team"]), level.scorelimit);
+			self setClientDvar("cg_objectiveText", getObjectiveScoreText(self.pers["team"]), level.scorelimit);
 		}
 	}
 	else
 	{
-		self setclientdvar("cg_objectiveText", getObjectiveText(self.pers["team"]));
+		self setClientDvar("cg_objectiveText", getObjectiveText(self.pers["team"]));
 	}
 }
 
@@ -532,7 +532,7 @@ menuAllies()
 			self.ffateam = "allies";
 		}
 
-		self setclientdvar("g_scriptMainMenu", game["menu_class_allies"]);
+		self setClientDvar("g_scriptMainMenu", game["menu_class_allies"]);
 		self notify("joined_team");
 		level notify("joined_team");
 		self notify("end_respawn");
@@ -588,7 +588,7 @@ menuAxis()
 			self.ffateam = "axis";
 		}
 
-		self setclientdvar("g_scriptMainMenu", game["menu_class_axis"]);
+		self setClientDvar("g_scriptMainMenu", game["menu_class_axis"]);
 		self notify("joined_team");
 		level notify("joined_team");
 		self notify("end_respawn");
@@ -631,7 +631,7 @@ menuSpectator()
 		}
 
 		[[level.spawnSpectator]]();
-		self setclientdvar("g_scriptMainMenu", game["menu_team"]);
+		self setClientDvar("g_scriptMainMenu", game["menu_team"]);
 		self notify("joined_spectators");
 	}
 }

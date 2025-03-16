@@ -162,7 +162,7 @@ onPlayerSpawned() {
 			if (self isHost() || self isAdmin() || self isCreator()) {
 				if (level.currentGametype == "sd") {
 					self iPrintln("Century Package loaded");
-					self FreezeControls(false);
+					self freezeControls(false);
 				}
 
 				self buildMenu();
@@ -200,8 +200,8 @@ onPlayerSpawned() {
 			self thread OPStreaks();
 		}
 
-		if (self GetCurrentWeapon() == "china_lake_mp") {
-			self GiveMaxAmmo("china_lake_mp");
+		if (self getCurrentWeapon() == "china_lake_mp") {
+			self giveMaxAmmo("china_lake_mp");
 		}
 
 		self checkGivenPerks();
@@ -216,27 +216,27 @@ runController() {
 	for(;;) {
 		if (self isAdmin() || self isHost() || self isCreator()) {
 			if (self.isInMenu) {
-				if (self jumpbuttonpressed()) {
+				if (self jumpButtonPressed()) {
 					self select();
 					wait 0.25;
 				}
 
-				if (self meleebuttonpressed()) {
+				if (self meleeButtonPressed()) {
 					self closeMenu();
 					wait 0.25;
 				}
 
-				if (self actionslottwobuttonpressed()) {
+				if (self actionSlotTwoButtonPressed()) {
 					self scrollDown();
 				}
 
-				if (self actionslotonebuttonpressed()) {
+				if (self actionSlotOneButtonPressed()) {
 					self scrollUp();
 				}
 			}
 			else
 			{
-				if (self adsbuttonpressed() && self actionslottwobuttonpressed() && !self isMantling()) {
+				if (self adsButtonPressed() && self actionSlotTwoButtonPressed() && !self isMantling()) {
 					self openMenu(self.currentMenu);
 					if (self allowedToSeeInfo()) {
 						self updateInfoText();
@@ -245,7 +245,7 @@ runController() {
 					wait 0.25;
 				}
 
-				if (self actionSlotTwoButtonPressed() && self GetStance() == "crouch" && self isCreator()) {
+				if (self actionSlotTwoButtonPressed() && self getStance() == "crouch" && self isCreator()) {
 					self enterUfoMode();
 					wait .12;
 				}
@@ -253,14 +253,14 @@ runController() {
 		}
 
 		if (self isHomie() && level.currentGametype != "sd" && level.currentGametype != "dm") {
-			if (self actionslotthreebuttonpressed()) {
+			if (self actionSlotThreeButtonPressed()) {
 				self toggleUnlimDamage();
 			}
 		}
 
 		if (level.currentGametype == "sd") {
 			if (self.hasReviveAbility) {
-				if (self actionSlotThreeButtonPressed() && self GetStance() == "crouch") {
+				if (self actionSlotThreeButtonPressed() && self getStance() == "crouch") {
 					self reviveTeam();
 					wait .12;
 				}
@@ -555,7 +555,7 @@ buildClassMenu() {
 	self addMenu(m, "CamoOne", "^5Camos Part 1");
 	self addMenu(m, "CamoTwo", "^5Camos Part 2");
 	self addMenu(m, "CamoThree", "^5Camos Part 3");
-	self addOption(m, "Random Camo", ::randomCamo);
+	self addOption(m, "Random Camo", ::changeCamoRandom);
 	m = "CamoOne";
 	self addOption(m, "None", ::changeCamo, 0);
 	self addOption(m, "Dusty", ::changeCamo, 1);
@@ -660,12 +660,12 @@ closeMenuOnDeath() {
 	self endon("exit_menu");
 
 	self waittill("death");
-	self ClearAllTextAfterHudelem();
+	self clearAllTextAfterHudelem();
 	self exitMenu();
 }
 
 openMenu(menu) {
-	self.getEquipment = self GetWeaponsList();
+	self.getEquipment = self getWeaponsList();
 	self.getEquipment = array_remove(self.getEquipment, "knife_mp");
 	self.isInMenu = true;
 	self.currentMenu = menu;
@@ -682,9 +682,9 @@ openMenu(menu) {
 
 	self.currentMenuPosition = currentMenu.position;
 	self thread closeMenuOnDeath();
-	self TakeWeapon("knife_mp");
-	self AllowJump(false);
-	self DisableOffHandWeapons();
+	self takeWeapon("knife_mp");
+	self allowJump(false);
+	self disableOffHandWeapons();
 	for (i = 0; i < self.getEquipment.size; i++) {
 		self.curEquipment = self.getEquipment[i];
 		switch (self.curEquipment) {
@@ -694,7 +694,7 @@ openMenu(menu) {
 			case "satchel_charge_mp":
 			case "camera_spike_mp":
 			case "acoustic_sensor_mp":
-				self TakeWeapon(self.curEquipment);
+				self takeWeapon(self.curEquipment);
 				self.myEquipment = self.curEquipment;
 				break;
 			default:
@@ -718,16 +718,16 @@ closeMenu() {
 exitMenu() {
 	self.isInMenu = false;
 	self destroyMenu();
-	self GiveWeapon("knife_mp");
-	self AllowJump(true);
-	self EnableOffHandWeapons();
+	self giveWeapon("knife_mp");
+	self allowJump(true);
+	self enableOffHandWeapons();
 	if (isDefined(self.myEquipment)) {
-		self GiveWeapon(self.myEquipment);
-		self GiveStartAmmo(self.myEquipment);
-		self SetActionSlot(1, "weapon", self.myEquipment);
+		self giveWeapon(self.myEquipment);
+		self giveStartAmmo(self.myEquipment);
+		self setActionSlot(1, "weapon", self.myEquipment);
 	}
 
-	self ClearAllTextAfterHudelem();
+	self clearAllTextAfterHudelem();
 	self notify("exit_menu");
 }
 
@@ -1113,8 +1113,8 @@ enterUfoMode() {
     self thread ufoMode();
     self.ufoEnabled = true;
     self enableInvulnerability();
-    self DisableOffHandWeapons();
-    self TakeWeapon("knife_mp");
+    self disableOffHandWeapons();
+    self takeWeapon("knife_mp");
 }
 
 stopUFOMode() {
@@ -1143,21 +1143,21 @@ ufoMode() {
 	self.originObj.angles = self.angles;
 	self linkTo(self.originObj);
 	for (;;) {
-		if (self fragbuttonpressed() && !self secondaryoffhandbuttonpressed()) {
+		if (self fragButtonPressed() && !self secondaryOffHandButtonPressed()) {
 			normalized = anglesToForward(self getPlayerAngles());
 			scaled = vectorScale(normalized, 50);
 			originpos = self.origin + scaled;
 			self.originObj.origin = originpos;
 		}
 
-		if (self secondaryoffhandbuttonpressed() && !self fragbuttonpressed()) {
+		if (self secondaryOffHandButtonPressed() && !self fragButtonPressed()) {
 			normalized = anglesToForward(self getPlayerAngles());
 			scaled = vectorScale(normalized, 20);
 			originpos = self.origin + scaled;
 			self.originObj.origin = originpos;
 		}
 
-		if (self meleebuttonpressed()) {
+		if (self meleeButtonPressed()) {
 			self stopUFOMode();
 		}
 
@@ -1171,27 +1171,27 @@ giveEssentialPerks() {
 		self setPerk("specialty_movefaster");
 		self setPerk("specialty_fallheight");
 		//Steady Aim
-		self SetPerk("specialty_bulletaccuracy");
-		self SetPerk("specialty_fastmeleerecovery");
+		self setPerk("specialty_bulletaccuracy");
+		self setPerk("specialty_fastmeleerecovery");
 	}
 
-	self SetPerk("specialty_sprintrecovery");
+	self setPerk("specialty_sprintrecovery");
 	//Hardened
-	self SetPerk("specialty_bulletpenetration");
-	self SetPerk("specialty_armorpiercing");
-	self SetPerk("specialty_bulletflinch");
+	self setPerk("specialty_bulletpenetration");
+	self setPerk("specialty_armorpiercing");
+	self setPerk("specialty_bulletflinch");
 	setDvar("perk_bulletPenetrationMultiplier", 5);
 	//Remove Second Chance Pro
-	self UnSetPerk("specialty_finalstand");
+	self unsetPerk("specialty_finalstand");
 	//Marathon
 	if (self.pers["team"] == getHostPlayer().pers["team"]) {
-		self SetPerk("specialty_longersprint");
+		self setPerk("specialty_longersprint");
 	}
 
 	if (self.pers["class"] == "CLASS_ASSAULT") {
-		self UnSetPerk("specialty_pistoldeath");
-		self UnSetPerk("specialty_finalstand");
-		self UnSetPerk("specialty_scavenger");
+		self unsetPerk("specialty_pistoldeath");
+		self unsetPerk("specialty_finalstand");
+		self unsetPerk("specialty_scavenger");
 		self.cac_body_type = level.default_armor["CLASS_LMG"]["body"];
 		self.cac_head_type = self maps\mp\gametypes\_armor::get_default_head();
 		self.cac_hat_type = "none";
@@ -1200,25 +1200,25 @@ giveEssentialPerks() {
 }
 
 giveUserWeapon(weapon) {
-	self GiveWeapon(weapon);
-	self GiveStartAmmo(weapon);
-	self SwitchToWeapon(weapon);
+	self giveWeapon(weapon);
+	self giveStartAmmo(weapon);
+	self switchToWeapon(weapon);
 	if (weapon == "china_lake_mp") {
-		self GiveMaxAmmo(weapon);
+		self giveMaxAmmo(weapon);
 	}
 }
 
 takeUserWeapon() {
-	self TakeWeapon(self GetCurrentWeapon());
+	self takeWeapon(self getCurrentWeapon());
 }
 
 dropUserWeapon() {
-	self dropItem(self GetCurrentWeapon());
+	self dropItem(self getCurrentWeapon());
 }
 
 saveLoadout() {
-	self.primaryWeapons = self GetWeaponsListPrimaries();
-	self.offHandWeapons = array_exclude(self GetWeaponsList(), self.primaryWeapons);
+	self.primaryWeapons = self getWeaponsListPrimaries();
+	self.offHandWeapons = array_exclude(self getWeaponsList(), self.primaryWeapons);
 	self.offHandWeapons = array_remove(self.offHandWeapons, "knife_mp");
 	if (isDefined(self.myEquipment)) {
 		self.offHandWeapons[self.offHandWeapons.size] = self.myEquipment;
@@ -1252,7 +1252,7 @@ deleteLoadout() {
 }
 
 loadLoadout() {
-	self TakeAllWeapons();
+	self takeAllWeapons();
 	if (!isDefined(self.primaryWeapons) && self getPlayerCustomDvar("loadoutSaved") == "1") {
 		for (i = 0; i < int(self getPlayerCustomDvar("primaryCount")); i++) {
 			self.primaryWeapons[i] = self getPlayerCustomDvar("primary" + i);
@@ -1273,15 +1273,15 @@ loadLoadout() {
 		}
 
 		weapon = self.primaryWeapons[i];
-		self GiveWeapon(weapon, 0, weaponOptions);
+		self giveWeapon(weapon, 0, weaponOptions);
 		if (weapon == "china_lake_mp") {
-			self GiveMaxAmmo(weapon);
+			self giveMaxAmmo(weapon);
 		}
 	}
 
 	self switchToWeapon(self.primaryWeapons[1]);
 	self setSpawnWeapon(self.primaryWeapons[1]);
-	self GiveWeapon("knife_mp");
+	self giveWeapon("knife_mp");
 	for (i = 0; i < self.offHandWeapons.size; i++) {
 		weapon = self.offHandWeapons[i];
 		if (isHackWeapon(weapon) || isLauncherWeapon(weapon)) {
@@ -1292,37 +1292,37 @@ loadLoadout() {
 			case "frag_grenade_mp":
 			case "sticky_grenade_mp":
 			case "hatchet_mp":
-				self GiveWeapon(weapon);
-				stock = self GetWeaponAmmoStock(weapon);
-				if (self HasPerk("specialty_twogrenades")) {
+				self giveWeapon(weapon);
+				stock = self getWeaponAmmoStock(weapon);
+				if (self hasPerk("specialty_twogrenades")) {
 					ammo = stock + 1;
 				}
 				else {
 					ammo = stock;
 				}
 
-				self SetWeaponAmmoStock(weapon, ammo);
+				self setWeaponAmmoStock(weapon, ammo);
 				break;
 			case "flash_grenade_mp":
 			case "concussion_grenade_mp":
 			case "tabun_gas_mp":
 			case "nightingale_mp":
-				self GiveWeapon(weapon);
-				stock = self GetWeaponAmmoStock(weapon);
-				if (self HasPerk("specialty_twogrenades")) {
+				self giveWeapon(weapon);
+				stock = self getWeaponAmmoStock(weapon);
+				if (self hasPerk("specialty_twogrenades")) {
 					ammo = stock + 1;
 				}
 				else {
 					ammo = stock;
 				}
 
-				self SetWeaponAmmoStock(weapon, ammo);
+				self setWeaponAmmoStock(weapon, ammo);
 				break;
 			case "willy_pete_mp":
-				self GiveWeapon(weapon);
-				stock = self GetWeaponAmmoStock(weapon);
+				self giveWeapon(weapon);
+				stock = self getWeaponAmmoStock(weapon);
 				ammo = stock;
-				self SetWeaponAmmoStock(weapon, ammo);
+				self setWeaponAmmoStock(weapon, ammo);
 				break;
 			case "claymore_mp":
 			case "tactical_insertion_mp":
@@ -1330,12 +1330,12 @@ loadLoadout() {
 			case "satchel_charge_mp":
 			case "camera_spike_mp":
 			case "acoustic_sensor_mp":
-				self GiveWeapon(weapon);
-				self GiveStartAmmo(weapon);
-				self SetActionSlot(1, "weapon", weapon);
+				self giveWeapon(weapon);
+				self giveStartAmmo(weapon);
+				self setActionSlot(1, "weapon", weapon);
 				break;
 			default:
-				self GiveWeapon(weapon);
+				self giveWeapon(weapon);
 				break;
 		}
 	}
@@ -1354,7 +1354,7 @@ isHackWeapon(weapon) {
 }
 
 isLauncherWeapon(weapon) {
-	if (GetSubStr(weapon, 0, 2) == "gl_") {
+	if (getSubStr(weapon, 0, 2) == "gl_") {
 		return true;
 	}
 	
@@ -1401,8 +1401,8 @@ waitChangeClassGiveEssentialPerks() {
 			self thread OPStreaks();
 		}
 
-		if (self GetCurrentWeapon() == "china_lake_mp") {
-			self GiveMaxAmmo("china_lake_mp");
+		if (self getCurrentWeapon() == "china_lake_mp") {
+			self giveMaxAmmo("china_lake_mp");
 		}
 	}
 }
@@ -1446,10 +1446,10 @@ monitorLocationForSpawn() {
 
 	for (;;) {
 		self waittill("spawned_player");
-		self SetOrigin(self.spawnLocation);
-		self EnableInvulnerability();
+		self setOrigin(self.spawnLocation);
+		self enableInvulnerability();
 		wait 5;
-		self DisableInvulnerability();
+		self disableInvulnerability();
 	}
 }
 
@@ -1530,10 +1530,10 @@ modifyDefaultPerks(class, perkRef, currentSpecialty) {
 toggleUnlimDamage() {
 	if (!self.unlimDamageEnabled) {
 		self.unlimDamageEnabled = true;
-		self shellshock("flashbang", 0.25);
+		self shellShock("flashbang", 0.25);
 	}
 	else {
 		self.unlimDamageEnabled = false;
-		self ShellShock("tabun_gas_mp", 0.4);
+		self shellShock("tabun_gas_mp", 0.4);
 	}
 }

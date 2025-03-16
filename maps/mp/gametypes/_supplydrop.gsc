@@ -206,7 +206,7 @@ validate_crate_type(killstreak_name, weapon_name, crate_type_name)
 				}
 			}
 			
-			primary_weapons = players[i] GetWeaponsListPrimaries();
+			primary_weapons = players[i] getWeaponsListPrimaries();
 			for (j = 0; j < primary_weapons.size; j++)
 			{
 				if (primary_weapons[j] == weapon_name)
@@ -257,17 +257,17 @@ giveCrateKillstreak(killstreak)
 
 giveCrateWeapon(weapon)
 {
-	currentWeapon = self GetCurrentWeapon();
+	currentWeapon = self getCurrentWeapon();
 	if (currentWeapon == weapon || self HasWeapon(weapon)) 
 	{
-		self GiveMaxAmmo(weapon);
+		self giveMaxAmmo(weapon);
 		return true;
 	}
 	
 	if (isSupplyDropWeapon(currentWeapon) || isDefined(level.grenade_array[currentWeapon])|| isDefined(level.inventory_array[currentWeapon])) 
 	{
-		self TakeWeapon(self.lastdroppableweapon);
-		self GiveWeapon(weapon);
+		self takeWeapon(self.lastdroppableweapon);
+		self giveWeapon(weapon);
 		self switchToWeapon(weapon);
 		return true;
 	}
@@ -295,15 +295,15 @@ giveCrateWeapon(weapon)
 			break;
 	}
 	
-	self TakeWeapon(currentWeapon);
-	self GiveWeapon(weapon);
+	self takeWeapon(currentWeapon);
+	self giveWeapon(weapon);
 	self switchToWeapon(weapon);
 	return true;
 }
 
 giveCrateAmmo(ammo)
 {
-  weaponsList = self GetWeaponsList();
+  weaponsList = self getWeaponsList();
   for(idx = 0; idx < weaponsList.size; idx++)
   {
 		weapon = weaponsList[idx];
@@ -322,21 +322,21 @@ giveCrateAmmo(ammo)
 			case "tabun_gas_mp":
 			case "nightingale_mp":
 			case "willy_pete_mp":
-				stock = self GetWeaponAmmoStock(weapon);
+				stock = self getWeaponAmmoStock(weapon);
 				maxAmmo = WeaponMaxAmmo(weapon);
-				if (!(self HasPerk("specialty_twogrenades")))
+				if (!(self hasPerk("specialty_twogrenades")))
 				{
 					maxAmmo = WeaponStartAmmo(weapon);
 				}
 
 				if (stock < maxAmmo)
 				{
-					self SetWeaponAmmoStock(weapon, maxAmmo);
+					self setWeaponAmmoStock(weapon, maxAmmo);
 				}
 
 				break;
 			default:
-				self GiveMaxAmmo(weapon);
+				self giveMaxAmmo(weapon);
 				break;
 		}
   	}
@@ -348,7 +348,7 @@ useSupplyDropMarker()
 
 	self thread supplyDropWatcher();
 	supplyDropWeapon = undefined;
-	currentWeapon = self GetCurrentWeapon();
+	currentWeapon = self getCurrentWeapon();
 	prevWeapon = currentWeapon;
 	if (isSupplyDropWeapon(currentWeapon))
 	{
@@ -372,7 +372,7 @@ useSupplyDropMarker()
 	
 	if (self HasWeapon(supplyDropWeapon) && !self GetAmmoCount(supplyDropWeapon))
 	{
-		self TakeWeapon(supplyDropWeapon);
+		self takeWeapon(supplyDropWeapon);
 	}	
 	
 	if (self HasWeapon(supplyDropWeapon) || self GetAmmoCount(supplyDropWeapon))
@@ -398,11 +398,11 @@ isSupplyDropGrenadeAllowed(hardpointType, killstreakWeapon)
 		}
 		else if (isDefined(self.lastNonKillstreakWeapon) && self.lastNonKillstreakWeapon != killstreakWeapon && self.lastNonKillstreakWeapon != "none")
 		{
-			self SwitchToWeapon(self.lastNonKillstreakWeapon);
+			self switchToWeapon(self.lastNonKillstreakWeapon);
 		}
 		else if (isDefined(self.lastDroppableWeapon) && self.lastDroppableWeapon != killstreakWeapon && self.lastDroppableWeapon != "none")
 		{
-			self SwitchToWeapon(self.lastDroppableWeapon);
+			self switchToWeapon(self.lastDroppableWeapon);
 		}
 
 		return false;
@@ -437,21 +437,21 @@ use_killstreak_death_machine(hardpointType)
 	}
 
 	weapon = "minigun_mp";
-	currentWeapon = self GetCurrentWeapon();
+	currentWeapon = self getCurrentWeapon();
 	if (isSupplyDropWeapon(currentWeapon) || isDefined(level.grenade_array[currentWeapon]) || isDefined(level.inventory_array[currentWeapon])) 
 	{
-		self TakeWeapon(self.lastdroppableweapon);
-		self GiveWeapon(weapon);
-		self SwitchToWeapon(weapon);
+		self takeWeapon(self.lastdroppableweapon);
+		self giveWeapon(weapon);
+		self switchToWeapon(weapon);
 		self setBlockWeaponPickup(weapon, true);
 		return true;
 	}
 
 	level thread maps\mp\_popups::DisplayTeamMessageToAll(&"KILLSTREAK_MINIGUN_INBOUND", self);
 	level maps\mp\gametypes\_weapons::addLimitedWeapon(weapon, self, 3);
-	self TakeWeapon(currentWeapon);
-	self GiveWeapon(weapon);
-	self SwitchToWeapon(weapon);
+	self takeWeapon(currentWeapon);
+	self giveWeapon(weapon);
+	self switchToWeapon(weapon);
 	self setBlockWeaponPickup(weapon, true);
 	return true;
 }
@@ -464,21 +464,21 @@ use_killstreak_grim_reaper(hardpointType)
 	}
 
 	weapon = "m202_flash_mp";
-	currentWeapon = self GetCurrentWeapon();
+	currentWeapon = self getCurrentWeapon();
 	if (isSupplyDropWeapon(currentWeapon) || isDefined(level.grenade_array[currentWeapon]) || isDefined(level.inventory_array[currentWeapon])) 
 	{
-		self TakeWeapon(self.lastdroppableweapon);
-		self GiveWeapon(weapon);
-		self SwitchToWeapon(weapon);
+		self takeWeapon(self.lastdroppableweapon);
+		self giveWeapon(weapon);
+		self switchToWeapon(weapon);
 		self setBlockWeaponPickup(weapon, true);
 		return true;
 	}
 
 	level thread maps\mp\_popups::DisplayTeamMessageToAll(&"KILLSTREAK_M202_FLASH_INBOUND", self);
 	level maps\mp\gametypes\_weapons::addLimitedWeapon(weapon, self, 3);
-	self TakeWeapon(currentWeapon);
-	self GiveWeapon(weapon);
-	self SwitchToWeapon(weapon);
+	self takeWeapon(currentWeapon);
+	self giveWeapon(weapon);
+	self switchToWeapon(weapon);
 	self setBlockWeaponPickup(weapon, true);
 	return true;
 }
@@ -492,21 +492,21 @@ use_killstreak_tv_guided_missile(hardpointType)
 	}
 
 	weapon = "m220_tow_mp";
-	currentWeapon = self GetCurrentWeapon();
+	currentWeapon = self getCurrentWeapon();
 	if (isSupplyDropWeapon(currentWeapon) || isDefined(level.grenade_array[currentWeapon]) || isDefined(level.inventory_array[currentWeapon])) 
 	{
-		self TakeWeapon(self.lastdroppableweapon);
-		self GiveWeapon(weapon);
-		self SwitchToWeapon(weapon);
+		self takeWeapon(self.lastdroppableweapon);
+		self giveWeapon(weapon);
+		self switchToWeapon(weapon);
 		self setBlockWeaponPickup(weapon, true);
 		return true;
 	}
 
 	level thread maps\mp\_popups::DisplayTeamMessageToAll(&"KILLSTREAK_M220_TOW_INBOUND", self);
 	level maps\mp\gametypes\_weapons::addLimitedWeapon(weapon, self, 3);
-	self TakeWeapon(currentWeapon);
-	self GiveWeapon(weapon);
-	self SwitchToWeapon(weapon);
+	self takeWeapon(currentWeapon);
+	self giveWeapon(weapon);
+	self switchToWeapon(weapon);
 	self setBlockWeaponPickup(weapon, true);
 	return true;
 }
@@ -520,21 +520,21 @@ use_killstreak_mp40(hardpointType)
 	}
 
 	weapon = "mp40_blinged_mp";
-	currentWeapon = self GetCurrentWeapon();
+	currentWeapon = self getCurrentWeapon();
 	if (isSupplyDropWeapon(currentWeapon) || isDefined(level.grenade_array[currentWeapon]) || isDefined(level.inventory_array[currentWeapon])) 
 	{
-		self TakeWeapon(self.lastdroppableweapon);
-		self GiveWeapon(weapon);
-		self SwitchToWeapon(weapon);
+		self takeWeapon(self.lastdroppableweapon);
+		self giveWeapon(weapon);
+		self switchToWeapon(weapon);
 		self setBlockWeaponPickup(weapon, true);
 		return true;
 	}
 
 	level thread maps\mp\_popups::DisplayTeamMessageToAll(&"KILLSTREAK_MP40_INBOUND", self);
 	level maps\mp\gametypes\_weapons::addLimitedWeapon(weapon, self, 3);
-	self TakeWeapon(currentWeapon);
-	self GiveWeapon(weapon);
-	self SwitchToWeapon(weapon);
+	self takeWeapon(currentWeapon);
+	self giveWeapon(weapon);
+	self switchToWeapon(weapon);
 	self setBlockWeaponPickup(weapon, true);
 	return true;
 }
@@ -641,7 +641,7 @@ playerChangeWeaponWaiter()
 	self endon("disconnect");
 	self endon("spawned_player");
 
-	currentWeapon = self GetCurrentWeapon();
+	currentWeapon = self getCurrentWeapon();
 	while (isSupplyDropWeapon(currentWeapon))
 	{
 		self waittill("weapon_change", currentWeapon);
@@ -1071,7 +1071,7 @@ dropCrate(origin, angle, weaponname, owner, team, killcamEnt)
 	{
 		crate waittill("captured", player);
 		player giveCrateItem(crate);
-		if (player HasPerk("specialty_disarmexplosive") && owner != player && ((level.teambased && team != player.team) || !level.teambased))
+		if (player hasPerk("specialty_disarmexplosive") && owner != player && ((level.teambased && team != player.team) || !level.teambased))
 		{
 			spawn_explosive_crate(crate.origin, crate.angles, weaponname, owner, team, player);
 			crate crateDelete(false);
@@ -1386,7 +1386,7 @@ crateUseThink()
 		}
 		
 		self.useEnt = useEnt;
-		if (player HasPerk("specialty_fastinteract"))
+		if (player hasPerk("specialty_fastinteract"))
 		{
 			if (level.teambased && player.team == self.owner.team)
 			{
@@ -1558,7 +1558,7 @@ crateGamblerThink()
 	for (;;)
 	{
 		self waittill("trigger_use_doubletap", player);
-		if (!player HasPerk("specialty_gambler"))
+		if (!player hasPerk("specialty_gambler"))
 		{
 			continue;
 		}
@@ -1595,7 +1595,7 @@ personalUseBar(object)
 
 	self.useBar = createSecondaryProgressBar();
 	self.useBarText = createSecondaryProgressBarText();
-	if (self HasPerk("specialty_disarmexplosive") && object.owner != self && !isDefined(object.hacker) && ((level.teambased && object.owner.team != self.team) || !level.teambased))
+	if (self hasPerk("specialty_disarmexplosive") && object.owner != self && !isDefined(object.hacker) && ((level.teambased && object.owner.team != self.team) || !level.teambased))
 	{
 		self.useBarText setText(&"KILLSTREAK_HACKING_CRATE");
 		self PlayLocalSound("evt_hacker_hacking");

@@ -95,7 +95,7 @@ PlayerLastStand(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHi
 	self.previousAmmoClip = [];
 	self.previousAmmoStock = [];
 	self.laststandpistol = level.laststandpistol;
-	self.previousPrimary = self GetCurrentWeapon();
+	self.previousPrimary = self getCurrentWeapon();
 	self.hadPistol = false;
 	for (i = 0; i < self.previousweaponslist.size; i++)
 	{
@@ -107,7 +107,7 @@ PlayerLastStand(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHi
 	}
 
 	self notify ("cancel_location");
-	gun = self GetCurrentWeapon();
+	gun = self getCurrentWeapon();
 	if (gun == "syrette_mp")
 	{
 		self takeWeapon ("syrette_mp");
@@ -447,7 +447,7 @@ revive_trigger_think()
 						{
 							players[i].revivingTeammate = true;
 							players[i] thread cleanUpRevivingTeamate(self);
-							gun = players[i] GetCurrentWeapon();
+							gun = players[i] getCurrentWeapon();
 							if (gun == "syrette_mp")
 							{
 								players[i].gun = players[i].previousprimary;
@@ -479,7 +479,7 @@ revive_trigger_think()
 							}
 							else
 							{
-								players[i] SwitchToWeapon(players[i].previousprimary);
+								players[i] switchToWeapon(players[i].previousprimary);
 							}
 
 							players[i].previousprimary = undefined;
@@ -508,7 +508,7 @@ switchToValidWeapon()
 	}
 	else
 	{
-		primaries = self GetWeaponsListPrimaries();
+		primaries = self getWeaponsListPrimaries();
 		assert(primaries.size > 0);
 		self switchToWeapon(primaries[0]);
 	}

@@ -9,14 +9,14 @@ printOrigin()
 
 printWeaponClass()
 {
-	weapon = self getcurrentweapon();
+	weapon = self getCurrentWeapon();
 	weaponClass = maps\mp\gametypes\_missions::getWeaponClass(weapon);
 	self iprintln(weaponClass);
 }
 
 printWeapon()
 {
-	weapon =  self GetCurrentWeapon();
+	weapon =  self getCurrentWeapon();
 	self iprintln(weapon);
 }
 
@@ -32,7 +32,7 @@ printWeaponLoop()
 
 	for (;;)
 	{
-		weap = self GetCurrentWeapon();
+		weap = self getCurrentWeapon();
 		self iprintln(weap);
 		wait 1;
 	} 
@@ -40,8 +40,8 @@ printWeaponLoop()
 
 printOffHandWeapons()
 {
-	prim = self GetWeaponsListPrimaries();
-	offHand = array_exclude(self GetWeaponsList(), prim);
+	prim = self getWeaponsListPrimaries();
+	offHand = array_exclude(self getWeaponsList(), prim);
 	offHandWOKnife = array_remove(offHand, "knife_mp");
 	for (i = 0; i < offHandWOKnife.size; i++)
 	{

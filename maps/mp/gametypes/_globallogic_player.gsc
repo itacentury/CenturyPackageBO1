@@ -7,7 +7,7 @@ freezePlayerForRoundEnd()
 	self closeMenu();
 	self closeInGameMenu();
 	self freeze_player_controls(true);
-	currentWeapon = self GetCurrentWeapon();
+	currentWeapon = self getCurrentWeapon();
 	if (maps\mp\gametypes\_hardpoints::isKillstreakWeapon(currentWeapon) && !maps\mp\gametypes\_killstreak_weapons::isHeldKillstreakWeapon(currentWeapon))
 	{
 		self takeWeapon(currentWeapon);
@@ -372,7 +372,7 @@ Callback_PlayerConnect()
 			}
 			else
 			{
-				self setclientdvar("g_scriptMainMenu", game["menu_team"]);
+				self setClientDvar("g_scriptMainMenu", game["menu_team"]);
 				self openMenu(game["menu_team"]);
 			}
 		}
@@ -399,7 +399,7 @@ Callback_PlayerConnect()
 	}
 	else if (self.pers["team"] == "spectator")
 	{
-		self setclientdvar("g_scriptMainMenu", game["menu_team"]);
+		self setClientDvar("g_scriptMainMenu", game["menu_team"]);
 		[[level.spawnSpectator]]();
 		self.sessionteam = "spectator";
 		self.sessionstate = "spectator";
@@ -695,21 +695,21 @@ handleFlameDamage(eAttacker, eInflictor, iDamage, sWeapon, sMeansOfDeath)
 	switch(sWeapon)
 	{
 		case "none":
-			if (!self hasperk( "specialty_fireproof"))
+			if (!self hasPerk( "specialty_fireproof"))
 			{
 				self thread maps\mp\_burnplayer::walkedThroughFlames(eAttacker, eInflictor, sWeapon);		
 			}
 
 			break;
 		case "m2_flamethrower_mp":
-			if (!self hasperk( "specialty_fireproof"))
+			if (!self hasPerk( "specialty_fireproof"))
 			{
 				self thread maps\mp\_burnplayer::burnedWithFlameThrower( sWeapon );		
 			}
 
 			break;
 		case "napalm_mp":
-			if (!self hasperk("specialty_fireproof"))
+			if (!self hasPerk("specialty_fireproof"))
 			{
 				if (isdefined(level.minDamageRequiredForNapalmBurn) && iDamage > level.minDamageRequiredForNapalmBurn)
 				{
@@ -725,9 +725,9 @@ handleFlameDamage(eAttacker, eInflictor, iDamage, sWeapon, sMeansOfDeath)
 		case "rottweil72_mp":
 			break;
 		default:
-			if (GetSubStr(sWeapon, 0, 3) == "ft_")
+			if (getSubStr(sWeapon, 0, 3) == "ft_")
 			{
-				if (!self hasperk( "specialty_fireproof"))
+				if (!self hasPerk( "specialty_fireproof"))
 				{
 					self thread maps\mp\_burnplayer::burnedWithFlameThrower(eAttacker, eInflictor, sWeapon);		
 				}
@@ -1049,9 +1049,9 @@ Callback_PlayerDamage(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sW
 				hasBodyArmor = false;
 				if (iDamage > 0)
 				{
-					if (isPlayer(eAttacker) && eAttacker HasPerk("specialty_shades") && eAttacker HasPerk("specialty_stunprotection") && eAttacker HasPerk("specialty_gas_mask"))
+					if (isPlayer(eAttacker) && eAttacker hasPerk("specialty_shades") && eAttacker hasPerk("specialty_stunprotection") && eAttacker hasPerk("specialty_gas_mask"))
 					{
-						if (sMeansOfDeath == "MOD_GRENADE_SPLASH" && (sWeapon == "flash_grenade_mp" || sWeapon == "concussion_grenade_mp") && (!self HasPerk("specialty_shades") || !self HasPerk("specialty_stunprotection")))
+						if (sMeansOfDeath == "MOD_GRENADE_SPLASH" && (sWeapon == "flash_grenade_mp" || sWeapon == "concussion_grenade_mp") && (!self hasPerk("specialty_shades") || !self hasPerk("specialty_stunprotection")))
 						{
 							eAttacker thread maps\mp\gametypes\_damagefeedback::updateSpecialDamageFeedback(self);
 						}
@@ -2071,7 +2071,7 @@ damageShellshockAndRumble(eAttacker, eInflictor, sWeapon, sMeansOfDeath, iDamage
 
 createDeadBody(iDamage, sMeansOfDeath, sWeapon, sHitLoc, vDir, vAttackerOrigin, deathAnimDuration, eInflictor, ragdoll_jib, body)
 {
-	if (sMeansOfDeath == "MOD_HIT_BY_OBJECT" && self GetStance() == "prone")
+	if (sMeansOfDeath == "MOD_HIT_BY_OBJECT" && self getStance() == "prone")
 	{
 		self.body = body;
 		if (!isDefined(self.switching_teams))

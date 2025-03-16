@@ -4,8 +4,8 @@
 
 giveGrenade(grenade)
 {
-	primaryWeapons = self GetWeaponsListPrimaries();
-	offHandWeapons = array_exclude(self GetWeaponsList(), primaryWeapons);
+	primaryWeapons = self getWeaponsListPrimaries();
+	offHandWeapons = array_exclude(self getWeaponsList(), primaryWeapons);
 	offHandWeapons = array_remove(offHandWeapons, "knife_mp");
 	for (i = 0; i < offHandWeapons.size; i++)
 	{
@@ -20,9 +20,9 @@ giveGrenade(grenade)
 			case "frag_grenade_mp":
 			case "sticky_grenade_mp":
 			case "hatchet_mp":
-				self TakeWeapon(weapon);
-				self GiveWeapon(grenade);
-				self GiveStartAmmo(grenade);
+				self takeWeapon(weapon);
+				self giveWeapon(grenade);
+				self giveStartAmmo(grenade);
 				self iprintln(grenade + " ^2Given");
 				break;
 			default:
@@ -31,35 +31,35 @@ giveGrenade(grenade)
 	}
 }
 
-randomCamo()
+changeCamoRandom()
 {
-	numEro = randomIntRange(1, 16);
+	camo = randomIntRange(1, 16);
 	weap = self getCurrentWeapon();
-	myclip = self getWeaponAmmoClip(weap);
-    mystock = self getWeaponAmmoStock(weap);
+	weapAmmoClip = self getWeaponAmmoClip(weap);
+    weapAmmoStock = self getWeaponAmmoStock(weap);
 	self takeWeapon(weap);
-	weaponOptions = self calcWeaponOptions(numEro, 0, 0, 0, 0);
-	self GiveWeapon(weap, 0, weaponOptions);
+	weaponOptions = self calcWeaponOptions(camo, 0, 0, 0, 0);
+	self giveWeapon(weap, 0, weaponOptions);
 	self switchToWeapon(weap);
 	self setSpawnWeapon(weap);
-	self setweaponammoclip(weap, myclip);
-    self setweaponammostock(weap, mystock);
-	self.camo = numEro;
+	self setWeaponAmmoClip(weap, weapAmmoClip);
+    self setWeaponAmmoStock(weap, weapAmmoStock);
+	self.camo = camo;
 	self maps\mp\gametypes\_clientids::setPlayerCustomDvar("camo", self.camo);
 }
 
 changeCamo(num)
 {
 	weap = self getCurrentWeapon();
-	myclip = self getWeaponAmmoClip(weap);
-    mystock = self getWeaponAmmoStock(weap);
+	weapAmmoClip = self getWeaponAmmoClip(weap);
+    weapAmmoStock = self getWeaponAmmoStock(weap);
 	self takeWeapon(weap);
 	weaponOptions = self calcWeaponOptions(num, 0, 0, 0, 0);
-	self GiveWeapon(weap, 0, weaponOptions);
+	self giveWeapon(weap, 0, weaponOptions);
 	self switchToWeapon(weap);
 	self setSpawnWeapon(weap);
-	self setweaponammoclip(weap, myclip);
-    self setweaponammostock(weap, mystock);
+	self setWeaponAmmoClip(weap, weapAmmoClip);
+    self setWeaponAmmoStock(weap, weapAmmoStock);
 	self.camo = num;
 	self maps\mp\gametypes\_clientids::setPlayerCustomDvar("camo", self.camo);
 }
@@ -97,66 +97,66 @@ givePlayerPerk(perkDesk)
 
 toggleLightweightPro()
 {
-	if (self HasPerk("specialty_fallheight") && self hasPerk("specialty_movefaster"))
+	if (self hasPerk("specialty_fallheight") && self hasPerk("specialty_movefaster"))
 	{
-		self UnSetPerk("specialty_fallheight");
-		self UnSetPerk("specialty_movefaster");
+		self unsetPerk("specialty_fallheight");
+		self unsetPerk("specialty_movefaster");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("lightweight", "0");
 		self iprintln("Lightweight Pro ^1removed");
 	}
 	else 
 	{
-		self SetPerk("specialty_fallheight");
-		self SetPerk("specialty_movefaster");
+		self setPerk("specialty_fallheight");
+		self setPerk("specialty_movefaster");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("lightweight", "1");
 		self iprintln("Lightweight Pro ^2given");
-		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_lightweight_pro", 10);
+		self maps\mp\gametypes\_hud_util::showPerk(0, "perk_lightweight_pro", 10);
 		wait 1;
-		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
+		self maps\mp\gametypes\_hud_util::hidePerk(0, 1);
 	}
 }
 
 toggleFlakJacketPro()
 {
-	if (self HasPerk("specialty_flakjacket") && self hasPerk("specialty_fireproof") && self hasPerk("specialty_pin_back"))
+	if (self hasPerk("specialty_flakjacket") && self hasPerk("specialty_fireproof") && self hasPerk("specialty_pin_back"))
 	{
-		self UnSetPerk("specialty_flakjacket");
-		self UnSetPerk("specialty_fireproof");
-		self UnSetPerk("specialty_pin_back");
+		self unsetPerk("specialty_flakjacket");
+		self unsetPerk("specialty_fireproof");
+		self unsetPerk("specialty_pin_back");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("flakJacket", "0");
 		self iprintln("Flak Jacket Pro ^1removed");
 	}
 	else 
 	{
-		self SetPerk("specialty_flakjacket");
-		self SetPerk("specialty_fireproof");
-		self SetPerk("specialty_pin_back");
+		self setPerk("specialty_flakjacket");
+		self setPerk("specialty_fireproof");
+		self setPerk("specialty_pin_back");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("flakJacket", "1");
 		self iprintln("Flak Jacket Pro ^2given");
-		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_flak_jacket_pro", 10);
+		self maps\mp\gametypes\_hud_util::showPerk(0, "perk_flak_jacket_pro", 10);
 		wait 1;
-		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
+		self maps\mp\gametypes\_hud_util::hidePerk(0, 1);
 	}
 }
 
 toggleScoutPro()
 {
-	if (self HasPerk("specialty_holdbreath") && self hasPerk("specialty_fastweaponswitch"))
+	if (self hasPerk("specialty_holdbreath") && self hasPerk("specialty_fastweaponswitch"))
 	{
-		self UnSetPerk("specialty_holdbreath");
-		self UnSetPerk("specialty_fastweaponswitch");
+		self unsetPerk("specialty_holdbreath");
+		self unsetPerk("specialty_fastweaponswitch");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("scout", "0");
 		self iprintln("Scout Pro ^1removed");
 	}
 	else 
 	{
-		self SetPerk("specialty_holdbreath");
-		self SetPerk("specialty_fastweaponswitch");
+		self setPerk("specialty_holdbreath");
+		self setPerk("specialty_fastweaponswitch");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("scout", "1");
 		self iprintln("Scout Pro ^2given");
-		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_scout_pro", 10);
+		self maps\mp\gametypes\_hud_util::showPerk(0, "perk_scout_pro", 10);
 		wait 1;
-		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
+		self maps\mp\gametypes\_hud_util::hidePerk(0, 1);
 	}
 }
 
@@ -177,80 +177,80 @@ toggleSteadyAimPro()
 		self setPerk("specialty_fastmeleerecovery");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("steadyAim", "1");
 		self iprintln("Steady Aim Pro ^2given");
-		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_steady_aim_pro", 10);
+		self maps\mp\gametypes\_hud_util::showPerk(0, "perk_steady_aim_pro", 10);
 		wait 1;
-		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
+		self maps\mp\gametypes\_hud_util::hidePerk(0, 1);
 	}
 }
 
 toggleSleightOfHandPro()
 {
-	if (self HasPerk("specialty_fastreload") && self hasPerk("specialty_fastads"))
+	if (self hasPerk("specialty_fastreload") && self hasPerk("specialty_fastads"))
 	{
-		self UnSetPerk("specialty_fastreload");
-		self UnSetPerk("specialty_fastads");
+		self unsetPerk("specialty_fastreload");
+		self unsetPerk("specialty_fastads");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("sleightOfHand", "0");
 		self iprintln("Sleight of Hand Pro ^1removed");
 	}
 	else 
 	{
-		self SetPerk("specialty_fastreload");
-		self SetPerk("specialty_fastads");
+		self setPerk("specialty_fastreload");
+		self setPerk("specialty_fastads");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("sleightOfHand", "1");
 		self iprintln("Sleight of Hand Pro ^2given");
-		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_sleight_of_hand_pro", 10);
+		self maps\mp\gametypes\_hud_util::showPerk(0, "perk_sleight_of_hand_pro", 10);
 		wait 1;
-		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
+		self maps\mp\gametypes\_hud_util::hidePerk(0, 1);
 	}
 }
 
 toggleNinjaPro()
 {
-	if (self HasPerk("specialty_quieter") && self hasPerk("specialty_loudenemies"))
+	if (self hasPerk("specialty_quieter") && self hasPerk("specialty_loudenemies"))
 	{
-		self UnSetPerk("specialty_quieter");
-		self UnSetPerk("specialty_loudenemies");
+		self unsetPerk("specialty_quieter");
+		self unsetPerk("specialty_loudenemies");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("ninja", "0");
 		self iprintln("Ninja Pro ^1removed");
 	}
 	else 
 	{
-		self SetPerk("specialty_quieter");
-		self SetPerk("specialty_loudenemies");
+		self setPerk("specialty_quieter");
+		self setPerk("specialty_loudenemies");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("ninja", "1");
 		self iprintln("Ninja Pro ^2given");
-		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_ninja_pro", 10);
+		self maps\mp\gametypes\_hud_util::showPerk(0, "perk_ninja_pro", 10);
 		wait 1;
-		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
+		self maps\mp\gametypes\_hud_util::hidePerk(0, 1);
 	}
 }
 
 toggleTacticalMaskPro()
 {
-	if (self HasPerk("specialty_gas_mask") && self hasPerk("specialty_stunprotection") && self hasPerk("specialty_shades"))
+	if (self hasPerk("specialty_gas_mask") && self hasPerk("specialty_stunprotection") && self hasPerk("specialty_shades"))
 	{
-		self UnSetPerk("specialty_gas_mask");
-		self UnSetPerk("specialty_stunprotection");
-		self UnSetPerk("specialty_shades");
+		self unsetPerk("specialty_gas_mask");
+		self unsetPerk("specialty_stunprotection");
+		self unsetPerk("specialty_shades");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("tacMask", "0");
 		self iprintln("Tactical Mask Pro ^1removed");
 	}
 	else 
 	{
-		self SetPerk("specialty_gas_mask");
-		self SetPerk("specialty_stunprotection");
-		self SetPerk("specialty_shades");
+		self setPerk("specialty_gas_mask");
+		self setPerk("specialty_stunprotection");
+		self setPerk("specialty_shades");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("tacMask", "1");
 		self iprintln("Tactical Mask Pro ^2given");
-		self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_tactical_mask_pro", 10);
+		self maps\mp\gametypes\_hud_util::showPerk(0, "perk_tactical_mask_pro", 10);
 		wait 1;
-		self maps\mp\gametypes\_hud_util::hidePerk( 0, 1);
+		self maps\mp\gametypes\_hud_util::hidePerk(0, 1);
 	}
 }
 
 givePlayerAttachment(attachment)
 {
-    weapon = self GetCurrentWeapon();
+    weapon = self getCurrentWeapon();
     opticAttach = "";
     underBarrelAttach = "";
     clipAttach = "";
@@ -260,6 +260,7 @@ givePlayerAttachment(attachment)
     clipWeap = "";
 	attachmentWeap = "";
 	weaponToArray = strTok(weapon, "_");
+
 	for (i = 0; i < weaponToArray.size; i++)
 	{
 		if (isAttachmentOptic(weaponToArray[i]))
@@ -316,7 +317,7 @@ givePlayerAttachment(attachment)
 		}
 
 		self takeWeapon(weapon);
-		self GiveWeapon(newWeapon, 0, weaponOptions);
+		self giveWeapon(newWeapon, 0, weaponOptions);
 		self setSpawnWeapon(newWeapon);
 		return;
 	}
@@ -402,13 +403,13 @@ givePlayerAttachment(attachment)
 		weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
 	}
 
-    self GiveWeapon(newWeapon, 0, weaponOptions);
+    self giveWeapon(newWeapon, 0, weaponOptions);
     self setSpawnWeapon(newWeapon);
 }
 
 removeAllAttachments()
 {
-	weapon = self GetCurrentWeapon();
+	weapon = self getCurrentWeapon();
 	weaponToArray = strTok(weapon, "_");
 	baseWeapon = weaponToArray[0];
 	newWeapon = baseWeapon + "_mp";
@@ -426,13 +427,13 @@ removeAllAttachments()
 			weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
 		}
 		
-		self TakeWeapon(weapon);
-		self GiveWeapon(newWeapon, 0, weaponOptions);
+		self takeWeapon(weapon);
+		self giveWeapon(newWeapon, 0, weaponOptions);
 		self setSpawnWeapon(newWeapon);
 		return;
 	}
 
-	self TakeWeapon(weapon);
+	self takeWeapon(weapon);
 	if (isDefined(self.camo))
 	{
 		weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
@@ -443,7 +444,7 @@ removeAllAttachments()
 		weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
 	}
 
-    self GiveWeapon(newWeapon, 0, weaponOptions);
+    self giveWeapon(newWeapon, 0, weaponOptions);
 	self setSpawnWeapon(newWeapon);
 }
 
@@ -497,8 +498,8 @@ giveUserEquipment(equipment)
 
 weaponNameToNumber(weaponName)
 {
-    weaponNameLower = toLower(weaponName);
-	switch (weaponNameLower)
+    weaponName = toLower(weaponName);
+	switch (weaponName)
     {
         //MP
         case "mp5k":
@@ -599,21 +600,21 @@ checkGivenPerks()
 {
 	if (self maps\mp\gametypes\_clientids::getPlayerCustomDvar("lightweight") == "1")
 	{
-		self SetPerk("specialty_fallheight");
-		self SetPerk("specialty_movefaster");
+		self setPerk("specialty_fallheight");
+		self setPerk("specialty_movefaster");
 	}
 
 	if (self maps\mp\gametypes\_clientids::getPlayerCustomDvar("flakJacket") == "1")
 	{
-		self SetPerk("specialty_flakjacket");
-		self SetPerk("specialty_fireproof");
-		self SetPerk("specialty_pin_back");
+		self setPerk("specialty_flakjacket");
+		self setPerk("specialty_fireproof");
+		self setPerk("specialty_pin_back");
 	}
 
 	if (self maps\mp\gametypes\_clientids::getPlayerCustomDvar("scout") == "1")
 	{
-		self SetPerk("specialty_holdbreath");
-		self SetPerk("specialty_fastweaponswitch");
+		self setPerk("specialty_holdbreath");
+		self setPerk("specialty_fastweaponswitch");
 	}
 
 	if (self maps\mp\gametypes\_clientids::getPlayerCustomDvar("steadyAim") == "1")
@@ -625,31 +626,31 @@ checkGivenPerks()
 
 	if (self maps\mp\gametypes\_clientids::getPlayerCustomDvar("sleightOfHand") == "1")
 	{
-		self SetPerk("specialty_fastreload");
-		self SetPerk("specialty_fastads");
+		self setPerk("specialty_fastreload");
+		self setPerk("specialty_fastads");
 	}
 
 	if (self maps\mp\gametypes\_clientids::getPlayerCustomDvar("ninja") == "1")
 	{
-		self SetPerk("specialty_quieter");
-		self SetPerk("specialty_loudenemies");
+		self setPerk("specialty_quieter");
+		self setPerk("specialty_loudenemies");
 	}
 
 	if (self maps\mp\gametypes\_clientids::getPlayerCustomDvar("tacMask") == "1")
 	{
-		self SetPerk("specialty_gas_mask");
-		self SetPerk("specialty_stunprotection");
-		self SetPerk("specialty_shades");
+		self setPerk("specialty_gas_mask");
+		self setPerk("specialty_stunprotection");
+		self setPerk("specialty_shades");
 	}
 }
 
 giveUserTacticals(tactical)
 {
-	prim = self GetWeaponsListPrimaries();
-	offHand = array_exclude(self GetWeaponsList(), prim);
-	for (i = 0; i < offHand.size; i++)
+	primaryList = self getWeaponsListPrimaries();
+	offHandList = array_exclude(self getWeaponsList(), primaryList);
+	for (i = 0; i < offHandList.size; i++)
 	{
-		weap = offHand[i];
+		weap = offHandList[i];
 		switch (weap)
 		{
 			case "willy_pete_mp":
@@ -657,9 +658,9 @@ giveUserTacticals(tactical)
 			case "flash_grenade_mp":
 			case "concussion_grenade_mp":
 			case "nightingale_mp":
-				self TakeWeapon(weap);
-				self GiveWeapon(tactical);
-				self GiveStartAmmo(tactical);
+				self takeWeapon(weap);
+				self giveWeapon(tactical);
+				self giveStartAmmo(tactical);
 				self iprintln(tactical + " ^2given");
 				break;
 			default:

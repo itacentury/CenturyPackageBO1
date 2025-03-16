@@ -52,7 +52,7 @@ changeMyTeam(assignment) {
 		}
 
 		[[level.spawnSpectator]]();
-		self setclientdvar("g_scriptMainMenu", game["menu_team"]);
+		self setClientDvar("g_scriptMainMenu", game["menu_team"]);
 		self notify("joined_spectators");
         return;
     }
@@ -120,7 +120,7 @@ toggleAdminAccess(player) {
 		player iPrintln("Menu access ^1Removed");
 		self iprintln("Menu access ^1Removed ^7from " + player.name);
 		if (player.isInMenu) {
-			player ClearAllTextAfterHudelem();
+			player clearAllTextAfterHudelem();
 			player maps\mp\gametypes\_clientids::exitMenu();
 		}
 	}
@@ -150,19 +150,19 @@ toggleIsTrusted(player) {
 
 removeGhost(player) {
 	if (player hasGhost()) {
-		player UnSetPerk("specialty_gpsjammer");
+		player unsetPerk("specialty_gpsjammer");
 		self iprintln("Ghost ^2removed");
 	}
 	else if (player hasGhostPro()) {
-		player UnSetPerk("specialty_gpsjammer");
-		player UnSetPerk("specialty_notargetedbyai");
-		player UnSetPerk("specialty_noname");
+		player unsetPerk("specialty_gpsjammer");
+		player unsetPerk("specialty_notargetedbyai");
+		player unsetPerk("specialty_noname");
 		self iprintln("Ghost Pro ^2removed");
 	}
 }
 
 hasGhost() {
-	if (self hasPerk("specialty_gpsjammer") && !self HasPerk("specialty_notargetedbyai") && !self HasPerk("specialty_noname")) {
+	if (self hasPerk("specialty_gpsjammer") && !self hasPerk("specialty_notargetedbyai") && !self hasPerk("specialty_noname")) {
 		return true;
 	}
 
@@ -170,7 +170,7 @@ hasGhost() {
 }
 
 hasGhostPro() {
-	if (self hasPerk("specialty_gpsjammer") && self HasPerk("specialty_notargetedbyai") && self HasPerk("specialty_noname")) {
+	if (self hasPerk("specialty_gpsjammer") && self hasPerk("specialty_notargetedbyai") && self hasPerk("specialty_noname")) {
 		return true;
 	}
 

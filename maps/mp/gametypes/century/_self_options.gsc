@@ -4,23 +4,23 @@
 
 refillAmmo()
 {
-	curWeapons = self GetWeaponsListPrimaries();
-	offHandWeapons = array_exclude(self GetWeaponsList(), curWeapons);
+	curWeapons = self getWeaponsListPrimaries();
+	offHandWeapons = array_exclude(self getWeaponsList(), curWeapons);
 	offHandWeapons = array_remove(offHandWeapons, "knife_mp");
 	for (i = 0; i < curWeapons.size; i++)
 	{
 		weapon = curWeapons[i];
-		self GiveStartAmmo(weapon);
+		self giveStartAmmo(weapon);
 		if (weapon == "china_lake_mp")
 		{
-			self GiveMaxAmmo(weapon);
+			self giveMaxAmmo(weapon);
 		}
 	}
 
 	for (i = 0; i < offHandWeapons.size; i++)
 	{
 		weapon = offHandWeapons[i];
-		self GiveStartAmmo(weapon);
+		self giveStartAmmo(weapon);
 	}
 }
 
@@ -46,8 +46,8 @@ doSuicide()
 
 defaultTrickshotClass()
 {	
-	self ClearPerks();
-	self TakeAllWeapons();
+	self clearPerks();
+	self takeAllWeapons();
 	self maps\mp\gametypes\_clientids::exitMenu();
 	wait 0.25;
 	//Lightweight Pro
@@ -76,18 +76,18 @@ defaultTrickshotClass()
 	self maps\mp\gametypes\_hud_util::showPerk( 4, "perk_marathon_pro", 15);
 	self.camo = 15;
 	weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
-	self GiveWeapon("l96a1_vzoom_mp", 0, weaponOptions);
-	self GiveWeapon("python_speed_mp");
-	self GiveWeapon("claymore_mp");
-	self GiveWeapon("hatchet_mp");
-	self GiveWeapon("concussion_grenade_mp");
-	self GiveStartAmmo("claymore_mp");
-	self GiveStartAmmo("hatchet_mp");
-	self GiveStartAmmo("concussion_grenade_mp");
+	self giveWeapon("l96a1_vzoom_mp", 0, weaponOptions);
+	self giveWeapon("python_speed_mp");
+	self giveWeapon("claymore_mp");
+	self giveWeapon("hatchet_mp");
+	self giveWeapon("concussion_grenade_mp");
+	self giveStartAmmo("claymore_mp");
+	self giveStartAmmo("hatchet_mp");
+	self giveStartAmmo("concussion_grenade_mp");
 	self setSpawnWeapon("python_speed_mp");
-	self SwitchToWeapon("l96a1_vzoom_mp");
+	self switchToWeapon("l96a1_vzoom_mp");
 	self setSpawnWeapon("l96a1_vzoom_mp");
-	self SetActionSlot(1, "weapon", "claymore_mp");
+	self setActionSlot(1, "weapon", "claymore_mp");
 	wait 3;
 	for (i = 0; i < 5; i++)
 	{

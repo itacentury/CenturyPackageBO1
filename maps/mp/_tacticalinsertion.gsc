@@ -198,7 +198,7 @@ pickUp(attacker)
 {
 	player = self.owner;
 	self destroy_tactical_insertion();
-	player GiveWeapon(level.tacticalInsertionWeapon);
+	player giveWeapon(level.tacticalInsertionWeapon);
 	player setWeaponAmmoClip(level.tacticalInsertionWeapon, 1);
 }
 
