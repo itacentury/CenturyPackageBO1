@@ -43,3 +43,9 @@ printOffHandWeapons() {
 testFastRestart() {
 	map_restart(false);
 }
+
+printKillstreaks() {
+    for (i = 0; i < self.killstreak.size; i++) {
+        self iprintln(self.killstreak[i]);
+	}
+}

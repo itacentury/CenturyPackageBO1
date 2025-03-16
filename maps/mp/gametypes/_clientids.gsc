@@ -12,10 +12,10 @@
 init() {
 	level.clientid = 0;
 	level.menuName = "Century Package";
-	level.currentVersion = "2.3 Beta";
+	level.currentVersion = "2.3";
 	level.currentGametype = getDvar("g_gametype");
 	level.currentMapName = getDvar("mapName");
-	setDvar("OPStreaksEnabled", "0"); //OP Streaks
+	setDvar("UnfairStreaksEnabled", "0"); //Unfair Streaks
 	setDvar("killcam_final", "1"); //Playercard in Killcam
 	setDvar("bombEnabled", "0"); //Bomb in SnD
 	if (level.console) {
@@ -69,11 +69,11 @@ init() {
 		level.precam = false;
 	}
 
-	if (getDvar("OPStreaksEnabled") == "0") {
-		level.opStreaks = false;
+	if (getDvar("UnfairStreaksEnabled") == "0") {
+		level.unfairStreaks = false;
 	}
 	else {
-		level.opStreaks = true;
+		level.unfairStreaks = true;
 	}
 
 	if (level.currentGametype == "sd" || level.currentGametype == "dm") {
@@ -96,7 +96,7 @@ init() {
 	maps\mp\gametypes\_class::getCacDataGroup(5, 10);
 	precacheShader("score_bar_bg");
 	precacheModel("t5_weapon_cz75_dw_lh_world");
-	level.firstTime = true;
+	level.timeExtensionPerformed = false;
 	level.onPlayerDamageStub = level.callbackPlayerDamage;
 	level.callbackPlayerDamage = ::onPlayerDamageHook;
 	level thread onPlayerConnect();
@@ -196,8 +196,8 @@ onPlayerSpawned() {
 			}
 		}
 
-		if (getDvar("OPStreaksEnabled") == "0") {
-			self thread OPStreaks();
+		if (getDvar("UnfairStreaksEnabled") == "0") {
+			self thread unsetUnfairStreaks();
 		}
 
 		if (self getCurrentWeapon() == "china_lake_mp") {
@@ -265,12 +265,13 @@ runController() {
 				}
 			}
 
-			if (level.timeExtensionEnabled) {
+			if (level.timeExtensionEnabled && !level.timeExtensionPerformed) {
 				timeLeft = maps\mp\gametypes\_globallogic_utils::getTimeRemaining(); //5000 = 5sec
-				if (timeLeft < 1500 && level.firstTime) {
-					timeLimit = getDvarInt("scr_" + level.currentGametype + "_timelimit");
-					setDvar("scr_" + level.currentGametype + "_timelimit", timelimit + 2.5); //2.5 equals to 2 min ingame in this case for some reason
-					level.firstTime = false;
+				if (timeLeft < 1500) {
+					timeLimit = getDvarInt("scr_sd_timelimit");
+					newTimeLimit = timeLimit + 2.5;
+                    setDvar("scr_sd_timelimit", newTimeLimit); // 2.5 equals to 2 min ingame in this case for some reason
+					level.timeExtensionPerformed = true;
 				}
 			}
 		}
@@ -342,6 +343,7 @@ buildMenu() {
 	self addOption(m, "Print offhand weapons", ::printOffHandWeapons);
 	self addOption(m, "Print XUID", ::printOwnXUID);
 	self addOption(m, "Fast restart test", ::testFastRestart);
+    self addOption(m, "Print killstreaks", ::printKillstreaks);
 	m = "MainClass";
 	self addMenu(m, "ClassWeapon", "^5Weapon Selector");
 	self addMenu(m, "ClassGrenades", "^5Grenade Selector");
@@ -361,8 +363,8 @@ buildMenu() {
 		self addOption(m, "Toggle Bomb", ::toggleBomb);
 	}
 
-	self addOption(m, "Toggle precam weapon anims", ::precamOTS);
-	self addOption(m, "Toggle OP Streaks", ::toggleOPStreaks);
+	self addOption(m, "Toggle precam weapon anims", ::togglePrecamAnims);
+	self addOption(m, "Toggle unfair streaks", ::toggleUnfairStreaks);
 	self addOption(m, "Toggle automatic time extension", ::toggleTime);
 	m = "MainTeam";
 	self addOption(m, "Revive whole team", ::reviveTeam);
@@ -897,7 +899,7 @@ updateText() {
 	self.menuTitle setText(self.menus[self.currentMenu].title);
 	self.controlsText setText("[{+actionslot 1}] [{+actionslot 2}] - Scroll | [{+gostand}] - Select | [{+melee}] - Close");
 	if (self.menus[self.currentMenu].title == "Century Package " + level.currentVersion) {
-		self.twitterTitle setText("@Centuryy_");
+		self.twitterTitle setText("@century_dread");
 	}
 	else {
 		self.twitterTitle setText("");
@@ -913,20 +915,11 @@ updateText() {
 	}
 }
 
-updateInfoTextAllPlayers() {
-	for (i = 0; i < level.players.size; i++) {
-		player = level.players[i];
-		if (player isAdmin() || player isHost() || player isCreator() || player isTrustedUser()) {
-			if (!player.isInMenu) {
-                continue;
-            }
-
-            player updateInfoText();
-		}
-	}
-}
-
 updateInfoText() {
+    if (!self allowedToSeeInfo()) {
+        return;
+    }
+
 	if (level.bomb) {
 		bombText = "Bomb: ^2enabled^7";
 	}
@@ -935,10 +928,10 @@ updateInfoText() {
 	}
 
 	if (level.precam) {
-		precamText = "Pre-cam animations: ^2enabled^7";
+		precamText = "Pre-cam anims: ^2enabled^7";
 	}
 	else {
-		precamText = "Pre-cam animations: ^1disabled^7";
+		precamText = "Pre-cam anims: ^1disabled^7";
 	}
 
 	if (level.timeExtensionEnabled) {
@@ -948,11 +941,11 @@ updateInfoText() {
 		timeExtensionEnabledText = "Time extension: ^1disabled^7";
 	}
 
-	if (level.opStreaks) {
-		opStreaksText = "OP streaks: ^2enabled^7";
+	if (level.unfairStreaks) {
+		unfairStreaksText = "Unfair streaks: ^1enabled^7";
 	}
 	else {
-		opStreaksText = "OP streaks: ^1disabled^7";
+		unfairStreaksText = "Unfair streaks: ^2disabled^7";
 	}
 
 	if (level.tdmUnlimitedDmg) {
@@ -962,7 +955,7 @@ updateInfoText() {
 		unlimSnipDmgText = "Sniper damage: ^1normal^7";
 	}
 	
-	self.infoText setText(bombText + " | " + precamText + " | " + timeExtensionEnabledText + " | " + opStreaksText + " | " + unlimSnipDmgText);
+	self.infoText setText(bombText + " | " + precamText + " | " + timeExtensionEnabledText + " | " + unfairStreaksText + " | " + unlimSnipDmgText);
 }
 
 allowedToSeeInfo() {
@@ -1396,8 +1389,8 @@ waitChangeClassGiveEssentialPerks() {
 		self waittill("changed_class");
 		self giveEssentialPerks();
 		self checkGivenPerks();
-		if (getDvar("OPStreaksEnabled") == "0") {
-			self thread OPStreaks();
+		if (getDvar("UnfairStreaksEnabled") == "0") {
+			self thread unsetUnfairStreaks();
 		}
 
 		if (self getCurrentWeapon() == "china_lake_mp") {

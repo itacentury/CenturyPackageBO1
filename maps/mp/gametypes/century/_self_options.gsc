@@ -113,22 +113,22 @@ giveUnlockAll() {
 	self setRank(self.pers["rank"], prestigeLevel);
 	//PERKS
 	perks = [];
-	perks[1] = "PERKS_SLEIGHT_OF_HAND";
-	perks[2] = "PERKS_GHOST";
-	perks[3] = "PERKS_NINJA";
-	perks[4] = "PERKS_HACKER";
-	perks[5] = "PERKS_LIGHTWEIGHT";
-	perks[6] = "PERKS_SCOUT";
-	perks[7] = "PERKS_STEADY_AIM";
-	perks[8] = "PERKS_DEEP_IMPACT";
-	perks[9] = "PERKS_MARATHON";
-	perks[10] = "PERKS_SECOND_CHANCE";
-	perks[11] = "PERKS_TACTICAL_MASK";
-	perks[12] = "PERKS_PROFESSIONAL";
-	perks[13] = "PERKS_SCAVENGER";
-	perks[14] = "PERKS_FLAK_JACKET";
-	perks[15] = "PERKS_HARDLINE";
-	for (i = 1; i < 16; i++) {
+	perks[0] = "PERKS_SLEIGHT_OF_HAND";
+	perks[1] = "PERKS_GHOST";
+	perks[2] = "PERKS_NINJA";
+	perks[3] = "PERKS_HACKER";
+	perks[4] = "PERKS_LIGHTWEIGHT";
+	perks[5] = "PERKS_SCOUT";
+	perks[6] = "PERKS_STEADY_AIM";
+	perks[7] = "PERKS_DEEP_IMPACT";
+	perks[8] = "PERKS_MARATHON";
+	perks[9] = "PERKS_SECOND_CHANCE";
+	perks[10] = "PERKS_TACTICAL_MASK";
+	perks[11] = "PERKS_PROFESSIONAL";
+	perks[12] = "PERKS_SCAVENGER";
+	perks[13] = "PERKS_FLAK_JACKET";
+	perks[14] = "PERKS_HARDLINE";
+	for (i = 0; i < perks.size; i++) {
 		perk = perks[i];
 		for (j = 0; j < 3; j++) {
 			self maps\mp\gametypes\_persistence::unlockItemFromChallenge("perkpro " + perk + " " + j);
