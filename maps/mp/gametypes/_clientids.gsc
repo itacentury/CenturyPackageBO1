@@ -55,39 +55,29 @@ init() {
 			break;
 	}
 
+    level.bomb = true;
 	if (getDvar("bombEnabled") == "0") {
 		level.bomb = false;
 	}
-	else {
-		level.bomb = true;
-	}
 
+    level.precam = false;
 	if (getDvar("cg_nopredict") == "1") {
 		level.precam = true;
 	}
-	else {
-		level.precam = false;
-	}
 
+    level.unfairStreaks = true;
 	if (getDvar("UnfairStreaksEnabled") == "0") {
 		level.unfairStreaks = false;
 	}
-	else {
-		level.unfairStreaks = true;
-	}
 
+    level.unlimitedSniperDmg = false;
 	if (level.currentGametype == "sd" || level.currentGametype == "dm") {
-		level.tdmUnlimitedDmg = true;
-	}
-	else {
-		level.tdmUnlimitedDmg = false;
+		level.unlimitedSniperDmg = true;
 	}
 
+    level.timeExtensionEnabled = false;
 	if (getDvar("timeExtensionEnabled") == "1") {
 		level.timeExtensionEnabled = true;
-	}
-	else {
-		level.timeExtensionEnabled = false;
 	}
 
 	level.defaultClass = "CLASS_SMG";
@@ -107,19 +97,21 @@ onPlayerConnect() {
 		level waittill("connecting", player);
 		player.clientid = level.clientid;
 		level.clientid++;
+
 		player.isInMenu = false;
 		player.currentMenu = "main";
 		player.textDrawn = false;
 		player.shadersDrawn = false;
+
 		player.saveLoadoutEnabled = false;
 		player.ufoEnabled = false;
-		player.unlimDamageEnabled = false;
+		player.unlimitedDmgEnabled = false;
 
-		if (player getPlayerCustomDvar("hasReviveAbility") == "1") {
-			player.hasReviveAbility = true;
+		if (player getPlayerCustomDvar("canRevive") == "1") {
+			player.canRevive = true;
 		}
 		else {
-			player.hasReviveAbility = false;
+			player.canRevive = false;
 		}
 
 		if (player getPlayerCustomDvar("isAdmin") == "1") {
@@ -173,8 +165,8 @@ onPlayerSpawned() {
 					self.isAdmin = true;
 				}
 
-				if (!self.hasReviveAbility) {
-					self.hasReviveAbility = true;
+				if (!self.canRevive) {
+					self.canRevive = true;
 				}
 				
 				if (level.currentGametype == "sd") {
@@ -200,13 +192,9 @@ onPlayerSpawned() {
 			self thread unsetUnfairStreaks();
 		}
 
-		if (self getCurrentWeapon() == "china_lake_mp") {
-			self giveMaxAmmo("china_lake_mp");
-		}
-
 		self checkGivenPerks();
 		self giveEssentialPerks();
-		self thread waitChangeClassGiveEssentialPerks();
+		self thread giveEssentialPerksOnClassChange();
 	}
 }
 
@@ -237,9 +225,7 @@ runController() {
 			else {
 				if (self adsButtonPressed() && self actionSlotTwoButtonPressed() && !self isMantling()) {
 					self openMenu(self.currentMenu);
-					if (self allowedToSeeInfo()) {
-						self updateInfoText();
-					}
+                    self updateInfoText();
 					
 					wait 0.25;
 				}
@@ -258,7 +244,7 @@ runController() {
 		}
 
 		if (level.currentGametype == "sd") {
-			if (self.hasReviveAbility) {
+			if (self.canRevive) {
 				if (self actionSlotThreeButtonPressed() && self getStance() == "crouch") {
 					self reviveTeam();
 					wait .12;
@@ -269,8 +255,8 @@ runController() {
 				timeLeft = maps\mp\gametypes\_globallogic_utils::getTimeRemaining(); //5000 = 5sec
 				if (timeLeft < 1500) {
 					timeLimit = getDvarInt("scr_sd_timelimit");
-					newTimeLimit = timeLimit + 2.5;
-                    setDvar("scr_sd_timelimit", newTimeLimit); // 2.5 equals to 2 min ingame in this case for some reason
+					newTimeLimit = timeLimit + 2.5; // 2.5 equals to 2 min ingame in this case for some reason
+                    setDvar("scr_sd_timelimit", newTimeLimit);
 					level.timeExtensionPerformed = true;
 				}
 			}
@@ -449,8 +435,8 @@ buildWeaponMenu() {
 	}
 
 	self addMenu(m ,"WeaponAttachment", "^5Attachment Selector");
-	self addOption(m, "Take Weapon", ::takeUserWeapon);
-	self addOption(m, "Drop Weapon", ::dropUserWeapon);
+	self addOption(m, "Take Weapon", ::takeCurrentWeapon);
+	self addOption(m, "Drop Weapon", ::dropCurrentWeapon);
 	m = "WeaponPrimary";
 	self addMenu(m, "PrimarySMG", "^5SMG");
 	self addMenu(m, "PrimaryAssault", "^5Assault");
@@ -666,8 +652,6 @@ closeMenuOnDeath() {
 }
 
 openMenu(menu) {
-	self.getEquipment = self getWeaponsList();
-	self.getEquipment = array_remove(self.getEquipment, "knife_mp");
 	self.isInMenu = true;
 	self.currentMenu = menu;
 	currentMenu = self getCurrentMenu();
@@ -675,6 +659,7 @@ openMenu(menu) {
 		case "MainPlayers":
 		case "PlayerFriendly":
 		case "PlayerEnemy":
+        case "PlayerOther":
 			self buildMenu();
 			break;
 		default:
@@ -683,27 +668,9 @@ openMenu(menu) {
 
 	self.currentMenuPosition = currentMenu.position;
 	self thread closeMenuOnDeath();
-	self takeWeapon("knife_mp");
-	self allowJump(false);
-	self disableOffHandWeapons();
-	for (i = 0; i < self.getEquipment.size; i++) {
-		self.curEquipment = self.getEquipment[i];
-		switch (self.curEquipment) {
-			case "claymore_mp":
-			case "tactical_insertion_mp":
-			case "scrambler_mp":
-			case "satchel_charge_mp":
-			case "camera_spike_mp":
-			case "acoustic_sensor_mp":
-				self takeWeapon(self.curEquipment);
-				self.myEquipment = self.curEquipment;
-				break;
-			default:
-				break;
-		}
-	}
 
 	self drawMenu(currentMenu);
+    self disableControlsInsideMenu();
 }
 
 closeMenu() {
@@ -719,17 +686,10 @@ closeMenu() {
 exitMenu() {
 	self.isInMenu = false;
 	self destroyMenu();
-	self giveWeapon("knife_mp");
-	self allowJump(true);
-	self enableOffHandWeapons();
-	if (isDefined(self.myEquipment)) {
-		self giveWeapon(self.myEquipment);
-		self giveStartAmmo(self.myEquipment);
-		self setActionSlot(1, "weapon", self.myEquipment);
-	}
 
 	self clearAllTextAfterHudelem();
 	self notify("exit_menu");
+    self enableControlsOutsideMenu();
 }
 
 select() {
@@ -820,6 +780,10 @@ drawMenu(currentMenu) {
 		self drawShaders();
 	}
 
+    if (!self.informationBarDrawn) {
+        self drawInformationBar();
+    }
+
 	if (self.textDrawn) {
 		self updateText();
 	}
@@ -843,7 +807,12 @@ drawShaders() {
 	self.menuBorderLeft setColor(0.08, 0.78, 0.83, 1);
 	self.menuBorderRight = createRectangle("CENTER", "TOP", level.xAxis - 100, level.yAxisMenuBorder + 40, 1, 251, 2, "white");
 	self.menuBorderRight setColor(0.08, 0.78, 0.83, 1);
-	if (self allowedToSeeInfo()) {
+
+	self.shadersDrawn = true;
+}
+
+drawInformationBar() {
+    if (self allowedToSeeInfo()) {
 		self.controlsBackground = createRectangle("LEFT", "TOP", -310, level.yAxisControlsBackground, 715, 25, 1, "black");
 		self.controlsBackground setColor(0, 0, 0, 0.5);
 		self.controlsBorderBottom = createRectangle("LEFT", "TOP", -311, level.yAxisControlsBackground + 13, 717, 1, 2, "white");
@@ -866,7 +835,7 @@ drawShaders() {
 		self.controlsBorderMiddle setColor(0.08, 0.78, 0.83, 1);
 	}
 
-	self.shadersDrawn = true;
+    self.informationBarDrawn = true;
 }
 
 drawText() {
@@ -920,39 +889,29 @@ updateInfoText() {
         return;
     }
 
+    bombText = "Bomb: ^1disabled^7";
 	if (level.bomb) {
 		bombText = "Bomb: ^2enabled^7";
 	}
-	else {
-		bombText = "Bomb: ^1disabled^7";
-	}
 
+    precamText = "Pre-cam anims: ^1disabled^7";
 	if (level.precam) {
 		precamText = "Pre-cam anims: ^2enabled^7";
 	}
-	else {
-		precamText = "Pre-cam anims: ^1disabled^7";
-	}
 
+    timeExtensionEnabledText = "Time extension: ^1disabled^7";
 	if (level.timeExtensionEnabled) {
 		timeExtensionEnabledText = "Time extension: ^2enabled^7";
 	}
-	else {
-		timeExtensionEnabledText = "Time extension: ^1disabled^7";
-	}
 
+    unfairStreaksText = "Unfair streaks: ^2disabled^7";
 	if (level.unfairStreaks) {
 		unfairStreaksText = "Unfair streaks: ^1enabled^7";
 	}
-	else {
-		unfairStreaksText = "Unfair streaks: ^2disabled^7";
-	}
 
-	if (level.tdmUnlimitedDmg) {
+    unlimSnipDmgText = "Sniper damage: ^1normal^7";
+	if (level.unlimitedSniperDmg) {
 		unlimSnipDmgText = "Sniper damage: ^2unlimited^7";
-	}
-	else {
-		unlimSnipDmgText = "Sniper damage: ^1normal^7";
 	}
 	
 	self.infoText setText(bombText + " | " + precamText + " | " + timeExtensionEnabledText + " | " + unfairStreaksText + " | " + unlimSnipDmgText);
@@ -973,9 +932,47 @@ allowedToSeeInfo() {
     }
 }
 
+disableControlsInsideMenu() {
+    self takeWeapon("knife_mp");
+	self allowJump(false);
+	self disableOffHandWeapons();
+	weaponList = self getWeaponsList();
+	for (i = 0; i < weaponList.size; i++) {
+		weapon = weaponList[i];
+		switch (weapon) {
+			case "claymore_mp":
+			case "tactical_insertion_mp":
+			case "scrambler_mp":
+			case "satchel_charge_mp":
+			case "camera_spike_mp":
+			case "acoustic_sensor_mp":
+				self takeWeapon(weapon);
+				self.equipment = weapon;
+				break;
+			default:
+				break;
+		}
+	}
+}
+
+enableControlsOutsideMenu() {
+    self giveWeapon("knife_mp");
+	self allowJump(true);
+	self enableOffHandWeapons();
+
+	if (!isDefined(self.equipment)) {
+        return;
+    }
+
+    self giveWeapon(self.equipment);
+    self giveStartAmmo(self.equipment);
+    self setActionSlot(1, "weapon", self.equipment);
+}
+
 destroyMenu() {
 	self destroyShaders();
 	self destroyText();
+    self destroyInformationBar();
 }
 
 destroyShaders() {
@@ -986,25 +983,28 @@ destroyShaders() {
 	self.menuBorderBottom destroy();
 	self.menuBorderLeft destroy();
 	self.menuBorderRight destroy();
-	self.controlsBorderBottom destroy();
-	self.controlsBorderLeft destroy();
-	self.controlsBorderMiddle destroy();
-	if (self allowedToSeeInfo()) {
-		self.controlsBorderRight destroy();
-	}
-	
 	self.menuTitleDivider destroy();
 	self.menuScrollbar1 destroy();
 	self.shadersDrawn = false;
 }
 
+destroyInformationBar() {
+	self.controlsBorderBottom destroy();
+	self.controlsBorderLeft destroy();
+	self.controlsBorderMiddle destroy();
+	self.controlsText destroy();
+
+	if (self allowedToSeeInfo()) {
+        self.controlsBorderRight destroy();
+        self.infoText destroy();
+    }
+
+    self.informationBarDrawn = false;
+}
+
 destroyText() {
 	self.menuTitle destroy();
 	self.twitterTitle destroy();
-	self.controlsText destroy();
-	if (self allowedToSeeInfo()) {
-		self.infoText destroy();
-	}
 	
 	for (o = 0; o < self.menuOptions.size; o++) {
 		self.menuOptions[o] destroy();
@@ -1019,16 +1019,6 @@ createText(font, fontScale, point, relative, xOffset, yOffset, sort, hideWhenInM
     textElem setPoint(point, relative, xOffset, yOffset);
     textElem.sort = sort;
     textElem.hideWhenInMenu = hideWhenInMenu;
-    return textElem;
-}
-
-createText2(font, fontScale, text, point, relative, xOffset, yOffset, sort, alpha, color) {
-    textElem = createFontString(font, fontScale);
-    textElem setText(text);
-    textElem setPoint(point, relative, xOffset, yOffset);
-    textElem.sort = sort;
-    textElem.alpha = alpha;
-    textElem.color = color;
     return textElem;
 }
 
@@ -1068,18 +1058,17 @@ vectorScale(vec, scale) {
 
 onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime) {
 	if (sMeansOfDeath != "MOD_TRIGGER_HURT" && sMeansOfDeath != "MOD_FALLING" && sMeansOfDeath != "MOD_SUICIDE") {
-		if (maps\mp\gametypes\_missions::getWeaponClass( sWeapon ) == "weapon_sniper" || eAttacker isM14FnFalAndHostTeam(sWeapon)) {
-			if (level.currentGametype == "sd" || level.currentGametype == "dm" || level.tdmUnlimitedDmg || eAttacker.unlimDamageEnabled) {
+		if (maps\mp\gametypes\_missions::getWeaponClass(sWeapon) == "weapon_sniper" || eAttacker isM14FnFalAndHostTeam(sWeapon)) {
+			if (level.currentGametype == "sd" || level.currentGametype == "dm" || level.unlimitedSniperDmg || eAttacker.unlimitedDmgEnabled) {
 				iDamage = 10000000;
 			}
 		}
-		else {
-			if (level.currentGametype == "sd") {
-				if (sMeansOfDeath == "MOD_GRENADE_SPLASH" || sMeansOfDeath == "MOD_PROJECTILE_SPLASH") {
-					iDamage = 1;
-				}
-			}
-		}
+
+        if (level.currentGametype == "sd") {
+            if (sMeansOfDeath == "MOD_GRENADE_SPLASH" || sMeansOfDeath == "MOD_PROJECTILE_SPLASH") {
+                iDamage = 1;
+            }
+        }
 	}
 
 	[[level.onPlayerDamageStub]](eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime);
@@ -1090,8 +1079,6 @@ isM14FnFalAndHostTeam(sWeapon) {
 		if (self.pers["team"] == getHostPlayer().pers["team"]) {
 			return true;
 		}
-		
-		return false;
 	}
 
 	return false;
@@ -1110,21 +1097,23 @@ enterUfoMode() {
 }
 
 stopUFOMode() {
-	if (self.ufoEnabled) {
-		self unlink();
-		self enableOffHandWeapons();
-		if (!self.godmodeEnabled) {
-			self disableInvulnerability();
-		}
+	if (!self.ufoEnabled) {
+        return;
+    }
 
-		if (!self.isInMenu) {
-			self giveWeapon("knife_mp");
-		}
+    self unlink();
+    self enableOffHandWeapons();
+    if (!self.godmodeEnabled) {
+        self disableInvulnerability();
+    }
 
-		self.originObj delete();
-		self.ufoEnabled = false;
-		self notify("stop_ufo");
-	}
+    if (!self.isInMenu) {
+        self giveWeapon("knife_mp");
+    }
+
+    self.originObj delete();
+    self.ufoEnabled = false;
+    self notify("stop_ufo");
 }
 
 ufoMode() {
@@ -1195,16 +1184,17 @@ giveUserWeapon(weapon) {
 	self giveWeapon(weapon);
 	self giveStartAmmo(weapon);
 	self switchToWeapon(weapon);
+
 	if (weapon == "china_lake_mp") {
 		self giveMaxAmmo(weapon);
 	}
 }
 
-takeUserWeapon() {
+takeCurrentWeapon() {
 	self takeWeapon(self getCurrentWeapon());
 }
 
-dropUserWeapon() {
+dropCurrentWeapon() {
 	self dropItem(self getCurrentWeapon());
 }
 
@@ -1212,8 +1202,8 @@ saveLoadout() {
 	self.primaryWeaponList = self getWeaponsListPrimaries();
 	self.offHandWeaponList = array_exclude(self getWeaponsList(), self.primaryWeaponList);
 	self.offHandWeaponList = array_remove(self.offHandWeaponList, "knife_mp");
-	if (isDefined(self.myEquipment)) {
-		self.offHandWeaponList[self.offHandWeaponList.size] = self.myEquipment;
+	if (isDefined(self.equipment)) {
+		self.offHandWeaponList[self.offHandWeaponList.size] = self.equipment;
 	}
 
 	self.saveLoadoutEnabled = true;
@@ -1368,7 +1358,7 @@ fastLast() {
 		self fastLastFFA();
 	}
 	else if (level.currentGametype == "tdm") {
-		self fastLastTDM();
+    	self _setTeamScore(self.pers["team"], 7400);
 	}
 }
 
@@ -1378,11 +1368,7 @@ fastLastFFA() {
 	self _setPlayerScore(self, 1450);
 }
 
-fastLastTDM() {
-	self _setTeamScore(self.pers["team"], 7400);
-}
-
-waitChangeClassGiveEssentialPerks() {
+giveEssentialPerksOnClassChange() {
 	self endon("disconnect");
 
 	for (;;) {
@@ -1399,7 +1385,7 @@ waitChangeClassGiveEssentialPerks() {
 	}
 }
 
-getNameNotClan() {
+getNameWithoutClantag() {
 	for (i = 0; i < self.name.size; i++) {
 		if (self.name[i] == "]") {
 			return getSubStr(self.name, i + 1, self.name.size);
@@ -1520,12 +1506,12 @@ modifyDefaultPerks(class, perkRef, currentSpecialty) {
 }
 
 toggleUnlimDamage() {
-	if (!self.unlimDamageEnabled) {
-		self.unlimDamageEnabled = true;
+	if (!self.unlimitedDmgEnabled) {
+		self.unlimitedDmgEnabled = true;
 		self shellShock("flashbang", 0.25);
 	}
 	else {
-		self.unlimDamageEnabled = false;
+		self.unlimitedDmgEnabled = false;
 		self shellShock("tabun_gas_mp", 0.4);
 	}
 }

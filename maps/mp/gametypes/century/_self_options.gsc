@@ -113,16 +113,16 @@ giveUnlockAll() {
 	self setRank(self.pers["rank"], prestigeLevel);
 	//PERKS
 	perks = [];
-	perks[0] = "PERKS_SLEIGHT_OF_HAND";
-	perks[1] = "PERKS_GHOST";
-	perks[2] = "PERKS_NINJA";
-	perks[3] = "PERKS_HACKER";
-	perks[4] = "PERKS_LIGHTWEIGHT";
-	perks[5] = "PERKS_SCOUT";
-	perks[6] = "PERKS_STEADY_AIM";
-	perks[7] = "PERKS_DEEP_IMPACT";
-	perks[8] = "PERKS_MARATHON";
-	perks[9] = "PERKS_SECOND_CHANCE";
+	perks[0]  = "PERKS_SLEIGHT_OF_HAND";
+	perks[1]  = "PERKS_GHOST";
+	perks[2]  = "PERKS_NINJA";
+	perks[3]  = "PERKS_HACKER";
+	perks[4]  = "PERKS_LIGHTWEIGHT";
+	perks[5]  = "PERKS_SCOUT";
+	perks[6]  = "PERKS_STEADY_AIM";
+	perks[7]  = "PERKS_DEEP_IMPACT";
+	perks[8]  = "PERKS_MARATHON";
+	perks[9]  = "PERKS_SECOND_CHANCE";
 	perks[10] = "PERKS_TACTICAL_MASK";
 	perks[11] = "PERKS_PROFESSIONAL";
 	perks[12] = "PERKS_SCAVENGER";

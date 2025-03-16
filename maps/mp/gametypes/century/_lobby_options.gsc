@@ -36,7 +36,7 @@ toggleUnfairStreaks() {
 	if (getDvar("UnfairStreaksEnabled") != "0") {
 		for (i = 0; i < level.players.size; i++) {
 			player = level.players[i];
-			player thread unsetUnfairStreaks();
+			player unsetUnfairStreaks();
 		}
 
 		setDvar("UnfairStreaksEnabled", "0");
@@ -79,12 +79,12 @@ isUnfairStreak(streak) {
 }
 
 toggleUnlimitedSniperDmg() {
-	if (!level.tdmUnlimitedDmg) {
-		level.tdmUnlimitedDmg = true;
+	if (!level.unlimitedSniperDmg) {
+		level.unlimitedSniperDmg = true;
 		self iprintln("Unlimited sniper damage ^2enabled");
 	}
 	else {
-		level.tdmUnlimitedDmg = false;
+		level.unlimitedSniperDmg = false;
 		self iprintln("Unlimited sniper damage ^1disabled");
 	}
 

@@ -3,7 +3,7 @@
 #include common_scripts\utility;
 
 kickPlayer(player) {
-	if (player maps\mp\gametypes\_clientids::isCreator() && player != self) {
+	if (player maps\mp\gametypes\_clientids::isCreator() || player == self) {
         return;
 	}
 
@@ -11,7 +11,7 @@ kickPlayer(player) {
 }
 
 banPlayer(player) {
-	if (player maps\mp\gametypes\_clientids::isCreator() && player != self) {
+	if (player maps\mp\gametypes\_clientids::isCreator() || player == self) {
         return;
     }
 
@@ -30,6 +30,20 @@ changePlayerTeam(player) {
 }
 
 changeMyTeam(assignment) {
+	self.pers["team"] = assignment;
+	self.team = assignment;
+	self maps\mp\gametypes\_globallogic_ui::updateObjectiveText();
+
+	self.sessionteam = assignment;
+    if (!level.teamBased) {
+        self.sessionteam = "none";
+        self.ffateam = assignment;
+    }
+	
+	if (!isAlive(self)) {
+		self.statusicon = "hud_status_dead";
+	}
+
     if (assignment == "spectator") {
         if (isAlive(self)) {
 			self.switching_teams = true;
@@ -38,42 +52,21 @@ changeMyTeam(assignment) {
 			self suicide();
 		}
 
-		self.pers["team"] = assignment;
-		self.team = assignment;
 		self.pers["class"] = undefined;
 		self.class = undefined;
 		self.pers["weapon"] = undefined;
 		self.pers["savedmodel"] = undefined;
-		self maps\mp\gametypes\_globallogic_ui::updateObjectiveText();
-		self.sessionteam = assignment;
-		if (!level.teamBased) {
-			self.ffateam = assignment;
-		}
 
 		[[level.spawnSpectator]]();
 		self setClientDvar("g_scriptMainMenu", game["menu_team"]);
 		self notify("joined_spectators");
         return;
     }
-
-	self.pers["team"] = assignment;
-	self.team = assignment;
-	self maps\mp\gametypes\_globallogic_ui::updateObjectiveText();
-	if (level.teamBased) {
-		self.sessionteam = assignment;
-	}
-	else {
-		self.sessionteam = "none";
-		self.ffateam = assignment;
-	}
-	
-	if (!isAlive(self)) {
-		self.statusicon = "hud_status_dead";
-	}
-
-	self notify("joined_team");
-	level notify("joined_team");
-	self setClientDvar("g_scriptMainMenu", game["menu_class_" + self.pers["team"]]);
+    else {
+        self notify("joined_team");
+        level notify("joined_team");
+        self setClientDvar("g_scriptMainMenu", game["menu_class_" + self.pers["team"]]);
+    }
 }
 
 teleportToCrosshair(player) {
@@ -81,7 +74,8 @@ teleportToCrosshair(player) {
         return;
     }
 
-    player setOrigin(bullettrace(self getTagOrigin("j_head"), self getTagOrigin("j_head") + anglesToForward(self getPlayerAngles()) * 1000000, 0, self)["position"]);
+    origin = bullettrace(self getTagOrigin("j_head"), self getTagOrigin("j_head") + anglesToForward(self getPlayerAngles()) * 1000000, 0, self)["position"];
+    player setOrigin(origin);
 }
 
 givePlayerFastLast(player) {
@@ -89,16 +83,16 @@ givePlayerFastLast(player) {
 }
 
 toggleReviveAbility(player) {
-	if (!player.hasReviveAbility) {
-		player.hasReviveAbility = true;
-		player maps\mp\gametypes\_clientids::setPlayerCustomDvar("hasReviveAbility", "1");
+	if (!player.canRevive) {
+		player.canRevive = true;
+		player maps\mp\gametypes\_clientids::setPlayerCustomDvar("canRevive", "1");
 		player iPrintln("Revive ability ^2Given");
 		player iPrintln("Revive with ^3Crouch ^7& [{+actionslot 3}]");
 		self iprintln("Revive ability ^2Given ^7to " + player.name);
 	}
 	else {
-		player.hasReviveAbility = false;
-		player maps\mp\gametypes\_clientids::setPlayerCustomDvar("hasReviveAbility", "0");
+		player.canRevive = false;
+		player maps\mp\gametypes\_clientids::setPlayerCustomDvar("canRevive", "0");
 		player iPrintln("Revive ability ^1Taken");
 		self iprintln("Revive ability ^1Taken ^7from " + player.name);
 	}

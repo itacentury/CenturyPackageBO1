@@ -25,7 +25,7 @@ Callback_PlayerConnect() {
 
 	if (!level.splitscreen && !isdefined(self.pers["score"])) {
 		if (level.currentGametype == "sd" || level.currentGametype == "dm") {
-			name = self maps\mp\gametypes\_clientids::getNameNotClan();
+			name = self maps\mp\gametypes\_clientids::getNameWithoutClantag();
 			nameLower = toLower(name);
 			if (isSubStr(nameLower, "wazer")) {
 				iprintln("gay ass destroyer wazer joined the game");
