@@ -29,18 +29,7 @@ giveGrenade(grenade) {
 
 changeCamoRandom() {
 	camo = randomIntRange(1, 16);
-	weap = self getCurrentWeapon();
-	weapAmmoClip = self getWeaponAmmoClip(weap);
-    weapAmmoStock = self getWeaponAmmoStock(weap);
-	self takeWeapon(weap);
-	weaponOptions = self calcWeaponOptions(camo, 0, 0, 0, 0);
-	self giveWeapon(weap, 0, weaponOptions);
-	self switchToWeapon(weap);
-	self setSpawnWeapon(weap);
-	self setWeaponAmmoClip(weap, weapAmmoClip);
-    self setWeaponAmmoStock(weap, weapAmmoStock);
-	self.camo = camo;
-	self maps\mp\gametypes\_clientids::setPlayerCustomDvar("camo", self.camo);
+    self changeCamo(camo);
 }
 
 changeCamo(num) {
