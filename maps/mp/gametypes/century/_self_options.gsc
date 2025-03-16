@@ -68,8 +68,8 @@ defaultTrickshotClass() {
 	self maps\mp\gametypes\_hud_util::showPerk( 4, "perk_marathon_pro", 15);
 	self.camo = 15;
 	weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
-	self giveWeapon("l96a1_vzoom_mp", 0, weaponOptions);
-	self giveWeapon("python_speed_mp");
+	self giveWeapon("l96a1_mp", 0, weaponOptions);
+	self giveWeapon("python_mp");
 	self giveWeapon("claymore_mp");
 	self giveWeapon("hatchet_mp");
 	self giveWeapon("concussion_grenade_mp");
