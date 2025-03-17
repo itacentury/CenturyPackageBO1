@@ -8,8 +8,8 @@ main() {
 	}
 
 	maps\mp\gametypes\_globallogic::init();
-	maps\mp\gametypes\_callbacksetup::SetupCallbacks();
-	maps\mp\gametypes\_globallogic::SetupCallbacks();
+	maps\mp\gametypes\_callbacksetup::setupCallbacks();
+	maps\mp\gametypes\_globallogic::setupCallbacks();
 	maps\mp\gametypes\_globallogic_utils::registerRoundSwitchDvar(level.gameType, 3, 0, 9);
 	maps\mp\gametypes\_globallogic_utils::registerTimeLimitDvar(level.gameType, 2.5, 0, 1440);
 	maps\mp\gametypes\_globallogic_utils::registerScoreLimitDvar(level.gameType, 4, 0, 500);
@@ -20,7 +20,7 @@ main() {
 	maps\mp\gametypes\_weapons::registerThrownGrenadeDudDvar(level.gameType, 5, 0, 1440);
 	maps\mp\gametypes\_weapons::registerKillstreakDelay(level.gameType, 15, 0, 1440);
 	maps\mp\gametypes\_globallogic::registerFriendlyFireDelay(level.gameType, 15, 0, 1440);
-	level.teamBased = true;
+	level.teambased = true;
 	level.overrideTeamScore = true;
 	level.onPrecacheGameType = ::onPrecacheGameType;
 	level.onStartGameType = ::onStartGameType;
@@ -388,7 +388,7 @@ onOneLeftEvent(team) {
 }
 
 onTimeLimit() {
-	if (level.teamBased) {
+	if (level.teambased) {
 		sd_endGame(game["defenders"], game["strings"]["time_limit_reached"]);
 	}
 	else {
@@ -410,7 +410,7 @@ warnLastPlayer(team) {
 	for (i = 0; i < players.size; i++) {
 		player = players[i];
 		if (isDefined(player.pers["team"]) && player.pers["team"] == team && isdefined( player.pers["class"])) {
-			if (player.sessionstate == "playing" && !player.afk) {
+			if (player.sessionState == "playing" && !player.afk) {
 				break;
 			}
 		}

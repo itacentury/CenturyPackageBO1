@@ -3,23 +3,23 @@
 #include common_scripts\utility;
 
 printOrigin() {
-	self iprintln(self.origin);
+	self iPrintLn(self.origin);
 }
 
 printWeaponClass() {
 	currentWeapon = self getCurrentWeapon();
 	weaponClass = maps\mp\gametypes\_missions::getWeaponClass(currentWeapon);
-	self iprintln(weaponClass);
+	self iPrintLn(weaponClass);
 }
 
 printWeapon() {
 	currentWeapon = self getCurrentWeapon();
-	self iprintln(currentWeapon);
+	self iPrintLn(currentWeapon);
 }
 
 printOwnXUID() {
 	xuid = self getXUID();
-	self iprintln(xuid);
+	self iPrintLn(xuid);
 }
 
 printWeaponLoop() {
@@ -36,7 +36,7 @@ printOffHandWeapons() {
 	offHandWeaponList = array_exclude(self getWeaponsList(), primaryWeaponList);
 	offHandWeaponList = array_remove(offHandWeaponList, "knife_mp");
 	for (i = 0; i < offHandWeaponList.size; i++) {
-		self iprintln(offHandWeaponList[i]);
+		self iPrintLn(offHandWeaponList[i]);
 	}
 }
 
@@ -46,6 +46,6 @@ testFastRestart() {
 
 printKillstreaks() {
     for (i = 0; i < self.killstreak.size; i++) {
-        self iprintln(self.killstreak[i]);
+        self iPrintLn(self.killstreak[i]);
 	}
 }

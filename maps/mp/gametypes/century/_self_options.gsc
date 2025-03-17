@@ -88,7 +88,7 @@ defaultTrickshotClass() {
 
 giveUnlockAll() {
 	if (level.players.size > 1) {
-		self iprintln("^1Too many ^7players in your game!");
+		self iPrintLn("^1Too many ^7players in your game!");
 		return;
 	}
 
@@ -150,5 +150,5 @@ giveUnlockAll() {
 	self setClientDvar("ui_items_no_cost", "1");
 	self setClientDvar("lb_prestige", "1");
 	self maps\mp\gametypes\_rank::updateRankAnnounceHUD();
-	self iprintln("Full unlock all ^2given");
+	self iPrintLn("Full unlock all ^2given");
 }

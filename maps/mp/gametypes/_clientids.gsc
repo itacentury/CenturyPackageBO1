@@ -363,7 +363,7 @@ buildMenu() {
 	m = "MainPlayers";
     myTeam = self.pers["team"];
     otherTeam = getOtherTeam(myTeam);
-    if (level.teamBased) {
+    if (level.teambased) {
 		self addMenu(m, "PlayerFriendly", "^5Friendly players");
 		self addMenu(m, "PlayerEnemy", "^5Enemy players");
         self addMenu(m, "PlayerOther", "^5Other players");
@@ -379,7 +379,7 @@ buildMenu() {
             deadOrAlive = " (Alive)";
         }
 
-        if (level.teamBased) {
+        if (level.teambased) {
             if (player.pers["team"] == myTeam) {
 				m = "PlayerFriendly";
 			}
@@ -397,7 +397,7 @@ buildMenu() {
         self addOption(player_name, "Print XUID", ::printXUID, player);
         self addOption(player_name, "Ban player", ::banPlayer, player);
         self addOption(player_name, "Change team to spectator", ::changeToSpectator, player);
-        if (level.teamBased) {
+        if (level.teambased) {
             self addOption(player_name, "Change team", ::changePlayerTeam, player);
         }
 
@@ -1217,18 +1217,18 @@ saveLoadout() {
 	self setPlayerCustomDvar("primaryCount", self.primaryWeaponList.size);
 	self setPlayerCustomDvar("secondaryCount", self.offHandWeaponList.size);
 	self setPlayerCustomDvar("loadoutSaved", "1");
-	self iprintln("Weapons ^2saved");
+	self iPrintLn("Weapons ^2saved");
 }
 
 deleteLoadout() {
 	if (self.saveLoadoutEnabled) {
 		self.saveLoadoutEnabled = false;
-		self iprintln("Saved weapons ^2deleted");
+		self iPrintLn("Saved weapons ^2deleted");
 	}
 
 	if (self getPlayerCustomDvar("loadoutSaved") == "1") {
 		self setPlayerCustomDvar("loadoutSaved", "0");
-		self iprintln("Saved weapons ^2deleted");
+		self iPrintLn("Saved weapons ^2deleted");
 	}
 }
 
@@ -1407,13 +1407,13 @@ getPlayerCustomDvar(dvar) {
 saveLocationForSpawn() {
 	self.spawnLocation = self.origin;
 	self.spawnAngles = self.angles;
-	self iprintln("Location ^2saved ^7for spawn");
+	self iPrintLn("Location ^2saved ^7for spawn");
 	self thread monitorLocationForSpawn();
 }
 
 stopLocationForSpawn() {
 	self.spawnLocation = undefined;
-	self iprintln("Location for spawn ^1deleted");
+	self iPrintLn("Location for spawn ^1deleted");
 	self notify("stop_locationForSpawn");
 }
 

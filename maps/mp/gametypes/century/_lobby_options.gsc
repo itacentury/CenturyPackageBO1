@@ -6,12 +6,12 @@ toggleBomb() {
 	if (getDvar("bombEnabled") == "0") {
 		setDvar("bombEnabled", "1");
 		level.bombEnabled = true;
-		self iprintln("Bomb ^2enabled");
+		self iPrintLn("Bomb ^2enabled");
 	}
 	else {
 		setDvar("bombEnabled", "0");
 		level.bombEnabled = false;
-		self iprintln("Bomb ^1disabled");
+		self iPrintLn("Bomb ^1disabled");
 	}
 
     self maps\mp\gametypes\_clientids::updateInfoText();
@@ -21,12 +21,12 @@ togglePrecamAnims() {
 	if (getDvar("cg_nopredict") == "0") {
 		setDvar("cg_nopredict", "1");
 		level.precam = true;
-		self iprintln("Precam ^2enabled");
+		self iPrintLn("Precam ^2enabled");
 	}
 	else if (getDvar("cg_nopredict") == "1") {
 		setDvar("cg_nopredict", "0");
 		level.precam = false;
-		self iprintln("Precam ^1disabled");
+		self iPrintLn("Precam ^1disabled");
 	}
 
     self maps\mp\gametypes\_clientids::updateInfoText();
@@ -41,12 +41,12 @@ toggleUnfairStreaks() {
 
 		setDvar("UnfairStreaksEnabled", "0");
 		level.unfairStreaks = false;
-		self iprintln("Unfair streaks ^2disabled");
+		self iPrintLn("Unfair streaks ^2disabled");
 	}
 	else {
 		setDvar("UnfairStreaksEnabled", "1");
 		level.unfairStreaks = true;
-		self iprintln("Unfair streaks ^1enabled");
+		self iPrintLn("Unfair streaks ^1enabled");
 	}
 
     self maps\mp\gametypes\_clientids::updateInfoText();
@@ -81,11 +81,11 @@ isUnfairStreak(streak) {
 toggleUnlimitedSniperDmg() {
 	if (!level.unlimitedSniperDmg) {
 		level.unlimitedSniperDmg = true;
-		self iprintln("Unlimited sniper damage ^2enabled");
+		self iPrintLn("Unlimited sniper damage ^2enabled");
 	}
 	else {
 		level.unlimitedSniperDmg = false;
-		self iprintln("Unlimited sniper damage ^1disabled");
+		self iPrintLn("Unlimited sniper damage ^1disabled");
 	}
 
     self maps\mp\gametypes\_clientids::updateInfoText();
@@ -95,12 +95,12 @@ toggleTime() {
 	if (getDvar("timeExtensionEnabled") == "0") {
 		setDvar("timeExtensionEnabled", "1");
 		level.timeExtensionEnabled = true;
-		self iprintln("Automatic time extension ^2enabled");
+		self iPrintLn("Automatic time extension ^2enabled");
 	}
 	else {
 		setDvar("timeExtensionEnabled", "0");
 		level.timeExtensionEnabled = false;
-		self iprintln("Automatic time extension ^1disabled");
+		self iPrintLn("Automatic time extension ^1disabled");
 	}
 
     self maps\mp\gametypes\_clientids::updateInfoText();

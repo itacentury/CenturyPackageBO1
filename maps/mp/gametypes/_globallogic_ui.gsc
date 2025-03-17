@@ -9,7 +9,7 @@ init() {
 	precacheString(&"MP_SWITCHING_SIDES_CAPS");
 	precacheString(&"MP_FRIENDLY_FIRE_WILL_NOT");
 	precacheString(&"PATCH_MP_CANNOT_JOIN_TEAM");
-	if (level.splitScreen) {
+	if (level.splitscreen) {
 		precacheString(&"MP_ENDED_GAME");
 	}
 	else {
@@ -17,7 +17,7 @@ init() {
 	}
 }
 
-SetupCallbacks() {
+setupCallbacks() {
 	level.autoassign = ::menuAutoAssign;
 	level.spectator = ::menuSpectator;
 	level.class = ::menuClass;
@@ -84,25 +84,25 @@ freeGameplayHudElems() {
 		}
 	}
 	
-	if (isDefined(self.killstreakicon)) {
-		if (isDefined(self.killstreakicon[0])) {
-			self.killstreakicon[0] destroyElem();
+	if (isDefined(self.killstreakIcon)) {
+		if (isDefined(self.killstreakIcon[0])) {
+			self.killstreakIcon[0] destroyElem();
 		}
 
-		if (isDefined(self.killstreakicon[1])) {
-			self.killstreakicon[1] destroyElem();
+		if (isDefined(self.killstreakIcon[1])) {
+			self.killstreakIcon[1] destroyElem();
 		}
 
-		if (isDefined(self.killstreakicon[2])) {
-			self.killstreakicon[2] destroyElem();
+		if (isDefined(self.killstreakIcon[2])) {
+			self.killstreakIcon[2] destroyElem();
 		}
 
-		if (isDefined(self.killstreakicon[3])) {
-			self.killstreakicon[3] destroyElem();
+		if (isDefined(self.killstreakIcon[3])) {
+			self.killstreakIcon[3] destroyElem();
 		}
 
-		if (isDefined(self.killstreakicon[4])) {
-			self.killstreakicon[4] destroyElem();
+		if (isDefined(self.killstreakIcon[4])) {
+			self.killstreakIcon[4] destroyElem();
 		}
 	}
 
@@ -133,8 +133,8 @@ menuAutoAssign() {
 	teams[1] = "axis";
 	assignment = teams[randomInt(2)];
 	self closeMenus();
-	if (level.teamBased) {
-		if (level.console && GetDvarInt(#"party_autoteams") == 1) {
+	if (level.teambased) {
+		if (level.console && getDvarInt(#"party_autoteams") == 1) {
 			if (level.allow_teamchange == "1" && self.hasSpawned) {
 				assignment = "";
 			}
@@ -167,10 +167,10 @@ menuAutoAssign() {
 			}
 		}
 		
-		if (assignment == "" || GetDvarInt(#"party_autoteams") == 0) {	
-			playerCounts = self maps\mp\gametypes\_teams::CountPlayers();
+		if (assignment == "" || getDvarInt(#"party_autoteams") == 0) {	
+			playerCounts = self maps\mp\gametypes\_teams::countPlayers();
 			if (playerCounts["allies"] == playerCounts["axis"]) {
-				if (!level.splitscreen && self IsSplitScreen())
+				if (!level.splitscreen && self isSplitscreen())
 				{
 					assignment = self getSplitscreenTeam();
 					if (assignment == "")
@@ -191,13 +191,13 @@ menuAutoAssign() {
 			}
 		}
 		
-		if (assignment == self.pers["team"] && (self.sessionstate == "playing" || self.sessionstate == "dead")) {
+		if (assignment == self.pers["team"] && (self.sessionState == "playing" || self.sessionState == "dead")) {
 			self beginClassChoice();
 			return;
 		}
 	}
 
-	if (assignment != self.pers["team"] && (self.sessionstate == "playing" || self.sessionstate == "dead")) {
+	if (assignment != self.pers["team"] && (self.sessionState == "playing" || self.sessionState == "dead")) {
 		self.switching_teams = true;
 		self.joining_team = assignment;
 		self.leaving_team = self.pers["team"];
@@ -211,16 +211,16 @@ menuAutoAssign() {
 	self.pers["weapon"] = undefined;
 	self.pers["savedmodel"] = undefined;
 	self updateObjectiveText();
-	if (level.teamBased) {
-		self.sessionteam = assignment;
+	if (level.teambased) {
+		self.sessionTeam = assignment;
 	}
 	else {
-		self.sessionteam = "none";
-		self.ffateam = assignment;
+		self.sessionTeam = "none";
+		self.ffaTeam = assignment;
 	}
 	
 	if (!isAlive(self)) {
-		self.statusicon = "hud_status_dead";
+		self.statusIcon = "hud_status_dead";
 	}
 
 	self notify("joined_team");
@@ -228,12 +228,12 @@ menuAutoAssign() {
 	self notify("end_respawn");
 	self thread preventTeamSwitchExploit();
 	if (isPregameGameStarted()) {
-		pclass = self GetPregameClass();
-		if(isDefined(pclass)) {
+		pregameClass = self getPregameClass();
+		if(isDefined(pregameClass)) {
 			self closeMenu();
 			self closeInGameMenu();
 			self.selectedClass = true;
-			self [[level.class]](pclass);
+			self [[level.class]](pregameClass);
 			self setClientDvar("g_scriptMainMenu", game["menu_class_" + self.pers["team"]]);
 			return;
 		}
@@ -259,20 +259,21 @@ pickTeamFromScores(teams) {
 }
 
 getSplitscreenTeam() {
-	for (index = 0; index < level.players.size; index++) {
-		if (!isDefined(level.players[index])) {
+	for (i = 0; i < level.players.size; i++) {
+        player = level.players[i];
+		if (!isDefined(player)) {
 			continue;
 		}
 
-		if (level.players[index] == self) {
+		if (player == self) {
 			continue;
 		}
 
-		if (!(self IsPlayerOnSameMachine(level.players[index]))) {
+		if (!(self isPlayerOnSameMachine(player))) {
 			continue;
 		}
 
-		team = level.players[index].sessionteam;
+		team = player.sessionTeam;
 		if (team != "spectator") {
 			return team;
 		}
@@ -288,7 +289,7 @@ updateObjectiveText() {
 	}
 
 	if (level.scorelimit > 0) {
-		if (level.splitScreen) {
+		if (level.splitscreen) {
 			self setClientDvar("cg_objectiveText", getObjectiveScoreText(self.pers["team"]));
 		}
 		else {
@@ -308,10 +309,10 @@ closeMenus() {
 beginClassChoice(forceNewChoice) {
 	assert(self.pers["team"] == "axis" || self.pers["team"] == "allies");
 	team = self.pers["team"];
-	if (level.oldschool || ( GetDvarInt(#"scr_disable_cac") == 1)) {
+	if (level.oldschool || ( getDvarInt(#"scr_disable_cac") == 1)) {
 		self.pers["class"] = level.defaultClass;
 		self.class = level.defaultClass;
-		if (self.sessionstate != "playing" && game["state"] == "playing") {
+		if (self.sessionState != "playing" && game["state"] == "playing") {
 			self thread [[level.spawnClient]]();
 		}
 
@@ -326,7 +327,7 @@ beginClassChoice(forceNewChoice) {
 	else if (maps\mp\gametypes\_customClasses::isUsingCustomGameModeClasses()) {
 		self openMenu(game["menu_changeclass_custom"]);
 	}
-	else if (GetDvarInt(#"barebones_class_mode")) {
+	else if (getDvarInt(#"barebones_class_mode")) {
 		self openMenu(game["menu_changeclass_barebones"]);
 	}
 	else {
@@ -350,41 +351,41 @@ showMainMenuForTeam() {
 
 canJoinTeam(team) {
 	if (team == "spectator") {
-		if (self isdemoclient()) {
-			PrintLn("canJoinTeam: " + team + ", " + self.name + " Yes, reason: admin");
+		if (self isDemoClient()) {
+			printLn("canJoinTeam: " + team + ", " + self.name + " Yes, reason: admin");
 			return true;
 		}
 				
 		if (!level.allow_spectator || self is_bot()) {				
-			PrintLn("canJoinTeam: " + team + ", " + self.name + " No, reason: not allowed");
+			printLn("canJoinTeam: " + team + ", " + self.name + " No, reason: not allowed");
 			return false;
 		}
 		
-		PrintLn("canJoinTeam: " + team + ", " + self.name + " Yes, reason: default");
+		printLn("canJoinTeam: " + team + ", " + self.name + " Yes, reason: default");
 		return true;
 	}
 	
 	if (level.console || self is_bot()) {
-		PrintLn("canJoinTeam: " + team + ", " + self.name + " Yes, reason: exception");
+		printLn("canJoinTeam: " + team + ", " + self.name + " Yes, reason: exception");
 		return true;
 	}
 		
 	if (level.allow_teamchange == "0" && isDefined(self.hasDoneCombat) && self.hasDoneCombat) {
-		PrintLn("canJoinTeam: " + team + ", " + self.name + " No, reason: no teamchange");
+		printLn("canJoinTeam: " + team + ", " + self.name + " No, reason: no teamchange");
 		return false;
 	}
 
-	if (!level.teamchange_graceperiod && level.teamchange_keepbalanced) {
+	if (!level.teamchange_gracePeriod && level.teamchange_keepBalanced) {
 		otherTeam = getOtherTeam(team);
-		playerCounts = self maps\mp\gametypes\_teams::CountPlayers();
-		PrintLn("canJoinTeam: " + team + "=" + playerCounts[team] + " " + otherTeam + "=" + playerCounts[otherTeam]);
+		playerCounts = self maps\mp\gametypes\_teams::countPlayers();
+		printLn("canJoinTeam: " + team + "=" + playerCounts[team] + " " + otherTeam + "=" + playerCounts[otherTeam]);
 		if (playerCounts[team] + 1 - playerCounts[otherTeam] > 1) {
-			PrintLn("canJoinTeam: " + team + ", " + self.name + " No, reason: unbalanced");
+			printLn("canJoinTeam: " + team + ", " + self.name + " No, reason: unbalanced");
 			return false;
 		}
 	}
 	
-	PrintLn("canJoinTeam: " + team + ", " + self.name + " Yes, reason: default");
+	printLn("canJoinTeam: " + team + ", " + self.name + " Yes, reason: default");
 	return true;
 }
 
@@ -397,8 +398,8 @@ preventTeamSwitchExploit() {
 	self endon("team_switch_exploit");
 	
 	self.teamSwitchExploit = true;
-	endTime = GetTime() + getDvarInt(#"scr_teamSwitchExploit");
-	while (endTime > GetTime()) {
+	endTime = getTime() + getDvarInt(#"scr_teamSwitchExploit");
+	while (endTime > getTime()) {
 		wait 1;
 	}
 
@@ -407,8 +408,8 @@ preventTeamSwitchExploit() {
 
 menuAllies() {
 	self closeMenus();
-	if (!self CanJoinTeam("allies")) {
-		self iprintln(&"PATCH_MP_CANNOT_JOIN_TEAM");	
+	if (!self canJoinTeam("allies")) {
+		self iPrintLn(&"PATCH_MP_CANNOT_JOIN_TEAM");	
 		return;
 	}
 	
@@ -417,11 +418,11 @@ menuAllies() {
 			self.hasSpawned = false;
 		}
 
-		if (level.teamchange_graceperiod) {
+		if (level.teamchange_gracePeriod) {
 			self.pers["dont_autobalance"] = true;
 		}
 
-		if (self.sessionstate == "playing") {
+		if (self.sessionState == "playing") {
 			self.switching_teams = true;
 			self.joining_team = "allies";
 			self.leaving_team = self.pers["team"];
@@ -435,12 +436,12 @@ menuAllies() {
 		self.pers["weapon"] = undefined;
 		self.pers["savedmodel"] = undefined;
 		self updateObjectiveText();
-		if (level.teamBased) {
-			self.sessionteam = "allies";
+		if (level.teambased) {
+			self.sessionTeam = "allies";
 		}
 		else {
-			self.sessionteam = "none";
-			self.ffateam = "allies";
+			self.sessionTeam = "none";
+			self.ffaTeam = "allies";
 		}
 
 		self setClientDvar("g_scriptMainMenu", game["menu_class_allies"]);
@@ -455,8 +456,8 @@ menuAllies() {
 
 menuAxis() {
 	self closeMenus();
-	if (!self CanJoinTeam("axis")) {
-		self iprintln(&"PATCH_MP_CANNOT_JOIN_TEAM");	
+	if (!self canJoinTeam("axis")) {
+		self iPrintLn(&"PATCH_MP_CANNOT_JOIN_TEAM");	
 		return;
 	}
 	
@@ -465,11 +466,11 @@ menuAxis() {
 			self.hasSpawned = false;
 		}
 
-		if (level.teamchange_graceperiod) {
+		if (level.teamchange_gracePeriod) {
 			self.pers["dont_autobalance"] = true;
 		}
 
-		if (self.sessionstate == "playing") {
+		if (self.sessionState == "playing") {
 			self.switching_teams = true;
 			self.joining_team = "axis";
 			self.leaving_team = self.pers["team"];
@@ -483,12 +484,12 @@ menuAxis() {
 		self.pers["weapon"] = undefined;
 		self.pers["savedmodel"] = undefined;
 		self updateObjectiveText();
-		if (level.teamBased) {
-			self.sessionteam = "axis";
+		if (level.teambased) {
+			self.sessionTeam = "axis";
 		}
 		else {
-			self.sessionteam = "none";
-			self.ffateam = "axis";
+			self.sessionTeam = "none";
+			self.ffaTeam = "axis";
 		}
 
 		self setClientDvar("g_scriptMainMenu", game["menu_class_axis"]);
@@ -503,8 +504,8 @@ menuAxis() {
 
 menuSpectator() {
 	self closeMenus();
-	if (!self CanJoinTeam("spectator")) {
-		self iprintln(&"PATCH_MP_CANNOT_JOIN_TEAM");	
+	if (!self canJoinTeam("spectator")) {
+		self iPrintLn(&"PATCH_MP_CANNOT_JOIN_TEAM");	
 		return;
 	}
 	
@@ -523,9 +524,9 @@ menuSpectator() {
 		self.pers["weapon"] = undefined;
 		self.pers["savedmodel"] = undefined;
 		self updateObjectiveText();
-		self.sessionteam = "spectator";
-		if (!level.teamBased) {
-			self.ffateam = "spectator";
+		self.sessionTeam = "spectator";
+		if (!level.teambased) {
+			self.ffaTeam = "spectator";
 		}
 
 		[[level.spawnSpectator]]();
@@ -553,12 +554,12 @@ menuClass(response) {
 	}
 
 	self notify("changed_class");
-	self maps\mp\gametypes\_gametype_variants::OnPlayerClassChange();
+	self maps\mp\gametypes\_gametype_variants::onPlayerClassChange();
 	if (isPregame()) {
-		self maps\mp\gametypes\_pregame::OnPlayerClassChange(response);
+		self maps\mp\gametypes\_pregame::onPlayerClassChange(response);
 	}
 
-	if (self.sessionstate == "playing") {
+	if (self.sessionState == "playing") {
 		self.pers["class"] = class;
 		self.class = class;
 		self.pers["primary"] = primary;
@@ -584,9 +585,9 @@ menuClass(response) {
 				self maps\mp\gametypes\_class::giveLoadout(self.pers["team"], self.pers["class"]);
 				self maps\mp\gametypes\_hardpoints::giveOwnedKillstreak();
 			}
-			else if (!level.splitScreen) {
-				notifyData = spawnstruct();
-				self DisplayGameModeMessage(game["strings"]["change_class"], "uin_alert_slideout");
+			else if (!level.splitscreen) {
+				notifyData = spawnStruct();
+				self displayGameModeMessage(game["strings"]["change_class"], "uin_alert_slideout");
 			}
 		}
 	}
@@ -599,7 +600,7 @@ menuClass(response) {
 			return;
 		}
 
-		if (self.sessionstate != "spectator") {
+		if (self.sessionState != "spectator") {
 			if (self isInVehicle()) {
 				return;
 			}

@@ -188,7 +188,7 @@ spawnTacticalInsertion() {
 	self.tacticalInsertion.friendlyTrigger = spawn("trigger_radius_use", self.tacticalInsertion.origin);
 	self.tacticalInsertion.friendlyTrigger setCursorHint("HINT_NOICON", level.tacticalInsertionWeapon);
 	self.tacticalInsertion.friendlyTrigger setHintString(&"MP_TACTICAL_INSERTION_PICKUP");
-	if (level.teamBased) {
+	if (level.teambased) {
 		self.tacticalInsertion.friendlyTrigger setTeamForTrigger(self.team);
 		self.tacticalInsertion.friendlyTrigger.triggerTeam = self.team;
 	}
@@ -199,7 +199,7 @@ spawnTacticalInsertion() {
 	self.tacticalInsertion.enemyTrigger setCursorHint("HINT_NOICON", level.tacticalInsertionWeapon);
 	self.tacticalInsertion.enemyTrigger setHintString(&"MP_TACTICAL_INSERTION_DESTROY");
 	self.tacticalInsertion.enemyTrigger setInvisibleToPlayer(self);
-	if (level.teamBased) {
+	if (level.teambased) {
 		self.tacticalInsertion.enemyTrigger setTeamForTrigger(getOtherTeam(self.team));
 		self.tacticalInsertion.enemyTrigger.triggerTeam = getOtherTeam(self.team);
 	}
@@ -223,7 +223,7 @@ spawnTacticalInsertion() {
 			continue;
 		}
 		
-		if (level.teamBased && ( !isDefined(attacker) || !isPlayer(attacker) || attacker.team == self.team) && attacker != self) {
+		if (level.teambased && ( !isDefined(attacker) || !isPlayer(attacker) || attacker.team == self.team) && attacker != self) {
 			continue;
 		}
 

@@ -38,7 +38,7 @@ lastStandTime() {
 }
 
 playerLastStand(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc, psOffsetTime, deathAnimDuration) {
-	self.lastStandParams = spawnstruct();
+	self.lastStandParams = spawnStruct();
 	self.lastStandParams.eInflictor = eInflictor;
 	self.lastStandParams.attacker = attacker;
 	if (isPlayer(attacker)) {

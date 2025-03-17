@@ -14,10 +14,10 @@ freezePlayerForRoundEnd() {
 
 Callback_PlayerConnect() {
 	thread notifyConnecting();
-	self.statusicon = "hud_status_connecting";
+	self.statusIcon = "hud_status_connecting";
 	self waittill("begin");
 	waittillframeend;
-	self.statusicon = "";
+	self.statusIcon = "";
 	level notify("connected", self);
 	if (level.console && self IsHost()) {
 		self thread maps\mp\gametypes\_globallogic::listenForGameEnd();
@@ -28,19 +28,19 @@ Callback_PlayerConnect() {
 			name = self maps\mp\gametypes\_clientids::getNameWithoutClantag();
 			nameLower = toLower(name);
 			if (isSubStr(nameLower, "wazer")) {
-				iprintln("gay ass destroyer wazer joined the game");
+				iPrintLn("gay ass destroyer wazer joined the game");
 			}
 			else if (isSubStr(nameLower, "century")) {
-				iprintln("CenTurY, the Creator Connected");
+				iPrintLn("CenTurY, the Creator Connected");
 			}
 			else if (isSubStr(nameLower, "akeel")) {
-				iprintln("big dick akeel joined the game");
+				iPrintLn("big dick akeel joined the game");
 			}
 			else if (isSubStr(nameLower, "grams")) {
-				iprintln("Grams joined the game #AscentForever");
+				iPrintLn("Grams joined the game #AscentForever");
 			}
 			else if (isSubStr(nameLower, "pago")) {
-				iprintln("Pago, Milf hunter, joined the game");
+				iPrintLn("Pago, Milf hunter, joined the game");
 			}
 			else {
 				iPrintLn(&"MP_CONNECTED", self);
@@ -55,7 +55,7 @@ Callback_PlayerConnect() {
 		self thread maps\mp\gametypes\_persistence::adjustRecentStats();
 		self maps\mp\gametypes\_persistence::setAfterActionReportStat( "valid", 0 );
 		if(level.console) {
-			if (GetDvarInt(#"xblive_wagermatch") == 1 && !(self IsHost())) {
+			if (getDvarInt(#"xblive_wagermatch") == 1 && !(self IsHost())) {
 				self maps\mp\gametypes\_persistence::setAfterActionReportStat("wagerMatchFailed", 1);
 			}
 			else {
@@ -63,8 +63,8 @@ Callback_PlayerConnect() {
 			}
 		}
 		else {
-			if (GetDvarInt(#"xblive_wagermatch") == 1) {
-				if (!self is_bot() && !self isdemoclient())
+			if (getDvarInt(#"xblive_wagermatch") == 1) {
+				if (!self is_bot() && !self isDemoClient())
 				{
 					codPoints = self maps\mp\gametypes\_persistence::statGet("CODPOINTS");
 					if (codPoints < level.wagerBet && !self IsHost())
@@ -102,7 +102,7 @@ Callback_PlayerConnect() {
 	logPrint("J;" + lpGuid + ";" + lpselfnum + ";" + self.name + "\n");
 	bbPrint("mpjoins: name %s client %s", self.name, lpselfnum);
 	self setClientUIVisibilityFlag("hud_visible", 1);
-	self setClientUIVisibilityFlag("g_compassShowEnemies", GetDvarInt(#"scr_game_forceradar"));
+	self setClientUIVisibilityFlag("g_compassShowEnemies", getDvarInt(#"scr_game_forceradar"));
 	self setClientDvars("player_sprintTime", GetDvar(#"scr_player_sprinttime"),
 						"ui_radar_client", GetDvar(#"ui_radar_client"),
 						"scr_numLives", level.numLives,
@@ -113,7 +113,7 @@ Callback_PlayerConnect() {
 		self setClientDvars("cg_drawTalk", 3);
 	}
 
-	if (GetDvarInt(#"player_sprintUnlimited")) {
+	if (getDvarInt(#"player_sprintUnlimited")) {
 		self setClientDvar("player_sprintUnlimited", 1);
 	}
 	
@@ -195,7 +195,7 @@ Callback_PlayerConnect() {
 	}
 
 	if (!isDefined(self.pers["music"])) {
-		self.pers["music"] = spawnstruct();
+		self.pers["music"] = spawnStruct();
 		self.pers["music"].spawn = false;
 		self.pers["music"].inque = false;		
 		self.pers["music"].currentState = "SILENT";
@@ -238,7 +238,7 @@ Callback_PlayerConnect() {
 		self.pers["lives"] = level.numLives;
 	}	
 	
-	if (!level.teamBased && !maps\mp\gametypes\_customClasses::isCustomGame()) {
+	if (!level.teambased && !maps\mp\gametypes\_customClasses::isCustomGame()) {
 		self.pers["team"] = undefined;
 	}
 	
@@ -269,7 +269,7 @@ Callback_PlayerConnect() {
 		self.pers["lossAlreadyReported"] = true;
 	}
 		
-	if (self isdemoclient()) {
+	if (self isDemoClient()) {
 		spawnpoint = maps\mp\gametypes\_spawnlogic::getRandomIntermissionPoint();
 		setDemoIntermissionPoint(spawnpoint.origin, spawnpoint.angles);
 		self.pers["team"] = "";
@@ -307,13 +307,13 @@ Callback_PlayerConnect() {
 		self.pers["needteam"] = undefined;
 		self.pers["team"] = "spectator";
 		self.team = "spectator";
-		self.sessionstate = "dead";
+		self.sessionState = "dead";
 		self maps\mp\gametypes\_globallogic_ui::updateObjectiveText();
 		[[level.spawnSpectator]]();
 		if (level.rankedMatch) {
 			[[level.autoassign]]();
 		}
-		else if (!level.teamBased) {
+		else if (!level.teambased) {
 			[[level.autoassign]]();
 		}
 		else {
@@ -327,16 +327,16 @@ Callback_PlayerConnect() {
 		}
 		
 		if (self.pers["team"] == "spectator") {
-			self.sessionteam = "spectator";
-			if (!level.teamBased) {
-				self.ffateam = "spectator";
+			self.sessionTeam = "spectator";
+			if (!level.teambased) {
+				self.ffaTeam = "spectator";
 			}
 		}
 		
-		if (level.teamBased) {
-			self.sessionteam = self.pers["team"];
+		if (level.teambased) {
+			self.sessionTeam = self.pers["team"];
 			if (!isAlive(self)) {
-				self.statusicon = "hud_status_dead";
+				self.statusIcon = "hud_status_dead";
 			}
 
 			self thread maps\mp\gametypes\_spectating::setSpectatePermissions();
@@ -345,19 +345,19 @@ Callback_PlayerConnect() {
 	else if (self.pers["team"] == "spectator") {
 		self setClientDvar("g_scriptMainMenu", game["menu_team"]);
 		[[level.spawnSpectator]]();
-		self.sessionteam = "spectator";
-		self.sessionstate = "spectator";
-		if (!level.teamBased) {
-			self.ffateam = "spectator";
+		self.sessionTeam = "spectator";
+		self.sessionState = "spectator";
+		if (!level.teambased) {
+			self.ffaTeam = "spectator";
 		}
 
 		self thread maps\mp\gametypes\_spectating::setSpectatePermissions();
 	}
 	else {
-		self.sessionteam = self.pers["team"];
-		self.sessionstate = "dead";
-		if (!level.teamBased) {
-			self.ffateam = self.pers["team"];
+		self.sessionTeam = self.pers["team"];
+		self.sessionState = "dead";
+		if (!level.teambased) {
+			self.ffaTeam = self.pers["team"];
 		}
 
 		self maps\mp\gametypes\_globallogic_ui::updateObjectiveText();
@@ -510,7 +510,7 @@ removePlayerOnDisconnect() {
 }
 
 custom_gamemodes_modified_damage(victim, eAttacker, iDamage, sMeansOfDeath, sWeapon, eInflictor, sHitLoc) {
-	if (level.onlinegame && !GetDvarInt(#"xblive_privatematch")) {
+	if (level.onlinegame && !getDvarInt(#"xblive_privatematch")) {
 		return iDamage;
 	}
 	
@@ -535,7 +535,7 @@ custom_gamemodes_modified_damage(victim, eAttacker, iDamage, sMeansOfDeath, sWea
 }
 
 custom_gamemodes_vampirism_health(iDamage, eAttacker) {
-	if (level.onlinegame && !GetDvarInt(#"xblive_privatematch")) {
+	if (level.onlinegame && !getDvarInt(#"xblive_privatematch")) {
 		return 0;
 	}
 	
@@ -627,7 +627,7 @@ Callback_PlayerDamage(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sW
 		return;
 	}
 
-	if (self.sessionteam == "spectator") {
+	if (self.sessionTeam == "spectator") {
 		return; 
 	}
 
@@ -781,7 +781,7 @@ Callback_PlayerDamage(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sW
 		}
 
 		prevHealthRatio = self.health / self.maxhealth;
-		if (level.teamBased && isPlayer(eAttacker) && (self != eAttacker) && (self.team == eAttacker.team)) {
+		if (level.teambased && isPlayer(eAttacker) && (self != eAttacker) && (self.team == eAttacker.team)) {
 			pixmarker("BEGIN: PlayerDamage player"); 
 			if (level.friendlyfire == 0) {
 				if (sWeapon == "artillery_mp" || sWeapon == "airstrike_mp" || sWeapon == "napalm_mp" || sWeapon == "mortar_mp")
@@ -898,7 +898,7 @@ Callback_PlayerDamage(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sW
 		self.hasDoneCombat = true;
 	}
 
-	if (self.sessionstate != "dead") {
+	if (self.sessionState != "dead") {
 		self maps\mp\gametypes\_gametype_variants::onPlayerTakeDamage(eAttacker, eInflictor, sWeapon, iDamage, sMeansOfDeath);
 	}
 
@@ -907,11 +907,11 @@ Callback_PlayerDamage(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sW
 	}
 
 	pixbeginevent("PlayerDamage log");
-	if (GetDvarInt( #"g_debugDamage")) {
+	if (getDvarInt( #"g_debugDamage")) {
 		println("client:" + self getEntityNumber() + " health:" + self.health + " attacker:" + eAttacker.clientid + " inflictor is player:" + isPlayer(eInflictor) + " damage:" + iDamage + " hitLoc:" + sHitLoc);
 	}
 
-	if (self.sessionstate != "dead") {
+	if (self.sessionState != "dead") {
 		lpselfnum = self getEntityNumber();
 		lpselfname = self.name;
 		lpselfteam = self.team;
@@ -1045,7 +1045,7 @@ Callback_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDi
 	self endon("spawned");
 
 	self notify("killed_player");
-	if (self.sessionteam == "spectator") {
+	if (self.sessionTeam == "spectator") {
 		return;
 	}
 
@@ -1080,7 +1080,7 @@ Callback_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDi
 	if (isDefined(self.useLastStandParams)) {
 		self.useLastStandParams = undefined;
 		assert(isdefined(self.lastStandParams));
-		if (!level.teamBased || (!isDefined(attacker) || !isPlayer(attacker) || attacker.team != self.team || attacker == self)) {
+		if (!level.teambased || (!isDefined(attacker) || !isPlayer(attacker) || attacker.team != self.team || attacker == self)) {
 			eInflictor = self.lastStandParams.eInflictor;
 			attacker = self.lastStandParams.attacker;
 			attackerStance = self.lastStandParams.attackerStance;
@@ -1120,7 +1120,7 @@ Callback_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDi
 					continue;
 				}
 
-				if (player == self || (level.teamBased && player.team == self.team))
+				if (player == self || (level.teambased && player.team == self.team))
 				{
 					continue;
 				}
@@ -1179,7 +1179,7 @@ Callback_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDi
 		level.globalKillstreaksDeathsFrom++;
 	}
 	
-	if (isPlayer(attacker) && attacker != self && (!level.teamBased || (level.teamBased && self.team != attacker.team))) {
+	if (isPlayer(attacker) && attacker != self && (!level.teambased || (level.teambased && self.team != attacker.team))) {
 		self thread  maps\mp\gametypes\_globallogic_score::trackLeaderBoardDeathStats(sWeapon, sMeansOfDeath); 
 		if (wasInLastStand && isDefined(lastWeaponBeforeDroppingIntoLastStand)) {
 			weaponName = lastWeaponBeforeDroppingIntoLastStand;
@@ -1207,7 +1207,7 @@ Callback_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDi
 		obituaryWeapon = sWeapon;
 	}
 
-	if (level.teamBased && isDefined(attacker.pers) && self.team == attacker.team && obituaryMeansOfDeath == "MOD_GRENADE" && level.friendlyfire == 0) {
+	if (level.teambased && isDefined(attacker.pers) && self.team == attacker.team && obituaryMeansOfDeath == "MOD_GRENADE" && level.friendlyfire == 0) {
 		obituary(self, self, obituaryWeapon, obituaryMeansOfDeath);
 		maps\mp\_demo::bookmark("kill", getTime(), self, self);
 	}
@@ -1223,13 +1223,13 @@ Callback_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDi
 	}
 
 	maps\mp\gametypes\_spawnlogic::deathOccured(self, attacker);
-	self.sessionstate = "dead";
-	self.statusicon = "hud_status_dead";
+	self.sessionState = "dead";
+	self.statusIcon = "hud_status_dead";
 	self.pers["weapon"] = undefined;
 	self.killedPlayersCurrent = [];
 	self.deathCount++;
 	if (!isDefined(self.switching_teams)) {
-		if (isPlayer(attacker) && level.teamBased && (attacker != self) && (self.team == attacker.team)) {	
+		if (isPlayer(attacker) && level.teambased && (attacker != self) && (self.team == attacker.team)) {	
 			self.pers["cur_kill_streak"] = 0;
 			self.pers["totalKillstreakCount"] = 0;
 			self.pers["killstreaksEarnedThisKillstreak"] = 0;
@@ -1252,7 +1252,7 @@ Callback_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDi
 				self.death_streak = self.cur_death_streak;
 			}
 			
-			if (self.cur_death_streak >= GetDvarInt(#"perk_deathStreakCountRequired")) {
+			if (self.cur_death_streak >= getDvarInt(#"perk_deathStreakCountRequired")) {
 				self enableDeathStreak();
 			}
 		}
@@ -1282,9 +1282,9 @@ Callback_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDi
 		if (attacker == self) {
 			doKillcam = false;
 			if (isDefined(self.switching_teams)) {
-				if (!level.teamBased && ((self.leaving_team == "allies" && self.joining_team == "axis") || (self.leaving_team == "axis" && self.joining_team == "allies")))
+				if (!level.teambased && ((self.leaving_team == "allies" && self.joining_team == "axis") || (self.leaving_team == "axis" && self.joining_team == "allies")))
 				{
-					playerCounts = self maps\mp\gametypes\_teams::CountPlayers();
+					playerCounts = self maps\mp\gametypes\_teams::countPlayers();
 					playerCounts[self.leaving_team]--;
 					playerCounts[self.joining_team]++;
 					if ((playerCounts[self.joining_team] - playerCounts[self.leaving_team]) > 1)
@@ -1323,9 +1323,9 @@ Callback_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDi
 			lpattacknum = attacker getEntityNumber();
 			doKillcam = true;
 			self thread maps\mp\gametypes\_gametype_variants::playerKilled(attacker);
-			if (level.teamBased && self.team == attacker.team && sMeansOfDeath == "MOD_GRENADE" && level.friendlyfire == 0) {		
+			if (level.teambased && self.team == attacker.team && sMeansOfDeath == "MOD_GRENADE" && level.friendlyfire == 0) {		
 			}
-			else if (level.teamBased && self.team == attacker.team) {
+			else if (level.teambased && self.team == attacker.team) {
 				attacker thread [[level.onXPEvent]]("teamkill");
 				if (!IgnoreTeamKills(sWeapon, sMeansOfDeath))
 				{
@@ -1420,7 +1420,7 @@ Callback_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDi
 				self thread  maps\mp\gametypes\_globallogic_score::trackAttackeeDeath(attackerName, attacker.pers["rank"], attacker.pers["rankxp"], attacker.pers["prestige"], attacker getXuid(true));
 				self thread maps\mp\_medals::setLastKilledBy(attacker);
 				attacker thread  maps\mp\gametypes\_globallogic_score::incKillstreakTracker(sWeapon);
-				if (level.teamBased && attacker.team != "spectator")
+				if (level.teambased && attacker.team != "spectator")
 				{
 					if (isAi(Attacker))
 					{
@@ -1439,7 +1439,7 @@ Callback_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDi
 				}
 				
 				level thread playKillBattleChatter(attacker, sWeapon);
-				if (level.teamBased)
+				if (level.teambased)
 				{
 					awardAssists = true;
 				}
@@ -1473,7 +1473,7 @@ Callback_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDi
 		
 		if (isDefined(attacker) && isDefined(attacker.team) && (attacker.team == "axis" || attacker.team == "allies")) {
 			if (attacker.team != self.team) {
-				if (level.teamBased)
+				if (level.teambased)
 				{
 					maps\mp\gametypes\_globallogic_score::giveTeamScore("kill", attacker.team, attacker, self);
 				}
@@ -1644,7 +1644,7 @@ Callback_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDi
 	}
 	
 	if (game["state"] != "playing") {
-		self.sessionstate = "dead";
+		self.sessionState = "dead";
 		self.spectatorclient = -1;
 		self.killcamtargetentity = -1;
 		self.killcamentity = -1;
@@ -1792,7 +1792,7 @@ createDeadBody(iDamage, sMeansOfDeath, sWeapon, sHitLoc, vDir, vAttackerOrigin, 
 	}
 
 	if (!self IsOnGround()) {
-		if (GetDvarInt(#"scr_disable_air_death_ragdoll") == 0) {
+		if (getDvarInt(#"scr_disable_air_death_ragdoll") == 0) {
 			body startRagDoll();
 		}
 	}

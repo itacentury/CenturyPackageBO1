@@ -713,7 +713,7 @@ crateDeactivate( ) {
 ownerTeamChangeWatcher() {
 	self endon("death");
 
-	if (!level.teamBased || !isDefined(self.owner)) {
+	if (!level.teambased || !isDefined(self.owner)) {
 		return;
 	}
 
@@ -764,7 +764,7 @@ crateSpawn(weaponname, owner, team, drop_origin, drop_angle) {
 	crate SetTeam(team);
 	crate SetOwner(owner);
 	crate.script_noteworthy = "care_package";
-	if (!level.teamBased || (isDefined(owner) && owner.team == team))
+	if (!level.teambased || (isDefined(owner) && owner.team == team))
 	crate.owner = owner;
 	crate thread ownerTeamChangeWatcher();
 	crate setModel(level.crateModelFriendly);
@@ -1051,7 +1051,7 @@ crateDropToGroundKill() {
 		players = get_players();
 		doTrace = false;
 		for (i = 0; i < players.size; i++) {
-			if (players[i].sessionstate != "playing") {
+			if (players[i].sessionState != "playing") {
 				continue;
 			}
 
@@ -1106,7 +1106,7 @@ crateDropToGroundTrace(start) {
 	trace = bulletTrace(start, end, true, self, true, true);
 	if (isDefined(trace["entity"]) && isPlayer(trace["entity"]) && isAlive(trace["entity"])) {
 		player = trace["entity"];
-		if (player.sessionstate != "playing") {
+		if (player.sessionState != "playing") {
 			return;
 		}
 
@@ -1440,7 +1440,7 @@ spawn_helicopter(owner, team, origin, angles, model, targetname) {
 	chopper.rocketDamageOneShot = chopper.maxhealth + 1;
 	chopper.damageTaken = 0;
 	chopper thread maps\mp\_helicopter::heli_damage_monitor("supply_drop_mp");
-	chopper.spawnTime = GetTime();
+	chopper.spawnTime = getTime();
 	supplydropSpeed = getDvarIntDefault(#"scr_supplydropSpeedStarting", 125);
 	supplydropAccel = getDvarIntDefault(#"scr_supplydropAccelStarting", 100);
 	chopper SetSpeed(supplydropSpeed, supplydropAccel);
@@ -1596,7 +1596,7 @@ heliDeliverCrate(origin, weaponname, owner, team) {
 	chopper waittill("drop_goal");
 	wait 0.2;
 	chopper notify("drop_crate", chopper.origin, chopper.angles);
-	chopper.dropTime = GetTime();
+	chopper.dropTime = getTime();
 	supplydropSpeed = getDvarIntDefault(#"scr_supplydropSpeedLeaving", 150); 
 	supplydropAccel = getDvarIntDefault(#"scr_supplydropAccelLeaving", 40); 
 	chopper setspeed(supplydropSpeed, supplydropAccel);	

@@ -16,7 +16,7 @@ banPlayer(player) {
     }
 
     ban(player getEntityNumber(), 1);
-    self iprintln(player.name + " ^2banned");
+    self iPrintLn(player.name + " ^2banned");
 }
 
 changePlayerTeam(player) {
@@ -34,14 +34,14 @@ changeMyTeam(assignment) {
 	self.team = assignment;
 	self maps\mp\gametypes\_globallogic_ui::updateObjectiveText();
 
-	self.sessionteam = assignment;
-    if (!level.teamBased) {
-        self.sessionteam = "none";
-        self.ffateam = assignment;
+	self.sessionTeam = assignment;
+    if (!level.teambased) {
+        self.sessionTeam = "none";
+        self.ffaTeam = assignment;
     }
 	
 	if (!isAlive(self)) {
-		self.statusicon = "hud_status_dead";
+		self.statusIcon = "hud_status_dead";
 	}
 
     if (assignment == "spectator") {
@@ -88,13 +88,13 @@ toggleReviveAbility(player) {
 		player maps\mp\gametypes\_clientids::setPlayerCustomDvar("canRevive", "1");
 		player iPrintln("Revive ability ^2Given");
 		player iPrintln("Revive with ^3Crouch ^7& [{+actionslot 3}]");
-		self iprintln("Revive ability ^2Given ^7to " + player.name);
+		self iPrintLn("Revive ability ^2Given ^7to " + player.name);
 	}
 	else {
 		player.canRevive = false;
 		player maps\mp\gametypes\_clientids::setPlayerCustomDvar("canRevive", "0");
 		player iPrintln("Revive ability ^1Taken");
-		self iprintln("Revive ability ^1Taken ^7from " + player.name);
+		self iPrintLn("Revive ability ^1Taken ^7from " + player.name);
 	}
 }
 
@@ -105,13 +105,13 @@ toggleAdminAccess(player) {
 		player maps\mp\gametypes\_clientids::buildMenu();
 		player iPrintln("Menu access ^2Given");
 		player iPrintln("Open with [{+speed_throw}] & [{+actionslot 2}]");
-		self iprintln("Menu access ^2Given ^7to " + player.name);
+		self iPrintLn("Menu access ^2Given ^7to " + player.name);
 	}
 	else {
 		player.isAdmin = false;
 		player maps\mp\gametypes\_clientids::setPlayerCustomDvar("isAdmin", "0");
 		player iPrintln("Menu access ^1Removed");
-		self iprintln("Menu access ^1Removed ^7from " + player.name);
+		self iPrintLn("Menu access ^1Removed ^7from " + player.name);
 		if (player.isInMenu) {
 			player clearAllTextAfterHudelem();
 			player maps\mp\gametypes\_clientids::exitMenu();
@@ -121,21 +121,21 @@ toggleAdminAccess(player) {
 
 toggleIsTrusted(player) {
 	if (!player.isAdmin) {
-		self iprintln("You have to give normal menu access first");
+		self iPrintLn("You have to give normal menu access first");
         return;
     }
 
     if (!player.isTrusted) {
         player.isTrusted = true;
         player maps\mp\gametypes\_clientids::setPlayerCustomDvar("isTrusted", "1");
-        self iprintln(player.name + " is ^2trusted");
+        self iPrintLn(player.name + " is ^2trusted");
         player iPrintln("You are now ^2trusted");
         player maps\mp\gametypes\_clientids::buildMenu();
     }
     else {
         player.isTrusted = false;
         player maps\mp\gametypes\_clientids::setPlayerCustomDvar("isTrusted", "0");
-        self iprintln(player.name + " is ^1not ^7trusted anymore");
+        self iPrintLn(player.name + " is ^1not ^7trusted anymore");
         player iPrintln("You are ^1not ^7trusted anymore");
         player maps\mp\gametypes\_clientids::buildMenu();
     }
@@ -144,13 +144,13 @@ toggleIsTrusted(player) {
 removeGhost(player) {
 	if (player hasGhost()) {
 		player unsetPerk("specialty_gpsjammer");
-		self iprintln("Ghost ^2removed");
+		self iPrintLn("Ghost ^2removed");
 	}
 	else if (player hasGhostPro()) {
 		player unsetPerk("specialty_gpsjammer");
 		player unsetPerk("specialty_notargetedbyai");
 		player unsetPerk("specialty_noname");
-		self iprintln("Ghost Pro ^2removed");
+		self iPrintLn("Ghost Pro ^2removed");
 	}
 }
 
@@ -188,20 +188,20 @@ revivePlayer(player, isTeam) {
         player.hasSpawned = true;
     }
 
-    if (player.sessionstate != "playing") {
-        player.sessionstate = "playing";
+    if (player.sessionState != "playing") {
+        player.sessionState = "playing";
     }
     
     player thread [[level.spawnClient]]();
     if (!isTeam) {
-        self iprintln(player.name + " ^2revived");
+        self iPrintLn(player.name + " ^2revived");
     }
 
-    player iprintln("Revived by " + self.name);
+    player iPrintLn("Revived by " + self.name);
 }
 
 printXUID(player) {
-	self iprintln(player.name + ": " + player getXUID());
+	self iPrintLn(player.name + ": " + player getXUID());
 }
 
 changeToSpectator(player) {
