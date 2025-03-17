@@ -1,6 +1,8 @@
-#include maps\mp\gametypes\_hud_util;
 #include maps\mp\_utility;
 #include common_scripts\utility;
+#include maps\mp\gametypes\_hud_util;
+
+#include maps\mp\gametypes\century\_utilities;
 
 giveGrenade(grenade) {
 	primaryWeaponList = self getWeaponsListPrimaries();
@@ -208,131 +210,131 @@ toggleTacticalMaskPro() {
 	}
 }
 
-givePlayerAttachment(attachment) {
-    weapon = self getCurrentWeapon();
-    opticAttach = "";
-    underBarrelAttach = "";
-    clipAttach = "";
-	attachmentAttach = "";
-    opticWeap = "";
-    underBarrelWeap = "";
-    clipWeap = "";
-	attachmentWeap = "";
-	weaponToArray = strTok(weapon, "_");
+giveAttachmentReworked(attachment) {
+    currentWeapon = self getCurrentWeapon();
+    weaponPartList = strTok(currentWeapon, "_");
+    baseWeapon = weaponPartList[0];
 
-	for (i = 0; i < weaponToArray.size; i++) {
-		if (isAttachmentOptic(weaponToArray[i])) {
-			opticAttach = weaponToArray[i];
-		}
-		else if (isAttachmentUnderBarrel(weaponToArray[i])) {
-			underBarrelAttach = weaponToArray[i];
-		}
-		else if (isAttachmentClip(weaponToArray[i])) {
-			clipAttach = weaponToArray[i];
-		}
-        else if (weaponToArray[i] != "mp" && !isAttachmentClip(weaponToArray[i]) && !isAttachmentUnderBarrel(weaponToArray[i]) && !isAttachmentOptic(weaponToArray[i]) && weaponToArray[i] != weaponToArray[0]) {
-            attachmentWeap = weaponToArray[i];
-        }
-	}
+    if (isSubStr(baseWeapon, "dw") && attachment == "dw") {
+        baseWeapon = getSubStr(baseWeapon, 0, baseWeapon.size - 2);
+        giveNewWeapon(currentWeapon, baseWeapon, []);
+        return;
+    }
 
-	baseWeapon = weaponToArray[0];
-	number = weaponNameToNumber(baseWeapon);
+    number = weaponNameToRowNum(baseWeapon);
 	itemRow = tableLookupRowNum("mp/statsTable.csv", level.cac_numbering, number);
 	compatibleAttachments = tableLookupColumnForRow("mp/statstable.csv", itemRow, level.cac_cstring);
+
+    // Check if attachment is compatible with weapon
 	if (!isSubStr(compatibleAttachments, attachment)) {
 		return;
 	}
 
-	if (attachmentWeap == attachment) {
-		return;
-	}
+    attachmentList = arrayRemoveItem(weaponPartList, 0);
+    attachmentList = arrayRemoveItem(attachmentList, attachmentList.size - 1);
 
-	if (isSubStr(baseWeapon, "dw")) {
-		baseWeapon = getSubStr(baseWeapon, 0, baseWeapon.size - 2);
-	}
-
-	if (isSubStr(attachment, "dw")) {
-		newWeapon = baseWeapon + "dw_mp";
-		if (isDefined(self.camo)) {
-			weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
-		}
-		else {
-			self.camo = 15;
-			weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
-		}
-
-		self takeWeapon(weapon);
-		self giveWeapon(newWeapon, 0, weaponOptions);
-		self setSpawnWeapon(newWeapon);
-		return;
-	}
-
-    if (isAttachmentOptic(attachment)) {
-        opticWeap = attachment + "_";
-    }
-    else if(isAttachmentUnderBarrel(attachment)) {
-        underBarrelWeap = attachment + "_";
-    }
-    else if(isAttachmentClip(attachment)) {
-        clipWeap = attachment + "_";
-    }
-	else if(!isAttachmentOptic(attachment) && !isAttachmentUnderBarrel(attachment) && !isAttachmentClip(attachment)) {
-		attachmentWeap = attachment + "_";
-	}
-
-	if (opticAttach == attachment) {
-		opticAttach = "";
-		opticWeap = "";
-	}
-
-	if (underBarrelAttach == attachment) {
-		underBarrelAttach = "";
-		underBarrelWeap = "";
-	}
-
-	if (clipAttach == attachment) {
-		clipAttach = "";
-		clipWeap = "";
-	}
-
-	if (attachmentWeap != "") {
-		if (!isAttachmentOptic(attachmentWeap) && !isAttachmentUnderBarrel(attachmentWeap) && !isAttachmentClip(attachmentWeap)) {
-			if (!isAttachmentOptic(attachment) && !isAttachmentUnderBarrel(attachment) && !isAttachmentClip(attachment)) {
-				attachmentWeap = attachment + "_";
-			}
-		}
-	}
-
-	if (opticAttach != "" && opticWeap == "") {
-        opticWeap = opticAttach + "_";
+    // Dual wield weapons and python has always only one attachment
+    if (attachment == "dw" || (baseWeapon == "python" && attachment != attachmentList[0])) {
+        attachmentList = [];
     }
 
-    if (underBarrelAttach != "" && underBarrelWeap == "") {
-        underBarrelWeap = underBarrelAttach + "_";
-    }
+    for (i = 0; i < attachmentList.size; i++) {
+        weaponPart = attachmentList[i];
+        // If same attachment is equiped, remove it
+        if (weaponPart == attachment) {
+            attachmentList = arrayRemoveItem(attachmentList, i);
+            giveNewWeapon(currentWeapon, baseWeapon, attachmentList);
+            return;
+        }
 
-    if (clipAttach != "" && clipWeap == "") {
-        clipWeap = clipAttach + "_";
-    }
-
-	if (attachmentWeap != "") {
-		if(!isSubStr(attachmentWeap, "_")) {
-			attachmentWeap = attachmentWeap + "_";
+        // Replace attachment if same kind of part is already on the weapon
+        if (isAttachmentSameClass(weaponPart, attachment)) {
+            attachmentList[i] = attachment;
+            giveNewWeapon(currentWeapon, baseWeapon, attachmentList);
+            return;
         }
     }
-	
-    self takeWeapon(weapon);
-	newWeapon = baseWeapon + "_" + opticWeap + underBarrelWeap + clipWeap + attachmentWeap + weaponToArray[weaponToArray.size - 1];
-	if (isDefined(self.camo)) {
-		weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
-	}
-	else {
-		self.camo = 15;
-		weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
-	}
 
+    if (attachmentList.size >= 4) {
+        return;
+    }
+
+    attachmentList[attachmentList.size] = attachment;
+    attachmentList = sortAttachments(attachmentList);
+
+    giveNewWeapon(currentWeapon, baseWeapon, attachmentList);
+}
+
+giveNewWeapon(currentWeapon, baseWeapon, attachmentList) {
+    self takeWeapon(currentWeapon);
+
+    newWeapon = baseWeapon;
+    for (i = 0; i < attachmentList.size; i++) {
+        prefix = "_";
+        attachment = attachmentList[i];
+
+        if (attachment == "dw") {
+            prefix = "";
+        }
+
+        fullAttachment = prefix + attachment;
+        newWeapon += fullAttachment;
+    }
+
+    newWeapon += "_mp";
+
+    if (!isDefined(self.camo) || self.camo == 0) {
+        self.camo = randomIntRange(1, 16);
+    }
+
+    weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
     self giveWeapon(newWeapon, 0, weaponOptions);
     self setSpawnWeapon(newWeapon);
+}
+
+sortAttachments(attachments) {
+    for (i = 0; i < attachments.size - 1; i++) {
+        minIndex = i;
+
+        for (j = i + 1; j < attachments.size; j++) {
+            if (getAttachmentPriority(attachments[j]) < getAttachmentPriority(attachments[minIndex])) {
+                minIndex = j;
+            }
+        }
+
+        if (minIndex != i) {
+            temp = attachments[i];
+            attachments[i] = attachments[minIndex];
+            attachments[minIndex] = temp;
+        }
+    }
+
+    return attachments;
+}
+
+isAttachmentSameClass(attachment1, attachment2) {
+    if ((isAttachmentOptic(attachment1) && isAttachmentOptic(attachment2)) ||
+            (isAttachmentUnderBarrel(attachment1) && isAttachmentUnderBarrel(attachment2)) ||
+            (isAttachmentClip(attachment1) && isAttachmentClip(attachment2))) {
+        return true;
+    }
+
+    return false;
+}
+
+getAttachmentPriority(attachment) {
+    if (isAttachmentOptic(attachment)) {
+        return 0;
+    }
+    else if (isAttachmentUnderBarrel(attachment)) {
+        return 1;
+    }
+    else if (isAttachmentClip(attachment)) {
+        return 2;
+    }
+    else {
+        return 3;
+    }
 }
 
 removeAllAttachments() {
@@ -343,29 +345,23 @@ removeAllAttachments() {
 	if (isSubStr(baseWeapon, "dw")) {
 		baseWeaponOnly = getSubStr(baseWeapon, 0, baseWeapon.size - 2);
 		newWeapon = baseWeaponOnly + "_mp";
-		if (isDefined(self.camo)) {
-			weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
-		}
-		else {
-			self.camo = 15;
-			weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
-		}
-		
+		if (!isDefined(self.camo) || self.camo == 0) {
+            self.camo = randomIntRange(1, 16);
+        }
+
 		self takeWeapon(weapon);
+        weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
 		self giveWeapon(newWeapon, 0, weaponOptions);
 		self setSpawnWeapon(newWeapon);
 		return;
 	}
 
 	self takeWeapon(weapon);
-	if (isDefined(self.camo)) {
-		weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
-	}
-	else {
-		self.camo = 15;
-		weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
-	}
+	if (!isDefined(self.camo) || self.camo == 0) {
+        self.camo = randomIntRange(1, 16);
+    }
 
+    weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
     self giveWeapon(newWeapon, 0, weaponOptions);
 	self setSpawnWeapon(newWeapon);
 }
@@ -386,19 +382,26 @@ isAttachmentOptic(attachment) {
 }
 
 isAttachmentUnderBarrel(attachment) {
-	if (isSubStr(attachment, "mk") || isSubStr(attachment, "ft") || isSubStr(attachment, "gl") || isSubStr(attachment, "grip")) {
-		return true;
-	}
-
-	return false;
+    switch (attachment) {
+        case "mk":
+        case "ft":
+        case "gl":
+        case "grip":
+            return true;
+        default:
+            return false;
+    }
 }
 
 isAttachmentClip(attachment) {
-	if (isSubStr(attachment, "extclip") || isSubStr(attachment, "dualclip") || isSubStr(attachment, "speed")) {
-		return true;
-	}
-
-	return false;
+    switch (attachment) {
+        case "extclip":
+        case "dualclip":
+        case "speed":
+            return true;
+        default:
+            return false;
+    }
 }
 
 giveUserKillstreak(killstreak) {
@@ -410,7 +413,7 @@ giveUserEquipment(equipment) {
 	self iPrintLn(equipment + " ^2given");
 }
 
-weaponNameToNumber(weaponName) {
+weaponNameToRowNum(weaponName) {
     weaponName = toLower(weaponName);
 	switch (weaponName) {
         //Pistol

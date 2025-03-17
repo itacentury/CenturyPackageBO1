@@ -510,26 +510,26 @@ buildWeaponMenu() {
 	self addMenu(m, "AttachOther", "^5Other");
 	self addOption(m, "Remove all attachments", ::removeAllAttachments);
 	m = "AttachOptic";
-	self addOption(m, "Toggle Reflex", ::givePlayerAttachment, "reflex");
-	self addOption(m, "Toggle Red Dot", ::givePlayerAttachment, "elbit");
-	self addOption(m, "Toggle Variable Zoom", ::givePlayerAttachment, "vzoom");
-	self addOption(m, "Toggle IR", ::givePlayerAttachment, "ir");
-	self addOption(m, "Toggle ACOG", ::givePlayerAttachment, "acog");
-	self addOption(m, "Toggle Upgraded Sight", ::givePlayerAttachment, "upgradesight");
-	self addOption(m, "Toggle Low Power Scope", ::givePlayerAttachment, "lps");
+	self addOption(m, "Reflex", ::giveAttachmentReworked, "reflex");
+	self addOption(m, "Red Dot", ::giveAttachmentReworked, "elbit");
+	self addOption(m, "Variable Zoom", ::giveAttachmentReworked, "vzoom");
+	self addOption(m, "IR", ::giveAttachmentReworked, "ir");
+	self addOption(m, "ACOG", ::giveAttachmentReworked, "acog");
+	self addOption(m, "Upgraded Sight", ::giveAttachmentReworked, "upgradesight");
+	self addOption(m, "Low Power Scope", ::giveAttachmentReworked, "lps");
 	m = "AttachMag";
-	self addOption(m, "Toggle Extended Clip", ::givePlayerAttachment, "extclip");
-	self addOption(m, "Toggle Dual Mag", ::givePlayerAttachment, "dualclip");
-	self addOption(m, "Toggle Speed Loader", ::givePlayerAttachment, "speed");
+	self addOption(m, "Extended Clip", ::giveAttachmentReworked, "extclip");
+	self addOption(m, "Dual Mag", ::giveAttachmentReworked, "dualclip");
+	self addOption(m, "Speed Loader", ::giveAttachmentReworked, "speed");
 	m = "AttachUnderBarrel";
-	self addOption(m, "Toggle Flamethrower", ::givePlayerAttachment, "ft");
-	self addOption(m, "Toggle Masterkey", ::givePlayerAttachment, "mk");
-	self addOption(m, "Toggle Grenade Launcher", ::givePlayerAttachment, "gl");
-	self addOption(m, "Toggle Grip", ::givePlayerAttachment, "grip");
+	self addOption(m, "Flamethrower", ::giveAttachmentReworked, "ft");
+	self addOption(m, "Masterkey", ::giveAttachmentReworked, "mk");
+	self addOption(m, "Grenade Launcher", ::giveAttachmentReworked, "gl");
+	self addOption(m, "Grip", ::giveAttachmentReworked, "grip");
 	m = "AttachOther";
-	self addOption(m, "Give Silencer", ::givePlayerAttachment, "silencer");
-	self addOption(m, "Give Snub Nose", ::givePlayerAttachment, "snub");
-	self addOption(m, "Toggle Dual Wield", ::givePlayerAttachment, "dw");
+	self addOption(m, "Silencer", ::giveAttachmentReworked, "silencer");
+	self addOption(m, "Snub Nose", ::giveAttachmentReworked, "snub");
+	self addOption(m, "Dual Wield", ::giveAttachmentReworked, "dw");
 }
 
 buildClassMenu() {
@@ -1244,15 +1244,13 @@ loadLoadout() {
 	}
 
 	for (i = 0; i < self.primaryWeaponList.size; i++) {
-		if (isDefined(self.camo)) {
-			weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
-		}
-		else {
-			self.camo = 15;
-			weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
-		}
+		if (!isDefined(self.camo) || self.camo == 0) {
+            self iPrintLn("random camo");
+            self.camo = randomIntRange(1, 16);
+        }
 
 		weapon = self.primaryWeaponList[i];
+        weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
 		self giveWeapon(weapon, 0, weaponOptions);
 		if (weapon == "china_lake_mp") {
 			self giveMaxAmmo(weapon);
