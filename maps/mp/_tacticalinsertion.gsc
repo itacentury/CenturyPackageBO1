@@ -1,12 +1,12 @@
-#include common_scripts\utility;
 #include maps\mp\_utility;
+#include common_scripts\utility;
 #include maps\mp\gametypes\_hud_util;
 
 init() {
 	level.tacticalInsertionWeapon = "tactical_insertion_mp";
-	LoadFX("misc/fx_equip_tac_insert_light_grn");
-	LoadFX("misc/fx_equip_tac_insert_light_red");
-	level._effect["tacticalInsertionFizzle"] = LoadFX("misc/fx_flare_tac_dest_mp");
+	loadFX("misc/fx_equip_tac_insert_light_grn");
+	loadFX("misc/fx_equip_tac_insert_light_red");
+	level._effect["tacticalInsertionFizzle"] = loadFX("misc/fx_flare_tac_dest_mp");
 }
 
 postLoadout() {
@@ -15,15 +15,15 @@ postLoadout() {
 	
 	self.lastTacticalInsertionOrigin = self.origin;
 	self.lastTacticalInsertionAngles = self.angles;
-	hasTacticalInsertion = self HasWeapon(level.tacticalInsertionWeapon);
+	hasTacticalInsertion = self hasWeapon(level.tacticalInsertionWeapon);
 	if (hasTacticalInsertion) {		
 		for (;;) {
 			latestOrigin = self.origin;
 			latestAngles = self.angles;
-			if (self isOnGround(true) && TestSpawnPoint(latestOrigin)) {
-				if (self DepthOfPlayerInWater() > 0)
+			if (self isOnGround(true) && testSpawnPoint(latestOrigin)) {
+				if (self depthOfPlayerInWater() > 0)
 				{
-					trace = BulletTrace(latestOrigin+(0,0,60), latestOrigin, false, self);
+					trace = bulletTrace(latestOrigin + (0, 0, 60), latestOrigin, false, self);
 					self.lastTacticalInsertionOrigin = trace["position"];
 				}
 				else
@@ -40,11 +40,11 @@ postLoadout() {
 }
 
 isTacSpawnTouchingCrates(origin, angles) {
-	crate_ents = GetEntArray("care_package", "script_noteworthy");
+	crate_ents = getEntArray("care_package", "script_noteworthy");
 	mins = (-17, -17, -40);
 	maxs = (17, 17, 40);
 	for (i = 0 ; i < crate_ents.size ; i++) {
-		if (crate_ents[i] IsTouchingVolume(origin + (0, 0, 40), mins, maxs)) {	
+		if (crate_ents[i] isTouchingVolume(origin + (0, 0, 40), mins, maxs)) {	
 			return true;
 		}
 	}
@@ -70,7 +70,7 @@ overrideSpawn() {
 	}
 
 	self spawn(origin, angles, "tactical insertion");
-	self SetSpawnClientFlag("SCDFL_DISABLE_LOGGING");
+	self setSpawnClientFlag("SCDFL_DISABLE_LOGGING");
     self maps\mp\gametypes\_globallogic_score::setWeaponStat("tactical_insertion_mp", 1, "used");
 	self.lastTacticalSpawnTime = getTime();
 	return true;
@@ -157,7 +157,7 @@ fizzle(attacker) {
 	}
 
 	self.fizzle = true;
-	PlayFX(level._effect["tacticalInsertionFizzle"], self.origin);
+	playFX(level._effect["tacticalInsertionFizzle"], self.origin);
 	self.owner maps\mp\gametypes\_globallogic_audio::leaderDialogOnPlayer("tact_destroyed", "item_destroyed");
 	self destroy_tactical_insertion(attacker);
 }
@@ -186,25 +186,25 @@ spawnTacticalInsertion() {
 	triggerHeight = 64;
 	triggerRadius = 128;
 	self.tacticalInsertion.friendlyTrigger = spawn("trigger_radius_use", self.tacticalInsertion.origin);
-	self.tacticalInsertion.friendlyTrigger SetCursorHint("HINT_NOICON", level.tacticalInsertionWeapon);
-	self.tacticalInsertion.friendlyTrigger SetHintString(&"MP_TACTICAL_INSERTION_PICKUP");
+	self.tacticalInsertion.friendlyTrigger setCursorHint("HINT_NOICON", level.tacticalInsertionWeapon);
+	self.tacticalInsertion.friendlyTrigger setHintString(&"MP_TACTICAL_INSERTION_PICKUP");
 	if (level.teamBased) {
-		self.tacticalInsertion.friendlyTrigger SetTeamForTrigger(self.team);
+		self.tacticalInsertion.friendlyTrigger setTeamForTrigger(self.team);
 		self.tacticalInsertion.friendlyTrigger.triggerTeam = self.team;
 	}
 
 	self ClientClaimTrigger(self.tacticalInsertion.friendlyTrigger);
 	self.tacticalInsertion.friendlyTrigger.claimedBy = self;
 	self.tacticalInsertion.enemyTrigger = spawn("trigger_radius_use", self.tacticalInsertion.origin);
-	self.tacticalInsertion.enemyTrigger SetCursorHint("HINT_NOICON", level.tacticalInsertionWeapon);
-	self.tacticalInsertion.enemyTrigger SetHintString(&"MP_TACTICAL_INSERTION_DESTROY");
-	self.tacticalInsertion.enemyTrigger SetInvisibleToPlayer(self);
+	self.tacticalInsertion.enemyTrigger setCursorHint("HINT_NOICON", level.tacticalInsertionWeapon);
+	self.tacticalInsertion.enemyTrigger setHintString(&"MP_TACTICAL_INSERTION_DESTROY");
+	self.tacticalInsertion.enemyTrigger setInvisibleToPlayer(self);
 	if (level.teamBased) {
-		self.tacticalInsertion.enemyTrigger SetTeamForTrigger(GetOtherTeam(self.team));
-		self.tacticalInsertion.enemyTrigger.triggerTeam = GetOtherTeam(self.team);
+		self.tacticalInsertion.enemyTrigger setTeamForTrigger(getOtherTeam(self.team));
+		self.tacticalInsertion.enemyTrigger.triggerTeam = getOtherTeam(self.team);
 	}
 	
-	self.tacticalInsertion SetClientFlag(level.const_flag_tactical_insertion);
+	self.tacticalInsertion setClientFlag(level.const_flag_tactical_insertion);
 	self thread watchDisconnect();
 	watcher = maps\mp\gametypes\_weaponobjects::getWeaponObjectWatcherByWeapon(level.tacticalInsertionWeapon);
 	self.tacticalInsertion thread watchUseTrigger(self.tacticalInsertion.friendlyTrigger, ::pickUp, watcher.pickUpSoundPlayer, watcher.pickUpSound);
@@ -216,7 +216,7 @@ spawnTacticalInsertion() {
 		self.tacticalInsertionCount = 1;
 	}
 
-	self.tacticalInsertion SetCanDamage(true);
+	self.tacticalInsertion setCanDamage(true);
 	for (;;) {
 		self.tacticalInsertion waittill("damage", damage, attacker, direction, point, type, tagName, modelName, partname, weaponName, iDFlags);
 		if (hasWeaponSplashDamage(weaponName)) {
@@ -327,7 +327,7 @@ cancel_button_press() {
 }
 
 cancel_text_create() {
-	text = NewClientHudElem(self);
+	text = newClientHudElem(self);
 	text.archived = false;
 	text.y = -100;
 	text.alignX = "center";
@@ -338,7 +338,7 @@ cancel_text_create() {
 	text.font = "small";
 	text.foreground = true;
 	text.hideWhenInMenu = true;
-	if (self IsSplitscreen()) {
+	if (self isSplitscreen()) {
 		text.y = -80;
 		text.fontscale = 1.2;
 	}

@@ -32,10 +32,10 @@ init() {
 	PreCacheShader("hud_ammo_refill_drop");
 	PreCacheString(&"KILLSTREAK_CAPTURING_CRATE");
 	PreCacheShader("headicon_dead");
-	level._supply_drop_smoke_fx = LoadFX("env/smoke/fx_smoke_supply_drop_blue_mp");
-	level._supply_drop_explosion_fx = LoadFX("explosions/fx_grenadeexp_default");
-	LoadFX("vehicle/props/fx_seaknight_main_blade_full");
-	LoadFX("vehicle/props/fx_seaknight_rear_blade_full");
+	level._supply_drop_smoke_fx = loadFX("env/smoke/fx_smoke_supply_drop_blue_mp");
+	level._supply_drop_explosion_fx = loadFX("explosions/fx_grenadeexp_default");
+	loadFX("vehicle/props/fx_seaknight_main_blade_full");
+	loadFX("vehicle/props/fx_seaknight_rear_blade_full");
 	maps\mp\gametypes\_hardpoints::registerKillstreak("supply_drop_mp", "supplydrop_mp", "killstreak_supply_drop", "supply_drop_used", ::useKillstreakSupplyDrop, undefined, true);
 	maps\mp\gametypes\_hardpoints::registerKillstreakStrings("supply_drop_mp", &"KILLSTREAK_EARNED_SUPPLY_DROP", &"KILLSTREAK_AIRSPACE_FULL");
 	maps\mp\gametypes\_hardpoints::registerKillstreakDialog("supply_drop_mp", "mpl_killstreak_supply", "kls_supply_used", "","kls_supply_enemy", "", "kls_supply_ready");
@@ -195,12 +195,12 @@ validate_crate_type(killstreak_name, weapon_name, crate_type_name) {
 				}
 			}
 			
-			ents = GetEntArray("weapon_" + weapon_name, "classname");
+			ents = getEntArray("weapon_" + weapon_name, "classname");
 			if (isDefined(ents) && ents.size > 0) {
 				return true;
 			}
 			
-			crate_ents = GetEntArray("care_package", "script_noteworthy");
+			crate_ents = getEntArray("care_package", "script_noteworthy");
 			for (j = 0; j < crate_ents.size; j++) {
 				if (!isDefined(crate_ents[j].crateType))
 					continue;
@@ -232,7 +232,7 @@ giveCrateKillstreak(killstreak) {
 
 giveCrateWeapon(weapon) {
 	currentWeapon = self getCurrentWeapon();
-	if (currentWeapon == weapon || self HasWeapon(weapon)) {
+	if (currentWeapon == weapon || self hasWeapon(weapon)) {
 		self giveMaxAmmo(weapon);
 		return true;
 	}
@@ -334,11 +334,11 @@ useSupplyDropMarker() {
 		return false;
 	}	
 	
-	if (self HasWeapon(supplyDropWeapon) && !self GetAmmoCount(supplyDropWeapon)) {
+	if (self hasWeapon(supplyDropWeapon) && !self GetAmmoCount(supplyDropWeapon)) {
 		self takeWeapon(supplyDropWeapon);
 	}	
 	
-	if (self HasWeapon(supplyDropWeapon) || self GetAmmoCount(supplyDropWeapon)) {
+	if (self hasWeapon(supplyDropWeapon) || self GetAmmoCount(supplyDropWeapon)) {
 		return false;
 	}
 
@@ -633,7 +633,7 @@ getIconForCrate() {
 
 crateActivate() {
 	self MakeUsable();
-	self SetCursorHint("HINT_NOICON");
+	self setCursorHint("HINT_NOICON");
 	self setHintString(self.crateType.hint);	
 	if (isDefined(self.crateType.hint_gambler)) {
 		self setHintStringForPerk("specialty_gambler", self.crateType.hint_gambler);
@@ -732,7 +732,7 @@ dropAllToGroundAfterCrateDelete(crate, crate_origin) {
 }
 
 dropCratesToGround(origin, radius) {
-	crate_ents = GetEntArray("care_package", "script_noteworthy");
+	crate_ents = getEntArray("care_package", "script_noteworthy");
 	radius_sq = radius * radius;
 	for (i = 0 ; i < crate_ents.size ; i++) {
 		if (DistanceSquared(origin, crate_ents[i].origin) < radius_sq) {
@@ -991,7 +991,7 @@ watch_explosive_crate() {
 	}
 
 	self RadiusDamage(self.origin, 256, 300, 75, self.hacker, "MOD_EXPLOSIVE", "supplydrop_mp");
-	PlayFX(level._supply_drop_explosion_fx, self.origin);
+	playFX(level._supply_drop_explosion_fx, self.origin);
 	PlaySoundAtPosition("wpn_grenade_explode", self.origin);
 	wait 0.1;
 	self crateDelete();
@@ -1103,7 +1103,7 @@ crateDropToGroundKill() {
 
 crateDropToGroundTrace(start) {
 	end = start + (0, 0, -8000);
-	trace = BulletTrace(start, end, true, self, true, true);
+	trace = bulletTrace(start, end, true, self, true, true);
 	if (isDefined(trace["entity"]) && isPlayer(trace["entity"]) && isAlive(trace["entity"])) {
 		player = trace["entity"];
 		if (player.sessionstate != "playing") {

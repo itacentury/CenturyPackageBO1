@@ -223,7 +223,7 @@ onSpawnPlayerUnified() {
 	self.isDefusing = false;
 	self.isBombCarrier = false;
 	if (level.multiBomb && !isDefined(self.carryIcon) && self.pers["team"] == game["attackers"] && !level.bombPlanted) {
-		if (self IsSplitscreen()) {
+		if (self isSplitscreen()) {
 			self.carryIcon = createIcon("hud_suitcase_bomb", 35, 35);
 			self.carryIcon.x = -125;
 			self.carryIcon.y = -90;
@@ -258,7 +258,7 @@ onSpawnPlayer() {
 	}
 
 	if (level.multiBomb && !isDefined(self.carryIcon) && self.pers["team"] == game["attackers"] && !level.bombPlanted) {
-		if (self IsSplitscreen()) {
+		if (self isSplitscreen()) {
 			self.carryIcon = createIcon("hud_suitcase_bomb", 35, 35);
 			self.carryIcon.x = -125;
 			self.carryIcon.y = -90;
