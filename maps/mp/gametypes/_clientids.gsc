@@ -889,9 +889,9 @@ updateInfoText() {
         return;
     }
 
-    bombText = "Bomb: ^1disabled^7";
+    bombText = "Bomb: ^2disabled^7";
 	if (level.bomb) {
-		bombText = "Bomb: ^2enabled^7";
+		bombText = "Bomb: ^1enabled^7";
 	}
 
     precamText = "Pre-cam anims: ^1disabled^7";
