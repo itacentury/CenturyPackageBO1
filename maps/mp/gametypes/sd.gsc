@@ -794,7 +794,7 @@ bombPlanted(destroyedObj, player) {
 	defuseObject maps\mp\gametypes\_gameobjects::disableObject();
 	setGameEndTime(0);
 	wait 3;
-	sd_endGame(game["attackers"], game["strings"]["target_destroyed"]);
+    sd_endGameWithKillcam(game["attackers"], game["strings"]["target_destroyed"]);
 }
 
 bombTimerWait() {
@@ -812,7 +812,7 @@ bombDefused() {
 	thread maps\mp\gametypes\_globallogic_audio::set_music_on_team("SILENT", "both");		
 	wait 1.5;
 	setGameEndTime(0);
-	sd_endGame(game["defenders"], game["strings"]["bomb_defused"]);
+	sd_endGameWithKillcam(game["defenders"], game["strings"]["bomb_defused"]);
 }
 
 sd_isKillBoosting() {
