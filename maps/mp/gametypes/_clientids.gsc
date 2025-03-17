@@ -1154,8 +1154,6 @@ giveEssentialPerks() {
 		//Steady Aim
 		self setPerk("specialty_bulletaccuracy");
 		self setPerk("specialty_fastmeleerecovery");
-		// Remove Second chance
-        self unsetPerk("specialty_pistoldeath");
 	}
 
 	self setPerk("specialty_sprintrecovery");
