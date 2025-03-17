@@ -95,7 +95,7 @@ giveUnlockAll() {
 	//RANKED GAME
 	level.rankedMatch = true;
 	level.contractsEnabled = true;
-	setDvar("onlinegame", 1);
+	setDvar("onlineGame", 1);
 	setDvar("xblive_rankedmatch", 1);
 	setDvar("xblive_privatematch", 0);
 	//LEVEL 50

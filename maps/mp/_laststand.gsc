@@ -221,9 +221,9 @@ lastStandWaittillDeath() {
 	self endon("disconnect");
 	self endon("player revived");
 
-	self waittill("death", attacker, isHeadShot, weapon);
+	self waittill("death", attacker, isHeadshot, weapon);
 	teammateNeedsRevive = false;
-	if (isDefined(attacker) && isDefined(isHeadShot) && isHeadShot && isPlayer(attacker)) {
+	if (isDefined(attacker) && isDefined(isHeadshot) && isHeadshot && isPlayer(attacker)) {
 		if (level.teambased) {
 			if (attacker.team != self.team) {
 				attacker maps\mp\_medals::execution(weapon);
@@ -553,7 +553,7 @@ reviveFromConsole() {
 	for (;;) {
 		if (getDvar(#"scr_reviveme") != "") {
 			self.thisPlayerIsInLastStand = false;	
-			setdvar("scr_reviveme", "");
+			setDvar("scr_reviveme", "");
 			self thread takePlayerOutOfLastStand();
 		}
 
@@ -646,7 +646,7 @@ clearUpOnDisconnect(player) {
 	for (i = 0; i < players.size; i++) {
 		player = players[i];
 		if (self.team == player.team) {
-			if (isdefined (player.reviveTrigger)) {
+			if (isDefined (player.reviveTrigger)) {
 				teammateNeedsRevive = true;
 			}
 		}

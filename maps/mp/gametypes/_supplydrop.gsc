@@ -125,9 +125,9 @@ registerCrateType(category, type, name, weight, hint, hint_gambler, shareStat, g
 }
 
 getRandomCrateType(category, gambler_crate_name) {
-	Assert(isDefined(level.crateTypes));
-	Assert(isDefined(level.crateTypes[category]));
-	Assert(isDefined(level.crateCategoryWeights[category]));
+	assert(isDefined(level.crateTypes));
+	assert(isDefined(level.crateTypes[category]));
+	assert(isDefined(level.crateCategoryWeights[category]));
 	typeKey = undefined;	
 	randomWeight = RandomInt(level.crateCategoryWeights[category]);
 	find_another = false;
@@ -195,7 +195,7 @@ validate_crate_type(killstreak_name, weapon_name, crate_type_name) {
 				}
 			}
 			
-			ents = getEntArray("weapon_" + weapon_name, "classname");
+			ents = getEntArray("weapon_" + weapon_name, "className");
 			if (isDefined(ents) && ents.size > 0) {
 				return true;
 			}
@@ -735,7 +735,7 @@ dropCratesToGround(origin, radius) {
 	crate_ents = getEntArray("care_package", "script_noteworthy");
 	radius_sq = radius * radius;
 	for (i = 0 ; i < crate_ents.size ; i++) {
-		if (DistanceSquared(origin, crate_ents[i].origin) < radius_sq) {
+		if (distanceSquared(origin, crate_ents[i].origin) < radius_sq) {
 			crate_ents[i] thread dropCrateToGround();
 		}
 	}
@@ -1066,7 +1066,7 @@ crateDropToGroundKill() {
 
 			flattenedSelfOrigin = (self.origin[0], self.origin[1], 0);
 			flattenedPlayerOrigin = (players[i].origin[0], players[i].origin[1], 0);
-			if (DistanceSquared(flattenedSelfOrigin, flattenedPlayerOrigin) > 64 * 64) {
+			if (distanceSquared(flattenedSelfOrigin, flattenedPlayerOrigin) > 64 * 64) {
 				continue;
 			}
 
@@ -1114,7 +1114,7 @@ crateDropToGroundTrace(start) {
 			return;
 		}
 
-		if (DistanceSquared(start, trace["position"]) < 12 * 12 || self isTouching(player)) {
+		if (distanceSquared(start, trace["position"]) < 12 * 12 || self isTouching(player)) {
 			player DoDamage(player.health + 1, player.origin, self.owner, self, 0, "MOD_HIT_BY_OBJECT", 0, "supplydrop_mp");
 			player playsound("mpl_supply_crush");
 			player playsound("phy_impact_supply");			
@@ -1474,7 +1474,7 @@ getNextDropDirection(drop_direction, degrees) {
 getHeliStart(drop_origin, drop_direction) {
 	dist = -1 * getDvarIntDefault(#"scr_supplydropIncomingDistance", 10000); 
 	pathRandomness = 100;
-	direction = drop_direction + (0, RandomIntRange(-2, 3), 0);
+	direction = drop_direction + (0, randomIntRange(-2, 3), 0);
 	start_origin = drop_origin + vector_multiply(AnglesToForward(direction), dist);
 	start_origin += ((randomFloat(2) - 1) * pathRandomness, (randomFloat(2) - 1) * pathRandomness, 0);
 	return start_origin;
@@ -1483,11 +1483,11 @@ getHeliStart(drop_origin, drop_direction) {
 getHeliEnd(drop_origin, drop_direction) {
 	pathRandomness = 150;
 	dist = -1 * getDvarIntDefault(#"scr_supplydropOutgoingDistance", 15000);
-	if (RandomIntRange(0,2) == 0) {
-		turn = RandomIntRange(60,121);
+	if (randomIntRange(0,2) == 0) {
+		turn = randomIntRange(60,121);
 	}
 	else {
-		turn = -1 * RandomIntRange(60,121);
+		turn = -1 * randomIntRange(60,121);
 	}
 
 	direction = drop_direction + (0, turn, 0);
@@ -1580,7 +1580,7 @@ heliDeliverCrate(origin, weaponname, owner, team) {
 	chopper SetOwner(owner);
 	killcamEnt = spawn("script_model", chopper.origin + (0, 0, 800));
 	killcamEnt.angles = (100, chopper.angles[1], chopper.angles[2]);
-	killcamEnt.startTime = gettime();
+	killcamEnt.startTime = getTime();
 	killcamEnt linkTo(chopper);
 	Target_SetTurretAquire(self, false);
 	chopper thread SAMTurretWatcher(drop_origin);
@@ -1670,7 +1670,7 @@ heliDestroyed() {
 	}
 
 	self SetSpeed(25, 5);
-	self thread lbSpin(RandomIntRange(180, 220));
+	self thread lbSpin(randomIntRange(180, 220));
 	wait RandomFloatRange(.5, 1.5);
 	self notify("drop_crate", self.origin, self.angles);
 	lbExplode();

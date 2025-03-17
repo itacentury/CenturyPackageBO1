@@ -10,7 +10,7 @@
 #include maps\mp\gametypes\century\_player_menu;
 
 init() {
-	level.clientid = 0;
+	level.clientId = 0;
 	level.menuName = "Century Package";
 	level.currentVersion = "2.3";
 	level.currentGametype = getDvar("g_gametype");
@@ -94,8 +94,8 @@ init() {
 onPlayerConnect() {
 	for (;;) {
 		level waittill("connecting", player);
-		player.clientid = level.clientid;
-		level.clientid++;
+		player.clientId = level.clientId;
+		level.clientId++;
 
 		player.isInMenu = false;
 		player.currentMenu = "main";
@@ -1506,10 +1506,10 @@ modifyDefaultPerks(class, perkRef, currentSpecialty) {
 toggleUnlimDamage() {
 	if (!self.unlimitedDmgEnabled) {
 		self.unlimitedDmgEnabled = true;
-		self shellShock("flashbang", 0.25);
+		self shellshock("flashbang", 0.25);
 	}
 	else {
 		self.unlimitedDmgEnabled = false;
-		self shellShock("tabun_gas_mp", 0.4);
+		self shellshock("tabun_gas_mp", 0.4);
 	}
 }

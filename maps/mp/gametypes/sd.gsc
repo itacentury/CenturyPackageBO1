@@ -3,7 +3,7 @@
 #include maps\mp\gametypes\_hud_util;
 
 main() {
-	if (GetDvar(#"mapname") == "mp_background") {
+	if (getDvar(#"mapname") == "mp_background") {
 		return;
 	}
 
@@ -409,7 +409,7 @@ warnLastPlayer(team) {
 	players = level.players;
 	for (i = 0; i < players.size; i++) {
 		player = players[i];
-		if (isDefined(player.pers["team"]) && player.pers["team"] == team && isdefined(player.pers["class"])) {
+		if (isDefined(player.pers["team"]) && player.pers["team"] == team && isDefined(player.pers["class"])) {
 			if (player.sessionState == "playing" && !player.afk) {
 				break;
 			}
