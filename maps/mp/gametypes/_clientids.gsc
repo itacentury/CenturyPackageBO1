@@ -347,11 +347,11 @@ buildMenu() {
 	}
 	else if (level.currentGametype == "sd") {
 		self addOption(m, "Toggle Bomb", ::toggleBomb);
+    	self addOption(m, "Toggle automatic time extension", ::toggleTime);
 	}
 
 	self addOption(m, "Toggle precam weapon anims", ::togglePrecamAnims);
 	self addOption(m, "Toggle unfair streaks", ::toggleUnfairStreaks);
-	self addOption(m, "Toggle automatic time extension", ::toggleTime);
 	m = "MainTeam";
 	self addOption(m, "Revive whole team", ::reviveTeam);
 	self addOption(m, "Kill whole team", ::killTeam);
@@ -1154,6 +1154,8 @@ giveEssentialPerks() {
 		//Steady Aim
 		self setPerk("specialty_bulletaccuracy");
 		self setPerk("specialty_fastmeleerecovery");
+		// Remove Second chance
+        self unsetPerk("specialty_pistoldeath");
 	}
 
 	self setPerk("specialty_sprintrecovery");
@@ -1171,7 +1173,6 @@ giveEssentialPerks() {
 
 	if (self.pers["class"] == "CLASS_ASSAULT") {
 		self unsetPerk("specialty_pistoldeath");
-		self unsetPerk("specialty_finalstand");
 		self unsetPerk("specialty_scavenger");
 		self.cac_body_type = level.default_armor["CLASS_LMG"]["body"];
 		self.cac_head_type = self maps\mp\gametypes\_armor::get_default_head();
