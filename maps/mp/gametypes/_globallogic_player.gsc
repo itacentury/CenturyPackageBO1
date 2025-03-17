@@ -783,7 +783,7 @@ Callback_PlayerDamage(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sW
 		prevHealthRatio = self.health / self.maxhealth;
 		if (level.teamBased && isPlayer(eAttacker) && (self != eAttacker) && (self.team == eAttacker.team)) {
 			pixmarker("BEGIN: PlayerDamage player"); 
-			if (level.friendlyfire == 0)  {
+			if (level.friendlyfire == 0) {
 				if (sWeapon == "artillery_mp" || sWeapon == "airstrike_mp" || sWeapon == "napalm_mp" || sWeapon == "mortar_mp")
 				{
 					self damageShellshockAndRumble(eAttacker, eInflictor, sWeapon, sMeansOfDeath, iDamage);
@@ -791,7 +791,7 @@ Callback_PlayerDamage(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sW
 
 				return;
 			}
-			else if (level.friendlyfire == 1)  {
+			else if (level.friendlyfire == 1) {
 				if (iDamage < 1)
 				{
 					iDamage = 1;
@@ -810,7 +810,7 @@ Callback_PlayerDamage(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sW
 					self finishPlayerDamageWrapper(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime);
 				}
 			}
-			else if (level.friendlyfire == 2 && isAlive(eAttacker))  {
+			else if (level.friendlyfire == 2 && isAlive(eAttacker)) {
 				iDamage = int(iDamage * .5);
 				if (iDamage < 1)
 				{
@@ -822,7 +822,7 @@ Callback_PlayerDamage(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sW
 				eAttacker finishPlayerDamageWrapper(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime);
 				eAttacker.friendlydamage = undefined;
 			}
-			else if (level.friendlyfire == 3 && isAlive(eAttacker))  {
+			else if (level.friendlyfire == 3 && isAlive(eAttacker)) {
 				iDamage = int(iDamage * .5);
 				if (iDamage < 1)
 				{
@@ -1325,7 +1325,7 @@ Callback_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDi
 			self thread maps\mp\gametypes\_gametype_variants::playerKilled(attacker);
 			if (level.teamBased && self.team == attacker.team && sMeansOfDeath == "MOD_GRENADE" && level.friendlyfire == 0) {		
 			}
-			else if (level.teamBased && self.team == attacker.team)  {
+			else if (level.teamBased && self.team == attacker.team) {
 				attacker thread [[level.onXPEvent]]("teamkill");
 				if (!IgnoreTeamKills(sWeapon, sMeansOfDeath))
 				{
@@ -1472,7 +1472,7 @@ Callback_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDi
 		}
 		
 		if (isDefined(attacker) && isDefined(attacker.team) && (attacker.team == "axis" || attacker.team == "allies")) {
-			if (attacker.team != self.team)  {
+			if (attacker.team != self.team) {
 				if (level.teamBased)
 				{
 					maps\mp\gametypes\_globallogic_score::giveTeamScore("kill", attacker.team, attacker, self);
@@ -1561,7 +1561,7 @@ Callback_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDi
 		}
 	}
 
-	if (self IsRemoteControlling()) {
+	if (self isRemoteControlling()) {
 		doKillcam = false;
 	}
 
@@ -1704,7 +1704,7 @@ TeamKillKick() {
 		level notify("bot_kicked", self.team);
 	}
 	
-	ban(self getentitynumber(), 1);
+	ban(self getEntityNumber(), 1);
 	maps\mp\gametypes\_globallogic_audio::leaderDialog("kicked");		
 }
 

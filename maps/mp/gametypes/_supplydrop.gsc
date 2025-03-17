@@ -351,8 +351,8 @@ isSupplyDropGrenadeAllowed(hardpointType, killstreakWeapon) {
 	}
 
 	if (self maps\mp\_killstreakrules::isKillstreakAllowed(hardpointType, self.team) == false) {
-		if (isDefined(self.lastStand) && self.lastStand && isDefined(self.laststandpistol) && self hasWeapon(self.laststandpistol)) {
-			self switchToWeapon(self.laststandpistol);
+		if (isDefined(self.lastStand) && self.lastStand && isDefined(self.lastStandPistol) && self hasWeapon(self.lastStandPistol)) {
+			self switchToWeapon(self.lastStandPistol);
 		}
 		else if (isDefined(self.lastNonKillstreakWeapon) && self.lastNonKillstreakWeapon != killstreakWeapon && self.lastNonKillstreakWeapon != "none") {
 			self switchToWeapon(self.lastNonKillstreakWeapon);

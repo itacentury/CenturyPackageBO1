@@ -577,7 +577,7 @@ menuClass(response) {
 			self maps\mp\gametypes\_hardpoints::giveOwnedKillstreak();
 		}
 		else {
-			if ((level.inGracePeriod && !self.hasDoneCombat) || supplyStationClassChange)  {
+			if ((level.inGracePeriod && !self.hasDoneCombat) || supplyStationClassChange) {
 				self maps\mp\gametypes\_class::setClass(self.pers["class"]);
 				self.tag_stowed_back = undefined;
 				self.tag_stowed_hip = undefined;
@@ -600,11 +600,11 @@ menuClass(response) {
 		}
 
 		if (self.sessionstate != "spectator") {
-			if (self IsInVehicle()) {
+			if (self isInVehicle()) {
 				return;
 			}
 
-			if (self IsRemoteControlling()) {
+			if (self isRemoteControlling()) {
 				return;
 			}
 		}
