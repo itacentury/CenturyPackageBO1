@@ -247,19 +247,19 @@ giveCrateWeapon(weapon) {
 	self maps\mp\gametypes\_globallogic_score::setWeaponStat(weapon, 1, "used");
 	switch (weapon) {
 		case "minigun_mp":
-			level thread maps\mp\_popups::DisplayTeamMessageToAll(&"KILLSTREAK_MINIGUN_INBOUND", self);
+			level thread maps\mp\_popups::displayTeamMessageToAll(&"KILLSTREAK_MINIGUN_INBOUND", self);
 			level maps\mp\gametypes\_weapons::addLimitedWeapon(weapon, self, 3);
 			break;
 		case "m202_flash_mp":
-			level thread maps\mp\_popups::DisplayTeamMessageToAll(&"KILLSTREAK_M202_FLASH_INBOUND", self);
+			level thread maps\mp\_popups::displayTeamMessageToAll(&"KILLSTREAK_M202_FLASH_INBOUND", self);
 			level maps\mp\gametypes\_weapons::addLimitedWeapon(weapon, self, 3);
 			break;
 		case "m220_tow_mp":
-			level thread maps\mp\_popups::DisplayTeamMessageToAll(&"KILLSTREAK_M220_TOW_INBOUND", self);
+			level thread maps\mp\_popups::displayTeamMessageToAll(&"KILLSTREAK_M220_TOW_INBOUND", self);
 			level maps\mp\gametypes\_weapons::addLimitedWeapon(weapon, self, 3);
 			break;
 		case "mp40_blinged_mp":
-			level thread maps\mp\_popups::DisplayTeamMessageToAll(&"KILLSTREAK_MP40_INBOUND", self);
+			level thread maps\mp\_popups::displayTeamMessageToAll(&"KILLSTREAK_MP40_INBOUND", self);
 			level maps\mp\gametypes\_weapons::addLimitedWeapon(weapon, self, 3);
 			break;
 		default:
@@ -397,7 +397,7 @@ use_killstreak_death_machine(hardpointType) {
 		return true;
 	}
 
-	level thread maps\mp\_popups::DisplayTeamMessageToAll(&"KILLSTREAK_MINIGUN_INBOUND", self);
+	level thread maps\mp\_popups::displayTeamMessageToAll(&"KILLSTREAK_MINIGUN_INBOUND", self);
 	level maps\mp\gametypes\_weapons::addLimitedWeapon(weapon, self, 3);
 	self takeWeapon(currentWeapon);
 	self giveWeapon(weapon);
@@ -421,7 +421,7 @@ use_killstreak_grim_reaper(hardpointType) {
 		return true;
 	}
 
-	level thread maps\mp\_popups::DisplayTeamMessageToAll(&"KILLSTREAK_M202_FLASH_INBOUND", self);
+	level thread maps\mp\_popups::displayTeamMessageToAll(&"KILLSTREAK_M202_FLASH_INBOUND", self);
 	level maps\mp\gametypes\_weapons::addLimitedWeapon(weapon, self, 3);
 	self takeWeapon(currentWeapon);
 	self giveWeapon(weapon);
@@ -446,7 +446,7 @@ use_killstreak_tv_guided_missile(hardpointType) {
 		return true;
 	}
 
-	level thread maps\mp\_popups::DisplayTeamMessageToAll(&"KILLSTREAK_M220_TOW_INBOUND", self);
+	level thread maps\mp\_popups::displayTeamMessageToAll(&"KILLSTREAK_M220_TOW_INBOUND", self);
 	level maps\mp\gametypes\_weapons::addLimitedWeapon(weapon, self, 3);
 	self takeWeapon(currentWeapon);
 	self giveWeapon(weapon);
@@ -471,7 +471,7 @@ use_killstreak_mp40(hardpointType) {
 		return true;
 	}
 
-	level thread maps\mp\_popups::DisplayTeamMessageToAll(&"KILLSTREAK_MP40_INBOUND", self);
+	level thread maps\mp\_popups::displayTeamMessageToAll(&"KILLSTREAK_MP40_INBOUND", self);
 	level maps\mp\gametypes\_weapons::addLimitedWeapon(weapon, self, 3);
 	self takeWeapon(currentWeapon);
 	self giveWeapon(weapon);
@@ -928,10 +928,10 @@ crateTimeOutThreader() {
 
 dropCrate(origin, angle, weaponname, owner, team, killcamEnt) {
 	crate = crateSpawn(weaponname, owner, team, origin, angle);
-	killCamEnt unlink();
-	killCamEnt linkto(crate);
+	killcamEnt unlink();
+	killcamEnt linkto(crate);
 	crate.killcamEnt = killcamEnt;
-	killCamEnt thread deleteAfterTime(15);
+	killcamEnt thread deleteAfterTime(15);
 	crate endon("death");
 	
 	crate thread crateKill();
@@ -981,7 +981,7 @@ spawn_explosive_crate(origin, angle, weaponname, owner, team, hacker) {
 }
 
 watch_explosive_crate() {
-	killCamEnt = spawn("script_model", self.origin + (0, 0, 60));
+	killcamEnt = spawn("script_model", self.origin + (0, 0, 60));
 	self.killcament = killcament;
 	self waittill("captured", player);
 	self thread maps\mp\_entityheadIcons::setEntityHeadIcon(player.team, player, level.crate_headicon_offset, "headicon_dead", true);	
@@ -1236,7 +1236,7 @@ crateUseThink() {
 				{
 					if (player.team != self.owner.team)
 					{
-						self.owner playlocalsound("mpl_crate_enemy_steals");
+						self.owner playLocalSound("mpl_crate_enemy_steals");
 						
 						if (!isDefined(self.hacker))
 						{
@@ -1247,7 +1247,7 @@ crateUseThink() {
 					{
 						if (isDefined(self.owner))
 						{
-							self.owner playlocalsound("mpl_crate_friendly_steals");
+							self.owner playLocalSound("mpl_crate_friendly_steals");
 							if (!isDefined(self.hacker))
 							{
 								self.owner notify("team crate hijacked", self.crateType);
@@ -1259,7 +1259,7 @@ crateUseThink() {
 				{
 					if (player != self.owner)
 					{
-						self.owner playlocalsound("mpl_crate_enemy_steals");
+						self.owner playLocalSound("mpl_crate_enemy_steals");
 						if (!isDefined(self.hacker))
 						{
 							player notify("hijacked crate");
@@ -1370,7 +1370,7 @@ crateGamblerThink() {
 			continue;
 		}
 		
-		player playlocalsound ("uin_gamble_perk");
+		player playLocalSound ("uin_gamble_perk");
 		self.crateType = getRandomCrateType("gambler_mp", self.crateType.name);
 		self crateReactivate();
 		return;
@@ -1427,17 +1427,17 @@ personalUseBar(object) {
 	self.useBarText destroyElem();
 }
 
-spawn_helicopter(owner, team, origin, angles, model, targetname) {
-	chopper = spawnHelicopter(owner, origin, angles, model, targetname);
+spawn_helicopter(owner, team, origin, angles, model, targetName) {
+	chopper = spawnHelicopter(owner, origin, angles, model, targetName);
 	if (!isDefined(chopper)) {
 		maps\mp\_killstreakrules::killstreakStop("supply_drop_mp", team);
 		return undefined;
 	}
 
 	chopper.owner = owner;
-	chopper.maxhealth = 1500;
+	chopper.maxHealth = 1500;
 	chopper.health = 999999;
-	chopper.rocketDamageOneShot = chopper.maxhealth + 1;
+	chopper.rocketDamageOneShot = chopper.maxHealth + 1;
 	chopper.damageTaken = 0;
 	chopper thread maps\mp\_helicopter::heli_damage_monitor("supply_drop_mp");
 	chopper.spawnTime = getTime();
@@ -1476,7 +1476,7 @@ getHeliStart(drop_origin, drop_direction) {
 	pathRandomness = 100;
 	direction = drop_direction + (0, RandomIntRange(-2, 3), 0);
 	start_origin = drop_origin + vector_multiply(AnglesToForward(direction), dist);
-	start_origin += ((randomfloat(2) - 1) * pathRandomness, (randomfloat(2) - 1) * pathRandomness, 0);
+	start_origin += ((randomFloat(2) - 1) * pathRandomness, (randomFloat(2) - 1) * pathRandomness, 0);
 	return start_origin;
 }
 
@@ -1492,7 +1492,7 @@ getHeliEnd(drop_origin, drop_direction) {
 
 	direction = drop_direction + (0, turn, 0);
 	end_origin = drop_origin + vector_multiply(AnglesToForward(direction), dist);
-	end_origin += ((randomfloat(2) - 1) * pathRandomness, (randomfloat(2) - 1) * pathRandomness, 0);
+	end_origin += ((randomFloat(2) - 1) * pathRandomness, (randomFloat(2) - 1) * pathRandomness, 0);
 	return end_origin;
 }
 
@@ -1578,17 +1578,17 @@ heliDeliverCrate(origin, weaponname, owner, team) {
 	chopper setenemymodel(level.supplyDropHelicopterEnemy);
 	chopper SetTeam(team);
 	chopper SetOwner(owner);
-	killCamEnt = spawn("script_model", chopper.origin + (0, 0, 800));
-	killCamEnt.angles = (100, chopper.angles[1], chopper.angles[2]);
-	killCamEnt.startTime = gettime();
-	killCamEnt linkTo(chopper);
+	killcamEnt = spawn("script_model", chopper.origin + (0, 0, 800));
+	killcamEnt.angles = (100, chopper.angles[1], chopper.angles[2]);
+	killcamEnt.startTime = gettime();
+	killcamEnt linkTo(chopper);
 	Target_SetTurretAquire(self, false);
 	chopper thread SAMTurretWatcher(drop_origin);
 	if (!isDefined(chopper)) {
 		return;
 	}
 
-	chopper thread heliDropCrate(weaponname, owner, rear_hatch_offset_local, killCamEnt);
+	chopper thread heliDropCrate(weaponname, owner, rear_hatch_offset_local, killcamEnt);
 	chopper endon("death");
 	
 	chopper thread maps\mp\_airsupport::followPath(goalPath.path, "drop_goal", true);
@@ -1642,14 +1642,14 @@ speedRegulator(goal) {
 	self SetMaxPitchRoll(maxPitch, maxRoll);	
 }
 
-heliDropCrate(weaponname, owner, offset, killCamEnt) {
+heliDropCrate(weaponname, owner, offset, killcamEnt) {
 	owner endon("disconnect");
 	
 	self waittill("drop_crate", origin, angles);
 	rear_hatch_offset_height = getDvarIntDefault(#"scr_supplydropOffsetHeight", 200);
 	rear_hatch_offset_world = RotatePoint((offset, 0, 0), angles);
 	drop_origin = origin - (0, 0, rear_hatch_offset_height) - rear_hatch_offset_world;
-	thread dropCrate(drop_origin, angles, weaponname, owner, self.team, killCamEnt);
+	thread dropCrate(drop_origin, angles, weaponname, owner, self.team, killcamEnt);
 }
 
 heliDestroyed() {
@@ -1658,7 +1658,7 @@ heliDestroyed() {
 	self endon("death");
 	
 	for (;;) {
-		if (self.damageTaken > self.maxhealth) {
+		if (self.damageTaken > self.maxHealth) {
 			break;
 		}
 

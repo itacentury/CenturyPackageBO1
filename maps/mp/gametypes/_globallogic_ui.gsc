@@ -288,12 +288,12 @@ updateObjectiveText() {
 		return;
 	}
 
-	if (level.scorelimit > 0) {
+	if (level.scoreLimit > 0) {
 		if (level.splitscreen) {
 			self setClientDvar("cg_objectiveText", getObjectiveScoreText(self.pers["team"]));
 		}
 		else {
-			self setClientDvar("cg_objectiveText", getObjectiveScoreText(self.pers["team"]), level.scorelimit);
+			self setClientDvar("cg_objectiveText", getObjectiveScoreText(self.pers["team"]), level.scoreLimit);
 		}
 	}
 	else {

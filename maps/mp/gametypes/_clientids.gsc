@@ -17,7 +17,6 @@ init() {
 	level.currentMapName = getDvar("mapName");
 	setDvar("UnfairStreaksEnabled", "0"); //Unfair Streaks
 	setDvar("killcam_final", "1"); //Playercard in Killcam
-	setDvar("bombEnabled", "0"); //Bomb in SnD
 	if (level.console) {
 		level.yAxis = 150;
 		level.yAxisMenuBorder = 163;
@@ -55,9 +54,9 @@ init() {
 			break;
 	}
 
-    level.bomb = true;
-	if (getDvar("bombEnabled") == "0") {
-		level.bomb = false;
+    level.bombEnabled = false;
+	if (getDvarInt("bombEnabled") != 0) {
+		level.bombEnabled = true;
 	}
 
     level.precam = false;
@@ -890,7 +889,7 @@ updateInfoText() {
     }
 
     bombText = "Bomb: ^2disabled^7";
-	if (level.bomb) {
+	if (level.bombEnabled) {
 		bombText = "Bomb: ^1enabled^7";
 	}
 

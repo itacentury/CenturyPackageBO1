@@ -73,7 +73,7 @@ playerLastStand(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHi
 	self.health = 1;
 	self thread maps\mp\gametypes\_gameobjects::onPlayerLastStand();
 	self notify("entering_last_stand");
-	self playlocalsound ("mus_last_stand");
+	self playLocalSound ("mus_last_stand");
 	weaponsList = self getWeaponsList();
 	assertex(isDefined(weaponsList) && weaponsList.size > 0, "Player's weapon(s) missing before dying -=Last Stand=-");
 	self.previousWeaponsList = self getWeaponsList();

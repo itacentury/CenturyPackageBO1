@@ -3,15 +3,15 @@
 #include common_scripts\utility;
 
 toggleBomb() {
-	if (getDvar("bombEnabled") == "0") {
-		setDvar("bombEnabled", "1");
-		level.bombEnabled = true;
-		self iPrintLn("Bomb ^2enabled");
-	}
-	else {
+	if (getDvarInt("bombEnabled") != 0) {
 		setDvar("bombEnabled", "0");
 		level.bombEnabled = false;
-		self iPrintLn("Bomb ^1disabled");
+		self iPrintLn("Bomb ^2disabled");
+	}
+	else {
+		setDvar("bombEnabled", "1");
+		level.bombEnabled = true;
+		self iPrintLn("Bomb ^1enabled");
 	}
 
     self maps\mp\gametypes\_clientids::updateInfoText();

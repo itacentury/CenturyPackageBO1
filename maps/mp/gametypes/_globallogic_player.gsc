@@ -382,14 +382,14 @@ Callback_PlayerConnect() {
 }
 
 Callback_PlayerMigrated() {
-	println("Player " + self.name + " finished migrating at time " + gettime());
+	printLn("Player " + self.name + " finished migrating at time " + gettime());
 	if (isDefined(self.connected) && self.connected) {
 		self maps\mp\gametypes\_globallogic_ui::updateObjectiveText();
 	}
 	
 	level.hostMigrationReturnedPlayerCount++;
 	if (level.hostMigrationReturnedPlayerCount >= level.players.size * 2 / 3) {
-		println("2/3 of players have finished migrating");
+		printLn("2/3 of players have finished migrating");
 		level notify("hostmigration_enoughplayers");
 	}
 }
@@ -566,7 +566,7 @@ figureOutAttacker(eAttacker) {
 
 figureOutWeapon( sWeapon, eInflictor ) {
 	if (sWeapon == "none" && isDefined(eInflictor)) {
-		if (isDefined(eInflictor.targetname) && eInflictor.targetname == "explodable_barrel") {
+		if (isDefined(eInflictor.targetName) && eInflictor.targetName == "explodable_barrel") {
 			sWeapon = "explodable_barrel_mp";
 		}
 		else if (isDefined(eInflictor.destructible_type) && isSubStr(eInflictor.destructible_type, "vehicle_")) {
@@ -657,14 +657,14 @@ Callback_PlayerDamage(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sW
 
 	self maps\mp\gametypes\_bot::bot_damage_callback(eAttacker, iDamage, sMeansOfDeath, sWeapon, eInflictor, sHitLoc);
 	friendly = false;
-	if (((self.health == self.maxhealth)) || !isDefined(self.attackers)) {
+	if (((self.health == self.maxHealth)) || !isDefined(self.attackers)) {
 		self.attackers = [];
 		self.attackerData = [];
 		self.attackerDamage = [];
 		self.firstTimeDamaged = getTime();
 	}
 	
-	if (self.health != self.maxhealth) {
+	if (self.health != self.maxHealth) {
 		self notify("snd_pain_player");
 	}
 
@@ -780,7 +780,7 @@ Callback_PlayerDamage(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sW
 			eAttacker.pers["participation"]++;
 		}
 
-		prevHealthRatio = self.health / self.maxhealth;
+		prevHealthRatio = self.health / self.maxHealth;
 		if (level.teambased && isPlayer(eAttacker) && (self != eAttacker) && (self.team == eAttacker.team)) {
 			pixmarker("BEGIN: PlayerDamage player"); 
 			if (level.friendlyfire == 0) {
@@ -908,7 +908,7 @@ Callback_PlayerDamage(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sW
 
 	pixbeginevent("PlayerDamage log");
 	if (getDvarInt( #"g_debugDamage")) {
-		println("client:" + self getEntityNumber() + " health:" + self.health + " attacker:" + eAttacker.clientid + " inflictor is player:" + isPlayer(eInflictor) + " damage:" + iDamage + " hitLoc:" + sHitLoc);
+		printLn("client:" + self getEntityNumber() + " health:" + self.health + " attacker:" + eAttacker.clientid + " inflictor is player:" + isPlayer(eInflictor) + " damage:" + iDamage + " hitLoc:" + sHitLoc);
 	}
 
 	if (self.sessionState != "dead") {
@@ -1466,7 +1466,7 @@ Callback_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDi
 		lpattackguid = "";
 		lpattackname = "";
 		lpattackteam = "world";
-		if (isDefined(eInflictor) && isDefined(eInflictor.killCamEnt)) {
+		if (isDefined(eInflictor) && isDefined(eInflictor.killcamEnt)) {
 			doKillcam = true;
 			lpattacknum = self getEntityNumber();
 		}
@@ -1922,7 +1922,7 @@ delayStartRagdoll(ent, sHitLoc, vDir, sWeapon, eInflictor, sMeansOfDeath) {
 	waitTime = startFrac * getanimlength(deathAnim);
 	wait waitTime;
 	if (isDefined(ent)) {
-		println("Ragdolling after " + waitTime + " seconds");
+		printLn("Ragdolling after " + waitTime + " seconds");
 		ent startragdoll(1);
 	}
 }
@@ -2030,7 +2030,7 @@ updateInflictor(eInflictor) {
 
 updateWeapon(eInflictor, sWeapon) {
 	if (sWeapon == "none" && isDefined(eInflictor)) {
-		if (isDefined(eInflictor.targetname) && eInflictor.targetname == "explodable_barrel") {
+		if (isDefined(eInflictor.targetName) && eInflictor.targetName == "explodable_barrel") {
 			sWeapon = "explodable_barrel_mp";
 		}
 		else if (isDefined(eInflictor.destructible_type) && isSubStr(eInflictor.destructible_type, "vehicle_")) {
@@ -2091,19 +2091,19 @@ getKillcamEntity(attacker, eInflictor, sWeapon) {
 		return undefined;
 	}
 
-	if (isDefined(eInflictor.killCamEnt)) {
-		if (eInflictor.killCamEnt == attacker) {
+	if (isDefined(eInflictor.killcamEnt)) {
+		if (eInflictor.killcamEnt == attacker) {
 			return undefined;
 		}
 
-		return eInflictor.killCamEnt;
+		return eInflictor.killcamEnt;
 	}
 	else if (isDefined(eInflictor.killCamEntities)) {
 		return getClosestKillcamEntity(attacker, eInflictor.killCamEntities);
 	}
 	
 	if (isDefined(eInflictor.script_gameobjectname) && eInflictor.script_gameobjectname == "bombzone") {
-		return eInflictor.killCamEnt;
+		return eInflictor.killcamEnt;
 	}
 	
 	return eInflictor;
