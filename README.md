@@ -132,7 +132,7 @@ You can launch it throught the "mods" folder as bo1 on pc has mods support.
         Removes Ghost Perk from the Player
   
 ## Background features _without ON/OFF Toggle_
-* Class can be changed at any time.
+* Class can be changed at any time. (Snd only)
 * Carepackage stall is always possible with any carepackage.
 * Tactical insertion cannot be destroyed by other players.
 * Tactical insertion can be used in FFA.
