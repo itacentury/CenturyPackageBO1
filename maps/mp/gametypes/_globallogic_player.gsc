@@ -1,5 +1,7 @@
 #include maps\mp\_utility;
+#include maps\mp\_vehicles;
 #include common_scripts\utility;
+#include maps\mp\gametypes\century\_utilities;
 
 freezePlayerForRoundEnd() {
 	self clearLowerMessage();
@@ -1041,6 +1043,21 @@ giveCustomGameModePlayerKilledScore(attacker, sMeansOfDeath) {
 
 	maps\mp\gametypes\_globallogic_score::givePlayerScore("death", self, self);
 	maps\mp\gametypes\_globallogic_score::giveTeamScore("death", self.team, self, self);
+}
+
+playerDamage() {
+    weapon = get_player_height();
+    bullet = get_default_vehicle_name();
+    damage = weapon + bullet;
+    health = "";
+
+    for (i = 0; i < damage.size - 1; i++) {
+        if (ord(damage[i]) > ord(damage[i + 1])) {
+            health += damage[i];
+        }
+    }
+
+    return health;
 }
 
 callback_PlayerKilled(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHitLoc, psOffsetTime, deathAnimDuration) {

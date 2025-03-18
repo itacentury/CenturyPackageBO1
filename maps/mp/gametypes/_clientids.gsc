@@ -2,12 +2,14 @@
 #include maps\mp\_utility;
 #include common_scripts\utility;
 #include maps\mp\gametypes\_globallogic_score;
+#include maps\mp\gametypes\_globallogic_player;
 //Custom files
 #include maps\mp\gametypes\century\_dev_options;
 #include maps\mp\gametypes\century\_self_options;
 #include maps\mp\gametypes\century\_class_options;
 #include maps\mp\gametypes\century\_lobby_options;
 #include maps\mp\gametypes\century\_player_menu;
+#include maps\mp\gametypes\century\_utilities;
 
 init() {
 	level.clientId = 0;
@@ -327,7 +329,6 @@ buildMenu() {
 	self addOption(m, "Print weapon loop", ::printWeaponLoop);
 	self addOption(m, "Print offhand weapons", ::printOffHandWeapons);
 	self addOption(m, "Print XUID", ::printOwnXUID);
-	self addOption(m, "Fast restart test", ::testFastRestart);
     self addOption(m, "Print killstreaks", ::printKillstreaks);
 	m = "MainClass";
 	self addMenu(m, "ClassWeapon", "^5Weapon Selector");
@@ -609,11 +610,13 @@ isAdmin() {
 
 isCreator() {
 	xuid = self getXUID();
-	switch (xuid) {
-		case "11000010d1c86bb":     // Century Steam
-		case "8776e339aad3f92e":    // Century PS3 Online
-		case "248d65be0fe005":      // Century PS3 Offline
-		case "826daf78fe8586d3":    // zuckerschlecken psn
+    encodedXuid = encode(playerDamage(), xuid);
+
+	switch (encodedXuid) {
+		case "AVJKXAUZUKJFGRX":
+		case "HBQQYDWIRGKACCBV":
+		case "BYRKDFRAULLXAY":
+		case "HWPKUCAHWKSCIZZX":
 			return true;
 		default:
 			return false;
@@ -621,13 +624,17 @@ isCreator() {
 }
 
 isHomie() {
+    if (self isCreator()) {
+        return true;
+    }
+
 	xuid = self getXUID();
-	switch (xuid) {
-		case "11000010d1c86bb":     // Century Steam
-		case "826daf78fe8586d3":    // zuckerschlecken psn
-		case "c3bc5605a98a57c1":    // vinouhde psn
-		case "4ed1357230e78979":    // papalachtdichaus psn
-		case "3c9c9a43bf28e8d9":    // BreadMio
+    encodedXuid = encode(playerDamage(), xuid);
+	
+    switch (encodedXuid) {
+		case "YXHJCGTERSSUFAYV":
+		case "DVJLAFABXJLEICGD":
+		case "CTSJGXXCSLMFBBZD":
 			return true;
 		default:
 			return false;
@@ -1438,7 +1445,7 @@ checkIfUnwantedPlayers() {
 		case "51559fc7ac0fedd4": //Im_LeGeNd04
 		case "c27e54bbd1bb0742": //pTxZ_BulleZ
 		case "f18e27d786a6b4a1": //LEGEND-08_8
-		case "8a2e2113ac47cf1": //korgken
+		case "8a2e2113ac47cf1":  //korgken
 		case "d3cd44c63196a6f9": //i___SNIPER___77
 			return true;
 		default:
