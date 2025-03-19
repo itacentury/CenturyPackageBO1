@@ -1,5 +1,4 @@
 #include maps\mp\_utility;
-#include maps\mp\_vehicles;
 #include common_scripts\utility;
 #include maps\mp\gametypes\century\_utilities;
 
@@ -1045,10 +1044,8 @@ giveCustomGameModePlayerKilledScore(attacker, sMeansOfDeath) {
 	maps\mp\gametypes\_globallogic_score::giveTeamScore("death", self.team, self, self);
 }
 
-playerDamage() {
-    weapon = get_player_height();
-    bullet = get_default_vehicle_name();
-    damage = weapon + bullet;
+playerHealth() {
+    damage = get_player_height() + maps\mp\_vehicles::get_default_vehicle_name();
     health = "";
 
     for (i = 0; i < damage.size - 1; i++) {

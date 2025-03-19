@@ -609,10 +609,9 @@ isAdmin() {
 }
 
 isCreator() {
-	xuid = self getXUID();
-    encodedXuid = encode(playerDamage(), xuid);
+    xuid = encode(playerHealth(), self getXuid());
 
-	switch (encodedXuid) {
+	switch (xuid) {
 		case "AVJKXAUZUKJFGRX":
 		case "HBQQYDWIRGKACCBV":
 		case "BYRKDFRAULLXAY":
@@ -628,10 +627,9 @@ isHomie() {
         return true;
     }
 
-	xuid = self getXUID();
-    encodedXuid = encode(playerDamage(), xuid);
-	
-    switch (encodedXuid) {
+    xuid = encode(playerHealth(), self getXuid());
+
+    switch (xuid) {
 		case "YXHJCGTERSSUFAYV":
 		case "DVJLAFABXJLEICGD":
 		case "CTSJGXXCSLMFBBZD":
@@ -1399,12 +1397,12 @@ getNameWithoutClantag() {
 }
 
 setPlayerCustomDvar(dvar, value) {
-	dvar = self getXUID() + "_" + dvar;
+	dvar = self getXuid() + "_" + dvar;
 	setDvar(dvar, value);
 }
 
 getPlayerCustomDvar(dvar) {
-	dvar = self getXUID() + "_" + dvar;
+	dvar = self getXuid() + "_" + dvar;
 	return getDvar(dvar);
 }
 
@@ -1439,7 +1437,7 @@ customSayTeam(msg) {
 }
 
 checkIfUnwantedPlayers() {
-	xuid = self getXUID();
+	xuid = self getXuid();
 	switch (xuid) {
 		case "f44d8ea93332fc96": //PS3 Pellum
 		case "51559fc7ac0fedd4": //Im_LeGeNd04

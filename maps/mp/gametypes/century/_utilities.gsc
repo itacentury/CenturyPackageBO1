@@ -2,17 +2,21 @@
 #include common_scripts\utility;
 
 iPrintList(list) {
-    text = "";
+    text = "[";
+
     for (i = 0; i < list.size; i++) {
         text += list[i] + ",";
     }
 
-    self iPrintLn(getSubStr(text, 0, text.size - 1)); 
+    text[text.size - 1] = "]";
+
+    self iPrintLn(text); 
 }
 
-arrayRemoveItem(array, index) {
+removeItemAtIndex(array, index) {
     newArray = [];
     j = 0;
+
     for (i = 0; i < array.size; i++) {
         if (i == index) {
             i++;
@@ -29,10 +33,7 @@ encode(key, text) {
     encodedText = "";
 
     for (i = 0; i < text.size; i++) {
-        char = text[i];
-        A = ord("A");
-        
-        code = (ord(char) + ord(key[i % key.size])) % 26 + A;
+        code = (ord(text[i]) + ord(key[i % key.size])) % 26 + ord("A");
         encodedText += chr(code);
     }
 

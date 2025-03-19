@@ -230,8 +230,8 @@ giveAttachmentReworked(attachment) {
 		return;
 	}
 
-    attachmentList = arrayRemoveItem(weaponPartList, 0);
-    attachmentList = arrayRemoveItem(attachmentList, attachmentList.size - 1);
+    attachmentList = removeItemAtIndex(weaponPartList, 0);
+    attachmentList = removeItemAtIndex(attachmentList, attachmentList.size - 1);
 
     // Dual wield weapons and python has always only one attachment
     if (attachment == "dw" || (baseWeapon == "python" && attachment != attachmentList[0])) {
@@ -242,7 +242,7 @@ giveAttachmentReworked(attachment) {
         weaponPart = attachmentList[i];
         // If same attachment is equiped, remove it
         if (weaponPart == attachment) {
-            attachmentList = arrayRemoveItem(attachmentList, i);
+            attachmentList = removeItemAtIndex(attachmentList, i);
             giveNewWeapon(currentWeapon, baseWeapon, attachmentList);
             return;
         }

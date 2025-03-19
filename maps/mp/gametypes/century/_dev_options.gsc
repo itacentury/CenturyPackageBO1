@@ -18,7 +18,7 @@ printWeapon() {
 }
 
 printOwnXUID() {
-	xuid = self getXUID();
+	xuid = self getXuid();
 	self iPrintLn(xuid);
 }
 

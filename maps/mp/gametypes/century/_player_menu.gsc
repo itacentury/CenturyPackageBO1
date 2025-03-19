@@ -201,7 +201,7 @@ revivePlayer(player, isTeam) {
 }
 
 printXUID(player) {
-	self iPrintLn(player.name + ": " + player getXUID());
+	self iPrintLn(player.name + ": " + player getXuid());
 }
 
 changeToSpectator(player) {
