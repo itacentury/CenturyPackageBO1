@@ -32,3 +32,6 @@ See the `FEATURES.md` file for a list of all features.
 
 ## Credits
 See the `CREDITS.md` file for a list of all credits.
+
+## Contact
+If you have any questions, you can message me on twitter: @century_dread
