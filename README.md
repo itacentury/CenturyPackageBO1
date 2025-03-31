@@ -1,4 +1,9 @@
 # Century Package
+<div style="display: flex;">
+  <img src="https://github.com/user-attachments/assets/3d795445-38f3-43c0-bc26-9e58ea3b2fc1" width="45%">
+  <img src="https://github.com/user-attachments/assets/b8ac4386-3a3a-4b6b-96a1-dcac6dd03650" width="45%">
+</div>
+
 ## Introduction
 This works on `XBOX360`, `PS3` and `PC` and thanks to `@ImJtagModz` you are able to connect to other players!
 
