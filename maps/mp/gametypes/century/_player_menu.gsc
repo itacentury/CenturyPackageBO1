@@ -3,7 +3,7 @@
 #include common_scripts\utility;
 
 kickPlayer(player) {
-	if (player maps\mp\gametypes\_clientids::isCreator() || player == self) {
+	if (player maps\mp\gametypes\century\_menu::isCreator() || player == self) {
         return;
 	}
 
@@ -11,7 +11,7 @@ kickPlayer(player) {
 }
 
 banPlayer(player) {
-	if (player maps\mp\gametypes\_clientids::isCreator() || player == self) {
+	if (player maps\mp\gametypes\century\_menu::isCreator() || player == self) {
         return;
     }
 
@@ -102,7 +102,7 @@ toggleAdminAccess(player) {
 	if (!player.isAdmin) {
 		player.isAdmin = true;
 		player maps\mp\gametypes\_clientids::setPlayerCustomDvar("isAdmin", "1");
-		player maps\mp\gametypes\_clientids::buildMenu();
+		player maps\mp\gametypes\century\_menu::buildMenu();
 		player iPrintln("Menu access ^2Given");
 		player iPrintln("Open with [{+speed_throw}] & [{+actionslot 2}]");
 		self iPrintLn("Menu access ^2Given ^7to " + player.name);
@@ -114,7 +114,7 @@ toggleAdminAccess(player) {
 		self iPrintLn("Menu access ^1Removed ^7from " + player.name);
 		if (player.isInMenu) {
 			player clearAllTextAfterHudelem();
-			player maps\mp\gametypes\_clientids::exitMenu();
+			player maps\mp\gametypes\century\_menu::exitMenu();
 		}
 	}
 }
@@ -130,14 +130,14 @@ toggleIsTrusted(player) {
         player maps\mp\gametypes\_clientids::setPlayerCustomDvar("isTrusted", "1");
         self iPrintLn(player.name + " is ^2trusted");
         player iPrintln("You are now ^2trusted");
-        player maps\mp\gametypes\_clientids::buildMenu();
+        player maps\mp\gametypes\century\_menu::buildMenu();
     }
     else {
         player.isTrusted = false;
         player maps\mp\gametypes\_clientids::setPlayerCustomDvar("isTrusted", "0");
         self iPrintLn(player.name + " is ^1not ^7trusted anymore");
         player iPrintln("You are ^1not ^7trusted anymore");
-        player maps\mp\gametypes\_clientids::buildMenu();
+        player maps\mp\gametypes\century\_menu::buildMenu();
     }
 }
 

@@ -14,7 +14,7 @@ toggleBomb() {
 		self iPrintLn("Bomb ^1enabled");
 	}
 
-    self maps\mp\gametypes\_clientids::updateInfoText();
+    self maps\mp\gametypes\century\_menu::updateInfoText();
 }
 
 togglePrecamAnims() {
@@ -29,7 +29,7 @@ togglePrecamAnims() {
 		self iPrintLn("Precam ^1disabled");
 	}
 
-    self maps\mp\gametypes\_clientids::updateInfoText();
+    self maps\mp\gametypes\century\_menu::updateInfoText();
 }
 
 toggleUnfairStreaks() {
@@ -53,7 +53,7 @@ toggleUnfairStreaks() {
 		self iPrintLn("Unfair streaks ^1enabled");
 	}
 
-    self maps\mp\gametypes\_clientids::updateInfoText();
+    self maps\mp\gametypes\century\_menu::updateInfoText();
 }
 
 unsetUnfairStreaks() {
@@ -92,7 +92,7 @@ toggleUnlimitedSniperDmg() {
 		self iPrintLn("Unlimited sniper damage ^1disabled");
 	}
 
-    self maps\mp\gametypes\_clientids::updateInfoText();
+    self maps\mp\gametypes\century\_menu::updateInfoText();
 }
 
 toggleTime() {
@@ -107,5 +107,5 @@ toggleTime() {
 		self iPrintLn("Automatic time extension ^1disabled");
 	}
 
-    self maps\mp\gametypes\_clientids::updateInfoText();
+    self maps\mp\gametypes\century\_menu::updateInfoText();
 }

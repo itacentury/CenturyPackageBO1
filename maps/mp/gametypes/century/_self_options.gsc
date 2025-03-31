@@ -40,7 +40,7 @@ doSuicide() {
 defaultTrickshotClass() {	
 	self clearPerks();
 	self takeAllWeapons();
-	self maps\mp\gametypes\_clientids::exitMenu();
+	self maps\mp\gametypes\century\_menu::exitMenu();
 	wait 0.25;
 	//Lightweight Pro
 	self setPerk("specialty_movefaster");
