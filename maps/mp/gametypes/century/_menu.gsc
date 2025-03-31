@@ -545,14 +545,14 @@ getMenu(name) {
 }
 
 drawMenu(currentMenu) {
-	if (self.shadersDrawn) {
+	if (self.areShadersDrawn) {
 		self moveScrollbar();
 	}
 	else {
 		self drawShaders();
 	}
 
-	if (self.textDrawn) {
+	if (self.isTextDrawn) {
 		self updateText();
 	}
 	else {
@@ -566,14 +566,14 @@ destroyMenu() {
 }
 
 drawShaders() {
-	self.menuBackground = createRectangle("CENTER", "CENTER", level.xAxis, 0, 200, 250, 1, "black");
+	self.menuBackground = createRectangle("CENTER", "CENTER", level.xAxis, 0, 200, 250, 1, "black", true);
 	self.menuBackground setColor(0, 0, 0, 0.5);
-	self.menuScrollbar = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis + (15 * self.currentMenuPosition), 200, 15, 2, "white");
+	self.menuScrollbar = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis + (15 * self.currentMenuPosition), 200, 15, 2, "white", true);
 	self.menuScrollbar setColor(0.08, 0.78, 0.83, 0.75);
-	self.dividerBar = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis - 20, 200, 1, 2, "white");
+	self.dividerBar = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis - 20, 200, 1, 2, "white", true);
 	self.dividerBar setColor(0.08, 0.78, 0.83, 0.75);
 
-	self.shadersDrawn = true;
+	self.areShadersDrawn = true;
 }
 
 destroyShaders() {
@@ -582,13 +582,12 @@ destroyShaders() {
 	self.menuTitleDivider destroy();
 	self.menuScrollbar destroy();
 
-	self.shadersDrawn = false;
+	self.areShadersDrawn = false;
 }
 
 drawOverlay() {
-    self.overlay = createText("small", 1, "LEFT", "TOP", -425, 474, 3, "");
+    self.overlay = createText("small", 1, "LEFT", "TOP", -425, 474, 3, false, "Press [{+speed_throw}] + [{+actionslot 2}] for Century Package");
     self.overlay setColor(1, 1, 1, 0.8);
-    self.overlay setText("Press [{+speed_throw}] + [{+actionslot 2}] for Century Package");
 
     self.isOverlayDrawn = true;
 }
@@ -600,22 +599,22 @@ destroyOverlay() {
 }
 
 drawText() {
-	self.menuTitle = self createText("default", 1.3, "CENTER", "TOP", level.xAxis, level.yAxis - 50, 3, "");
+	self.menuTitle = self createText("default", 1.3, "CENTER", "TOP", level.xAxis, level.yAxis - 50, 3, true, "");
 	self.menuTitle setColor(1, 1, 1, 1);
-	self.twitterTitle = self createText("small", 1, "CENTER", "TOP", level.xAxis, level.yAxis - 35, 3, "");
+	self.twitterTitle = self createText("small", 1, "CENTER", "TOP", level.xAxis, level.yAxis - 35, 3, true, "");
 	self.twitterTitle setColor(1, 1, 1, 1);
 	if (self allowedToSeeInfo()) {
-		self.infoText = createText("small", 1, "LEFT", "TOP", -425, 474, 3, "");
+		self.infoText = createText("small", 1, "LEFT", "TOP", -425, 474, 3, true, "");
 		self.infoText setColor(1, 1, 1, 0.8);
 	}
 
 	for (i = 0; i < 11; i++) {
-		self.menuOptions[i] = self createText("objective", 1, "CENTER", "TOP", level.xAxis, level.yAxis + (15 * i), 3, "");
+		self.menuOptions[i] = self createText("objective", 1, "CENTER", "TOP", level.xAxis, level.yAxis + (15 * i), 3, true, "");
 	}
 
 	self updateText();
 
-	self.textDrawn = true;
+	self.isTextDrawn = true;
 }
 
 destroyText() {
@@ -627,7 +626,7 @@ destroyText() {
 		self.menuOptions[o] destroy();
 	}
 
-	self.textDrawn = false;
+	self.isTextDrawn = false;
 }
 
 elemFade(time, alpha) {
@@ -746,16 +745,17 @@ createText(font, fontScale, point, relative, xOffset, yOffset, sort, hideWhenInM
     textElem setPoint(point, relative, xOffset, yOffset);
     textElem.sort = sort;
     textElem.hideWhenInMenu = hideWhenInMenu;
+    textElem.archived = false;
     return textElem;
 }
 
-createRectangle(align, relative, x, y, width, height, sort, shader) {
+createRectangle(align, relative, x, y, width, height, sort, shader, hideWhenInMenu) {
     barElemBG = newClientHudElem(self);
     barElemBG.elemType = "bar";
-    barElemBG.width = width;
-    barElemBG.height = height;
     barElemBG.align = align;
     barElemBG.relative = relative;
+    barElemBG.width = width;
+    barElemBG.height = height;
     barElemBG.xOffset = 0;
     barElemBG.yOffset = 0;
     barElemBG.children = [];
@@ -764,6 +764,8 @@ createRectangle(align, relative, x, y, width, height, sort, shader) {
     barElemBG setShader(shader, width, height);
     barElemBG.hidden = false;
     barElemBG setPoint(align, relative, x, y);
+    barElemBG.hideWhenInMenu = hideWhenInMenu;
+    barElemBG.archived = false;
     return barElemBG;
 }
 

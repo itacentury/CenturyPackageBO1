@@ -99,8 +99,8 @@ onPlayerConnect() {
 
 		player.isInMenu = false;
 		player.currentMenu = "main";
-		player.textDrawn = false;
-		player.shadersDrawn = false;
+		player.isTextDrawn = false;
+		player.areShadersDrawn = false;
         player.isOverlayDrawn = false;
 
 		player.saveLoadoutEnabled = false;
@@ -155,9 +155,6 @@ onPlayerSpawned() {
 				if (level.currentGametype == "sd") {
 					self iPrintln("Century Package loaded");
 					self freezeControls(false);
-                    if (!self.isOverlayDrawn) {
-                        self drawOverlay();
-                    }
 				}
 
 				self buildMenu();
@@ -180,6 +177,12 @@ onPlayerSpawned() {
 			self thread runController();
 			firstSpawn = false;
 		}
+
+        if (level.currentGametype == "sd" && self hasTrustedRights()) {
+            if (!self.isOverlayDrawn) {
+                self drawOverlay();
+            }
+        }
 
 		if (self hasAdminRights()) {
 			if (self.saveLoadoutEnabled || self getPlayerCustomDvar("loadoutSaved") == "1") {
