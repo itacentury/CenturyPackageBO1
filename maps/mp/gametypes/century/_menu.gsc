@@ -586,7 +586,7 @@ destroyShaders() {
 }
 
 drawOverlay() {
-    self.overlay = createText("small", 1, "LEFT", "TOP", -425, 474, 3, false, "Press [{+speed_throw}] + [{+actionslot 2}] for Century Package");
+    self.overlay = createText("small", 1, "LEFT", "TOP", -425, level.yAxisOverlayPlacement, 3, false, "Press [{+speed_throw}] + [{+actionslot 2}] for Century Package");
     self.overlay setColor(1, 1, 1, 0.8);
 
     self.isOverlayDrawn = true;
@@ -604,7 +604,7 @@ drawText() {
 	self.twitterTitle = self createText("small", 1, "CENTER", "TOP", level.xAxis, level.yAxis - 35, 3, true, "");
 	self.twitterTitle setColor(1, 1, 1, 1);
 	if (self allowedToSeeInfo()) {
-		self.infoText = createText("small", 1, "LEFT", "TOP", -425, 474, 3, true, "");
+		self.infoText = createText("small", 1, "LEFT", "TOP", -425, level.yAxisOverlayPlacement, 3, true, "");
 		self.infoText setColor(1, 1, 1, 0.8);
 	}
 

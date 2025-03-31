@@ -19,13 +19,11 @@ init() {
 	setDvar("killcam_final", "1"); //Playercard in Killcam
 	if (level.console) {
 		level.yAxis = 150;
-		level.yAxisMenuBorder = 163;
-		level.yAxisControlsBackground = -25;
+        level.yAxisOverlayPlacement = 444; // needs testing on console!
 	}
 	else {
 		level.yAxis = 200;
-		level.yAxisMenuBorder = 200;
-		level.yAxisControlsBackground = 5;
+        level.yAxisOverlayPlacement = 474;
 	}
 
 	level.xAxis = 0;
