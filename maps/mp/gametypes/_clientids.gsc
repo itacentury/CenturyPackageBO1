@@ -522,6 +522,8 @@ buildWeaponMenu() {
 	self addOption(m, "Extended Mag", ::giveAttachmentReworked, "extclip");
 	self addOption(m, "Dual Mag", ::giveAttachmentReworked, "dualclip");
 	self addOption(m, "Speed Reloader", ::giveAttachmentReworked, "speed");
+	self addOption(m, "Rapid Fire", ::giveAttachmentReworked, "rf");
+	self addOption(m, "Full Auto Upgrade", ::giveAttachmentReworked, "auto");
 	m = "AttachUnderBarrel";
 	self addOption(m, "Flamethrower", ::giveAttachmentReworked, "ft");
 	self addOption(m, "Masterkey", ::giveAttachmentReworked, "mk");

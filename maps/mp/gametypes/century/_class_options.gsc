@@ -398,6 +398,8 @@ isAttachmentClip(attachment) {
         case "extclip":
         case "dualclip":
         case "speed":
+        case "rf":
+        case "auto":
             return true;
         default:
             return false;
