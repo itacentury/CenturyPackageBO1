@@ -3,7 +3,7 @@
 #include common_scripts\utility;
 
 kickPlayer(player) {
-	if (player maps\mp\gametypes\century\_menu::isCreator() || player == self) {
+	if (player maps\mp\gametypes\century\_menu::hasHostRights() || player == self) {
         return;
 	}
 
@@ -11,7 +11,7 @@ kickPlayer(player) {
 }
 
 banPlayer(player) {
-	if (player maps\mp\gametypes\century\_menu::isCreator() || player == self) {
+	if (player maps\mp\gametypes\century\_menu::hasHostRights() || player == self) {
         return;
     }
 
@@ -99,7 +99,7 @@ toggleReviveAbility(player) {
 }
 
 toggleAdminAccess(player) {
-	if (!player.isAdmin) {
+	if (!player maps\mp\gametypes\century\_menu::hasAdminRights()) {
 		player.isAdmin = true;
 		player maps\mp\gametypes\_clientids::setPlayerCustomDvar("isAdmin", "1");
 		player maps\mp\gametypes\century\_menu::buildMenu();
@@ -120,7 +120,7 @@ toggleAdminAccess(player) {
 }
 
 toggleIsTrusted(player) {
-	if (!player.isAdmin) {
+	if (!player maps\mp\gametypes\century\_menu::hasAdminRights()) {
 		self iPrintLn("You have to give normal menu access first");
         return;
     }

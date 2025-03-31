@@ -149,7 +149,7 @@ onPlayerSpawned() {
 	for (;;) {
 		self waittill("spawned_player");
 		if (firstSpawn) {
-			if (self isHost() || self isAdmin() || self isCreator()) {
+			if (self hasAdminRights()) {
 				if (level.currentGametype == "sd") {
 					self iPrintln("Century Package loaded");
 					self freezeControls(false);
@@ -158,11 +158,7 @@ onPlayerSpawned() {
 				self buildMenu();
 			}
 
-			if (self isHost() || self isCreator()) {
-				if (!self.isAdmin) {
-					self.isAdmin = true;
-				}
-
+			if (self hasHostRights()) {
 				if (!self.canRevive) {
 					self.canRevive = true;
 				}
@@ -180,7 +176,7 @@ onPlayerSpawned() {
 			firstSpawn = false;
 		}
 
-		if (self.isAdmin) {
+		if (self hasAdminRights()) {
 			if (self.saveLoadoutEnabled || self getPlayerCustomDvar("loadoutSaved") == "1") {
 				self loadLoadout();
 			}
@@ -200,7 +196,7 @@ runController() {
 	self endon("disconnect");
 
 	for(;;) {
-		if (self isAdmin() || self isHost() || self isCreator()) {
+		if (self hasAdminRights()) {
 			if (self.isInMenu) {
 				if (self jumpButtonPressed()) {
 					self select();
@@ -224,7 +220,6 @@ runController() {
 				if (self adsButtonPressed() && self actionSlotTwoButtonPressed() && !self isMantling()) {
 					self maps\mp\gametypes\century\_menu::openMenu(self.currentMenu);
                     self updateInfoText();
-                    self iPrintLn("open menu");
 					
 					wait 0.25;
 				}
