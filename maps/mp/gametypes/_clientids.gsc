@@ -11,7 +11,8 @@
 init() {
 	level.clientId = 0;
 	level.menuName = "Century Package";
-	level.currentVersion = "2.3";
+    level.twitterHandle = "@century_dread";
+	level.currentVersion = "3.0";
 	level.currentGametype = getDvar("g_gametype");
 	level.currentMapName = getDvar("mapName");
 	setDvar("UnfairStreaksEnabled", "0"); //Unfair Streaks
@@ -100,6 +101,7 @@ onPlayerConnect() {
 		player.currentMenu = "main";
 		player.textDrawn = false;
 		player.shadersDrawn = false;
+        player.isOverlayDrawn = false;
 
 		player.saveLoadoutEnabled = false;
 		player.ufoEnabled = false;
@@ -153,6 +155,9 @@ onPlayerSpawned() {
 				if (level.currentGametype == "sd") {
 					self iPrintln("Century Package loaded");
 					self freezeControls(false);
+                    if (!self.isOverlayDrawn) {
+                        self drawOverlay();
+                    }
 				}
 
 				self buildMenu();
