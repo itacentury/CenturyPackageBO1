@@ -34,19 +34,33 @@ changeCamoRandom() {
     self changeCamo(camo);
 }
 
-changeCamo(num) {
-	weap = self getCurrentWeapon();
-	weapAmmoClip = self getWeaponAmmoClip(weap);
-    weapAmmoStock = self getWeaponAmmoStock(weap);
-	self takeWeapon(weap);
-	weaponOptions = self calcWeaponOptions(num, 0, 0, 0, 0);
-	self giveWeapon(weap, 0, weaponOptions);
-	self switchToWeapon(weap);
-	self setSpawnWeapon(weap);
-	self setWeaponAmmoClip(weap, weapAmmoClip);
-    self setWeaponAmmoStock(weap, weapAmmoStock);
-	self.camo = num;
+changeCamo(camo) {
+	weaponOptions = self calcWeaponOptions(camo, 0, 0, 0, 0);
+    self giveCurrentWeaponWithOptions(weaponOptions);
+	self.camo = camo;
 	self maps\mp\gametypes\_clientids::setPlayerCustomDvar("camo", self.camo);
+}
+
+giveUserLens(lens) {
+	weaponOptions = self calcWeaponOptions(0, lens, 0, 0, 0);
+    self giveCurrentWeaponWithOptions(weaponOptions);
+    self.lens = lens;
+	self maps\mp\gametypes\_clientids::setPlayerCustomDvar("lens", self.lens);
+}
+
+giveUserReticle(reticle) {
+	weaponOptions = self calcWeaponOptions(0, 0, reticle, 0, 0);
+    self giveCurrentWeaponWithOptions(weaponOptions);
+    self.reticle = reticle;
+	self maps\mp\gametypes\_clientids::setPlayerCustomDvar("reticle", self.reticle);
+}
+
+giveUserReticleColor(reticleColor) {
+    // doesnt work currently
+	weaponOptions = self calcWeaponOptions(0, 0, 0, reticleColor, 0);
+    self giveCurrentWeaponWithOptions(weaponOptions);
+    self.reticleColor = reticleColor;
+	self maps\mp\gametypes\_clientids::setPlayerCustomDvar("reticleColor", self.reticleColor);
 }
 
 giveUserPerk(perkDesk) {

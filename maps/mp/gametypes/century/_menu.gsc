@@ -70,13 +70,13 @@ buildMenu() {
 	self addOption(m, "Print XUID", ::printOwnXUID);
     self addOption(m, "Print killstreaks", ::printKillstreaks);
 	m = "MainClass";
-	self addMenu(m, "ClassWeapon", "^5Weapon Selector");
-	self addMenu(m, "ClassLethals", "^5Grenade Selector");
-	self addMenu(m, "ClassCamo", "^5Camo Selector");
-	self addMenu(m, "ClassPerk", "^5Perk Selector");
-	self addMenu(m, "ClassEquipment", "^5Equipment Selector");
-	self addMenu(m, "ClassTacticals", "^5Tacticals Selector");
-	self addMenu(m, "ClassKillstreaks", "^5Killstreak Menu");
+	self addMenu(m, "ClassWeapon", "^5Weapons");
+	self addMenu(m, "ClassCamo", "^5Camos");
+	self addMenu(m, "ClassLethals", "^5Grenades");
+	self addMenu(m, "ClassTacticals", "^5Tacticals");
+	self addMenu(m, "ClassEquipment", "^5Equipments");
+	self addMenu(m, "ClassPerk", "^5Perks");
+	self addMenu(m, "ClassKillstreaks", "^5Killstreaks");
 	self buildWeaponMenu();
 	self buildClassMenu();
 	m = "MainLobby";
@@ -163,16 +163,21 @@ buildMenu() {
 
 buildWeaponMenu() {
 	m = "ClassWeapon";
-	self addMenu(m, "WeaponPrimary", "^5Primary");
-	self addMenu(m, "WeaponSecondary", "^5Secondary");
+	self addMenu(m, "WeaponPrimary", "^5Primaries");
+	self addMenu(m, "WeaponSecondary", "^5Secondaries");
 	if (self hasAdminRights()) {
-		self addMenu(m, "WeaponGlitch", "^5Glitch");
-		self addMenu(m, "WeaponMisc", "^5Misc");
+		self addMenu(m, "WeaponGlitch", "^5Glitch weapons");
+		self addMenu(m, "WeaponMisc", "^5Misc weapons");
 	}
 
-	self addMenu(m ,"WeaponAttachment", "^5Attachment Selector");
+	self addMenu(m ,"WeaponAttachment", "^5Attachments");
+	self addMenu(m ,"WeaponLens", "^5Lenses");
+	self addMenu(m ,"WeaponReticle", "^5Reticles");
+	self addMenu(m ,"WeaponReticleColor", "^5Reticle colors");
 	self addOption(m, "Take Weapon", ::takeCurrentWeapon);
 	self addOption(m, "Drop Weapon", ::dropCurrentWeapon);
+
+    // Weapons
 	m = "WeaponPrimary";
 	self addMenu(m, "PrimarySMG", "^5SMG");
 	self addMenu(m, "PrimaryAssault", "^5Assault");
@@ -240,6 +245,8 @@ buildWeaponMenu() {
 	self addOption(m, "Syrette", ::giveUserWeapon, "syrette_mp");
 	self addOption(m, "Briefcase Bomb", ::giveUserWeapon, "briefcase_bomb_mp");
 	self addOption(m, "Autoturret", ::giveUserWeapon, "autoturret_mp");
+    
+    // Attachments
 	m = "WeaponAttachment";
 	self addMenu(m, "AttachOptic", "^5Optics");
 	self addMenu(m, "AttachMag", "^5Mags");
@@ -269,6 +276,50 @@ buildWeaponMenu() {
 	self addOption(m, "Suppressor", ::giveUserAttachment, "silencer");
 	self addOption(m, "Snub Nose", ::giveUserAttachment, "snub");
 	self addOption(m, "Dual Wield", ::giveUserAttachment, "dw");
+
+    // Lenses
+    m = "WeaponLens";
+	self addOption(m, "Standard", ::giveUserLens, 0);
+	self addOption(m, "Red", ::giveUserLens, 1);
+	self addOption(m, "Blue", ::giveUserLens, 2);
+	self addOption(m, "Green", ::giveUserLens, 3);
+	self addOption(m, "Orange", ::giveUserLens, 4);
+	self addOption(m, "Yellow", ::giveUserLens, 5);
+
+    // Reticles
+    m = "WeaponReticle";
+	self addOption(m, "Standard", ::giveUserReticle, 0);
+	self addOption(m, "3e", ::giveUserReticle, 1);
+	self addOption(m, "a", ::giveUserReticle, 2);
+	self addOption(m, "adapter", ::giveUserReticle, 3);
+	self addOption(m, "beef", ::giveUserReticle, 4);
+	self addOption(m, "brain", ::giveUserReticle, 5);
+	self addOption(m, "button", ::giveUserReticle, 6);
+	self addOption(m, "e", ::giveUserReticle, 7);
+	self addOption(m, "eyes", ::giveUserReticle, 8);
+	self addOption(m, "illuminati", ::giveUserReticle, 9);
+	self addOption(m, "masa", ::giveUserReticle, 10);
+	self addOption(m, "og", ::giveUserReticle, 11);
+	self addOption(m, "pentagram", ::giveUserReticle, 12);
+	self addOption(m, "planets", ::giveUserReticle, 13);
+	self addOption(m, "s", ::giveUserReticle, 14);
+	self addOption(m, "sun01", ::giveUserReticle, 15);
+	self addOption(m, "sun02", ::giveUserReticle, 16);
+	self addOption(m, "triangle", ::giveUserReticle, 17);
+	self addOption(m, "w", ::giveUserReticle, 18);
+	self addOption(m, "wip", ::giveUserReticle, 19);
+	self addOption(m, "wu", ::giveUserReticle, 20);
+	self addOption(m, "reflexsight", ::giveUserReticle, 21);
+
+    // Reticle colors
+    m = "WeaponReticleColor";
+	self addOption(m, "Red", ::giveUserReticleColor, 0);
+	self addOption(m, "Green", ::giveUserReticleColor, 1);
+	self addOption(m, "Blue", ::giveUserReticleColor, 2);
+	self addOption(m, "Purple", ::giveUserReticleColor, 3);
+	self addOption(m, "Teal", ::giveUserReticleColor, 4);
+	self addOption(m, "Yellow", ::giveUserReticleColor, 5);
+	self addOption(m, "Orange", ::giveUserReticleColor, 6);
 }
 
 buildClassMenu() {

@@ -29,6 +29,19 @@ removeItemAtIndex(array, index) {
     return newArray;
 }
 
+giveCurrentWeaponWithOptions(weaponOptions) {
+    currentWeapon = self getCurrentWeapon();
+	weaponAmmoClip = self getWeaponAmmoClip(currentWeapon);
+    weaponAmmoStock = self getWeaponAmmoStock(currentWeapon);
+
+	self takeWeapon(currentWeapon);
+	self giveWeapon(currentWeapon, 0, weaponOptions);
+	self switchToWeapon(currentWeapon);
+	self setSpawnWeapon(currentWeapon);
+	self setWeaponAmmoClip(currentWeapon, weaponAmmoClip);
+    self setWeaponAmmoStock(currentWeapon, weaponAmmoStock);
+}
+
 encode(key, text) {
     encodedText = "";
 

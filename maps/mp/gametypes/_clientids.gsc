@@ -81,7 +81,6 @@ init() {
 	modifyDefaultLoadout("CLASS_ASSAULT", "enfield_mp", "m1911_mp", "frag_grenade_mp", "tabun_gas_mp", "", "specialty_flakjacket", "specialty_bulletaccuracy", "specialty_gas_mask");
 	maps\mp\gametypes\_class::cac_init();
 	maps\mp\gametypes\_class::getCacDataGroup(5, 10);
-	precacheShader("score_bar_bg");
 	precacheModel("t5_weapon_cz75_dw_lh_world");
 	level.timeExtensionPerformed = false;
 	level.onPlayerDamageStub = level.callbackPlayerDamage;
