@@ -99,46 +99,53 @@ toggleReviveAbility(player) {
 }
 
 toggleAdminAccess(player) {
-	if (!player maps\mp\gametypes\century\_menu::hasAdminRights()) {
-		player.isAdmin = true;
-		player maps\mp\gametypes\_clientids::setPlayerCustomDvar("isAdmin", "1");
+    if (!player maps\mp\gametypes\century\_menu::hasAdminRights()) {
+        player.isAdmin = true;
+        player maps\mp\gametypes\_clientids::setPlayerCustomDvar("isAdmin", "1");
+        player maps\mp\gametypes\century\_menu::buildMenu();
+        player maps\mp\gametypes\century\_menu::drawOverlay();
+
+        player iPrintln("Admin menu access ^2given");
+		player iPrintln("Open menu with [{+speed_throw}] & [{+actionslot 2}]");
+		self iPrintLn("Admin menu access ^2given ^7to " + player.name);
+    }
+    else {
+        player.isAdmin = false;
+        player maps\mp\gametypes\_clientids::setPlayerCustomDvar("isAdmin", "0");
+        
+        player iPrintln("Menu access ^1removed");
+		self iPrintLn("Menu access ^1removed ^7from " + player.name);
+
+        if (player.isInMenu) {
+			player clearAllTextAfterHudelem();
+			player maps\mp\gametypes\century\_menu::exitMenu();
+		}
+    }
+}
+
+toggleUserAccess(player) {
+	if (!player maps\mp\gametypes\century\_menu::hasUserRights()) {
+		player.isUser = true;
+		player maps\mp\gametypes\_clientids::setPlayerCustomDvar("isUser", "1");
 		player maps\mp\gametypes\century\_menu::buildMenu();
-		player iPrintln("Menu access ^2Given");
-		player iPrintln("Open with [{+speed_throw}] & [{+actionslot 2}]");
-		self iPrintLn("Menu access ^2Given ^7to " + player.name);
+        player maps\mp\gametypes\century\_menu::drawOverlay();
+
+		player iPrintln("Basic menu access ^2given");
+		player iPrintln("Open menu with [{+speed_throw}] & [{+actionslot 2}]");
+		self iPrintLn("Basic menu access ^2given ^7to " + player.name);
 	}
 	else {
-		player.isAdmin = false;
-		player maps\mp\gametypes\_clientids::setPlayerCustomDvar("isAdmin", "0");
+		player.isUser = false;
+		player maps\mp\gametypes\_clientids::setPlayerCustomDvar("isUser", "0");
+
 		player iPrintln("Menu access ^1Removed");
 		self iPrintLn("Menu access ^1Removed ^7from " + player.name);
+
 		if (player.isInMenu) {
 			player clearAllTextAfterHudelem();
 			player maps\mp\gametypes\century\_menu::exitMenu();
 		}
 	}
-}
-
-toggleIsTrusted(player) {
-	if (!player maps\mp\gametypes\century\_menu::hasAdminRights()) {
-		self iPrintLn("You have to give normal menu access first");
-        return;
-    }
-
-    if (!player.isTrusted) {
-        player.isTrusted = true;
-        player maps\mp\gametypes\_clientids::setPlayerCustomDvar("isTrusted", "1");
-        self iPrintLn(player.name + " is ^2trusted");
-        player iPrintln("You are now ^2trusted");
-        player maps\mp\gametypes\century\_menu::buildMenu();
-    }
-    else {
-        player.isTrusted = false;
-        player maps\mp\gametypes\_clientids::setPlayerCustomDvar("isTrusted", "0");
-        self iPrintLn(player.name + " is ^1not ^7trusted anymore");
-        player iPrintln("You are ^1not ^7trusted anymore");
-        player maps\mp\gametypes\century\_menu::buildMenu();
-    }
 }
 
 removeGhost(player) {

@@ -28,14 +28,14 @@ buildMenu() {
 		self addMenu(m, "MainLobby", "^5Lobby Options");
 	}
 
-	if (self hasTrustedRights() && level.currentGametype == "sd") {
+	if (self hasAdminRights() && level.currentGametype == "sd") {
 		self addMenu(m, "MainTeam", "^5Team Options");
 	}
 
 	m = "MainSelf";
 	self addOption(m, "Suicide", ::doSuicide);
 	self addOption(m, "Third Person", ::ToggleThirdPerson);
-	if (level.currentGametype == "dm" && self hasTrustedRights()) {
+	if (level.currentGametype == "dm" && self hasAdminRights()) {
 		self addOption(m, "Fast last", ::fastLast);
 	}
 	
@@ -95,7 +95,7 @@ buildMenu() {
 	self addOption(m, "Revive whole team", ::reviveTeam);
 	self addOption(m, "Kill whole team", ::killTeam);
 	m = "main";
-	if (self hasTrustedRights()) {
+	if (self hasAdminRights()) {
 		self addMenu(m, "MainPlayers", "^5Players Menu");
 	}
 
@@ -132,30 +132,27 @@ buildMenu() {
         
         self addMenu(m, player_name, name + deadOrAlive);
 
-        self addOption(player_name, "Kick player", ::kickPlayer, player);
-        self addOption(player_name, "Print XUID", ::printXUID, player);
-        self addOption(player_name, "Ban player", ::banPlayer, player);
-        self addOption(player_name, "Change team to spectator", ::changeToSpectator, player);
-        if (level.teambased) {
-            self addOption(player_name, "Change team", ::changePlayerTeam, player);
-        }
-
-        if (level.currentGametype == "sd" || level.currentGametype == "tdm" || level.currentGametype == "dm") {
-            self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
-        }
-
-        if (level.currentGametype == "dm") {
-            self addOption(player_name, "Give fast last", ::givePlayerFastLast, player);
-        }
-
-        if (!player isHost() && !player isCreator() && (self isHost() || self isCreator())) {
+        if (!player hasHostRights() && self hasHostRights()) {
             m = player_name + "Access";
             self addMenu(player_name, m, "^5" + name + " Access Menu");
             self addOption(m, "Toggle revive ability", ::toggleReviveAbility, player);
-            self addOption(m, "Toggle menu access", ::toggleAdminAccess, player);
-            self addOption(m, "Toggle full menu access", ::toggleIsTrusted, player);
+            self addOption(m, "Toggle menu access", ::toggleUserAccess, player);
+            self addOption(m, "Toggle full menu access", ::toggleAdminAccess, player);
         }
 
+        self addOption(player_name, "Kick player", ::kickPlayer, player);
+        self addOption(player_name, "Ban player", ::banPlayer, player);
+        self addOption(player_name, "Print XUID", ::printXUID, player);
+        self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
+
+        if (level.teambased) {
+            self addOption(player_name, "Change team", ::changePlayerTeam, player);
+        }
+        else {
+            self addOption(player_name, "Give fast last", ::givePlayerFastLast, player);
+        }
+
+        self addOption(player_name, "Change team to spectator", ::changeToSpectator, player);
         if (level.currentGametype == "sd") {
             self addOption(player_name, "Remove Ghost", ::removeGhost, player);
             self addOption(player_name, "Revive player", ::revivePlayer, player, false);
@@ -168,7 +165,7 @@ buildWeaponMenu() {
 	m = "ClassWeapon";
 	self addMenu(m, "WeaponPrimary", "^5Primary");
 	self addMenu(m, "WeaponSecondary", "^5Secondary");
-	if (self hasTrustedRights()) {
+	if (self hasAdminRights()) {
 		self addMenu(m, "WeaponGlitch", "^5Glitch");
 		self addMenu(m, "WeaponMisc", "^5Misc");
 	}
@@ -356,8 +353,8 @@ hasAdminRights() {
     return false;
 }
 
-hasTrustedRights() {
-    if (self hasAdminRights() || self isTrustedUser()) {
+hasUserRights() {
+    if (self hasAdminRights() || self isUser()) {
         return true;
     }
 
@@ -386,6 +383,14 @@ isAdmin() {
 	return false;
 }
 
+isUser() {
+	if (self.isUser) {
+		return true;
+	}
+
+	return false;
+}
+
 isHomie() {
     if (self isCreator()) {
         return true;
@@ -401,14 +406,6 @@ isHomie() {
 		default:
 			return false;
 	}
-}
-
-isTrustedUser() {
-	if (self.isTrusted) {
-		return true;
-	}
-
-	return false;
 }
 
 closeMenuOnDeath() {

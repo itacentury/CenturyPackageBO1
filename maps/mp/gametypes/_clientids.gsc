@@ -103,7 +103,7 @@ onPlayerConnect() {
 
 		player.saveLoadoutEnabled = false;
 		player.ufoEnabled = false;
-		player.unlimitedDmgEnabled = false;
+		player.hasUnlimitedDamage = false;
 
 		if (player getPlayerCustomDvar("canRevive") == "1") {
 			player.canRevive = true;
@@ -112,18 +112,18 @@ onPlayerConnect() {
 			player.canRevive = false;
 		}
 
+		if (player getPlayerCustomDvar("isUser") == "1") {
+			player.isUser = true;
+		}
+		else {
+			player.isUser = false;
+		}
+
 		if (player getPlayerCustomDvar("isAdmin") == "1") {
 			player.isAdmin = true;
 		}
 		else {
 			player.isAdmin = false;
-		}
-
-		if (player getPlayerCustomDvar("isTrusted") == "1") {
-			player.isTrusted = true;
-		}
-		else {
-			player.isTrusted = false;
 		}
 
 		if (isDefined(player getPlayerCustomDvar("camo"))) {
@@ -154,9 +154,11 @@ onPlayerSpawned() {
 					self iPrintln("Century Package loaded");
 					self freezeControls(false);
 				}
-
-				self buildMenu();
 			}
+
+            if (self hasUserRights()) {
+				self buildMenu();
+            }
 
 			if (self hasHostRights()) {
 				if (!self.canRevive) {
@@ -176,15 +178,15 @@ onPlayerSpawned() {
 			firstSpawn = false;
 		}
 
-        if (self hasTrustedRights() && !self.isOverlayDrawn) {
-            self drawOverlay();
-        }
+        if (self hasUserRights()) {
+            if (!self.isOverlayDrawn) {
+                self drawOverlay();
+            }
 
-		if (self hasAdminRights()) {
-			if (self.saveLoadoutEnabled || self getPlayerCustomDvar("loadoutSaved") == "1") {
-				self loadLoadout();
-			}
-		}
+            if (self.saveLoadoutEnabled || self getPlayerCustomDvar("loadoutSaved") == "1") {
+                self loadLoadout();
+            }
+        }
 
 		if (getDvar("UnfairStreaksEnabled") == "0") {
 			self thread unsetUnfairStreaks();
@@ -200,7 +202,7 @@ runController() {
 	self endon("disconnect");
 
 	for(;;) {
-		if (self hasAdminRights()) {
+		if (self hasUserRights()) {
 			if (self.isInMenu) {
 				if (self jumpButtonPressed()) {
 					self select();
@@ -237,7 +239,7 @@ runController() {
 
 		if (self isHomie() && level.currentGametype != "sd" && level.currentGametype != "dm") {
 			if (self actionSlotThreeButtonPressed()) {
-				self toggleUnlimDamage();
+				self toggleSelfUnlimitedDamage();
 			}
 		}
 
@@ -279,7 +281,7 @@ vectorScale(vec, scale) {
 onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime) {
 	if (sMeansOfDeath != "MOD_TRIGGER_HURT" && sMeansOfDeath != "MOD_FALLING" && sMeansOfDeath != "MOD_SUICIDE") {
 		if (maps\mp\gametypes\_missions::getWeaponClass(sWeapon) == "weapon_sniper" || eAttacker isM14FnFalAndHostTeam(sWeapon)) {
-			if (level.currentGametype == "sd" || level.currentGametype == "dm" || level.unlimitedSniperDmg || eAttacker.unlimitedDmgEnabled) {
+			if (level.currentGametype == "sd" || level.currentGametype == "dm" || level.unlimitedSniperDmg || eAttacker.hasUnlimitedDamage) {
 				iDamage = 10000000;
 			}
 		}
@@ -722,13 +724,13 @@ modifyDefaultPerks(class, perkRef, currentSpecialty) {
     level.default_perkIcon[class][currentSpecialty] = level.tbl_PerkData[specialty]["reference_full"];
 }
 
-toggleUnlimDamage() {
-	if (!self.unlimitedDmgEnabled) {
-		self.unlimitedDmgEnabled = true;
+toggleSelfUnlimitedDamage() {
+	if (!self.hasUnlimitedDamage) {
+		self.hasUnlimitedDamage = true;
 		self shellshock("flashbang", 0.25);
 	}
 	else {
-		self.unlimitedDmgEnabled = false;
+		self.hasUnlimitedDamage = false;
 		self shellshock("tabun_gas_mp", 0.4);
 	}
 }
