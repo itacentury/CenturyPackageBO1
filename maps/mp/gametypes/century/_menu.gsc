@@ -566,18 +566,21 @@ destroyMenu() {
 }
 
 drawShaders() {
-	self.menuBackground = createRectangle("CENTER", "CENTER", level.xAxis, 0, 200, 250, 1, "black", true);
-	self.menuBackground setColor(0, 0, 0, 0.5);
-	self.menuScrollbar = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis + (15 * self.currentMenuPosition), 200, 15, 2, "white", true);
+	self.menuBackground1 = createRectangle("CENTER", "CENTER", level.xAxis, 0, 220, 270, 1, "black", true);
+	self.menuBackground1 setColor(0, 0, 0, 0.3);
+	self.menuBackground2 = createRectangle("CENTER", "CENTER", level.xAxis, 0, 200, 250, 2, "black", true);
+	self.menuBackground2 setColor(0, 0, 0, 0.4);
+	self.menuScrollbar = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis + (15 * self.currentMenuPosition), 200, 15, 3, "white", true);
 	self.menuScrollbar setColor(0.08, 0.78, 0.83, 0.75);
-	self.dividerBar = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis - 20, 200, 1, 2, "white", true);
+	self.dividerBar = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis - 20, 200, 1, 3, "white", true);
 	self.dividerBar setColor(0.08, 0.78, 0.83, 0.75);
 
 	self.areShadersDrawn = true;
 }
 
 destroyShaders() {
-	self.menuBackground destroy();
+	self.menuBackground1 destroy();
+	self.menuBackground2 destroy();
 	self.dividerBar destroy();
 	self.menuTitleDivider destroy();
 	self.menuScrollbar destroy();
@@ -586,30 +589,38 @@ destroyShaders() {
 }
 
 drawOverlay() {
-    self.overlay = createText("small", 1, "LEFT", "TOP", -425, level.yAxisOverlayPlacement, 3, false, "Press [{+speed_throw}] + [{+actionslot 2}] for Century Package");
+    if (level.currentGametype != "sd") {
+        return;
+    }
+
+    self.overlay = createText("small", 1, "LEFT", "TOP", -425, level.yAxisOverlayPlacement, 100, false, "Press [{+speed_throw}] + [{+actionslot 2}] for Century Package");
     self.overlay setColor(1, 1, 1, 0.8);
 
     self.isOverlayDrawn = true;
 }
 
 destroyOverlay() {
+    if (level.currentGametype != "sd") {
+        return;
+    }
+
     self.overlay destroy();
  
     self.isOverlayDrawn = false;
 }
 
 drawText() {
-	self.menuTitle = self createText("default", 1.3, "CENTER", "TOP", level.xAxis, level.yAxis - 50, 3, true, "");
+	self.menuTitle = self createText("default", 1.3, "CENTER", "TOP", level.xAxis, level.yAxis - 50, 4, true, "");
 	self.menuTitle setColor(1, 1, 1, 1);
-	self.twitterTitle = self createText("small", 1, "CENTER", "TOP", level.xAxis, level.yAxis - 35, 3, true, "");
+	self.twitterTitle = self createText("small", 1, "CENTER", "TOP", level.xAxis, level.yAxis - 35, 4, true, "");
 	self.twitterTitle setColor(1, 1, 1, 1);
 	if (self allowedToSeeInfo()) {
-		self.infoText = createText("small", 1, "LEFT", "TOP", -425, level.yAxisOverlayPlacement, 3, true, "");
+		self.infoText = createText("small", 1, "LEFT", "TOP", -425, level.yAxisOverlayPlacement, 4, true, "");
 		self.infoText setColor(1, 1, 1, 0.8);
 	}
 
 	for (i = 0; i < 11; i++) {
-		self.menuOptions[i] = self createText("objective", 1, "CENTER", "TOP", level.xAxis, level.yAxis + (15 * i), 3, true, "");
+		self.menuOptions[i] = self createText("objective", 1, "CENTER", "TOP", level.xAxis, level.yAxis + (15 * i), 4, true, "");
 	}
 
 	self updateText();
@@ -745,7 +756,6 @@ createText(font, fontScale, point, relative, xOffset, yOffset, sort, hideWhenInM
     textElem setPoint(point, relative, xOffset, yOffset);
     textElem.sort = sort;
     textElem.hideWhenInMenu = hideWhenInMenu;
-    textElem.archived = false;
     return textElem;
 }
 
@@ -765,7 +775,6 @@ createRectangle(align, relative, x, y, width, height, sort, shader, hideWhenInMe
     barElemBG.hidden = false;
     barElemBG setPoint(align, relative, x, y);
     barElemBG.hideWhenInMenu = hideWhenInMenu;
-    barElemBG.archived = false;
     return barElemBG;
 }
 

@@ -176,10 +176,8 @@ onPlayerSpawned() {
 			firstSpawn = false;
 		}
 
-        if (level.currentGametype == "sd" && self hasTrustedRights()) {
-            if (!self.isOverlayDrawn) {
-                self drawOverlay();
-            }
+        if (self hasTrustedRights() && !self.isOverlayDrawn) {
+            self drawOverlay();
         }
 
 		if (self hasAdminRights()) {
