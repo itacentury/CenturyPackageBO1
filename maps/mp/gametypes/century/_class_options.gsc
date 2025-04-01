@@ -4,7 +4,7 @@
 
 #include maps\mp\gametypes\century\_utilities;
 
-giveGrenade(grenade) {
+giveUserLethal(grenade) {
 	primaryWeaponList = self getWeaponsListPrimaries();
 	offHandWeaponList = array_exclude(self getWeaponsList(), primaryWeaponList);
 	offHandWeaponList = array_remove(offHandWeaponList, "knife_mp");
@@ -49,7 +49,7 @@ changeCamo(num) {
 	self maps\mp\gametypes\_clientids::setPlayerCustomDvar("camo", self.camo);
 }
 
-givePlayerPerk(perkDesk) {
+giveUserPerk(perkDesk) {
 	switch (perkDesk) {
 		case "lightweightPro":
 			self toggleLightweightPro();
@@ -210,7 +210,7 @@ toggleTacticalMaskPro() {
 	}
 }
 
-giveAttachmentReworked(attachment) {
+giveUserAttachment(attachment) {
     currentWeapon = self getCurrentWeapon();
     weaponPartList = strTok(currentWeapon, "_");
     baseWeapon = weaponPartList[0];
@@ -553,7 +553,7 @@ checkGivenPerks() {
 	}
 }
 
-giveUserTacticals(tactical) {
+giveUserTactical(tactical) {
 	primaryList = self getWeaponsListPrimaries();
 	offHandList = array_exclude(self getWeaponsList(), primaryList);
 	for (i = 0; i < offHandList.size; i++) {

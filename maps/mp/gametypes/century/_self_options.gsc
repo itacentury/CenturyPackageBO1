@@ -1,6 +1,6 @@
-#include maps\mp\gametypes\_hud_util;
 #include maps\mp\_utility;
 #include common_scripts\utility;
+#include maps\mp\gametypes\_hud_util;
 
 refillAmmo() {
 	primaryWeaponList = self getWeaponsListPrimaries();
@@ -20,7 +20,7 @@ refillAmmo() {
 	}
 }
 
-ToggleThirdPerson() {
+toggleThirdPerson() {
 	if (!self.thirdPerson) {
 		self setClientDvar("cg_thirdPerson", "1");
 		self.thirdPerson = true;
@@ -37,7 +37,7 @@ doSuicide() {
 	self.currentMenu = "main";
 }
 
-defaultTrickshotClass() {	
+giveDefaultTrickshotClass() {	
 	self clearPerks();
 	self takeAllWeapons();
 	self maps\mp\gametypes\century\_menu::exitMenu();

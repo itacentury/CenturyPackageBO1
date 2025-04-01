@@ -1,6 +1,6 @@
-#include maps\mp\gametypes\_hud_util;
 #include maps\mp\_utility;
 #include common_scripts\utility;
+#include maps\mp\gametypes\_hud_util;
 
 kickPlayer(player) {
 	if (player maps\mp\gametypes\century\_menu::hasHostRights() || player == self) {
@@ -69,7 +69,7 @@ changeMyTeam(assignment) {
     }
 }
 
-teleportToCrosshair(player) {
+teleportPlayerToCrosshair(player) {
 	if (!isAlive(player)) {
         return;
     }
@@ -211,7 +211,7 @@ printXUID(player) {
 	self iPrintLn(player.name + ": " + player getXuid());
 }
 
-changeToSpectator(player) {
+changePlayerTeamSpectator(player) {
     player changeMyTeam("spectator");
     self iPrintln(player.name + " ^2changed ^7team to " + player.pers["team"]);
 	player iPrintln("Team ^2changed ^7to " + player.pers["team"]);

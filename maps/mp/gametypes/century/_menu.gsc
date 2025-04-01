@@ -34,7 +34,7 @@ buildMenu() {
 
 	m = "MainSelf";
 	self addOption(m, "Suicide", ::doSuicide);
-	self addOption(m, "Third Person", ::ToggleThirdPerson);
+	self addOption(m, "Third Person", ::toggleThirdPerson);
 	if (level.currentGametype == "dm" && self hasAdminRights()) {
 		self addOption(m, "Fast last", ::fastLast);
 	}
@@ -56,11 +56,11 @@ buildMenu() {
 
 	m = "SelfLocation";
 	self addOption(m, "Save location for spawn", ::saveLocationForSpawn);
-	self addOption(m, "Delete location for spawn", ::stopLocationForSpawn);
+	self addOption(m, "Delete location for spawn", ::deleteLocationForSpawn);
 	m = "SelfLoadout";
-	self addOption(m, "Give default ts loadout", ::defaultTrickshotClass);
+	self addOption(m, "Give default ts loadout", ::giveDefaultTrickshotClass);
 	self addOption(m, "Save Loadout", ::saveLoadout);
-	self addOption(m, "Delete saved loadout", ::deleteLoadout);
+	self addOption(m, "Delete saved loadout", ::deleteSavedLoadout);
 	m = "MainDev";
 	self addOption(m, "Print origin", ::printOrigin);
 	self addOption(m, "Print weapon class", ::printWeaponClass);
@@ -71,7 +71,7 @@ buildMenu() {
     self addOption(m, "Print killstreaks", ::printKillstreaks);
 	m = "MainClass";
 	self addMenu(m, "ClassWeapon", "^5Weapon Selector");
-	self addMenu(m, "ClassGrenades", "^5Grenade Selector");
+	self addMenu(m, "ClassLethals", "^5Grenade Selector");
 	self addMenu(m, "ClassCamo", "^5Camo Selector");
 	self addMenu(m, "ClassPerk", "^5Perk Selector");
 	self addMenu(m, "ClassEquipment", "^5Equipment Selector");
@@ -82,11 +82,11 @@ buildMenu() {
 	m = "MainLobby";
 	if (level.currentGametype == "tdm") {
 		self addOption(m, "Fast last my team", ::fastLast);
-		self addOption(m, "Toggle unlimited sniper damage", ::toggleUnlimitedSniperDmg);
+		self addOption(m, "Toggle unlimited sniper damage", ::toggleUnlimitedSniperDamage);
 	}
 	else if (level.currentGametype == "sd") {
 		self addOption(m, "Toggle Bomb", ::toggleBomb);
-    	self addOption(m, "Toggle automatic time extension", ::toggleTime);
+    	self addOption(m, "Toggle automatic time extension", ::toggleTimeExtension);
 	}
 
 	self addOption(m, "Toggle precam weapon anims", ::togglePrecamAnims);
@@ -143,7 +143,7 @@ buildMenu() {
         self addOption(player_name, "Kick player", ::kickPlayer, player);
         self addOption(player_name, "Ban player", ::banPlayer, player);
         self addOption(player_name, "Print XUID", ::printXUID, player);
-        self addOption(player_name, "Teleport player to crosshair", ::teleportToCrosshair, player);
+        self addOption(player_name, "Teleport player to crosshair", ::teleportPlayerToCrosshair, player);
 
         if (level.teambased) {
             self addOption(player_name, "Change team", ::changePlayerTeam, player);
@@ -152,7 +152,7 @@ buildMenu() {
             self addOption(player_name, "Give fast last", ::givePlayerFastLast, player);
         }
 
-        self addOption(player_name, "Change team to spectator", ::changeToSpectator, player);
+        self addOption(player_name, "Change team to spectator", ::changePlayerTeamSpectator, player);
         if (level.currentGametype == "sd") {
             self addOption(player_name, "Remove Ghost", ::removeGhost, player);
             self addOption(player_name, "Revive player", ::revivePlayer, player, false);
@@ -247,35 +247,31 @@ buildWeaponMenu() {
 	self addMenu(m, "AttachOther", "^5Other");
 	self addOption(m, "Remove all attachments", ::removeAllAttachments);
 	m = "AttachOptic";
-	self addOption(m, "Reflex Sight", ::giveAttachmentReworked, "reflex");
-	self addOption(m, "Red Dot Sight", ::giveAttachmentReworked, "elbit");
-	self addOption(m, "Variable Zoom", ::giveAttachmentReworked, "vzoom");
-	self addOption(m, "Infrared Scope", ::giveAttachmentReworked, "ir");
-	self addOption(m, "ACOG Sight", ::giveAttachmentReworked, "acog");
-	self addOption(m, "Upgraded Iron Sights", ::giveAttachmentReworked, "upgradesight");
-	self addOption(m, "Low Power Scope", ::giveAttachmentReworked, "lps");
+	self addOption(m, "Reflex Sight", ::giveUserAttachment, "reflex");
+	self addOption(m, "Red Dot Sight", ::giveUserAttachment, "elbit");
+	self addOption(m, "Variable Zoom", ::giveUserAttachment, "vzoom");
+	self addOption(m, "Infrared Scope", ::giveUserAttachment, "ir");
+	self addOption(m, "ACOG Sight", ::giveUserAttachment, "acog");
+	self addOption(m, "Upgraded Iron Sights", ::giveUserAttachment, "upgradesight");
+	self addOption(m, "Low Power Scope", ::giveUserAttachment, "lps");
 	m = "AttachMag";
-	self addOption(m, "Extended Mag", ::giveAttachmentReworked, "extclip");
-	self addOption(m, "Dual Mag", ::giveAttachmentReworked, "dualclip");
-	self addOption(m, "Speed Reloader", ::giveAttachmentReworked, "speed");
-	self addOption(m, "Rapid Fire", ::giveAttachmentReworked, "rf");
-	self addOption(m, "Full Auto Upgrade", ::giveAttachmentReworked, "auto");
+	self addOption(m, "Extended Mag", ::giveUserAttachment, "extclip");
+	self addOption(m, "Dual Mag", ::giveUserAttachment, "dualclip");
+	self addOption(m, "Speed Reloader", ::giveUserAttachment, "speed");
+	self addOption(m, "Rapid Fire", ::giveUserAttachment, "rf");
+	self addOption(m, "Full Auto Upgrade", ::giveUserAttachment, "auto");
 	m = "AttachUnderBarrel";
-	self addOption(m, "Flamethrower", ::giveAttachmentReworked, "ft");
-	self addOption(m, "Masterkey", ::giveAttachmentReworked, "mk");
-	self addOption(m, "Grenade Launcher", ::giveAttachmentReworked, "gl");
-	self addOption(m, "Grip", ::giveAttachmentReworked, "grip");
+	self addOption(m, "Flamethrower", ::giveUserAttachment, "ft");
+	self addOption(m, "Masterkey", ::giveUserAttachment, "mk");
+	self addOption(m, "Grenade Launcher", ::giveUserAttachment, "gl");
+	self addOption(m, "Grip", ::giveUserAttachment, "grip");
 	m = "AttachOther";
-	self addOption(m, "Suppressor", ::giveAttachmentReworked, "silencer");
-	self addOption(m, "Snub Nose", ::giveAttachmentReworked, "snub");
-	self addOption(m, "Dual Wield", ::giveAttachmentReworked, "dw");
+	self addOption(m, "Suppressor", ::giveUserAttachment, "silencer");
+	self addOption(m, "Snub Nose", ::giveUserAttachment, "snub");
+	self addOption(m, "Dual Wield", ::giveUserAttachment, "dw");
 }
 
 buildClassMenu() {
-	m = "ClassGrenades";
-	self addOption(m, "Frag", ::giveGrenade, "frag_grenade_mp");
-	self addOption(m, "Semtex", ::giveGrenade, "sticky_grenade_mp");
-	self addOption(m, "Tomahawk", ::giveGrenade, "hatchet_mp");
     m = "ClassCamo";
 	self addMenu(m, "CamoOne", "^5Camos Part 1");
 	self addMenu(m, "CamoTwo", "^5Camos Part 2");
@@ -301,13 +297,13 @@ buildClassMenu() {
 	self addOption(m, "Flora", ::changeCamo, 14);
 	self addOption(m, "Gold", ::changeCamo, 15);
 	m = "ClassPerk";
-	self addOption(m, "Toggle Lightweight Pro", ::givePlayerPerk, "lightweightPro");
-	self addOption(m, "Toggle Flak Jacket Pro", ::givePlayerPerk, "flakJacketPro");
-	self addOption(m, "Toggle Scout Pro", ::givePlayerPerk, "scoutPro");
-	self addOption(m, "Toggle Steady Aim Pro", ::givePlayerPerk, "steadyAimPro");
-	self addOption(m, "Toggle Sleight of Hand Pro", ::givePlayerPerk, "sleightOfHandPro");
-	self addOption(m, "Toggle Ninja Pro", ::givePlayerPerk, "ninjaPro");
-	self addOption(m, "Toggle Tactical Mask Pro", ::givePlayerPerk, "tacticalMaskPro");
+	self addOption(m, "Lightweight Pro", ::giveUserPerk, "lightweightPro");
+	self addOption(m, "Flak Jacket Pro", ::giveUserPerk, "flakJacketPro");
+	self addOption(m, "Scout Pro", ::giveUserPerk, "scoutPro");
+	self addOption(m, "Steady Aim Pro", ::giveUserPerk, "steadyAimPro");
+	self addOption(m, "Sleight of Hand Pro", ::giveUserPerk, "sleightOfHandPro");
+	self addOption(m, "Ninja Pro", ::giveUserPerk, "ninjaPro");
+	self addOption(m, "Tactical Mask Pro", ::giveUserPerk, "tacticalMaskPro");
 	m = "ClassKillstreaks";
 	self addMenu(m, "KillstreaksSupport", "^5Support");
 	self addMenu(m, "KillstreaksLethal", "^5Lethal");
@@ -329,12 +325,16 @@ buildClassMenu() {
 	self addOption(m, "Jammer", ::giveUserEquipment, "scrambler_mp");
 	self addOption(m, "Motion Sensor", ::giveUserEquipment, "acoustic_sensor_mp");
 	self addOption(m, "Claymore", ::giveUserEquipment, "claymore_mp");
-	m = "ClassTacticals";
-	self addOption(m, "Willy Pete", ::giveUserTacticals, "willy_pete_mp");
-	self addOption(m, "Nova Gas", ::giveUserTacticals, "tabun_gas_mp");
-	self addOption(m, "Flashbang", ::giveUserTacticals, "flash_grenade_mp");
-	self addOption(m, "Concussion", ::giveUserTacticals, "concussion_grenade_mp");
-	self addOption(m, "Decoy", ::giveUserTacticals, "nightingale_mp");
+    m = "ClassLethals";
+	self addOption(m, "Frag", ::giveUserLethal, "frag_grenade_mp");
+	self addOption(m, "Semtex", ::giveUserLethal, "sticky_grenade_mp");
+	self addOption(m, "Tomahawk", ::giveUserLethal, "hatchet_mp");
+    m = "ClassTacticals";
+	self addOption(m, "Willy Pete", ::giveUserTactical, "willy_pete_mp");
+	self addOption(m, "Nova Gas", ::giveUserTactical, "tabun_gas_mp");
+	self addOption(m, "Flashbang", ::giveUserTactical, "flash_grenade_mp");
+	self addOption(m, "Concussion", ::giveUserTactical, "concussion_grenade_mp");
+	self addOption(m, "Decoy", ::giveUserTactical, "nightingale_mp");
 }
 
 hasHostRights() {

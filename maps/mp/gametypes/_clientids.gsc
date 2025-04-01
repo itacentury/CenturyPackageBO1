@@ -29,8 +29,8 @@ init() {
 	level.xAxis = 0;
 	switch (level.currentGametype) {
 		case "dm": {
-			if (getDvar("scr_disable_tacinsert") == "1") {
-				setDvar("scr_disable_tacinsert", "0");
+			if (getDvarInt("scr_disable_tacinsert") == 1) {
+				setDvar("scr_disable_tacinsert", 0);
 			}
 
 			if (level.disable_tacinsert) {
@@ -58,12 +58,12 @@ init() {
 	}
 
     level.precam = false;
-	if (getDvar("cg_nopredict") == "1") {
+	if (getDvarInt("cg_nopredict") == 1) {
 		level.precam = true;
 	}
 
     level.unfairStreaks = true;
-	if (getDvar("UnfairStreaksEnabled") == "0") {
+	if (getDvarInt("UnfairStreaksEnabled") == 0) {
 		level.unfairStreaks = false;
 	}
 
@@ -73,7 +73,7 @@ init() {
 	}
 
     level.timeExtensionEnabled = false;
-	if (getDvar("timeExtensionEnabled") == "1") {
+	if (getDvarInt("timeExtensionEnabled") == 1) {
 		level.timeExtensionEnabled = true;
 	}
 
@@ -130,8 +130,8 @@ onPlayerConnect() {
 			player.camo = int(player getPlayerCustomDvar("camo"));
 		}
 
-		if (getDvar("killcam_final") == "1") {
-			player SetClientDvar("killcam_final", "1");
+		if (getDvarInt("killcam_final") == 1) {
+			player setClientDvar("killcam_final", "1");
 		}
 
 		if (player checkIfUnwantedPlayers()) {
@@ -188,7 +188,7 @@ onPlayerSpawned() {
             }
         }
 
-		if (getDvar("UnfairStreaksEnabled") == "0") {
+		if (getDvarInt("UnfairStreaksEnabled") == 0) {
 			self thread unsetUnfairStreaks();
 		}
 
@@ -442,7 +442,7 @@ saveLoadout() {
 	self iPrintLn("Weapons ^2saved");
 }
 
-deleteLoadout() {
+deleteSavedLoadout() {
 	if (self.saveLoadoutEnabled) {
 		self.saveLoadoutEnabled = false;
 		self iPrintLn("Saved weapons ^2deleted");
@@ -594,7 +594,7 @@ giveEssentialPerksOnClassChange() {
 		self waittill("changed_class");
 		self giveEssentialPerks();
 		self checkGivenPerks();
-		if (getDvar("UnfairStreaksEnabled") == "0") {
+		if (getDvarInt("UnfairStreaksEnabled") == 0) {
 			self thread unsetUnfairStreaks();
 		}
 
@@ -631,7 +631,7 @@ saveLocationForSpawn() {
 	self thread monitorLocationForSpawn();
 }
 
-stopLocationForSpawn() {
+deleteLocationForSpawn() {
 	self.spawnLocation = undefined;
 	self iPrintLn("Location for spawn ^1deleted");
 	self notify("stop_locationForSpawn");

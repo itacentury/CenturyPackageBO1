@@ -1,30 +1,30 @@
-#include maps\mp\gametypes\_hud_util;
 #include maps\mp\_utility;
 #include common_scripts\utility;
+#include maps\mp\gametypes\_hud_util;
 
 toggleBomb() {
-	if (getDvarInt("bombEnabled") != 0) {
-		setDvar("bombEnabled", "0");
-		level.bombEnabled = false;
-		self iPrintLn("Bomb ^2disabled");
-	}
-	else {
-		setDvar("bombEnabled", "1");
+	if (getDvarInt("bombEnabled") == 0 || getDvar("bombEnabled") == "") {
+		setDvar("bombEnabled", 1);
 		level.bombEnabled = true;
 		self iPrintLn("Bomb ^1enabled");
+	}
+	else {
+		setDvar("bombEnabled", 0);
+		level.bombEnabled = false;
+		self iPrintLn("Bomb ^2disabled");
 	}
 
     self maps\mp\gametypes\century\_menu::updateInfoText();
 }
 
 togglePrecamAnims() {
-	if (getDvar("cg_nopredict") == "0") {
-		setDvar("cg_nopredict", "1");
+	if (getDvarInt("cg_nopredict") == 0 || getDvar("cg_nopredict") == "") {
+		setDvar("cg_nopredict", 1);
 		level.precam = true;
 		self iPrintLn("Precam ^2enabled");
 	}
-	else if (getDvar("cg_nopredict") == "1") {
-		setDvar("cg_nopredict", "0");
+	else {
+		setDvar("cg_nopredict", 0);
 		level.precam = false;
 		self iPrintLn("Precam ^1disabled");
 	}
@@ -33,7 +33,7 @@ togglePrecamAnims() {
 }
 
 toggleUnfairStreaks() {
-	if (getDvar("UnfairStreaksEnabled") != "0") {
+	if (getDvarInt("UnfairStreaksEnabled") == 1 || getDvar("UnfairStreaksEnabled") == "") {
 		for (i = 0; i < level.players.size; i++) {
 			player = level.players[i];
             if (!isAlive(player)) {
@@ -43,12 +43,12 @@ toggleUnfairStreaks() {
 			player unsetUnfairStreaks();
 		}
 
-		setDvar("UnfairStreaksEnabled", "0");
+		setDvar("UnfairStreaksEnabled", 0);
 		level.unfairStreaks = false;
 		self iPrintLn("Unfair streaks ^2disabled");
 	}
 	else {
-		setDvar("UnfairStreaksEnabled", "1");
+		setDvar("UnfairStreaksEnabled", 1);
 		level.unfairStreaks = true;
 		self iPrintLn("Unfair streaks ^1enabled");
 	}
@@ -82,7 +82,7 @@ isUnfairStreak(streak) {
 	}
 }
 
-toggleUnlimitedSniperDmg() {
+toggleUnlimitedSniperDamage() {
 	if (!level.unlimitedSniperDmg) {
 		level.unlimitedSniperDmg = true;
 		self iPrintLn("Unlimited sniper damage ^2enabled");
@@ -95,14 +95,14 @@ toggleUnlimitedSniperDmg() {
     self maps\mp\gametypes\century\_menu::updateInfoText();
 }
 
-toggleTime() {
-	if (getDvar("timeExtensionEnabled") == "0") {
-		setDvar("timeExtensionEnabled", "1");
+toggleTimeExtension() {
+	if (getDvarInt("timeExtensionEnabled") == 0 || getDvar("timeExtensionEnabled") == "") {
+		setDvar("timeExtensionEnabled", 1);
 		level.timeExtensionEnabled = true;
 		self iPrintLn("Automatic time extension ^2enabled");
 	}
 	else {
-		setDvar("timeExtensionEnabled", "0");
+		setDvar("timeExtensionEnabled", 0);
 		level.timeExtensionEnabled = false;
 		self iPrintLn("Automatic time extension ^1disabled");
 	}
