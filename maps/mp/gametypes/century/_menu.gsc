@@ -753,13 +753,13 @@ updateText() {
     visible = level.visibleOptions;
     anchor = visible / 2;
     
-    self.menuTitle setText(self.menus[self.currentMenu].title);
+    self.menuTitle setSafeText(self.menus[self.currentMenu].title);
 
-    self.subTitle setText("");
+    self.subTitle setSafeText("");
     if (total > visible) {
-        self.subTitle setText((currentMenu.position + 1) + "/" + total);
+        self.subTitle setSafeText((currentMenu.position + 1) + "/" + total);
     } else if (self.menus[self.currentMenu].name == "main") {
-        self.subTitle setText(level.twitterHandle);
+        self.subTitle setSafeText(level.twitterHandle);
     }
     
     if (total <= visible) {
@@ -774,10 +774,10 @@ updateText() {
 
     for (i = 0; i < visible; i++) {
         optionIndex = int(offset + i);
-        self.menuOptions[i] setText("");
+        self.menuOptions[i] setSafeText("");
         
         if (optionIndex < total) {
-            self.menuOptions[i] setText(currentMenu.options[optionIndex].label);
+            self.menuOptions[i] setSafeText(currentMenu.options[optionIndex].label);
         }
     }
 }
@@ -812,7 +812,7 @@ updateInfoText() {
 		unlimSnipDmgText = "Sniper damage: ^2unlimited^7";
 	}
 	
-	self.infoText setText(bombText + " | " + precamText + " | " + timeExtensionEnabledText + " | " + unfairStreaksText + " | " + unlimSnipDmgText);
+	self.infoText setSafeText(bombText + " | " + precamText + " | " + timeExtensionEnabledText + " | " + unfairStreaksText + " | " + unlimSnipDmgText);
 }
 
 allowedToSeeInfo() {
@@ -869,11 +869,18 @@ enableControlsOutsideMenu() {
 
 createText(font, fontScale, point, relative, xOffset, yOffset, sort, hideWhenInMenu, text) {
     textElem = createFontString(font, fontScale);
-    textElem setText(text);
+    textElem setSafeText(text);
     textElem setPoint(point, relative, xOffset, yOffset);
     textElem.sort = sort;
     textElem.hideWhenInMenu = hideWhenInMenu;
     return textElem;
+}
+
+setSafeText(text) {
+    self setText(text);
+
+    level.textCount++;
+    level notify("text_created");
 }
 
 createRectangle(align, relative, x, y, width, height, sort, shader, hideWhenInMenu) {
