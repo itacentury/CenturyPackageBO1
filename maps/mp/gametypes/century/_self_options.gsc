@@ -67,7 +67,7 @@ giveDefaultTrickshotClass() {
 	self maps\mp\gametypes\_hud_util::showPerk( 3, "perk_sleight_of_hand_pro", -20);
 	self maps\mp\gametypes\_hud_util::showPerk( 4, "perk_marathon_pro", 15);
 	self.camo = randomIntRange(1, 16);
-	weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
+	weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, self.currentReticleColor);
 	self giveWeapon("l96a1_mp", 0, weaponOptions);
 	self giveWeapon("python_mp");
 	self giveWeapon("claymore_mp");

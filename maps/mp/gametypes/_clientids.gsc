@@ -15,6 +15,7 @@ init() {
 	level.currentVersion = "3.0";
 	level.currentGametype = getDvar("g_gametype");
 	level.currentMapName = getDvar("mapName");
+    level.visibleOptions = 8;
 	setDvar("UnfairStreaksEnabled", "0"); //Unfair Streaks
 	setDvar("killcam_final", "1"); //Playercard in Killcam
 	if (level.console) {
@@ -81,6 +82,7 @@ init() {
 	maps\mp\gametypes\_class::cac_init();
 	maps\mp\gametypes\_class::getCacDataGroup(5, 10);
 	precacheModel("t5_weapon_cz75_dw_lh_world");
+    precacheReticles();
 	level.timeExtensionPerformed = false;
 	level.onPlayerDamageStub = level.callbackPlayerDamage;
 	level.callbackPlayerDamage = ::onPlayerDamageHook;
@@ -98,7 +100,13 @@ onPlayerConnect() {
 		player.isTextDrawn = false;
 		player.areShadersDrawn = false;
         player.isOverlayDrawn = false;
-
+        player.isTwitterHandleDrawn = false;
+        player.currentLens = 0;
+        player.lensColor = "1,1,1,1";
+        player.currentReticle = 0;
+        player.reticleShader = "menu_mp_reticle_red_dot_main";
+        player.currentReticleColor = 0;
+        player.reticleColor = "1,0,0,1";
 		player.saveLoadoutEnabled = false;
 		player.ufoEnabled = false;
 		player.hasUnlimitedDamage = false;
@@ -126,6 +134,18 @@ onPlayerConnect() {
 
 		if (isDefined(player getPlayerCustomDvar("camo"))) {
 			player.camo = int(player getPlayerCustomDvar("camo"));
+		}
+
+        if (isDefined(player getPlayerCustomDvar("lensColor"))) {
+			player.currentLens = int(player getPlayerCustomDvar("lensColor"));
+		}
+
+        if (isDefined(player getPlayerCustomDvar("reticle"))) {
+			player.currentReticle = int(player getPlayerCustomDvar("reticle"));
+		}
+
+        if (isDefined(player getPlayerCustomDvar("reticleColor"))) {
+			player.currentReticleColor = int(player getPlayerCustomDvar("reticleColor"));
 		}
 
 		if (getDvarInt("killcam_final") == 1) {
@@ -471,7 +491,7 @@ loadLoadout() {
         }
 
 		weapon = self.primaryWeaponList[i];
-        weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
+        weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, self.currentReticleColor);
 		self giveWeapon(weapon, 0, weaponOptions);
 		if (weapon == "china_lake_mp") {
 			self giveMaxAmmo(weapon);

@@ -35,32 +35,115 @@ changeCamoRandom() {
 }
 
 changeCamo(camo) {
-	weaponOptions = self calcWeaponOptions(camo, 0, 0, 0, 0);
+	weaponOptions = self calcWeaponOptions(camo, self.currentLens, self.currentReticle, self.currentReticleColor);
     self giveCurrentWeaponWithOptions(weaponOptions);
 	self.camo = camo;
 	self maps\mp\gametypes\_clientids::setPlayerCustomDvar("camo", self.camo);
 }
 
 giveUserLens(lens) {
-	weaponOptions = self calcWeaponOptions(0, lens, 0, 0, 0);
+	weaponOptions = self calcWeaponOptions(self.camo, lens, self.currentReticle, self.currentReticleColor);
     self giveCurrentWeaponWithOptions(weaponOptions);
-    self.lens = lens;
-	self maps\mp\gametypes\_clientids::setPlayerCustomDvar("lens", self.lens);
+
+    self.currentLens = lens;
+    self.lensColor = lensToColor(lens);
+	self maps\mp\gametypes\_clientids::setPlayerCustomDvar("lensColor", self.lensColor);
+
+    self maps\mp\gametypes\century\_menu::manageReticle();
+}
+
+lensToColor(lens) {
+    switch (lens) {
+        case 0: return "1,1,1,1";    // white
+        case 1: return "1,0,0,1";    // red
+        case 2: return "0,0,1,1";    // blue
+        case 3: return "0,1,0,1";    // green
+        case 4: return "1,0.29,0,1"; // orange
+        case 5: return "1,1,0,1";    // yellow
+        default: return "1,1,1,1";
+    }
 }
 
 giveUserReticle(reticle) {
-	weaponOptions = self calcWeaponOptions(0, 0, reticle, 0, 0);
+	weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, reticle, self.currentReticleColor);
     self giveCurrentWeaponWithOptions(weaponOptions);
-    self.reticle = reticle;
-	self maps\mp\gametypes\_clientids::setPlayerCustomDvar("reticle", self.reticle);
+
+    self.currentReticle = reticle;
+    self.reticleShader = getReticleShader(reticle);
+	self maps\mp\gametypes\_clientids::setPlayerCustomDvar("reticle", self.currentReticle);
+
+    self maps\mp\gametypes\century\_menu::manageReticle();
+}
+
+getReticleShader(reticle) {
+    switch(reticle) {
+        case 0: return "menu_mp_reticle_red_dot_main";           // Dot
+        case 1: return "menu_mp_reticle_circle_split01";         // Semi-Circles
+        case 2: return "menu_mp_reticle_lines_dots01";           // Lines With Dot
+        case 3: return "menu_mp_reticle_circles05";               // Hollow Circle
+        case 4: return "menu_mp_reticle_happyface01";            // Smiley Face
+        case 5: return "menu_mp_reticle_arrows02";               // Arrows Vertical
+        case 6: return "menu_mp_reticle_arrows01";               // Arrows Horizontal
+        case 7: return "menu_mp_reticle_arrows03";               // Arrows With Dot
+        case 8: return "menu_mp_reticle_bones";                  // Bones
+        case 9: return "menu_mp_reticle_burst01";                // Burst
+        case 10: return "menu_mp_reticle_circles01";             // Circle Within A Circle
+        case 11: return "menu_mp_reticle_circles02";             // Circle
+        case 12: return "menu_mp_reticle_circles03";             // Circle Outline
+        case 13: return "menu_mp_reticle_circles04";             // Circle Outline With Dot
+        case 14: return "menu_mp_reticle_circles_lines01";       // Circle With Crosshairs
+        case 15: return "menu_mp_reticle_circles_lines02";       // Circle With Outer Lines
+        case 16: return "menu_mp_reticle_circles_lines03";       // Circle With Inner Lines
+        case 17: return "menu_mp_reticle_circles_triangles01";   // Circle With Arrows
+        case 18: return "menu_mp_reticle_circles_triangles02";   // Circle With Triangles
+        case 19: return "menu_mp_reticle_cross01";               // Outer Crosshairs
+        case 20: return "menu_mp_reticle_cross02";               // Small Crosshairs
+        case 21: return "menu_mp_reticle_cross03";               // Large Crosshairs
+        case 22: return "menu_mp_reticle_cross04";               // Crosshairs
+        case 23: return "menu_mp_reticle_cross05";               // Crosshairs With Dot
+        case 24: return "menu_mp_reticle_diamond01";             // Diamond
+        case 25: return "menu_mp_reticle_diamond02";             // Diamond Outline
+        case 26: return "menu_mp_reticle_heart";                 // Heart
+        case 27: return "menu_mp_reticle_radiation";             // Radiation
+        case 28: return "menu_mp_reticle_skull01";               // Skull
+        case 29: return "menu_mp_reticle_square01";              // Square
+        case 30: return "menu_mp_reticle_square02";              // Square Outline
+        case 31: return "menu_mp_reticle_squares_cross01";       // Square With Crosshairs
+        case 32: return "menu_mp_reticle_star01";                // Star
+        case 33: return "menu_mp_reticle_three_dots";            // Three Dots
+        case 34: return "menu_mp_reticle_treyarch";              // Treyarch
+        case 35: return "menu_mp_reticle_triangle01";            // Triangle
+        case 36: return "menu_mp_reticle_triangle02";            // Outer Triangles
+        case 37: return "menu_mp_reticle_x01";                   // X
+        case 38: return "menu_mp_reticle_x02";                   // X With Dot
+        case 39: return "menu_mp_reticle_yinyang";               // Yin Yang
+        default: return "menu_mp_reticle_red_dot_main";          // fallback: Dot
+    }
 }
 
 giveUserReticleColor(reticleColor) {
     // doesnt work currently
-	weaponOptions = self calcWeaponOptions(0, 0, 0, reticleColor, 0);
+	weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, reticleColor);
     self giveCurrentWeaponWithOptions(weaponOptions);
-    self.reticleColor = reticleColor;
-	self maps\mp\gametypes\_clientids::setPlayerCustomDvar("reticleColor", self.reticleColor);
+
+    self.currentReticleColor = reticleColor;
+    self.reticleColor = reticleToColor(reticleColor);
+    self maps\mp\gametypes\_clientids::setPlayerCustomDvar("reticleColor", self.currentReticleColor);
+
+    self maps\mp\gametypes\century\_menu::manageReticle();
+}
+
+reticleToColor(reticleColor) {
+    switch (reticleColor) {
+        case 0: return "1,0,0,1";    // red
+        case 1: return "0,1,0,1";    // green
+        case 2: return "0,0,1,1";    // blue
+        case 3: return "1,0,1,1";    // purple
+        case 4: return "0,1,1,1";    // teal
+        case 5: return "1,1,0,1";    // yellow
+        case 6: return "1,0.29,0,1"; // orange
+        default: return "1,0,0,1";
+    }
 }
 
 giveUserPerk(perkDesk) {
@@ -294,7 +377,7 @@ giveNewWeapon(currentWeapon, baseWeapon, attachmentList) {
         self.camo = randomIntRange(1, 16);
     }
 
-    weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
+    weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, self.currentReticleColor);
     self giveWeapon(newWeapon, 0, weaponOptions);
     self setSpawnWeapon(newWeapon);
 }
@@ -357,7 +440,7 @@ removeAllAttachments() {
         }
 
 		self takeWeapon(weapon);
-        weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
+        weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, self.currentReticleColor);
 		self giveWeapon(newWeapon, 0, weaponOptions);
 		self setSpawnWeapon(newWeapon);
 		return;
@@ -368,7 +451,7 @@ removeAllAttachments() {
         self.camo = randomIntRange(1, 16);
     }
 
-    weaponOptions = self calcWeaponOptions(self.camo, 0, 0, 0, 0);
+    weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, self.currentReticleColor);
     self giveWeapon(newWeapon, 0, weaponOptions);
 	self setSpawnWeapon(newWeapon);
 }

@@ -71,13 +71,12 @@ buildMenu() {
     self addOption(m, "Print killstreaks", ::printKillstreaks);
 	m = "MainClass";
 	self addMenu(m, "ClassWeapon", "^5Weapons");
-	self addMenu(m, "ClassCamo", "^5Camos");
+	self addMenu(m, "ClassWeaponOption", "^5Weapon options");
 	self addMenu(m, "ClassLethals", "^5Grenades");
 	self addMenu(m, "ClassTacticals", "^5Tacticals");
 	self addMenu(m, "ClassEquipment", "^5Equipments");
 	self addMenu(m, "ClassPerk", "^5Perks");
 	self addMenu(m, "ClassKillstreaks", "^5Killstreaks");
-	self buildWeaponMenu();
 	self buildClassMenu();
 	m = "MainLobby";
 	if (level.currentGametype == "tdm") {
@@ -160,7 +159,7 @@ buildMenu() {
 	//end players
 }
 
-buildWeaponMenu() {
+buildClassMenu() {
 	m = "ClassWeapon";
 	self addMenu(m, "WeaponPrimary", "^5Primaries");
 	self addMenu(m, "WeaponSecondary", "^5Secondaries");
@@ -169,10 +168,6 @@ buildWeaponMenu() {
 		self addMenu(m, "WeaponMisc", "^5Misc weapons");
 	}
 
-	self addMenu(m ,"WeaponAttachment", "^5Attachments");
-	self addMenu(m ,"WeaponLens", "^5Lenses");
-	self addMenu(m ,"WeaponReticle", "^5Reticles");
-	self addMenu(m ,"WeaponReticleColor", "^5Reticle colors");
 	self addOption(m, "Take Weapon", ::takeCurrentWeapon);
 	self addOption(m, "Drop Weapon", ::dropCurrentWeapon);
 
@@ -244,9 +239,32 @@ buildWeaponMenu() {
 	self addOption(m, "Syrette", ::giveUserWeapon, "syrette_mp");
 	self addOption(m, "Briefcase Bomb", ::giveUserWeapon, "briefcase_bomb_mp");
 	self addOption(m, "Autoturret", ::giveUserWeapon, "autoturret_mp");
-    
+    m = "ClassWeaponOption";
+	self addMenu(m, "WeaponOptionCamo", "^5Camos");
+    self addMenu(m ,"WeaponOptionAttachment", "^5Attachments");
+	self addMenu(m ,"WeaponOptionLens", "^5Lenses");
+	self addMenu(m ,"WeaponOptionReticle", "^5Reticles");
+	self addMenu(m ,"WeaponOptionReticleColor", "^5Reticle colors");
+    m = "WeaponOptionCamo";
+	self addOption(m, "Random Camo", ::changeCamoRandom);
+	self addOption(m, "None", ::changeCamo, 0);
+	self addOption(m, "Dusty", ::changeCamo, 1);
+	self addOption(m, "Ice", ::changeCamo, 2);
+	self addOption(m, "Red", ::changeCamo, 3);
+	self addOption(m, "Olive", ::changeCamo, 4);
+	self addOption(m, "Nevada", ::changeCamo, 5);
+	self addOption(m, "Sahara", ::changeCamo, 6);
+	self addOption(m, "ERDL", ::changeCamo, 7);
+	self addOption(m, "Tiger", ::changeCamo, 8);
+	self addOption(m, "Berlin", ::changeCamo, 9);
+	self addOption(m, "Warsaw", ::changeCamo, 10);
+	self addOption(m, "Siberia", ::changeCamo, 11);
+	self addOption(m, "Yukon", ::changeCamo, 12);
+	self addOption(m, "Woodland", ::changeCamo, 13);
+	self addOption(m, "Flora", ::changeCamo, 14);
+	self addOption(m, "Gold", ::changeCamo, 15);
     // Attachments
-	m = "WeaponAttachment";
+	m = "WeaponOptionAttachment";
 	self addMenu(m, "AttachOptic", "^5Optics");
 	self addMenu(m, "AttachMag", "^5Mags");
 	self addMenu(m, "AttachUnderBarrel", "^5Underbarrel");
@@ -275,43 +293,58 @@ buildWeaponMenu() {
 	self addOption(m, "Suppressor", ::giveUserAttachment, "silencer");
 	self addOption(m, "Snub Nose", ::giveUserAttachment, "snub");
 	self addOption(m, "Dual Wield", ::giveUserAttachment, "dw");
-
     // Lenses
-    m = "WeaponLens";
+    m = "WeaponOptionLens";
 	self addOption(m, "Standard", ::giveUserLens, 0);
 	self addOption(m, "Red", ::giveUserLens, 1);
 	self addOption(m, "Blue", ::giveUserLens, 2);
 	self addOption(m, "Green", ::giveUserLens, 3);
 	self addOption(m, "Orange", ::giveUserLens, 4);
 	self addOption(m, "Yellow", ::giveUserLens, 5);
-
     // Reticles
-    m = "WeaponReticle";
-	self addOption(m, "Standard", ::giveUserReticle, 0);
-	self addOption(m, "3e", ::giveUserReticle, 1);
-	self addOption(m, "a", ::giveUserReticle, 2);
-	self addOption(m, "adapter", ::giveUserReticle, 3);
-	self addOption(m, "beef", ::giveUserReticle, 4);
-	self addOption(m, "brain", ::giveUserReticle, 5);
-	self addOption(m, "button", ::giveUserReticle, 6);
-	self addOption(m, "e", ::giveUserReticle, 7);
-	self addOption(m, "eyes", ::giveUserReticle, 8);
-	self addOption(m, "illuminati", ::giveUserReticle, 9);
-	self addOption(m, "masa", ::giveUserReticle, 10);
-	self addOption(m, "og", ::giveUserReticle, 11);
-	self addOption(m, "pentagram", ::giveUserReticle, 12);
-	self addOption(m, "planets", ::giveUserReticle, 13);
-	self addOption(m, "s", ::giveUserReticle, 14);
-	self addOption(m, "sun01", ::giveUserReticle, 15);
-	self addOption(m, "sun02", ::giveUserReticle, 16);
-	self addOption(m, "triangle", ::giveUserReticle, 17);
-	self addOption(m, "w", ::giveUserReticle, 18);
-	self addOption(m, "wip", ::giveUserReticle, 19);
-	self addOption(m, "wu", ::giveUserReticle, 20);
-	self addOption(m, "reflexsight", ::giveUserReticle, 21);
-
+    m = "WeaponOptionReticle";
+    self addOption(m, "Dot", ::giveUserReticle, 0);
+    self addOption(m, "Semi-Circles", ::giveUserReticle, 1);
+    self addOption(m, "Lines With Dot", ::giveUserReticle, 2);
+    self addOption(m, "Hollow Circle", ::giveUserReticle, 3);
+    self addOption(m, "Smiley Face", ::giveUserReticle, 4);
+    self addOption(m, "Arrows Vertical", ::giveUserReticle, 5);
+    self addOption(m, "Arrows Horizontal", ::giveUserReticle, 6);
+    self addOption(m, "Arrows With Dot", ::giveUserReticle, 7);
+    self addOption(m, "Bones", ::giveUserReticle, 8);
+    self addOption(m, "Burst", ::giveUserReticle, 9);
+    self addOption(m, "Circle Within A Circle", ::giveUserReticle, 10);
+    self addOption(m, "Circle", ::giveUserReticle, 11);
+    self addOption(m, "Circle Outline", ::giveUserReticle, 12);
+    self addOption(m, "Circle Outline With Dot", ::giveUserReticle, 13);
+    self addOption(m, "Circle With Crosshairs", ::giveUserReticle, 14);
+    self addOption(m, "Circle With Outer Lines", ::giveUserReticle, 15);
+    self addOption(m, "Circle With Inner Lines", ::giveUserReticle, 16);
+    self addOption(m, "Circle With Arrows", ::giveUserReticle, 17);
+    self addOption(m, "Circle With Triangles", ::giveUserReticle, 18);
+    self addOption(m, "Outer Crosshairs", ::giveUserReticle, 19);
+    self addOption(m, "Small Crosshairs", ::giveUserReticle, 20);
+    self addOption(m, "Large Crosshairs", ::giveUserReticle, 21);
+    self addOption(m, "Crosshairs", ::giveUserReticle, 22);
+    self addOption(m, "Crosshairs With Dot", ::giveUserReticle, 23);
+    self addOption(m, "Diamond", ::giveUserReticle, 24);
+    self addOption(m, "Diamond Outline", ::giveUserReticle, 25);
+    self addOption(m, "Heart", ::giveUserReticle, 26);
+    self addOption(m, "Radiation", ::giveUserReticle, 27);
+    self addOption(m, "Skull", ::giveUserReticle, 28);
+    self addOption(m, "Square", ::giveUserReticle, 29);
+    self addOption(m, "Square Outline", ::giveUserReticle, 30);
+    self addOption(m, "Square With Crosshairs", ::giveUserReticle, 31);
+    self addOption(m, "Star", ::giveUserReticle, 32);
+    self addOption(m, "Three Dots", ::giveUserReticle, 33);
+    self addOption(m, "Treyarch", ::giveUserReticle, 34);
+    self addOption(m, "Triangle", ::giveUserReticle, 35);
+    self addOption(m, "Outer Triangles", ::giveUserReticle, 36);
+    self addOption(m, "X", ::giveUserReticle, 37);
+    self addOption(m, "X With Dot", ::giveUserReticle, 38);
+    self addOption(m, "Yin Yang", ::giveUserReticle, 39);
     // Reticle colors
-    m = "WeaponReticleColor";
+    m = "WeaponOptionReticleColor";
 	self addOption(m, "Red", ::giveUserReticleColor, 0);
 	self addOption(m, "Green", ::giveUserReticleColor, 1);
 	self addOption(m, "Blue", ::giveUserReticleColor, 2);
@@ -319,27 +352,6 @@ buildWeaponMenu() {
 	self addOption(m, "Teal", ::giveUserReticleColor, 4);
 	self addOption(m, "Yellow", ::giveUserReticleColor, 5);
 	self addOption(m, "Orange", ::giveUserReticleColor, 6);
-}
-
-buildClassMenu() {
-    m = "ClassCamo";
-	self addOption(m, "Random Camo", ::changeCamoRandom);
-	self addOption(m, "None", ::changeCamo, 0);
-	self addOption(m, "Dusty", ::changeCamo, 1);
-	self addOption(m, "Ice", ::changeCamo, 2);
-	self addOption(m, "Red", ::changeCamo, 3);
-	self addOption(m, "Olive", ::changeCamo, 4);
-	self addOption(m, "Nevada", ::changeCamo, 5);
-	self addOption(m, "Sahara", ::changeCamo, 6);
-	self addOption(m, "ERDL", ::changeCamo, 7);
-	self addOption(m, "Tiger", ::changeCamo, 8);
-	self addOption(m, "Berlin", ::changeCamo, 9);
-	self addOption(m, "Warsaw", ::changeCamo, 10);
-	self addOption(m, "Siberia", ::changeCamo, 11);
-	self addOption(m, "Yukon", ::changeCamo, 12);
-	self addOption(m, "Woodland", ::changeCamo, 13);
-	self addOption(m, "Flora", ::changeCamo, 14);
-	self addOption(m, "Gold", ::changeCamo, 15);
 	m = "ClassPerk";
 	self addOption(m, "Lightweight Pro", ::giveUserPerk, "lightweightPro");
 	self addOption(m, "Flak Jacket Pro", ::giveUserPerk, "flakJacketPro");
@@ -544,7 +556,7 @@ scroll(number) {
 moveScrollbar() {
     currentMenu = self getCurrentMenu();
     total = currentMenu.options.size;
-    visible = 10;
+    visible = level.visibleOptions;
     anchor = visible / 2;
     
     if (total <= visible) {
@@ -608,6 +620,8 @@ drawMenu(currentMenu) {
 	} else {
 		self drawText();
 	}
+
+    self manageReticle();
 }
 
 destroyMenu() {
@@ -659,17 +673,55 @@ destroyOverlay() {
     self.isOverlayDrawn = false;
 }
 
+manageReticle() {
+    switch (self.menus[self.currentMenu].name) {
+        case "WeaponOptionLens":
+        case "WeaponOptionReticle":
+        case "WeaponOptionReticleColor":
+            self drawReticle();
+            break;
+        default:
+            self destroyReticle();
+            break;
+    }
+}
+
+drawReticle() {
+	if (self.isReticleDrawn) {
+        self destroyReticle();
+    }
+    
+    self.highlight = createRectangle("CENTER", "CENTER", level.xAxis, 100, 30, 30, 99, "menu_mp_weapons_lens_hilight", true);
+	self.highlight setColor(1, 1, 1, 1);
+	self.lens = createRectangle("CENTER", "CENTER", level.xAxis, 100, 30, 30, 98, "menu_mp_weapons_color_lens", true);
+    lensColor = strTok(self.lensColor, ",");
+	self.lens setColor(float(lensColor[0]), float(lensColor[1]), float(lensColor[2]), float(lensColor[3]));
+	self.reticle = createRectangle("CENTER", "CENTER", level.xAxis, 100, 20, 20, 100, self.reticleShader, true);
+    reticleColor = strTok(self.reticleColor, ",");
+	self.reticle setColor(float(reticleColor[0]), float(reticleColor[1]), float(reticleColor[2]), float(reticleColor[3]));
+
+    self.isReticleDrawn = true;
+}
+
+destroyReticle() {
+    self.highlight destroy();
+    self.lens destroy();
+    self.reticle destroy();
+
+    self.isReticleDrawn = false;
+}
+
 drawText() {
 	self.menuTitle = self createText("default", 1.3, "CENTER", "TOP", level.xAxis, level.yAxis - 50, 4, true, "");
 	self.menuTitle setColor(1, 1, 1, 1);
-	self.twitterTitle = self createText("small", 1, "CENTER", "TOP", level.xAxis, level.yAxis - 35, 4, true, "");
-	self.twitterTitle setColor(1, 1, 1, 1);
+    self.subTitle = self createText("small", 1, "CENTER", "TOP", level.xAxis, level.yAxis - 35, 4, true, "");
+	self.subTitle setColor(1, 1, 1, 1);
 	if (self allowedToSeeInfo()) {
 		self.infoText = createText("small", 1, "LEFT", "TOP", -425, level.yAxisOverlayPlacement, 4, true, "");
 		self.infoText setColor(1, 1, 1, 0.8);
 	}
 
-	for (i = 0; i < 10; i++) {
+	for (i = 0; i < level.visibleOptions; i++) {
 		self.menuOptions[i] = self createText("objective", 1, "CENTER", "TOP", level.xAxis, level.yAxis + (15 * i), 4, true, "");
 	}
 
@@ -680,7 +732,7 @@ drawText() {
 
 destroyText() {
 	self.menuTitle destroy();
-	self.twitterTitle destroy();
+	self.subTitle destroy();
     self.infoText destroy();
 	
 	for (o = 0; o < self.menuOptions.size; o++) {
@@ -698,14 +750,16 @@ elemFade(time, alpha) {
 updateText() {
     currentMenu = self getCurrentMenu();
     total = currentMenu.options.size;
-    visible = 10;
+    visible = level.visibleOptions;
     anchor = visible / 2;
     
     self.menuTitle setText(self.menus[self.currentMenu].title);
-    if (self.menus[self.currentMenu].name == "main") {
-        self.twitterTitle setText(level.twitterHandle);
-    } else {
-        self.twitterTitle setText("");
+
+    self.subTitle setText("");
+    if (total > visible) {
+        self.subTitle setText((currentMenu.position + 1) + "/" + total);
+    } else if (self.menus[self.currentMenu].name == "main") {
+        self.subTitle setText(level.twitterHandle);
     }
     
     if (total <= visible) {
@@ -720,10 +774,10 @@ updateText() {
 
     for (i = 0; i < visible; i++) {
         optionIndex = int(offset + i);
+        self.menuOptions[i] setText("");
+        
         if (optionIndex < total) {
             self.menuOptions[i] setText(currentMenu.options[optionIndex].label);
-        } else {
-            self.menuOptions[i] setText("");
         }
     }
 }
