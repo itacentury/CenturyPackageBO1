@@ -121,9 +121,9 @@ getReticleShader(reticle) {
     }
 }
 
+// doesnt work currently
 giveUserReticleColor(reticleColor) {
-    // doesnt work currently
-	weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, reticleColor);
+	weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, 0, 0, 0, reticleColor);
     self giveCurrentWeaponWithOptions(weaponOptions);
 
     self.currentReticleColor = reticleColor;

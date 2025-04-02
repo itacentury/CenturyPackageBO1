@@ -244,7 +244,7 @@ buildClassMenu() {
     self addMenu(m ,"WeaponOptionAttachment", "^5Attachments");
 	self addMenu(m ,"WeaponOptionLens", "^5Lenses");
 	self addMenu(m ,"WeaponOptionReticle", "^5Reticles");
-	self addMenu(m ,"WeaponOptionReticleColor", "^5Reticle colors");
+	// self addMenu(m ,"WeaponOptionReticleColor", "^5Reticle colors"); // disabled because it doesnt work currently
     m = "WeaponOptionCamo";
 	self addOption(m, "Random Camo", ::changeCamoRandom);
 	self addOption(m, "None", ::changeCamo, 0);
