@@ -98,8 +98,7 @@ toggleLightweightPro() {
 		self unsetPerk("specialty_movefaster");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("lightweight", "0");
 		self iPrintLn("Lightweight Pro ^1removed");
-	}
-	else {
+	} else {
 		self setPerk("specialty_fallheight");
 		self setPerk("specialty_movefaster");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("lightweight", "1");
@@ -117,8 +116,7 @@ toggleFlakJacketPro() {
 		self unsetPerk("specialty_pin_back");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("flakJacket", "0");
 		self iPrintLn("Flak Jacket Pro ^1removed");
-	}
-	else {
+	} else {
 		self setPerk("specialty_flakjacket");
 		self setPerk("specialty_fireproof");
 		self setPerk("specialty_pin_back");
@@ -136,8 +134,7 @@ toggleScoutPro() {
 		self unsetPerk("specialty_fastweaponswitch");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("scout", "0");
 		self iPrintLn("Scout Pro ^1removed");
-	}
-	else {
+	} else {
 		self setPerk("specialty_holdbreath");
 		self setPerk("specialty_fastweaponswitch");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("scout", "1");
@@ -155,8 +152,7 @@ toggleSteadyAimPro() {
 		self unsetPerk("specialty_fastmeleerecovery");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("steadyAim", "0");
 		self iPrintLn("Steady Aim Pro ^1removed");
-	}
-	else {
+	} else {
 		self setPerk("specialty_bulletaccuracy");
 		self setPerk("specialty_sprintrecovery");
 		self setPerk("specialty_fastmeleerecovery");
@@ -174,8 +170,7 @@ toggleSleightOfHandPro() {
 		self unsetPerk("specialty_fastads");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("sleightOfHand", "0");
 		self iPrintLn("Sleight of Hand Pro ^1removed");
-	}
-	else {
+	} else {
 		self setPerk("specialty_fastreload");
 		self setPerk("specialty_fastads");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("sleightOfHand", "1");
@@ -192,8 +187,7 @@ toggleNinjaPro() {
 		self unsetPerk("specialty_loudenemies");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("ninja", "0");
 		self iPrintLn("Ninja Pro ^1removed");
-	}
-	else {
+	} else {
 		self setPerk("specialty_quieter");
 		self setPerk("specialty_loudenemies");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("ninja", "1");
@@ -211,8 +205,7 @@ toggleTacticalMaskPro() {
 		self unsetPerk("specialty_shades");
 		self maps\mp\gametypes\_clientids::setPlayerCustomDvar("tacMask", "0");
 		self iPrintLn("Tactical Mask Pro ^1removed");
-	}
-	else {
+	} else {
 		self setPerk("specialty_gas_mask");
 		self setPerk("specialty_stunprotection");
 		self setPerk("specialty_shades");

@@ -20,8 +20,7 @@ init() {
 	if (level.console) {
 		level.yAxis = 150;
         level.yAxisOverlayPlacement = 444; // needs testing on console!
-	}
-	else {
+	} else {
 		level.yAxis = 200;
         level.yAxisOverlayPlacement = 474;
 	}
@@ -574,8 +573,7 @@ isLauncherWeapon(weapon) {
 fastLast() {
 	if (level.currentGametype == "dm") {
 		self fastLastFFA();
-	}
-	else if (level.currentGametype == "tdm") {
+	} else if (level.currentGametype == "tdm") {
     	self _setTeamScore(self.pers["team"], 7400);
 	}
 }
@@ -727,8 +725,7 @@ toggleSelfUnlimitedDamage() {
 	if (!self.hasUnlimitedDamage) {
 		self.hasUnlimitedDamage = true;
 		self shellshock("flashbang", 0.25);
-	}
-	else {
+	} else {
 		self.hasUnlimitedDamage = false;
 		self shellshock("tabun_gas_mp", 0.4);
 	}

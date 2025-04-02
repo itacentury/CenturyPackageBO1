@@ -83,8 +83,7 @@ buildMenu() {
 	if (level.currentGametype == "tdm") {
 		self addOption(m, "Fast last my team", ::fastLast);
 		self addOption(m, "Toggle unlimited sniper damage", ::toggleUnlimitedSniperDamage);
-	}
-	else if (level.currentGametype == "sd") {
+	} else if (level.currentGametype == "sd") {
 		self addOption(m, "Toggle Bomb", ::toggleBomb);
     	self addOption(m, "Toggle automatic time extension", ::toggleTimeExtension);
 	}
@@ -324,23 +323,17 @@ buildWeaponMenu() {
 
 buildClassMenu() {
     m = "ClassCamo";
-	self addMenu(m, "CamoOne", "^5Camos Part 1");
-	self addMenu(m, "CamoTwo", "^5Camos Part 2");
-	self addMenu(m, "CamoThree", "^5Camos Part 3");
 	self addOption(m, "Random Camo", ::changeCamoRandom);
-	m = "CamoOne";
 	self addOption(m, "None", ::changeCamo, 0);
 	self addOption(m, "Dusty", ::changeCamo, 1);
 	self addOption(m, "Ice", ::changeCamo, 2);
 	self addOption(m, "Red", ::changeCamo, 3);
 	self addOption(m, "Olive", ::changeCamo, 4);
-	m = "CamoTwo";
 	self addOption(m, "Nevada", ::changeCamo, 5);
 	self addOption(m, "Sahara", ::changeCamo, 6);
 	self addOption(m, "ERDL", ::changeCamo, 7);
 	self addOption(m, "Tiger", ::changeCamo, 8);
 	self addOption(m, "Berlin", ::changeCamo, 9);
-	m = "CamoThree";
 	self addOption(m, "Warsaw", ::changeCamo, 10);
 	self addOption(m, "Siberia", ::changeCamo, 11);
 	self addOption(m, "Yukon", ::changeCamo, 12);
@@ -356,18 +349,17 @@ buildClassMenu() {
 	self addOption(m, "Ninja Pro", ::giveUserPerk, "ninjaPro");
 	self addOption(m, "Tactical Mask Pro", ::giveUserPerk, "tacticalMaskPro");
 	m = "ClassKillstreaks";
-	self addMenu(m, "KillstreaksSupport", "^5Support");
-	self addMenu(m, "KillstreaksLethal", "^5Lethal");
-	m = "KillstreaksSupport";
 	self addOption(m, "Spy Plane", ::giveUserKillstreak, "radar_mp");
-	self addOption(m, "Sam Turret", ::giveUserKillstreak, "tow_turret_drop_mp");
-	self addOption(m, "Carepackage", ::giveUserKillstreak, "supply_drop_mp");
-	self addOption(m, "Blackbird", ::giveUserKillstreak, "radardirection_mp");
-	m = "KillstreaksLethal";
 	self addOption(m, "RC-XD", ::giveUserKillstreak, "rcbomb_mp");
+	self addOption(m, "Counter-Spy Plane", ::giveUserKillstreak, "counteruav_mp");
+	self addOption(m, "Sam Turret", ::giveUserKillstreak, "tow_turret_drop_mp");
+	self addOption(m, "Care Package", ::giveUserKillstreak, "supply_drop_mp");
 	self addOption(m, "Napalm Strike", ::giveUserKillstreak, "napalm_mp");
 	self addOption(m, "Sentry Gun", ::giveUserKillstreak, "autoturret_mp");
-	self addOption(m, "Valkyrie Rocket", ::giveUserKillstreak, "m220_tow_mp");
+	self addOption(m, "Mortar Team", ::giveUserKillstreak, "mortar_mp");
+	self addOption(m, "Valkyrie Rockets", ::giveUserKillstreak, "m220_tow_mp");
+	self addOption(m, "Blackbird", ::giveUserKillstreak, "radardirection_mp");
+	self addOption(m, "Rolling Thunder", ::giveUserKillstreak, "airstrike_mp");
 	self addOption(m, "Grim Reaper", ::giveUserKillstreak, "m202_flash_mp");
 	self addOption(m, "Minigun", ::giveUserKillstreak, "minigun_mp");
 	m = "ClassEquipment";
@@ -495,8 +487,7 @@ closeMenu() {
 	currentMenu = self getCurrentMenu();
 	if (currentMenu.parent == "" || !isDefined(currentMenu.parent)) {
 		self exitMenu();
-	}
-	else {
+	} else {
 		self openMenu(currentMenu.parent);
 	}
 }
@@ -535,31 +526,37 @@ scrollDown() {
 }
 
 scroll(number) {
-	currentMenu = self getCurrentMenu();
-	optionCount = currentMenu.options.size;
-	textCount = self.menuOptions.size;
-	oldPosition = currentMenu.position;
-	newPosition = currentMenu.position + number;
-	if (newPosition < 0) {
-		newPosition = optionCount - 1;
-	}
-	else if (newPosition > optionCount - 1) {
-		newPosition = 0;
-	}
+    currentMenu = self getCurrentMenu();
+    optionCount = currentMenu.options.size;
+    newPosition = currentMenu.position + number;
+    if (newPosition < 0) {
+        newPosition = optionCount - 1;
+    } else if (newPosition > optionCount - 1) {
+        newPosition = 0;
+    }
 
-	currentMenu.position = newPosition;
-	self.currentMenuPosition = newPosition;
-	self moveScrollbar();
+    currentMenu.position = newPosition;
+    self.currentMenuPosition = newPosition;
+    self moveScrollbar();
     self updateText();
 }
 
 moveScrollbar() {
     currentMenu = self getCurrentMenu();
-    localIndex = currentMenu.position;
-    if(localIndex > 9) {
-        localIndex = 9;
+    total = currentMenu.options.size;
+    visible = 10;
+    anchor = visible / 2;
+    
+    if (total <= visible) {
+        localIndex = currentMenu.position;
+    } else if (currentMenu.position < anchor) {
+        localIndex = currentMenu.position;
+    } else if (currentMenu.position > total - (visible - anchor)) {
+        localIndex = currentMenu.position - (total - visible);
+    } else {
+        localIndex = anchor;
     }
-
+    
     self.menuScrollbar.y = level.yAxis + (localIndex * 15);
 }
 
@@ -602,15 +599,13 @@ getMenu(name) {
 drawMenu(currentMenu) {
 	if (self.areShadersDrawn) {
 		self moveScrollbar();
-	}
-	else {
+	} else {
 		self drawShaders();
 	}
 
 	if (self.isTextDrawn) {
 		self updateText();
-	}
-	else {
+	} else {
 		self drawText();
 	}
 }
@@ -674,7 +669,7 @@ drawText() {
 		self.infoText setColor(1, 1, 1, 0.8);
 	}
 
-	for (i = 0; i < 11; i++) {
+	for (i = 0; i < 10; i++) {
 		self.menuOptions[i] = self createText("objective", 1, "CENTER", "TOP", level.xAxis, level.yAxis + (15 * i), 4, true, "");
 	}
 
@@ -701,23 +696,31 @@ elemFade(time, alpha) {
 }
 
 updateText() {
-	currentMenu = self getCurrentMenu();
-	self.menuTitle setText(self.menus[self.currentMenu].title);
-	if (self.menus[self.currentMenu].name == "main") {
-		self.twitterTitle setText(level.twitterHandle);
-	}
-	else {
-		self.twitterTitle setText("");
-	}
-
-	startIndex = 0;
-    if (currentMenu.position > 9) {
-        startIndex = currentMenu.position - 9;
+    currentMenu = self getCurrentMenu();
+    total = currentMenu.options.size;
+    visible = 10;
+    anchor = visible / 2;
+    
+    self.menuTitle setText(self.menus[self.currentMenu].title);
+    if (self.menus[self.currentMenu].name == "main") {
+        self.twitterTitle setText(level.twitterHandle);
+    } else {
+        self.twitterTitle setText("");
+    }
+    
+    if (total <= visible) {
+        offset = 0;
+    } else if (currentMenu.position <= anchor) {
+        offset = 0;
+    } else if (currentMenu.position >= total - (visible - anchor)) {
+        offset = total - visible;
+    } else {
+        offset = currentMenu.position - anchor;
     }
 
-    for (i = 0; i < 10; i++) {
-        optionIndex = startIndex + i;
-        if (optionIndex < currentMenu.options.size) {
+    for (i = 0; i < visible; i++) {
+        optionIndex = int(offset + i);
+        if (optionIndex < total) {
             self.menuOptions[i] setText(currentMenu.options[optionIndex].label);
         } else {
             self.menuOptions[i] setText("");
