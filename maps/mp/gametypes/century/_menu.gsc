@@ -44,14 +44,8 @@ buildMenu() {
 	}
 
 	self addMenu(m, "SelfLoadout", "^5Loadout Options");
-	if (self hasHostRights()) {
-		if (level.currentGametype == "sd") {
-			self addOption(m, "Inform team about revive team bind", ::customSayTeam, "^2Crouch ^7& ^5DPAD Left ^7to revive your team!");
-		}
-
-		if (level.players.size == 1) {
-			self addOption(m, "Give unlock all", ::giveUnlockAll);
-		}
+	if (self hasHostRights() && level.players.size == 1) {
+        self addOption(m, "Give unlock all", ::giveUnlockAll);
 	}
 
 	m = "SelfLocation";
@@ -90,6 +84,7 @@ buildMenu() {
 	self addOption(m, "Toggle precam weapon anims", ::togglePrecamAnims);
 	self addOption(m, "Toggle unfair streaks", ::toggleUnfairStreaks);
 	m = "MainTeam";
+    self addOption(m, "Say team: revive team bind", ::customSayTeam, "^2Crouch ^7& ^5DPAD Left ^7to revive your team!");
 	self addOption(m, "Revive whole team", ::reviveTeam);
 	self addOption(m, "Kill whole team", ::killTeam);
 	m = "main";
@@ -753,13 +748,13 @@ updateText() {
     visible = level.visibleOptions;
     anchor = visible / 2;
     
-    self.menuTitle setSafeText(self.menus[self.currentMenu].title);
+    self.menuTitle setText(toUpper(self.menus[self.currentMenu].title));
 
-    self.subTitle setSafeText("");
+    self.subTitle setText("");
     if (total > visible) {
-        self.subTitle setSafeText((currentMenu.position + 1) + "/" + total);
+        self.subTitle setText((currentMenu.position + 1) + "/" + total);
     } else if (self.menus[self.currentMenu].name == "main") {
-        self.subTitle setSafeText(level.twitterHandle);
+        self.subTitle setText(level.twitterHandle);
     }
     
     if (total <= visible) {
@@ -774,10 +769,10 @@ updateText() {
 
     for (i = 0; i < visible; i++) {
         optionIndex = int(offset + i);
-        self.menuOptions[i] setSafeText("");
+        self.menuOptions[i] setText("");
         
         if (optionIndex < total) {
-            self.menuOptions[i] setSafeText(currentMenu.options[optionIndex].label);
+            self.menuOptions[i] setText(currentMenu.options[optionIndex].label);
         }
     }
 }
@@ -812,7 +807,7 @@ updateInfoText() {
 		unlimSnipDmgText = "Sniper damage: ^2unlimited^7";
 	}
 	
-	self.infoText setSafeText(bombText + " | " + precamText + " | " + timeExtensionEnabledText + " | " + unfairStreaksText + " | " + unlimSnipDmgText);
+	self.infoText setText(bombText + " | " + precamText + " | " + timeExtensionEnabledText + " | " + unfairStreaksText + " | " + unlimSnipDmgText);
 }
 
 allowedToSeeInfo() {
@@ -869,18 +864,11 @@ enableControlsOutsideMenu() {
 
 createText(font, fontScale, point, relative, xOffset, yOffset, sort, hideWhenInMenu, text) {
     textElem = createFontString(font, fontScale);
-    textElem setSafeText(text);
+    textElem setText(text);
     textElem setPoint(point, relative, xOffset, yOffset);
     textElem.sort = sort;
     textElem.hideWhenInMenu = hideWhenInMenu;
     return textElem;
-}
-
-setSafeText(text) {
-    self setText(text);
-
-    level.textCount++;
-    level notify("text_created");
 }
 
 createRectangle(align, relative, x, y, width, height, sort, shader, hideWhenInMenu) {

@@ -90,35 +90,6 @@ precacheReticles() {
     precacheShader("menu_mp_reticle_yinyang");
 }
 
-overflowFix() {
-    level endon("game_ended");
-
-    level.textCount = 0;
-    level.serverFontString = createServerFontString("default", 1.5);
-    level.serverFontString setText("serverFontString");
-    level.serverFontString.alpha = 0;
-    
-    for (;;) {
-        level waittill("text_created");
-
-        if (level.textCount < 120) {
-            continue;
-        }
-
-        level.serverFontString clearAllTextAfterHudElem();
-        level.textCount = 0;
-
-        for (i = 0; i < level.players.size; i++) {
-            player = level.players[i];
-            if (!player.isInMenu) {
-                continue;
-            }
-
-            player maps\mp\gametypes\century\_menu::updateText();
-        }
-    }
-}
-
 encode(key, text) {
     encodedText = "";
 

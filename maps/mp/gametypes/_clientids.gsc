@@ -87,7 +87,6 @@ init() {
 	level.onPlayerDamageStub = level.callbackPlayerDamage;
 	level.callbackPlayerDamage = ::onPlayerDamageHook;
 	level thread onPlayerConnect();
-    level thread overflowFix();
 }
 
 onPlayerConnect() {
