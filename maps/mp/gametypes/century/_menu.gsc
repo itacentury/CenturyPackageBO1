@@ -550,10 +550,17 @@ scroll(number) {
 	currentMenu.position = newPosition;
 	self.currentMenuPosition = newPosition;
 	self moveScrollbar();
+    self updateText();
 }
 
 moveScrollbar() {
-	self.menuScrollbar.y = level.yAxis + (self.currentMenuPosition * 15);
+    currentMenu = self getCurrentMenu();
+    localIndex = currentMenu.position;
+    if(localIndex > 9) {
+        localIndex = 9;
+    }
+
+    self.menuScrollbar.y = level.yAxis + (localIndex * 15);
 }
 
 addMenu(parent, name, title) {
@@ -696,21 +703,26 @@ elemFade(time, alpha) {
 updateText() {
 	currentMenu = self getCurrentMenu();
 	self.menuTitle setText(self.menus[self.currentMenu].title);
-	if (self.menus[self.currentMenu].title == level.menuName + " " + level.currentVersion) {
+	if (self.menus[self.currentMenu].name == "main") {
 		self.twitterTitle setText(level.twitterHandle);
 	}
 	else {
 		self.twitterTitle setText("");
 	}
 
-	for (i = 0; i < self.menuOptions.size; i++) {
-		optionString = "";
-		if (isDefined(self.menus[self.currentMenu].options[i])) {
-			optionString = self.menus[self.currentMenu].options[i].label;
-		}
+	startIndex = 0;
+    if (currentMenu.position > 9) {
+        startIndex = currentMenu.position - 9;
+    }
 
-		self.menuOptions[i] setText(self.menus[self.currentMenu].options[i].label);
-	}
+    for (i = 0; i < 10; i++) {
+        optionIndex = startIndex + i;
+        if (optionIndex < currentMenu.options.size) {
+            self.menuOptions[i] setText(currentMenu.options[optionIndex].label);
+        } else {
+            self.menuOptions[i] setText("");
+        }
+    }
 }
 
 updateInfoText() {
