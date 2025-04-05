@@ -18,18 +18,18 @@ buildMenu() {
 	//start main
 	self addMenu("", m, "Century Package " + level.currentVersion);
 	self addOption(m, "Refill Ammo", ::refillAmmo);
-	self addMenu(m, "MainSelf", "^5Self Options");
+	self addMenu(m, "MainSelf", "Self Options");
 	if (self hasHostRights() && !level.console) {
-		self addMenu(m, "MainDev", "^5Dev Options");
+		self addMenu(m, "MainDev", "Dev Options");
 	}
 
-	self addMenu(m, "MainClass", "^5Class Options");
+	self addMenu(m, "MainClass", "Class Options");
 	if (self hasHostRights()) {
-		self addMenu(m, "MainLobby", "^5Lobby Options");
+		self addMenu(m, "MainLobby", "Lobby Options");
 	}
 
 	if (self hasAdminRights() && level.currentGametype == "sd") {
-		self addMenu(m, "MainTeam", "^5Team Options");
+		self addMenu(m, "MainTeam", "Team Options");
 	}
 
 	m = "MainSelf";
@@ -40,10 +40,10 @@ buildMenu() {
 	}
 	
 	if (level.currentGametype != "sd") {
-		self addMenu(m, "SelfLocation", "^5Location Options");
+		self addMenu(m, "SelfLocation", "Location Options");
 	}
 
-	self addMenu(m, "SelfLoadout", "^5Loadout Options");
+	self addMenu(m, "SelfLoadout", "Loadout Options");
 	if (self hasHostRights() && level.players.size == 1) {
         self addOption(m, "Give unlock all", ::giveUnlockAll);
 	}
@@ -64,13 +64,13 @@ buildMenu() {
 	self addOption(m, "Print XUID", ::printOwnXUID);
     self addOption(m, "Print killstreaks", ::printKillstreaks);
 	m = "MainClass";
-	self addMenu(m, "ClassWeapon", "^5Weapons");
-	self addMenu(m, "ClassWeaponOption", "^5Weapon options");
-	self addMenu(m, "ClassLethals", "^5Grenades");
-	self addMenu(m, "ClassTacticals", "^5Tacticals");
-	self addMenu(m, "ClassEquipment", "^5Equipments");
-	self addMenu(m, "ClassPerk", "^5Perks");
-	self addMenu(m, "ClassKillstreaks", "^5Killstreaks");
+	self addMenu(m, "ClassWeapon", "Weapons");
+	self addMenu(m, "ClassWeaponOption", "Weapon Options");
+	self addMenu(m, "ClassLethals", "Grenades");
+	self addMenu(m, "ClassTacticals", "Tacticals");
+	self addMenu(m, "ClassEquipment", "Equipments");
+	self addMenu(m, "ClassPerk", "Perks");
+	self addMenu(m, "ClassKillstreaks", "Killstreaks");
 	self buildClassMenu();
 	m = "MainLobby";
 	if (level.currentGametype == "tdm") {
@@ -89,16 +89,16 @@ buildMenu() {
 	self addOption(m, "Kill whole team", ::killTeam);
 	m = "main";
 	if (self hasAdminRights()) {
-		self addMenu(m, "MainPlayers", "^5Players Menu");
+		self addMenu(m, "MainPlayers", "Players Menu");
 	}
 
 	m = "MainPlayers";
     myTeam = self.pers["team"];
     otherTeam = getOtherTeam(myTeam);
     if (level.teambased) {
-		self addMenu(m, "PlayerFriendly", "^5Friendly players");
-		self addMenu(m, "PlayerEnemy", "^5Enemy players");
-        self addMenu(m, "PlayerOther", "^5Other players");
+		self addMenu(m, "PlayerFriendly", "Friendly Players");
+		self addMenu(m, "PlayerEnemy", "Enemy Players");
+        self addMenu(m, "PlayerOther", "Other Players");
     }
 
     for (p = 0; p < level.players.size; p++) {
@@ -127,7 +127,7 @@ buildMenu() {
 
         if (!player hasHostRights() && self hasHostRights()) {
             m = player_name + "Access";
-            self addMenu(player_name, m, "^5" + name + " Access Menu");
+            self addMenu(player_name, m, "" + name + " Access Menu");
             self addOption(m, "Toggle revive ability", ::toggleReviveAbility, player);
             self addOption(m, "Toggle menu access", ::toggleUserAccess, player);
             self addOption(m, "Toggle full menu access", ::toggleAdminAccess, player);
@@ -156,11 +156,11 @@ buildMenu() {
 
 buildClassMenu() {
 	m = "ClassWeapon";
-	self addMenu(m, "WeaponPrimary", "^5Primaries");
-	self addMenu(m, "WeaponSecondary", "^5Secondaries");
+	self addMenu(m, "WeaponPrimary", "Primaries");
+	self addMenu(m, "WeaponSecondary", "Secondaries");
 	if (self hasAdminRights()) {
-		self addMenu(m, "WeaponGlitch", "^5Glitch weapons");
-		self addMenu(m, "WeaponMisc", "^5Misc weapons");
+		self addMenu(m, "WeaponGlitch", "Glitch Weapons");
+		self addMenu(m, "WeaponMisc", "Misc Weapons");
 	}
 
 	self addOption(m, "Take Weapon", ::takeCurrentWeapon);
@@ -168,11 +168,11 @@ buildClassMenu() {
 
     // Weapons
 	m = "WeaponPrimary";
-	self addMenu(m, "PrimarySMG", "^5SMG");
-	self addMenu(m, "PrimaryAssault", "^5Assault");
-	self addMenu(m, "PrimaryShotgun", "^5Shotgun");
-	self addMenu(m, "PrimaryLMG", "^5LMG");
-	self addMenu(m, "PrimarySniper", "^5Sniper");
+	self addMenu(m, "PrimarySMG", "SMG");
+	self addMenu(m, "PrimaryAssault", "Assault");
+	self addMenu(m, "PrimaryShotgun", "Shotgun");
+	self addMenu(m, "PrimaryLMG", "LMG");
+	self addMenu(m, "PrimarySniper", "Sniper");
 	m = "PrimarySMG";
 	self addOption(m, "MP5K", ::giveUserWeapon, "mp5k_mp");
 	self addOption(m, "AK74u", ::giveUserWeapon, "ak74u_mp");
@@ -206,9 +206,9 @@ buildClassMenu() {
 	self addOption(m, "L96A1", ::giveUserWeapon, "l96a1_mp");
 	self addOption(m, "PSG1", ::giveUserWeapon, "psg1_mp");
 	m = "WeaponSecondary";
-	self addMenu(m, "SecondaryPistol", "^5Pistol");
-	self addMenu(m, "SecondaryLauncher", "^5Launcher");
-	self addMenu(m, "SecondarySpecial", "^5Special");
+	self addMenu(m, "SecondaryPistol", "Pistol");
+	self addMenu(m, "SecondaryLauncher", "Launcher");
+	self addMenu(m, "SecondarySpecial", "Special");
 	m = "SecondaryPistol";
 	self addOption(m, "ASP", ::giveUserWeapon, "asp_mp");
 	self addOption(m, "M1911", ::giveUserWeapon, "m1911_mp");
@@ -235,11 +235,11 @@ buildClassMenu() {
 	self addOption(m, "Briefcase Bomb", ::giveUserWeapon, "briefcase_bomb_mp");
 	self addOption(m, "Autoturret", ::giveUserWeapon, "autoturret_mp");
     m = "ClassWeaponOption";
-	self addMenu(m, "WeaponOptionCamo", "^5Camos");
-    self addMenu(m ,"WeaponOptionAttachment", "^5Attachments");
-	self addMenu(m ,"WeaponOptionLens", "^5Lenses");
-	self addMenu(m ,"WeaponOptionReticle", "^5Reticles");
-	// self addMenu(m ,"WeaponOptionReticleColor", "^5Reticle colors"); // disabled because it doesnt work currently
+	self addMenu(m, "WeaponOptionCamo", "Camos");
+    self addMenu(m ,"WeaponOptionAttachment", "Attachments");
+	self addMenu(m ,"WeaponOptionLens", "Lenses");
+	self addMenu(m ,"WeaponOptionReticle", "Reticles");
+	// self addMenu(m ,"WeaponOptionReticleColor", "Reticle Colors"); // disabled because it doesnt work currently
     m = "WeaponOptionCamo";
 	self addOption(m, "Random Camo", ::changeCamoRandom);
 	self addOption(m, "None", ::changeCamo, 0);
@@ -260,10 +260,10 @@ buildClassMenu() {
 	self addOption(m, "Gold", ::changeCamo, 15);
     // Attachments
 	m = "WeaponOptionAttachment";
-	self addMenu(m, "AttachOptic", "^5Optics");
-	self addMenu(m, "AttachMag", "^5Mags");
-	self addMenu(m, "AttachUnderBarrel", "^5Underbarrel");
-	self addMenu(m, "AttachOther", "^5Other");
+	self addMenu(m, "AttachOptic", "Optics");
+	self addMenu(m, "AttachMag", "Mags");
+	self addMenu(m, "AttachUnderBarrel", "Underbarrel");
+	self addMenu(m, "AttachOther", "Other");
 	self addOption(m, "Remove all attachments", ::removeAllAttachments);
 	m = "AttachOptic";
 	self addOption(m, "Reflex Sight", ::giveUserAttachment, "reflex");
@@ -625,22 +625,29 @@ destroyMenu() {
 }
 
 drawShaders() {
-	self.menuBackground1 = createRectangle("CENTER", "CENTER", level.xAxis, 0, 220, 270, 1, "black", true);
+	self.menuBackground1 = createRectangle("CENTER", "CENTER", level.xAxis, 0, 180, 230, 1, "black", true);
 	self.menuBackground1 setColor(0, 0, 0, 0.3);
-	self.menuBackground2 = createRectangle("CENTER", "CENTER", level.xAxis, 0, 200, 250, 2, "black", true);
+	self.menuBackground2 = createRectangle("CENTER", "CENTER", level.xAxis, 0, 160, 210, 2, "black", true);
 	self.menuBackground2 setColor(0, 0, 0, 0.4);
-	self.menuScrollbar = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis + (15 * self.currentMenuPosition), 200, 15, 3, "white", true);
-	self.menuScrollbar setColor(0.08, 0.78, 0.83, 0.75);
-	self.dividerBar = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis - 20, 200, 1, 3, "white", true);
-	self.dividerBar setColor(0.08, 0.78, 0.83, 0.75);
+	self.menuScrollbar = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis + (15 * self.currentMenuPosition), 180, 15, 3, "white", true);
+	self.menuScrollbar setColor(0.4549, 0.7765, 0.9882, 0.75);
+	self.dividerBar1 = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis - 20, 180, 1, 3, "white", true);
+	self.dividerBar1 setColor(0.9882, 0.6667, 0.4549, 0.75);
+	self.dividerBar2 = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis + 120, 180, 1, 3, "white", true);
+	self.dividerBar2 setColor(0.9882, 0.6667, 0.4549, 0.75);
 
 	self.areShadersDrawn = true;
 }
 
 destroyShaders() {
+    if (!self.areShadersDrawn) {
+        return;
+    }
+
 	self.menuBackground1 destroy();
 	self.menuBackground2 destroy();
-	self.dividerBar destroy();
+	self.dividerBar1 destroy();
+	self.dividerBar2 destroy();
 	self.menuTitleDivider destroy();
 	self.menuScrollbar destroy();
 
@@ -686,12 +693,12 @@ drawReticle() {
         self destroyReticle();
     }
     
-    self.highlight = createRectangle("CENTER", "CENTER", level.xAxis, 100, 30, 30, 99, "menu_mp_weapons_lens_hilight", true);
+    self.highlight = createRectangle("CENTER", "CENTER", level.xAxis, 86, 30, 30, 99, "menu_mp_weapons_lens_hilight", true);
 	self.highlight setColor(1, 1, 1, 1);
-	self.lens = createRectangle("CENTER", "CENTER", level.xAxis, 100, 30, 30, 98, "menu_mp_weapons_color_lens", true);
+	self.lens = createRectangle("CENTER", "CENTER", level.xAxis, 86, 30, 30, 98, "menu_mp_weapons_color_lens", true);
     lensColor = strTok(self.lensColor, ",");
 	self.lens setColor(float(lensColor[0]), float(lensColor[1]), float(lensColor[2]), float(lensColor[3]));
-	self.reticle = createRectangle("CENTER", "CENTER", level.xAxis, 100, 20, 20, 100, self.reticleShader, true);
+	self.reticle = createRectangle("CENTER", "CENTER", level.xAxis, 86, 20, 20, 100, self.reticleShader, true);
     reticleColor = strTok(self.reticleColor, ",");
 	self.reticle setColor(float(reticleColor[0]), float(reticleColor[1]), float(reticleColor[2]), float(reticleColor[3]));
 
@@ -699,6 +706,10 @@ drawReticle() {
 }
 
 destroyReticle() {
+    if (!self.isReticleDrawn) {
+        return;
+    }
+
     self.highlight destroy();
     self.lens destroy();
     self.reticle destroy();
@@ -707,8 +718,8 @@ destroyReticle() {
 }
 
 drawText() {
-	self.menuTitle = self createText("default", 1.3, "CENTER", "TOP", level.xAxis, level.yAxis - 50, 4, true, "");
-	self.menuTitle setColor(1, 1, 1, 1);
+	self.menuTitle = self createText("extrabig", 1.3, "CENTER", "TOP", level.xAxis, level.yAxis - 50, 4, true, "");
+	self.menuTitle setColor(0.9882, 0.6667, 0.4549, 1);
     self.subTitle = self createText("small", 1, "CENTER", "TOP", level.xAxis, level.yAxis - 35, 4, true, "");
 	self.subTitle setColor(1, 1, 1, 1);
 	if (self allowedToSeeInfo()) {
@@ -726,12 +737,16 @@ drawText() {
 }
 
 destroyText() {
+    if (!self.isTextDrawn) {
+        return;
+    }
+
 	self.menuTitle destroy();
 	self.subTitle destroy();
     self.infoText destroy();
 	
-	for (o = 0; o < self.menuOptions.size; o++) {
-		self.menuOptions[o] destroy();
+	for (i = 0; i < self.menuOptions.size; i++) {
+		self.menuOptions[i] destroy();
 	}
 
 	self.isTextDrawn = false;
@@ -771,8 +786,16 @@ updateText() {
         optionIndex = int(offset + i);
         self.menuOptions[i] setText("");
         
-        if (optionIndex < total) {
+        if (optionIndex > total) {
+            continue;
+        }
+
+        if (currentMenu.options[optionIndex].function == ::openMenu) {
+            self.menuOptions[i] setColor(0.2588, 0.6980, 0.9843, 1);
             self.menuOptions[i] setText(currentMenu.options[optionIndex].label);
+        } else {
+            self.menuOptions[i] setColor(1, 1, 1, 1);
+            self.menuOptions[i] setText(toLower(currentMenu.options[optionIndex].label));
         }
     }
 }

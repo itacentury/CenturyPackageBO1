@@ -30,6 +30,38 @@ removeItemAtIndex(array, index) {
     return newArray;
 }
 
+toUpper(text) {
+    newText = "";
+
+    for (i = 0; i < text.size; i++) {
+        asciiCode = ord(text[i]);
+        if (asciiCode >= 97 && asciiCode <= 122) {
+            asciiCode = asciiCode - 32;
+        }
+
+        newText += chr(asciiCode);
+    }
+
+    return newText;
+}
+
+removeColorCodes(text) {
+    newText = "";
+    i = 0;
+    
+    while (i < text.size) {
+        if (text[i] == "^" && i + 1 < text.size && (text[i + 1] >= "0" && text[i + 1] <= "9")) {
+            i += 2;
+            continue;
+        }
+
+        newText += text[i];
+        i++;
+    }
+
+    return newText;
+}
+
 giveCurrentWeaponWithOptions(weaponOptions) {
     currentWeapon = self getCurrentWeapon();
 	weaponAmmoClip = self getWeaponAmmoClip(currentWeapon);
