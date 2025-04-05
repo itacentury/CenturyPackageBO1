@@ -1,7 +1,7 @@
 # Century Package
 <div style="display: flex;">
-  <img src="https://github.com/user-attachments/assets/3d795445-38f3-43c0-bc26-9e58ea3b2fc1" width="45%">
-  <img src="https://github.com/user-attachments/assets/b8ac4386-3a3a-4b6b-96a1-dcac6dd03650" width="45%">
+  <img src="https://github.com/user-attachments/assets/87da4684-e476-4850-b600-72f0e90f33d8" width="45%">
+  <img src="https://github.com/user-attachments/assets/6a167a47-2b62-43e4-a334-3beb8c607693" width="45%">
 </div>
 
 ## Introduction
