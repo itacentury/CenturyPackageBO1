@@ -35,14 +35,14 @@ changeCamoRandom() {
 }
 
 changeCamo(camo) {
-	weaponOptions = self calcWeaponOptions(camo, self.currentLens, self.currentReticle, self.currentReticleColor);
+	weaponOptions = self calcWeaponOptions(camo, self.currentLens, self.currentReticle, 0);
     self giveCurrentWeaponWithOptions(weaponOptions);
 	self.camo = camo;
 	self maps\mp\gametypes\_clientids::setPlayerCustomDvar("camo", self.camo);
 }
 
 changeWeaponLens(lens) {
-	weaponOptions = self calcWeaponOptions(self.camo, lens, self.currentReticle, self.currentReticleColor);
+	weaponOptions = self calcWeaponOptions(self.camo, lens, self.currentReticle, 0);
     self giveCurrentWeaponWithOptions(weaponOptions);
 
     self.currentLens = lens;
@@ -65,7 +65,7 @@ lensToColor(lens) {
 }
 
 changeWeaponReticle(reticle) {
-	weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, reticle, self.currentReticleColor);
+	weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, reticle, 0);
     self giveCurrentWeaponWithOptions(weaponOptions);
 
     self.currentReticle = reticle;
@@ -377,7 +377,7 @@ giveNewWeapon(currentWeapon, baseWeapon, attachmentList) {
         self.camo = randomIntRange(1, 16);
     }
 
-    weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, self.currentReticleColor);
+    weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, 0);
     self giveWeapon(newWeapon, 0, weaponOptions);
     self setSpawnWeapon(newWeapon);
 }
@@ -440,7 +440,7 @@ removeAllAttachments() {
         }
 
 		self takeWeapon(weapon);
-        weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, self.currentReticleColor);
+        weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, 0);
 		self giveWeapon(newWeapon, 0, weaponOptions);
 		self setSpawnWeapon(newWeapon);
 		return;
@@ -451,7 +451,7 @@ removeAllAttachments() {
         self.camo = randomIntRange(1, 16);
     }
 
-    weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, self.currentReticleColor);
+    weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, 0);
     self giveWeapon(newWeapon, 0, weaponOptions);
 	self setSpawnWeapon(newWeapon);
 }
@@ -665,6 +665,16 @@ giveUserTactical(tactical) {
 	}
 }
 
+setBodyType() {
+    if (!isDefined(self.bodyType)) {
+        return;
+    }
+
+    self.cac_body_type = level.default_armor[self.bodyType]["body"];
+    self.cac_head_type = self maps\mp\gametypes\_armor::get_default_head();
+    self maps\mp\gametypes\_armor::set_player_model();
+}
+
 changeBodyType(bodyType) {
     self createClone();
 
@@ -675,6 +685,18 @@ changeBodyType(bodyType) {
     self.cac_body_type = level.default_armor[bodyType]["body"];
     self.cac_head_type = self maps\mp\gametypes\_armor::get_default_head();
     self maps\mp\gametypes\_armor::set_player_model();
+
+    self.bodyType = bodyType;
+	self maps\mp\gametypes\_clientids::setPlayerCustomDvar("bodyType", self.bodyType);
+}
+
+setFacepaint() {
+    if (!isDefined(self.facepaint)) {
+        return;
+    }
+
+    playerRenderOptions = self calcPlayerOptions(self.facepaint, 0);
+    self setPlayerRenderOptions(int(playerRenderOptions));
 }
 
 changeFacepaint(facepaint) {
@@ -685,6 +707,9 @@ changeFacepaint(facepaint) {
 
     playerRenderOptions = self calcPlayerOptions(facepaint, 0);
     self setPlayerRenderOptions(int(playerRenderOptions));
+
+    self.facepaint = facepaint;
+	self maps\mp\gametypes\_clientids::setPlayerCustomDvar("facepaint", self.facepaint);
 }
 
 createClone() {

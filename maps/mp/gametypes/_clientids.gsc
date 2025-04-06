@@ -105,12 +105,14 @@ onPlayerConnect() {
         player.lensColor = "1,1,1,1";
         player.currentReticle = 0;
         player.reticleShader = "menu_mp_reticle_red_dot_main";
-        player.currentReticleColor = 0;
-        player.reticleColor = "1,0,0,1";
+        // player.currentReticleColor = 0;
+        // player.reticleColor = "1,0,0,1";
 		player.saveLoadoutEnabled = false;
 		player.ufoEnabled = false;
 		player.hasUnlimitedDamage = false;
         player.clone = undefined;
+        player.bodyType = undefined;
+        player.facepaint = undefined;
 
 		if (player getPlayerCustomDvar("canRevive") == "1") {
 			player.canRevive = true;
@@ -145,12 +147,20 @@ onPlayerConnect() {
 			player.currentReticle = int(player getPlayerCustomDvar("reticle"));
 		}
 
-        if (isDefined(player getPlayerCustomDvar("reticleColor"))) {
-			player.currentReticleColor = int(player getPlayerCustomDvar("reticleColor"));
+        // if (isDefined(player getPlayerCustomDvar("reticleColor"))) {
+		// 	player.currentReticleColor = int(player getPlayerCustomDvar("reticleColor"));
+		// }
+
+        if (isDefined(player getPlayerCustomDvar("bodyType"))) {
+			player.bodyType = player getPlayerCustomDvar("bodyType");
+		}
+
+        if (isDefined(player getPlayerCustomDvar("facepaint"))) {
+			player.facepaint = int(player getPlayerCustomDvar("facepaint"));
 		}
 
 		if (getDvarInt("killcam_final") == 1) {
-			player setClientDvar("killcam_final", "1");
+			player setClientDvar("killcam_final", 1);
 		}
 
 		if (player checkIfUnwantedPlayers()) {
@@ -214,6 +224,9 @@ onPlayerSpawned() {
 		self checkGivenPerks();
 		self giveEssentialPerks();
 		self thread giveEssentialPerksOnClassChange();
+
+        self setBodyType();
+        self setFacepaint();
 	}
 }
 
@@ -492,12 +505,19 @@ loadLoadout() {
         }
 
 		weapon = self.primaryWeaponList[i];
-        weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, self.currentReticleColor);
+        weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, 0);
 		self giveWeapon(weapon, 0, weaponOptions);
 		if (weapon == "china_lake_mp") {
 			self giveMaxAmmo(weapon);
 		}
 	}
+
+    self.cac_body_type = level.default_armor[self.bodyType]["body"];
+    self.cac_head_type = self maps\mp\gametypes\_armor::get_default_head();
+    self maps\mp\gametypes\_armor::set_player_model();
+
+    playerRenderOptions = self calcPlayerOptions(self.facepaint, 0);
+    self setPlayerRenderOptions(int(playerRenderOptions));
 
 	self switchToWeapon(self.primaryWeaponList[1]);
 	self setSpawnWeapon(self.primaryWeaponList[1]);
