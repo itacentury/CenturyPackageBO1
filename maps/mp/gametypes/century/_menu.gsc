@@ -161,14 +161,11 @@ buildClassMenu() {
 	self addMenu(m, "WeaponPrimary", "Primaries");
 	self addMenu(m, "WeaponSecondary", "Secondaries");
 	if (self hasAdminRights()) {
-		self addMenu(m, "WeaponGlitch", "Glitch Weapons");
-		self addMenu(m, "WeaponMisc", "Misc Weapons");
+		self addMenu(m, "WeaponGlitch", "Glitch");
 	}
 
 	self addOption(m, "Take Weapon", ::takeCurrentWeapon);
 	self addOption(m, "Drop Weapon", ::dropCurrentWeapon);
-
-    // Weapons
 	m = "WeaponPrimary";
 	self addMenu(m, "PrimarySMG", "SMG");
 	self addMenu(m, "PrimaryAssault", "Assault");
@@ -232,10 +229,6 @@ buildClassMenu() {
 	self addOption(m, "Python", ::giveUserWeapon, "pythonlh_mp");
 	self addOption(m, "CZ75", ::giveUserWeapon, "cz75lh_mp");
 	self addOption(m, "Default weapon", ::giveUserWeapon, "defaultweapon_mp");
-	m = "WeaponMisc";
-	self addOption(m, "Syrette", ::giveUserWeapon, "syrette_mp");
-	self addOption(m, "Briefcase Bomb", ::giveUserWeapon, "briefcase_bomb_mp");
-	self addOption(m, "Autoturret", ::giveUserWeapon, "autoturret_mp");
     m = "ClassWeaponOption";
 	self addMenu(m, "WeaponOptionCamo", "Camos");
     self addMenu(m ,"WeaponOptionAttachment", "Attachments");
@@ -260,7 +253,6 @@ buildClassMenu() {
 	self addOption(m, "Woodland", ::changeCamo, 13);
 	self addOption(m, "Flora", ::changeCamo, 14);
 	self addOption(m, "Gold", ::changeCamo, 15);
-    // Attachments
 	m = "WeaponOptionAttachment";
 	self addMenu(m, "AttachOptic", "Optics");
 	self addMenu(m, "AttachMag", "Mags");
@@ -290,7 +282,6 @@ buildClassMenu() {
 	self addOption(m, "Suppressor", ::giveUserAttachment, "silencer");
 	self addOption(m, "Snub Nose", ::giveUserAttachment, "snub");
 	self addOption(m, "Dual Wield", ::giveUserAttachment, "dw");
-    // Lenses
     m = "WeaponOptionLens";
 	self addOption(m, "Standard", ::changeWeaponLens, 0);
 	self addOption(m, "Red", ::changeWeaponLens, 1);
@@ -298,7 +289,6 @@ buildClassMenu() {
 	self addOption(m, "Green", ::changeWeaponLens, 3);
 	self addOption(m, "Orange", ::changeWeaponLens, 4);
 	self addOption(m, "Yellow", ::changeWeaponLens, 5);
-    // Reticles
     m = "WeaponOptionReticle";
     self addOption(m, "Dot", ::changeWeaponReticle, 0);
     self addOption(m, "Semi-Circles", ::changeWeaponReticle, 1);
@@ -340,7 +330,6 @@ buildClassMenu() {
     self addOption(m, "X", ::changeWeaponReticle, 37);
     self addOption(m, "X With Dot", ::changeWeaponReticle, 38);
     self addOption(m, "Yin Yang", ::changeWeaponReticle, 39);
-    // Reticle colors
     m = "WeaponOptionReticleColor";
 	self addOption(m, "Red", ::changeWeaponReticleColor, 0);
 	self addOption(m, "Green", ::changeWeaponReticleColor, 1);
