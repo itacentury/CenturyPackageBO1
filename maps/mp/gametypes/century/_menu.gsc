@@ -72,7 +72,6 @@ buildMenu() {
 	self addMenu(m, "ClassEquipment", "Equipments");
 	self addMenu(m, "ClassPerk", "Perks");
 	self addMenu(m, "ClassKillstreaks", "Killstreaks");
-    self addOption(m, "Test Clone", ::testClone);
 	self buildClassMenu();
 	m = "MainLobby";
 	if (level.currentGametype == "tdm") {

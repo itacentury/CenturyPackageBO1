@@ -665,51 +665,6 @@ giveUserTactical(tactical) {
 	}
 }
 
-testClone() {
-    eye = self getEye();
-    anglesVec = anglesToForward(self getPlayerAngles());
-    origin = bullettrace(eye, eye + vector_scale(anglesVec, 100), 0, self)["position"];
-
-    clone = addTestClient();
-    clone thread maps\mp\gametypes\_bot::bot_spawn_think(self.pers["team"]);
-
-    while (!isAlive(clone)) {
-        wait 0.25;
-    }
-
-    clone freezeControls(true);
-    clone enableInvulnerability();
-    clone setOrigin(origin + (0, 0, self.origin[2] - eye[2]));
-    clone setPlayerAngles(vectorToAngles(eye - clone getEye()));
-
-    for (i = 0; i < level.players.size; i++) {
-        player = level.players[i];
-
-        if (player == self || player == clone) {
-            continue;
-        }
-
-        clone setInvisibleToPlayer(player);
-    }
-
-    wait 1;
-
-    clone.cac_body_type = level.default_armor["CLASS_LMG"]["body"];
-    clone.cac_head_type = clone maps\mp\gametypes\_armor::get_default_head();
-    clone maps\mp\gametypes\_armor::set_player_model();
-
-
-    for (i = 0; i < 10; i++) {
-        playerRenderOptions = clone calcPlayerOptions(0, i);
-        clone setPlayerRenderOptions(int(playerRenderOptions));
-        wait 1;
-    }
-
-    wait 5;
-
-    kick(clone getEntityNumber());
-}
-
 changeBodyType(bodyType) {
     self createClone();
 
@@ -758,7 +713,7 @@ createClone() {
     clone giveWeapon(weapon);
     clone switchToWeapon(weapon);
     clone setSpawnWeapon(weapon);
-    
+
     clone.cac_body_type = self.cac_body_type;
     clone.cac_head_type = self.cac_head_type;
     clone maps\mp\gametypes\_armor::set_player_model();
