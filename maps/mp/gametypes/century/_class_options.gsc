@@ -695,6 +695,7 @@ createClone() {
     eye = self getEye();
     anglesVec = anglesToForward(self getPlayerAngles());
     origin = bullettrace(eye, eye + vector_scale(anglesVec, 100), 0, self)["position"];
+    origin = (origin[0], origin[1], self.origin[2]);
     weapon = self getCurrentWeapon();
 
     clone = addTestClient();
@@ -705,7 +706,7 @@ createClone() {
     }
 
     clone enableInvulnerability();
-    clone setOrigin(origin + (0, 0, self.origin[2] - eye[2]));
+    clone setOrigin(origin);
     clone setPlayerAngles(vectorToAngles(eye - clone getEye()));
 
     clone takeAllWeapons();
