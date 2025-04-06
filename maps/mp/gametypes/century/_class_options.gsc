@@ -704,7 +704,6 @@ createClone() {
         wait 0.25;
     }
 
-    clone freezeControls(true);
     clone enableInvulnerability();
     clone setOrigin(origin + (0, 0, self.origin[2] - eye[2]));
     clone setPlayerAngles(vectorToAngles(eye - clone getEye()));
@@ -729,4 +728,15 @@ createClone() {
     }
 
     self.clone = clone;
+    self thread monitorClone();
+}
+
+monitorClone() {
+    self endon("clone_kicked");
+
+    for (;;) {
+        self.clone freezeControls(true);
+
+        wait 0.5;
+    }
 }

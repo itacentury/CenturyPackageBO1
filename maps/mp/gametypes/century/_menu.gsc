@@ -533,6 +533,12 @@ exitMenu() {
     self enableControlsOutsideMenu();
 
     self drawOverlay();
+
+    if (self.clone) {
+        kick(self.clone getEntityNumber());
+        self.clone = undefined;
+        self notify("clone_kicked");
+    }
 }
 
 select() {
