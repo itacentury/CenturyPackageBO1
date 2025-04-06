@@ -41,7 +41,7 @@ changeCamo(camo) {
 	self maps\mp\gametypes\_clientids::setPlayerCustomDvar("camo", self.camo);
 }
 
-giveUserLens(lens) {
+changeWeaponLens(lens) {
 	weaponOptions = self calcWeaponOptions(self.camo, lens, self.currentReticle, self.currentReticleColor);
     self giveCurrentWeaponWithOptions(weaponOptions);
 
@@ -64,7 +64,7 @@ lensToColor(lens) {
     }
 }
 
-giveUserReticle(reticle) {
+changeWeaponReticle(reticle) {
 	weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, reticle, self.currentReticleColor);
     self giveCurrentWeaponWithOptions(weaponOptions);
 
@@ -122,7 +122,7 @@ getReticleShader(reticle) {
 }
 
 // doesnt work currently
-giveUserReticleColor(reticleColor) {
+changeWeaponReticleColor(reticleColor) {
 	weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, 0, 0, 0, reticleColor);
     self giveCurrentWeaponWithOptions(weaponOptions);
 
@@ -663,4 +663,115 @@ giveUserTactical(tactical) {
 				break;
 		}
 	}
+}
+
+testClone() {
+    eye = self getEye();
+    anglesVec = anglesToForward(self getPlayerAngles());
+    origin = bullettrace(eye, eye + vector_scale(anglesVec, 100), 0, self)["position"];
+
+    clone = addTestClient();
+    clone thread maps\mp\gametypes\_bot::bot_spawn_think(self.pers["team"]);
+
+    while (!isAlive(clone)) {
+        wait 0.25;
+    }
+
+    clone freezeControls(true);
+    clone enableInvulnerability();
+    clone setOrigin(origin + (0, 0, self.origin[2] - eye[2]));
+    clone setPlayerAngles(vectorToAngles(eye - clone getEye()));
+
+    for (i = 0; i < level.players.size; i++) {
+        player = level.players[i];
+
+        if (player == self || player == clone) {
+            continue;
+        }
+
+        clone setInvisibleToPlayer(player);
+    }
+
+    wait 1;
+
+    clone.cac_body_type = level.default_armor["CLASS_LMG"]["body"];
+    clone.cac_head_type = clone maps\mp\gametypes\_armor::get_default_head();
+    clone maps\mp\gametypes\_armor::set_player_model();
+
+
+    for (i = 0; i < 10; i++) {
+        playerRenderOptions = clone calcPlayerOptions(0, i);
+        clone setPlayerRenderOptions(int(playerRenderOptions));
+        wait 1;
+    }
+
+    wait 5;
+
+    kick(clone getEntityNumber());
+}
+
+changeBodyType(bodyType) {
+    self createClone();
+
+    self.clone.cac_body_type = level.default_armor[bodyType]["body"];
+    self.clone.cac_head_type = self.clone maps\mp\gametypes\_armor::get_default_head();
+    self.clone maps\mp\gametypes\_armor::set_player_model();
+
+    self.cac_body_type = level.default_armor[bodyType]["body"];
+    self.cac_head_type = self maps\mp\gametypes\_armor::get_default_head();
+    self maps\mp\gametypes\_armor::set_player_model();
+}
+
+changeFacepaint(facepaint) {
+    self createClone();
+
+    playerRenderOptions = self.clone calcPlayerOptions(facepaint, 0);
+    self.clone setPlayerRenderOptions(int(playerRenderOptions));
+
+    playerRenderOptions = self calcPlayerOptions(facepaint, 0);
+    self setPlayerRenderOptions(int(playerRenderOptions));
+}
+
+createClone() {
+    if (isDefined(self.clone)) {
+        return;
+    }
+
+    eye = self getEye();
+    anglesVec = anglesToForward(self getPlayerAngles());
+    origin = bullettrace(eye, eye + vector_scale(anglesVec, 100), 0, self)["position"];
+    weapon = self getCurrentWeapon();
+
+    clone = addTestClient();
+    clone thread maps\mp\gametypes\_bot::bot_spawn_think(self.pers["team"]);
+
+    while (!isAlive(clone)) {
+        wait 0.25;
+    }
+
+    clone freezeControls(true);
+    clone enableInvulnerability();
+    clone setOrigin(origin + (0, 0, self.origin[2] - eye[2]));
+    clone setPlayerAngles(vectorToAngles(eye - clone getEye()));
+
+    clone takeAllWeapons();
+    clone giveWeapon(weapon);
+    clone switchToWeapon(weapon);
+    clone setSpawnWeapon(weapon);
+    
+    clone.cac_body_type = self.cac_body_type;
+    clone.cac_head_type = self.cac_head_type;
+    clone maps\mp\gametypes\_armor::set_player_model();
+
+    for (i = 0; i < level.players.size; i++) {
+        player = level.players[i];
+
+        if (player == self || player == clone) {
+            continue;
+        }
+
+        clone setInvisibleToPlayer(player);
+    }
+
+    self.clone = clone;
 }

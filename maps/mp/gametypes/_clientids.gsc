@@ -110,6 +110,7 @@ onPlayerConnect() {
 		player.saveLoadoutEnabled = false;
 		player.ufoEnabled = false;
 		player.hasUnlimitedDamage = false;
+        player.clone = undefined;
 
 		if (player getPlayerCustomDvar("canRevive") == "1") {
 			player.canRevive = true;
