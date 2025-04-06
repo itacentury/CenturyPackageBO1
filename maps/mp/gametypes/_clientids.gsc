@@ -18,6 +18,7 @@ init() {
     level.visibleOptions = 8;
 	setDvar("UnfairStreaksEnabled", "0"); //Unfair Streaks
 	setDvar("killcam_final", "1"); //Playercard in Killcam
+	level.xAxis = 0;
 	if (level.console) {
 		level.yAxis = 150;
         level.yAxisOverlayPlacement = 444; // needs testing on console!
@@ -26,7 +27,6 @@ init() {
         level.yAxisOverlayPlacement = 474;
 	}
 
-	level.xAxis = 0;
 	switch (level.currentGametype) {
 		case "dm": {
 			if (getDvarInt("scr_disable_tacinsert") == 1) {
