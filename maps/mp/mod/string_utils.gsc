@@ -2,34 +2,6 @@
 #include common_scripts\utility;
 #include maps\mp\gametypes\_hud_util;
 
-iPrintList(list) {
-    text = "[";
-
-    for (i = 0; i < list.size; i++) {
-        text += list[i] + ",";
-    }
-
-    text[text.size - 1] = "]";
-
-    self iPrintLn(text); 
-}
-
-removeItemAtIndex(array, index) {
-    newArray = [];
-    j = 0;
-
-    for (i = 0; i < array.size; i++) {
-        if (i == index) {
-            i++;
-        }
-
-        newArray[j] = array[i];
-        j++;
-    }
-
-    return newArray;
-}
-
 toUpper(text) {
     newText = "";
 
@@ -43,83 +15,6 @@ toUpper(text) {
     }
 
     return newText;
-}
-
-removeColorCodes(text) {
-    newText = "";
-    i = 0;
-    
-    while (i < text.size) {
-        if (text[i] == "^" && i + 1 < text.size && (text[i + 1] >= "0" && text[i + 1] <= "9")) {
-            i += 2;
-            continue;
-        }
-
-        newText += text[i];
-        i++;
-    }
-
-    return newText;
-}
-
-giveCurrentWeaponWithOptions(weaponOptions) {
-    currentWeapon = self getCurrentWeapon();
-	weaponAmmoClip = self getWeaponAmmoClip(currentWeapon);
-    weaponAmmoStock = self getWeaponAmmoStock(currentWeapon);
-
-	self takeWeapon(currentWeapon);
-	self giveWeapon(currentWeapon, 0, weaponOptions);
-	self switchToWeapon(currentWeapon);
-	self setSpawnWeapon(currentWeapon);
-	self setWeaponAmmoClip(currentWeapon, weaponAmmoClip);
-    self setWeaponAmmoStock(currentWeapon, weaponAmmoStock);
-}
-
-precacheReticles() {
-    precacheShader("menu_mp_weapons_lens_hilight");
-    precacheShader("menu_mp_weapons_color_lens");
-
-    // Reticles
-    precacheShader("menu_mp_reticle_arrows01");
-    precacheShader("menu_mp_reticle_arrows02");
-    precacheShader("menu_mp_reticle_arrows03");
-    precacheShader("menu_mp_reticle_bones");
-    precacheShader("menu_mp_reticle_burst01");
-    precacheShader("menu_mp_reticle_circles01");
-    precacheShader("menu_mp_reticle_circles02");
-    precacheShader("menu_mp_reticle_circles03");
-    precacheShader("menu_mp_reticle_circles04");
-    precacheShader("menu_mp_reticle_circles05");
-    precacheShader("menu_mp_reticle_circles_triangles01");
-    precacheShader("menu_mp_reticle_circles_triangles02");
-    precacheShader("menu_mp_reticle_circles_lines01");
-    precacheShader("menu_mp_reticle_circles_lines02");
-    precacheShader("menu_mp_reticle_circles_lines03");
-    precacheShader("menu_mp_reticle_circle_split01");
-    precacheShader("menu_mp_reticle_cross01");
-    precacheShader("menu_mp_reticle_cross02");
-    precacheShader("menu_mp_reticle_cross03");
-    precacheShader("menu_mp_reticle_cross04");
-    precacheShader("menu_mp_reticle_cross05");
-    precacheShader("menu_mp_reticle_diamond01");
-    precacheShader("menu_mp_reticle_diamond02");
-    precacheShader("menu_mp_reticle_happyface01");
-    precacheShader("menu_mp_reticle_heart");
-    precacheShader("menu_mp_reticle_lines_dots01");
-    precacheShader("menu_mp_reticle_radiation");
-    precacheShader("menu_mp_reticle_red_dot_main");
-    precacheShader("menu_mp_reticle_skull01");
-    precacheShader("menu_mp_reticle_square01");
-    precacheShader("menu_mp_reticle_square02");
-    precacheShader("menu_mp_reticle_squares_cross01");
-    precacheShader("menu_mp_reticle_star01");
-    precacheShader("menu_mp_reticle_three_dots");
-    precacheShader("menu_mp_reticle_treyarch");
-    precacheShader("menu_mp_reticle_triangle01");
-    precacheShader("menu_mp_reticle_triangle02");
-    precacheShader("menu_mp_reticle_x01");
-    precacheShader("menu_mp_reticle_x02");
-    precacheShader("menu_mp_reticle_yinyang");
 }
 
 encode(key, text) {
