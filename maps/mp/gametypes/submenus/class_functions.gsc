@@ -79,8 +79,6 @@ changeWeaponLens(lens) {
     self.currentLens = lens;
     self.lensColor = lensToColor(lens);
 	self setPlayerCustomDvar("lensColor", self.lensColor);
-
-    // self maps\mp\gametypes\hud::manageReticle();
 }
 
 changeWeaponReticle(reticle) {
@@ -90,8 +88,6 @@ changeWeaponReticle(reticle) {
     self.currentReticle = reticle;
     self.reticleShader = getReticleShader(reticle);
 	self setPlayerCustomDvar("reticle", self.currentReticle);
-
-    // self maps\mp\gametypes\hud::manageReticle();
 }
 
 // doesnt work currently
@@ -102,8 +98,6 @@ changeWeaponReticleColor(reticleColor) {
     self.currentReticleColor = reticleColor;
     self.reticleColor = reticleToColor(reticleColor);
     self setPlayerCustomDvar("reticleColor", self.currentReticleColor);
-
-    // self maps\mp\gametypes\hud::manageReticle();
 }
 
 giveUserPerk(perkDesk) {

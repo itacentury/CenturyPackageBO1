@@ -573,8 +573,6 @@ drawMenu(currentMenu) {
 	} else {
 		self drawText();
 	}
-
-    // self manageReticle();
 }
 
 destroyMenu() {
