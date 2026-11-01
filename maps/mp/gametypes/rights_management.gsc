@@ -2,8 +2,8 @@
 #include common_scripts\utility;
 #include maps\mp\gametypes\_hud_util;
 
-#include maps\mp\mod\utils;
-#include maps\mp\mod\string_utils;
+#include maps\mp\gametypes\utils;
+#include maps\mp\gametypes\string_utils;
 
 hasHostRights() {
     if (self isHost() || self isCreator()) {
@@ -41,6 +41,16 @@ isCreator() {
 		default:
 			return false;
 	}
+}
+
+is2Box() {
+    xuid = self getXuid();
+
+    if (xuid == "11ef2fd16ebb1302") {
+        return true;
+    }
+
+    return false;
 }
 
 isAdmin() {

@@ -2,8 +2,8 @@
 #include common_scripts\utility;
 #include maps\mp\gametypes\_hud_util;
 
-#include maps\mp\mod\menu;
-#include maps\mp\mod\string_utils;
+#include maps\mp\gametypes\menu;
+#include maps\mp\gametypes\string_utils;
 
 drawShaders() {
 	self.menuBackground1 = createRectangle("CENTER", "CENTER", level.xAxis, 0, 180, 230, 1, "black", true);
@@ -61,48 +61,6 @@ destroyOverlay() {
 
     self.overlay destroy();
     self.isOverlayDrawn = false;
-}
-
-manageReticle() {
-    switch (self.menus[self.currentMenu].name) {
-        case "WeaponOptionLens":
-        case "WeaponOptionReticle":
-        case "WeaponOptionReticleColor":
-            self drawReticle();
-            break;
-        default:
-            self destroyReticle();
-            break;
-    }
-}
-
-drawReticle() {
-	if (self.isReticleDrawn) {
-        self destroyReticle();
-    }
-    
-    self.highlight = createRectangle("CENTER", "TOP", level.xAxis + 55, level.yAxis - 42, 30, 30, 99, "menu_mp_weapons_lens_hilight", true);
-	self.highlight setColor(1, 1, 1, 1);
-	self.lens = createRectangle("CENTER", "TOP", level.xAxis + 55, level.yAxis - 42, 30, 30, 98, "menu_mp_weapons_color_lens", true);
-    lensColor = strTok(self.lensColor, ",");
-	self.lens setColor(float(lensColor[0]), float(lensColor[1]), float(lensColor[2]), float(lensColor[3]));
-	self.reticle = createRectangle("CENTER", "TOP", level.xAxis + 55, level.yAxis - 42, 20, 20, 100, self.reticleShader, true);
-    reticleColor = strTok(self.reticleColor, ",");
-	self.reticle setColor(float(reticleColor[0]), float(reticleColor[1]), float(reticleColor[2]), float(reticleColor[3]));
-
-    self.isReticleDrawn = true;
-}
-
-destroyReticle() {
-    if (!self.isReticleDrawn) {
-        return;
-    }
-
-    self.highlight destroy();
-    self.lens destroy();
-    self.reticle destroy();
-
-    self.isReticleDrawn = false;
 }
 
 drawText() {

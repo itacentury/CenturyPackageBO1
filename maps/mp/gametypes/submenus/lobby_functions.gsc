@@ -17,7 +17,7 @@ toggleUnlimitedSniperDamage() {
 		self iPrintLn("Unlimited sniper damage ^1disabled");
 	}
 
-    self maps\mp\mod\hud::updateInfoText();
+    self maps\mp\gametypes\hud::updateInfoText();
 }
 
 toggleBomb() {
@@ -34,7 +34,7 @@ toggleBomb() {
 		self iPrintLn("Bomb ^2disabled");
 	}
 
-    self maps\mp\mod\hud::updateInfoText();
+    self maps\mp\gametypes\hud::updateInfoText();
 }
 
 toggleTimeExtension() {
@@ -47,7 +47,7 @@ toggleTimeExtension() {
 		self iPrintLn("Automatic time extension ^1disabled");
 	}
 
-    self maps\mp\mod\hud::updateInfoText();
+    self maps\mp\gametypes\hud::updateInfoText();
 }
 
 togglePrecamAnims() {
@@ -60,7 +60,7 @@ togglePrecamAnims() {
 		self iPrintLn("Precam ^1disabled");
 	}
 
-    self maps\mp\mod\hud::updateInfoText();
+    self maps\mp\gametypes\hud::updateInfoText();
 }
 
 toggleUnfairStreaks() {
@@ -82,7 +82,7 @@ toggleUnfairStreaks() {
 		self iPrintLn("Unfair streaks ^1enabled");
 	}
 
-    self maps\mp\mod\hud::updateInfoText();
+    self maps\mp\gametypes\hud::updateInfoText();
 }
 
 unsetUnfairStreaks() {

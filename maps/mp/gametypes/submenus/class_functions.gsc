@@ -2,7 +2,7 @@
 #include common_scripts\utility;
 #include maps\mp\gametypes\_hud_util;
 
-#include maps\mp\mod\utils;
+#include maps\mp\gametypes\utils;
 
 takeCurrentWeapon() {
 	self takeWeapon(self getCurrentWeapon());
@@ -27,12 +27,21 @@ giveCurrentWeaponWithOptions(weaponOptions) {
 	weaponAmmoClip = self getWeaponAmmoClip(currentWeapon);
     weaponAmmoStock = self getWeaponAmmoStock(currentWeapon);
 
+	if (currentWeapon == "none") {
+		return;
+	}
+
 	self takeWeapon(currentWeapon);
 	self giveWeapon(currentWeapon, 0, weaponOptions);
 	self switchToWeapon(currentWeapon);
 	self setSpawnWeapon(currentWeapon);
 	self setWeaponAmmoClip(currentWeapon, weaponAmmoClip);
     self setWeaponAmmoStock(currentWeapon, weaponAmmoStock);
+}
+
+getCurrentWeaponOptions() {
+    weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, self.clantagEnabled, self.emblemEnabled);
+    return weaponOptions + (self.currentReticleColor * 65536);
 }
 
 giveUserLethal(grenade) {
@@ -66,44 +75,49 @@ changeCamoRandom() {
 }
 
 changeCamo(camo) {
-	weaponOptions = self calcWeaponOptions(camo, self.currentLens, self.currentReticle, 0);
-    self giveCurrentWeaponWithOptions(weaponOptions);
 	self.camo = camo;
 	self setPlayerCustomDvar("camo", self.camo);
+    self giveCurrentWeaponWithOptions(self getCurrentWeaponOptions());
 }
 
 changeWeaponLens(lens) {
-	weaponOptions = self calcWeaponOptions(self.camo, lens, self.currentReticle, 0);
-    self giveCurrentWeaponWithOptions(weaponOptions);
-
     self.currentLens = lens;
-    self.lensColor = lensToColor(lens);
-	self setPlayerCustomDvar("lensColor", self.lensColor);
-
-    self maps\mp\mod\hud::manageReticle();
+	self setPlayerCustomDvar("lens", self.currentLens);
+    self giveCurrentWeaponWithOptions(self getCurrentWeaponOptions());
 }
 
 changeWeaponReticle(reticle) {
-	weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, reticle, 0);
-    self giveCurrentWeaponWithOptions(weaponOptions);
-
     self.currentReticle = reticle;
-    self.reticleShader = getReticleShader(reticle);
 	self setPlayerCustomDvar("reticle", self.currentReticle);
-
-    self maps\mp\mod\hud::manageReticle();
+    self giveCurrentWeaponWithOptions(self getCurrentWeaponOptions());
 }
 
-// doesnt work currently
 changeWeaponReticleColor(reticleColor) {
-	weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, 0, 0, 0, reticleColor);
-    self giveCurrentWeaponWithOptions(weaponOptions);
-
     self.currentReticleColor = reticleColor;
-    self.reticleColor = reticleToColor(reticleColor);
     self setPlayerCustomDvar("reticleColor", self.currentReticleColor);
+    self giveCurrentWeaponWithOptions(self getCurrentWeaponOptions());
+}
 
-    self maps\mp\mod\hud::manageReticle();
+toggleClantag() {
+	if (self.clantagEnabled) {
+		self.clantagEnabled = 0;
+	} else {
+		self.clantagEnabled = 1;
+	}
+
+    self setPlayerCustomDvar("clantagEnabled", self.clantagEnabled);
+    self giveCurrentWeaponWithOptions(self getCurrentWeaponOptions());
+}
+
+toggleEmblem() {
+	if (self.emblemEnabled) {
+		self.emblemEnabled = 0;
+	} else {
+		self.emblemEnabled = 1;
+	}
+
+    self setPlayerCustomDvar("emblemEnabled", self.emblemEnabled);
+    self giveCurrentWeaponWithOptions(self getCurrentWeaponOptions());
 }
 
 giveUserPerk(perkDesk) {
@@ -337,8 +351,7 @@ giveNewWeapon(currentWeapon, baseWeapon, attachmentList) {
         self.camo = randomIntRange(1, 16);
     }
 
-    weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, 0);
-    self giveWeapon(newWeapon, 0, weaponOptions);
+    self giveWeapon(newWeapon, 0, self getCurrentWeaponOptions());
     self setSpawnWeapon(newWeapon);
 }
 
@@ -400,8 +413,7 @@ removeAllAttachments() {
         }
 
 		self takeWeapon(weapon);
-        weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, 0);
-		self giveWeapon(newWeapon, 0, weaponOptions);
+		self giveWeapon(newWeapon, 0, self getCurrentWeaponOptions());
 		self setSpawnWeapon(newWeapon);
 		return;
 	}
@@ -411,8 +423,7 @@ removeAllAttachments() {
         self.camo = randomIntRange(1, 16);
     }
 
-    weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, 0);
-    self giveWeapon(newWeapon, 0, weaponOptions);
+    self giveWeapon(newWeapon, 0, self getCurrentWeaponOptions());
 	self setSpawnWeapon(newWeapon);
 }
 

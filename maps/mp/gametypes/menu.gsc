@@ -2,14 +2,14 @@
 #include common_scripts\utility;
 #include maps\mp\gametypes\_hud_util;
 
-#include maps\mp\mod\hud;
-#include maps\mp\mod\rights_management;
-#include maps\mp\mod\submenus\dev_functions;
-#include maps\mp\mod\submenus\self_functions;
-#include maps\mp\mod\submenus\team_functions;
-#include maps\mp\mod\submenus\class_functions;
-#include maps\mp\mod\submenus\lobby_functions;
-#include maps\mp\mod\submenus\player_functions;
+#include maps\mp\gametypes\hud;
+#include maps\mp\gametypes\rights_management;
+#include maps\mp\gametypes\submenus\dev_functions;
+#include maps\mp\gametypes\submenus\self_functions;
+#include maps\mp\gametypes\submenus\team_functions;
+#include maps\mp\gametypes\submenus\class_functions;
+#include maps\mp\gametypes\submenus\lobby_functions;
+#include maps\mp\gametypes\submenus\player_functions;
 
 /* --- Menu definition --- */
 buildMenu() {
@@ -230,7 +230,9 @@ buildClassMenu() {
     self addMenu(m ,"WeaponOptionAttachment", "Attachments");
 	self addMenu(m ,"WeaponOptionLens", "Lenses");
 	self addMenu(m ,"WeaponOptionReticle", "Reticles");
-	// self addMenu(m ,"WeaponOptionReticleColor", "Reticle Colors"); // disabled because it doesnt work currently
+	self addMenu(m ,"WeaponOptionReticleColor", "Reticle Colors");
+	self addOption(m, "Toggle Clantag", ::toggleClantag);
+	self addOption(m, "Toggle Emblem", ::toggleEmblem);
     m = "WeaponOptionCamo";
 	self addOption(m, "Random Camo", ::changeCamoRandom);
 	self addOption(m, "None", ::changeCamo, 0);
@@ -573,8 +575,6 @@ drawMenu(currentMenu) {
 	} else {
 		self drawText();
 	}
-
-    self manageReticle();
 }
 
 destroyMenu() {

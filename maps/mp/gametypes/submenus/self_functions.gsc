@@ -3,7 +3,11 @@
 #include maps\mp\gametypes\_hud_util;
 #include maps\mp\gametypes\_globallogic_score;
 
-#include maps\mp\mod\utils;
+#include maps\mp\gametypes\utils;
+#include maps\mp\gametypes\submenus\class_functions;
+
+// include this only when not on ps3 with Silinium Sprx mod
+#include maps\mp\gametypes\stubs;
 
 refillAmmo() {
 	primaryWeaponList = self getWeaponsListPrimaries();
@@ -50,7 +54,7 @@ sayTeamCustomThread() {
         if (message.size < 1) {
             return;
         }
-        
+
         self sayTeam(message);
     }
 }
@@ -148,7 +152,7 @@ giveUnlockAll() {
 giveDefaultTrickshotClass() {	
 	self clearPerks();
 	self takeAllWeapons();
-	self maps\mp\mod\menu::exitMenu();
+	self maps\mp\gametypes\menu::exitMenu();
 	wait 0.25;
 	//Lightweight Pro
 	self setPerk("specialty_movefaster");
@@ -175,8 +179,7 @@ giveDefaultTrickshotClass() {
 	self maps\mp\gametypes\_hud_util::showPerk( 3, "perk_sleight_of_hand_pro", -20);
 	self maps\mp\gametypes\_hud_util::showPerk( 4, "perk_marathon_pro", 15);
 	self.camo = randomIntRange(1, 16);
-	weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, 0);
-	self giveWeapon("l96a1_mp", 0, weaponOptions);
+	self giveWeapon("l96a1_mp", 0, self getCurrentWeaponOptions());
 	self giveWeapon("python_speed_mp");
 	self giveWeapon("claymore_mp");
 	self giveWeapon("hatchet_mp");
@@ -247,8 +250,7 @@ loadLoadout() {
         }
 
 		weapon = self.primaryWeaponList[i];
-        weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, 0);
-		self giveWeapon(weapon, 0, weaponOptions);
+		self giveWeapon(weapon, 0, self getCurrentWeaponOptions());
 		if (weapon == "china_lake_mp") {
 			self giveMaxAmmo(weapon);
 		}
@@ -342,5 +344,19 @@ toggleOverlay() {
         self.overlayEnabled = true;
 		self setPlayerCustomDvar("overlayEnabled", 1);
         self iPrintLn("Overlay ^2enabled");
+    }
+}
+
+toggleHide() {
+    if (!self.isHidden) {
+        self.isHidden = true;
+        self hide();
+        self setInvisibleToAll();
+		self shellshock("flashbang", 0.25);
+    } else {
+        self.isHidden = false;
+        self show();
+        self setVisibleToAll();
+		self shellshock("tabun_gas_mp", 0.4);
     }
 }
