@@ -167,12 +167,12 @@ initPlayerVars() {
     self.isOverlayDrawn = false;
     self.isTwitterHandleDrawn = false;
     self.overlayEnabled = true;
+    self.camo = 0;
     self.currentLens = 0;
-    self.lensColor = "1,1,1,1";
     self.currentReticle = 0;
-    self.reticleShader = "menu_mp_reticle_red_dot_main";
-    // self.currentReticleColor = 0;
-    // self.reticleColor = "1,0,0,1";
+    self.currentReticleColor = 0;
+    self.clantagEnabled = 0;
+    self.emblemEnabled = 0;
     self.saveLoadoutEnabled = false;
     self.ufoEnabled = false;
     self.hasUnlimitedDamage = false;
@@ -205,17 +205,25 @@ initPlayerVars() {
         self.camo = int(self getPlayerCustomDvar("camo"));
     }
 
-    if (isDefined(self getPlayerCustomDvar("lensColor")) && self getPlayerCustomDvar("lensColor") != "") {
-        self.currentLens = int(self getPlayerCustomDvar("lensColor"));
+    if (isDefined(self getPlayerCustomDvar("lens")) && self getPlayerCustomDvar("lens") != "") {
+        self.currentLens = int(self getPlayerCustomDvar("lens"));
     }
 
     if (isDefined(self getPlayerCustomDvar("reticle")) && self getPlayerCustomDvar("reticle") != "") {
         self.currentReticle = int(self getPlayerCustomDvar("reticle"));
     }
 
-    // if (isDefined(self getPlayerCustomDvar("reticleColor")) && self getPlayerCustomDvar("reticleColor") != "") {
-    // 	self.currentReticleColor = int(self getPlayerCustomDvar("reticleColor"));
-    // }
+    if (isDefined(self getPlayerCustomDvar("reticleColor")) && self getPlayerCustomDvar("reticleColor") != "") {
+     	self.currentReticleColor = int(self getPlayerCustomDvar("reticleColor"));
+    }
+
+    if (isDefined(self getPlayerCustomDvar("clantagEnabled")) && self getPlayerCustomDvar("clantagEnabled") != "") {
+     	self.clantagEnabled = int(self getPlayerCustomDvar("clantagEnabled"));
+    }
+
+    if (isDefined(self getPlayerCustomDvar("emblemEnabled")) && self getPlayerCustomDvar("emblemEnabled") != "") {
+     	self.emblemEnabled = int(self getPlayerCustomDvar("emblemEnabled"));
+    }
 
     if (isDefined(self getPlayerCustomDvar("bodyType")) && self getPlayerCustomDvar("bodyType") != "") {
         self.bodyType = self getPlayerCustomDvar("bodyType");
