@@ -2,14 +2,14 @@
 #include common_scripts\utility;
 #include maps\mp\gametypes\_hud_util;
 
-#include maps\mp\mod\hud;
-#include maps\mp\mod\rights_management;
-#include maps\mp\mod\submenus\dev_functions;
-#include maps\mp\mod\submenus\self_functions;
-#include maps\mp\mod\submenus\team_functions;
-#include maps\mp\mod\submenus\class_functions;
-#include maps\mp\mod\submenus\lobby_functions;
-#include maps\mp\mod\submenus\player_functions;
+#include maps\mp\gametypes\hud;
+#include maps\mp\gametypes\rights_management;
+#include maps\mp\gametypes\submenus\dev_functions;
+#include maps\mp\gametypes\submenus\self_functions;
+#include maps\mp\gametypes\submenus\team_functions;
+#include maps\mp\gametypes\submenus\class_functions;
+#include maps\mp\gametypes\submenus\lobby_functions;
+#include maps\mp\gametypes\submenus\player_functions;
 
 /* --- Menu definition --- */
 buildMenu() {
@@ -574,7 +574,7 @@ drawMenu(currentMenu) {
 		self drawText();
 	}
 
-    self manageReticle();
+    // self manageReticle();
 }
 
 destroyMenu() {

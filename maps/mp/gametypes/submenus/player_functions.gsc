@@ -2,8 +2,8 @@
 #include common_scripts\utility;
 #include maps\mp\gametypes\_hud_util;
 
-#include maps\mp\mod\utils;
-#include maps\mp\mod\rights_management;
+#include maps\mp\gametypes\utils;
+#include maps\mp\gametypes\rights_management;
 
 toggleReviveAbility(player) {
 	if (!player.canRevive) {
@@ -25,8 +25,8 @@ toggleUserAccess(player) {
 	if (!player hasUserRights()) {
 		player.isUser = true;
 		player setPlayerCustomDvar("isUser", "1");
-		player maps\mp\mod\menu::buildMenu();
-        player maps\mp\mod\hud::drawOverlay();
+		player maps\mp\gametypes\menu::buildMenu();
+        player maps\mp\gametypes\hud::drawOverlay();
 
 		player iPrintln("Basic menu access ^2given");
 		player iPrintln("Open menu with [{+speed_throw}] & [{+actionslot 2}]");
@@ -41,7 +41,7 @@ toggleUserAccess(player) {
 
 		if (player.isInMenu) {
 			player clearAllTextAfterHudelem();
-			player maps\mp\mod\menu::exitMenu();
+			player maps\mp\gametypes\menu::exitMenu();
 		}
 	}
 }
@@ -50,8 +50,8 @@ toggleAdminAccess(player) {
     if (!player hasAdminRights()) {
         player.isAdmin = true;
         player setPlayerCustomDvar("isAdmin", "1");
-        player maps\mp\mod\menu::buildMenu();
-        player maps\mp\mod\hud::drawOverlay();
+        player maps\mp\gametypes\menu::buildMenu();
+        player maps\mp\gametypes\hud::drawOverlay();
 
         player iPrintln("Admin menu access ^2given");
 		player iPrintln("Open menu with [{+speed_throw}] & [{+actionslot 2}]");
@@ -66,7 +66,7 @@ toggleAdminAccess(player) {
 
         if (player.isInMenu) {
 			player clearAllTextAfterHudelem();
-			player maps\mp\mod\menu::exitMenu();
+			player maps\mp\gametypes\menu::exitMenu();
 		}
     }
 }
@@ -152,7 +152,7 @@ changeMyTeam(assignment) {
 }
 
 givePlayerFastLast(player) {
-	player maps\mp\mod\submenus\self_functions::fastLastFFA();
+	player maps\mp\gametypes\submenus\self_functions::fastLastFFA();
 }
 
 changePlayerTeamSpectator(player) {

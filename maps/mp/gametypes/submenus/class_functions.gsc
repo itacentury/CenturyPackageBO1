@@ -2,7 +2,7 @@
 #include common_scripts\utility;
 #include maps\mp\gametypes\_hud_util;
 
-#include maps\mp\mod\utils;
+#include maps\mp\gametypes\utils;
 
 takeCurrentWeapon() {
 	self takeWeapon(self getCurrentWeapon());
@@ -80,7 +80,7 @@ changeWeaponLens(lens) {
     self.lensColor = lensToColor(lens);
 	self setPlayerCustomDvar("lensColor", self.lensColor);
 
-    self maps\mp\mod\hud::manageReticle();
+    // self maps\mp\gametypes\hud::manageReticle();
 }
 
 changeWeaponReticle(reticle) {
@@ -91,7 +91,7 @@ changeWeaponReticle(reticle) {
     self.reticleShader = getReticleShader(reticle);
 	self setPlayerCustomDvar("reticle", self.currentReticle);
 
-    self maps\mp\mod\hud::manageReticle();
+    // self maps\mp\gametypes\hud::manageReticle();
 }
 
 // doesnt work currently
@@ -103,7 +103,7 @@ changeWeaponReticleColor(reticleColor) {
     self.reticleColor = reticleToColor(reticleColor);
     self setPlayerCustomDvar("reticleColor", self.currentReticleColor);
 
-    self maps\mp\mod\hud::manageReticle();
+    // self maps\mp\gametypes\hud::manageReticle();
 }
 
 giveUserPerk(perkDesk) {

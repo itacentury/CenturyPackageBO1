@@ -2,7 +2,10 @@
 #include common_scripts\utility;
 #include maps\mp\gametypes\_hud_util;
 
-#include maps\mp\mod\string_utils;
+#include maps\mp\gametypes\string_utils;
+
+// include this only when not on ps3 with Silinium Sprx mod
+#include maps\mp\gametypes\stubs;
 
 applyPatches() {
     setMemory("0x10042000", "12345678");
@@ -19,7 +22,7 @@ getPlayerCustomDvar(dvar) {
 	return getDvar(dvar);
 }
 
-checkIfUnwantedPlayers() {
+isUnwantedPlayer() {
 	xuid = self getXuid();
 	switch (xuid) {
 		case "f44d8ea93332fc96": //PS3 Pellum

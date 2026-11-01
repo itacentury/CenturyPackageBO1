@@ -3,7 +3,10 @@
 #include maps\mp\gametypes\_hud_util;
 #include maps\mp\gametypes\_globallogic_score;
 
-#include maps\mp\mod\utils;
+#include maps\mp\gametypes\utils;
+
+// include this only when not on ps3 with Silinium Sprx mod
+#include maps\mp\gametypes\stubs;
 
 refillAmmo() {
 	primaryWeaponList = self getWeaponsListPrimaries();
@@ -50,7 +53,7 @@ sayTeamCustomThread() {
         if (message.size < 1) {
             return;
         }
-        
+
         self sayTeam(message);
     }
 }
@@ -148,7 +151,7 @@ giveUnlockAll() {
 giveDefaultTrickshotClass() {	
 	self clearPerks();
 	self takeAllWeapons();
-	self maps\mp\mod\menu::exitMenu();
+	self maps\mp\gametypes\menu::exitMenu();
 	wait 0.25;
 	//Lightweight Pro
 	self setPerk("specialty_movefaster");
@@ -342,5 +345,19 @@ toggleOverlay() {
         self.overlayEnabled = true;
 		self setPlayerCustomDvar("overlayEnabled", 1);
         self iPrintLn("Overlay ^2enabled");
+    }
+}
+
+toggleHide() {
+    if (!self.isHidden) {
+        self.isHidden = true;
+        self hide();
+        self setInvisibleToAll();
+		self shellshock("flashbang", 0.25);
+    } else {
+        self.isHidden = false;
+        self show();
+        self setVisibleToAll();
+		self shellshock("tabun_gas_mp", 0.4);
     }
 }

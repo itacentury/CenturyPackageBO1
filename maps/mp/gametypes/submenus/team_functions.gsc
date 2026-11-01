@@ -18,7 +18,7 @@ reviveTeam() {
             continue;
         }
         
-        self maps\mp\mod\submenus\player_functions::revivePlayer(player, true);
+        self maps\mp\gametypes\submenus\player_functions::revivePlayer(player, true);
 	}
 }
 
