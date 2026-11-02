@@ -44,7 +44,7 @@ drawOverlay() {
         return;
     }
 
-    self.overlay = createText("small", 1, "LEFT", "TOP", -425, level.yAxisOverlayPlacement, 100, false, "Press [{+speed_throw}] + [{+actionslot 2}] for Century Package");
+    self.overlay = createText("small", 1, "LEFT", "TOP", -425, level.yAxisOverlayPlacement, 100, false, "Press [{+speed_throw}] + [{+actionslot 2}] for " + level.menuName);
     self.overlay setColor(1, 1, 1, 0.8);
 
     self.isOverlayDrawn = true;

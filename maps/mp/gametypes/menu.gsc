@@ -15,7 +15,7 @@
 buildMenu() {
 	self.menus = [];
 	m = "main";
-	self addMenu("", m, "Century Package " + level.currentVersion);
+	self addMenu("", m, level.menuName);
 	self addOption(m, "Refill Ammo", ::refillAmmo);
 	self addMenu(m, "MainSelf", "Self Options");
 	if (self hasHostRights() && !level.console) {

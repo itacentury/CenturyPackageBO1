@@ -5,9 +5,8 @@
 #include maps\mp\gametypes\utils;
 
 initLevelVars() {
-    level.menuName = "Century Package";
-    level.twitterHandle = "@century_dread";
-	level.currentVersion = "3.0";
+    level.menuName = "The Century Package";
+    level.twitterHandle = "@Zxckerschlecken";
 	level.currentGametype = getDvar("g_gametype");
 	level.currentMapName = getDvar("mapName");
     level.visibleOptions = 8;
