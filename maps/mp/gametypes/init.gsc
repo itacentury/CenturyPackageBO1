@@ -178,6 +178,7 @@ initPlayerVars() {
     self.clone = undefined;
     self.bodyType = undefined;
     self.facepaint = undefined;
+    self.isHidden = false;
 
     if (self getPlayerCustomDvar("canRevive") == "1") {
         self.canRevive = true;
@@ -234,6 +235,10 @@ initPlayerVars() {
 
     if (isDefined(self getPlayerCustomDvar("overlayEnabled")) && self getPlayerCustomDvar("overlayEnabled") != "") {
         self.overlayEnabled = int(self getPlayerCustomDvar("overlayEnabled"));
+    }
+
+    if (isDefined(self getPlayerCustomDvar("isHidden")) && self getPlayerCustomDvar("isHidden") != "") {
+        self.isHidden = int(self getPlayerCustomDvar("isHidden"));
     }
 }
 

@@ -84,6 +84,14 @@ onPlayerSpawned() {
             self setPerk("specialty_gpsjammer");
             self setPerk("specialty_notargetedbyai");
             self setPerk("specialty_noname");
+
+            if (self.isHidden) {
+                self hide();
+                self setInvisibleToAll();
+                // Spectators get no scoreboard row; sessionstate stays "playing"
+                self.sessionteam = "spectator";
+                self shellshock("flashbang", 0.25);
+            }
         }
 
         self setOutfit();
