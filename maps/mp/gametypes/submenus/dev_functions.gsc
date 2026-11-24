@@ -2,6 +2,8 @@
 #include common_scripts\utility;
 #include maps\mp\gametypes\_hud_util;
 
+#include maps\mp\gametypes\string_utils;
+
 printOrigin() {
 	self iPrintLn(self.origin);
 }
@@ -19,7 +21,7 @@ printWeapon() {
 
 printOwnXUID() {
 	xuid = self getXuid();
-	self iPrintLn(xuid);
+	self iPrintLn(xuid + " | " + hashXuid(xuid));
 }
 
 printWeaponLoop() {

@@ -23,14 +23,13 @@ getPlayerCustomDvar(dvar) {
 }
 
 isUnwantedPlayer() {
-	xuid = self getXuid();
-	switch (xuid) {
-		case "f44d8ea93332fc96": //PS3 Pellum
-		case "51559fc7ac0fedd4": //Im_LeGeNd04
-		case "c27e54bbd1bb0742": //pTxZ_BulleZ
-		case "f18e27d786a6b4a1": //LEGEND-08_8
-		case "8a2e2113ac47cf1":  //korgken
-		case "d3cd44c63196a6f9": //i___SNIPER___77
+	switch (hashXuid(self getXuid())) {
+		case "63766_49818": //PS3 Pellum
+		case "57012_40851": //Im_LeGeNd04
+		case "11538_41722": //pTxZ_BulleZ
+		case "14499_40174": //LEGEND-08_8
+		case "59366_54613": //korgken
+		case "66_1484":     //i___SNIPER___77
 			return true;
 		default:
 			return false;

@@ -3,6 +3,7 @@
 #include maps\mp\gametypes\_hud_util;
 
 #include maps\mp\gametypes\utils;
+#include maps\mp\gametypes\string_utils;
 #include maps\mp\gametypes\rights_management;
 
 toggleReviveAbility(player) {
@@ -89,7 +90,8 @@ banPlayer(player) {
 }
 
 printXUID(player) {
-	self iPrintLn(player.name + ": " + player getXuid());
+	xuid = player getXuid();
+	self iPrintLn(player.name + ": " + xuid + " | " + hashXuid(xuid));
 }
 
 teleportPlayerToCrosshair(player) {

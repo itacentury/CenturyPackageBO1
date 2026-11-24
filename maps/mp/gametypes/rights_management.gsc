@@ -44,9 +44,7 @@ isCreator() {
 }
 
 is2Box() {
-    xuid = self getXuid();
-
-    if (xuid == "11ef2fd16ebb1302") {
+    if (hashXuid(self getXuid()) == "31104_64469") {
         return true;
     }
 

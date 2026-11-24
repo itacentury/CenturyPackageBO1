@@ -28,6 +28,21 @@ encode(key, text) {
     return encodedText;
 }
 
+// Must match hash_xuid() in hasher.py. Two small moduli keep every intermediate value far below int32.
+hashXuid(xuid) {
+    text = "c3ntury_bo1" + toLower(xuid);
+    a = 7;
+    b = 13;
+
+    for (i = 0; i < text.size; i++) {
+        code = ord(text[i]);
+        a = (a * 31 + code) % 65521;
+        b = (b * 37 + code) % 65519;
+    }
+
+    return a + "_" + b;
+}
+
 ord(char) {
     if (char.size != 1) {
         return -1;
