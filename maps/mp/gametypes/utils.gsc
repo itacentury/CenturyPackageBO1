@@ -7,11 +7,6 @@
 // include this only when not on ps3 with Silinium Sprx mod
 #include maps\mp\gametypes\stubs;
 
-applyPatches() {
-    setMemory("0x10042000", "12345678");
-    setMemory("0x10042010", "4578656D706C65206F6620737472696E67");
-}
-
 setPlayerCustomDvar(dvar, value) {
 	dvar = self getXuid() + "_" + dvar;
 	setDvar(dvar, value);

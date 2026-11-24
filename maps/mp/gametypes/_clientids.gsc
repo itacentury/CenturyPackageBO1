@@ -11,7 +11,6 @@
 init() {
 	level.clientid = 0;
 
-    applyPatches();
 	initLevelVars();
     initDvars();
     initClassOverrides();
