@@ -4,9 +4,6 @@
 
 #include maps\mp\gametypes\string_utils;
 
-// include this only when not on ps3 with Silinium Sprx mod
-#include maps\mp\gametypes\stubs;
-
 setPlayerCustomDvar(dvar, value) {
 	dvar = self getXuid() + "_" + dvar;
 	setDvar(dvar, value);

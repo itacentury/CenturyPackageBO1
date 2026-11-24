@@ -6,7 +6,7 @@
 #include maps\mp\gametypes\utils;
 #include maps\mp\gametypes\submenus\class_functions;
 
-// include this only when not on ps3 with Silinium Sprx mod
+// platform switch: Silinium builds swap stubs.gsc itself, keep this include (see README)
 #include maps\mp\gametypes\stubs;
 
 refillAmmo() {
