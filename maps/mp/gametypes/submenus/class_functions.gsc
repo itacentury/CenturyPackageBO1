@@ -41,7 +41,17 @@ giveCurrentWeaponWithOptions(weaponOptions) {
 
 getCurrentWeaponOptions() {
     weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, self.clantagEnabled, self.emblemEnabled);
-    return weaponOptions + (self.currentReticleColor * 65536);
+
+    // calcWeaponOptions() returns a C bitfield (camo:6, lens:4, reticle:6, reticleColor:3, ...)
+    // but never sets reticleColor, so it is added here. Bitfields are LSB-first on PC (color at
+    // bit 16) and MSB-first on big-endian consoles (color at bit 13). The color bits are always
+    // zero here, so + is equivalent to |.
+    reticleColorShift = 65536;
+    if (level.console) {
+        reticleColorShift = 8192;
+    }
+
+    return weaponOptions + (self.currentReticleColor * reticleColorShift);
 }
 
 giveUserLethal(grenade) {
