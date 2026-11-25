@@ -40,6 +40,18 @@
 
         Choose between all attachments that are added to your current weapon. Some attachments can not be toggled off, to get rid of it you have to select the option "Remove all attachments". The attachment has to be supported by your current weapon.
   
+* Reticle Color Selector
+
+        Choose the reticle color of your current weapon: Red, Green, Blue, Purple, Teal, Yellow or Orange. The choice is saved and kept after respawning.
+
+* Toggle Clantag
+
+        Toggles your clantag being shown on your current weapon. The setting is saved and kept after respawning.
+
+* Toggle Emblem
+
+        Toggles your emblem being shown on your current weapon. The setting is saved and kept after respawning.
+
 * Equipment Selector
 
         Choose between all equipments except tactical insertion (doesn't work)
