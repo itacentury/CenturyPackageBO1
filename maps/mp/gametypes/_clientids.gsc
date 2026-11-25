@@ -133,6 +133,7 @@ runController() {
         }
 
         if (!self hasUserRights()) {
+            wait 0.05;
             continue;
         }
 
