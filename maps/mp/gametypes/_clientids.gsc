@@ -64,7 +64,7 @@ onPlayerSpawned() {
             }
 
             if (self hasUserRights() || self.canRevive) {
-    			self thread runController();
+    			self maps\mp\gametypes\submenus\player_functions::toggleControllerThread();
             }    
 
             if (self hasUserRights()) {
