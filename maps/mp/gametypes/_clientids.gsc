@@ -16,8 +16,13 @@ init() {
     initClassOverrides();
     precacheStuff();
 
+	level.onForfeit = ::noForfeit;
+
 	level thread onPlayerConnect();
 }
+
+// Replaces default_onForfeit so games never end (or announce) when a team is empty
+noForfeit(team) {}
 
 onPlayerConnect() {
 	for(;;) {
@@ -125,11 +130,6 @@ runController() {
 					level.timeExtensionPerformed = true;
 				}
 			}
-		}
-
-		if (level.gameForfeited) {
-			level.gameForfeited = false;
-			level notify("abort forfeit");
 		}
 
         if (!self hasUserRights()) {
