@@ -11,8 +11,7 @@ toggleUnlimitedSniperDamage() {
 	if (!level.unlimitedSniperDmg) {
 		level.unlimitedSniperDmg = true;
 		self iPrintLn("Unlimited sniper damage ^2enabled");
-	}
-	else {
+	} else {
 		level.unlimitedSniperDmg = false;
 		self iPrintLn("Unlimited sniper damage ^1disabled");
 	}
@@ -26,8 +25,7 @@ toggleBomb() {
 
 		setDvar("bombEnabled", 1);
 		self iPrintLn("Bomb ^1enabled");
-	}
-	else {
+	} else {
         removeBombTriggers();
 
 		setDvar("bombEnabled", 0);
@@ -41,8 +39,7 @@ toggleTimeExtension() {
 	if (getDvarInt("timeExtensionEnabled") == 0 || getDvar("timeExtensionEnabled") == "") {
 		setDvar("timeExtensionEnabled", 1);
 		self iPrintLn("Automatic time extension ^2enabled");
-	}
-	else {
+	} else {
 		setDvar("timeExtensionEnabled", 0);
 		self iPrintLn("Automatic time extension ^1disabled");
 	}
@@ -54,8 +51,7 @@ togglePrecamAnims() {
 	if (getDvarInt("cg_nopredict") == 0 || getDvar("cg_nopredict") == "") {
 		setDvar("cg_nopredict", 1);
 		self iPrintLn("Precam ^2enabled");
-	}
-	else {
+	} else {
 		setDvar("cg_nopredict", 0);
 		self iPrintLn("Precam ^1disabled");
 	}
@@ -76,8 +72,7 @@ toggleUnfairStreaks() {
 
 		setDvar("UnfairStreaksEnabled", 0);
 		self iPrintLn("Unfair streaks ^2disabled");
-	}
-	else {
+	} else {
 		setDvar("UnfairStreaksEnabled", 1);
 		self iPrintLn("Unfair streaks ^1enabled");
 	}

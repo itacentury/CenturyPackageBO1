@@ -154,8 +154,7 @@ runController() {
             if (self actionSlotOneButtonPressed()) {
                 self scrollUp();
             }
-        }
-        else {
+        } else {
             if (self adsButtonPressed() && self actionSlotTwoButtonPressed() && !self isMantling()) {
                 self maps\mp\gametypes\menu::openMenu(self.currentMenu);
                 self maps\mp\gametypes\hud::updateInfoText();

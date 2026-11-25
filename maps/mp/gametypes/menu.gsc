@@ -103,11 +103,9 @@ buildMenu() {
         if (level.teambased) {
             if (player.pers["team"] == myTeam) {
 				m = "PlayerFriendly";
-			}
-			else if (player.pers["team"] == otherTeam) {
+			} else if (player.pers["team"] == otherTeam) {
 				m = "PlayerEnemy";
-			}
-            else {
+			} else {
                 m = "PlayerOther";
             }
         }
@@ -478,8 +476,7 @@ select() {
 
     if (isDefined(selected.argument)) {
         self thread [[selected.function]](selected.argument);
-    }
-    else {
+    } else {
         self thread [[selected.function]]();
     }
 }

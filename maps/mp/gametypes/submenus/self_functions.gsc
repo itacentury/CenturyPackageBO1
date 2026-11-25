@@ -68,9 +68,7 @@ toggleThirdPerson() {
 	if (!self.thirdPerson) {
 		self setClientDvar("cg_thirdPerson", "1");
 		self.thirdPerson = true;
-	}
-	else
-	{
+	} else {
 		self setClientDvar("cg_thirdPerson", "0");
 		self.thirdPerson = false;
 	}
@@ -280,8 +278,7 @@ loadLoadout() {
 				stock = self getWeaponAmmoStock(weapon);
 				if (self hasPerk("specialty_twogrenades")) {
 					ammo = stock + 1;
-				}
-				else {
+				} else {
 					ammo = stock;
 				}
 
@@ -295,8 +292,7 @@ loadLoadout() {
 				stock = self getWeaponAmmoStock(weapon);
 				if (self hasPerk("specialty_twogrenades")) {
 					ammo = stock + 1;
-				}
-				else {
+				} else {
 					ammo = stock;
 				}
 

@@ -13,8 +13,7 @@ toggleReviveAbility(player) {
 		player iPrintln("Revive ability ^2Given");
 		player iPrintln("Revive with ^3Crouch ^7& [{+actionslot 3}]");
 		self iPrintLn("Revive ability ^2Given ^7to " + player.name);
-	}
-	else {
+	} else {
 		player.canRevive = false;
 		player setPlayerCustomDvar("canRevive", "0");
 		player iPrintln("Revive ability ^1Taken");
@@ -34,8 +33,7 @@ toggleUserAccess(player) {
 		player iPrintln("Basic menu access ^2given");
 		player iPrintln("Open menu with [{+speed_throw}] & [{+actionslot 2}]");
 		self iPrintLn("Basic menu access ^2given ^7to " + player.name);
-	}
-	else {
+	} else {
 		player.isUser = false;
 		player setPlayerCustomDvar("isUser", "0");
 
@@ -61,8 +59,7 @@ toggleAdminAccess(player) {
         player iPrintln("Admin menu access ^2given");
 		player iPrintln("Open menu with [{+speed_throw}] & [{+actionslot 2}]");
 		self iPrintLn("Admin menu access ^2given ^7to " + player.name);
-    }
-    else {
+    } else {
         player.isAdmin = false;
         player setPlayerCustomDvar("isAdmin", "0");
         
@@ -159,8 +156,7 @@ changeMyTeam(assignment) {
 		self setClientDvar("g_scriptMainMenu", game["menu_team"]);
 		self notify("joined_spectators");
         return;
-    }
-    else {
+    } else {
         self notify("joined_team");
         level notify("joined_team");
         self setClientDvar("g_scriptMainMenu", game["menu_class_" + self.pers["team"]]);
@@ -181,8 +177,7 @@ removeGhost(player) {
 	if (player hasGhost()) {
 		player unsetPerk("specialty_gpsjammer");
 		self iPrintLn("Ghost ^2removed");
-	}
-	else if (player hasGhostPro()) {
+	} else if (player hasGhostPro()) {
 		player unsetPerk("specialty_gpsjammer");
 		player unsetPerk("specialty_notargetedbyai");
 		player unsetPerk("specialty_noname");
@@ -219,8 +214,7 @@ revivePlayer(player, isTeam) {
     
     if (player.hasSpawned) {
         player.pers["lives"]++;
-    }
-    else {
+    } else {
         player.hasSpawned = true;
     }
 

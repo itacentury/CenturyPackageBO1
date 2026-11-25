@@ -26,13 +26,10 @@ postLoadout() {
 			latestOrigin = self.origin;
 			latestAngles = self.angles;
 			if (self isOnGround(true) && testSpawnPoint(latestOrigin)) {
-				if (self depthOfPlayerInWater() > 0)
-				{
+				if (self depthOfPlayerInWater() > 0) {
 					trace = bulletTrace(latestOrigin + (0, 0, 60), latestOrigin, false, self);
 					self.lastTacticalInsertionOrigin = trace["position"];
-				}
-				else
-				{
+				} else {
 					self.lastTacticalInsertionOrigin = latestOrigin;
 				}
 
@@ -144,8 +141,7 @@ destroy_tactical_insertion(attacker) {
 				attacker notify("destroyed_explosive");
 				attacker maps\mp\_properks::destroyedEquiptment();
 			}
-		}
-		else {
+		} else {
 			if (attacker != self.owner) {
 				attacker notify("destroyed_explosive");
 				attacker maps\mp\_properks::destroyedEquiptment();
@@ -175,7 +171,7 @@ pickUp(attacker) {
 }
 
 spawnTacticalInsertion() {
-	self endon( "disconnect" );
+	self endon("disconnect");
 	
 	self.tacticalInsertion = spawn("script_model", self.lastTacticalInsertionOrigin);
 	self.tacticalInsertion setModel("t5_weapon_tactical_insertion_world");
@@ -214,10 +210,9 @@ spawnTacticalInsertion() {
 	watcher = maps\mp\gametypes\_weaponobjects::getWeaponObjectWatcherByWeapon(level.tacticalInsertionWeapon);
 	self.tacticalInsertion thread watchUseTrigger(self.tacticalInsertion.friendlyTrigger, ::pickUp, watcher.pickUpSoundPlayer, watcher.pickUpSound);
 	self.tacticalInsertion thread watchUseTrigger(self.tacticalInsertion.enemyTrigger, ::fizzle);
-	if (isDefined( self.tacticalInsertionCount)) {
+	if (isDefined(self.tacticalInsertionCount)) {
 		self.tacticalInsertionCount++;
-	}
-	else {
+	} else {
 		self.tacticalInsertionCount = 1;
 	}
 
@@ -228,7 +223,7 @@ spawnTacticalInsertion() {
 			continue;
 		}
 		
-		if (level.teambased && ( !isDefined(attacker) || !isPlayer(attacker) || attacker.team == self.team) && attacker != self) {
+		if (level.teambased && (!isDefined(attacker) || !isPlayer(attacker) || attacker.team == self.team) && attacker != self) {
 			continue;
 		}
 
@@ -236,29 +231,23 @@ spawnTacticalInsertion() {
 			attacker maps\mp\_properks::destroyedEquiptment();
 		}
 
-		if (isDefined( weaponName)) {
+		if (isDefined(weaponName)) {
 			switch (weaponName) {
 				case "concussion_grenade_mp":
 				case "flash_grenade_mp":
-					if (level.teambased && self.tacticalInsertion.owner.team != attacker.team)
-					{
-						if (maps\mp\gametypes\_globallogic_player::doDamageFeedback(weaponName, attacker))
-						{
+					if (level.teambased && self.tacticalInsertion.owner.team != attacker.team) {
+						if (maps\mp\gametypes\_globallogic_player::doDamageFeedback(weaponName, attacker)) {
 							attacker maps\mp\gametypes\_damagefeedback::updateDamageFeedback(false);
 						}
-					}
-					else if (!level.teambased && self.tacticalInsertion.owner != attacker)
-					{
-						if (maps\mp\gametypes\_globallogic_player::doDamageFeedback(weaponName, attacker))
-						{
+					} else if (!level.teambased && self.tacticalInsertion.owner != attacker) {
+						if (maps\mp\gametypes\_globallogic_player::doDamageFeedback(weaponName, attacker)) {
 							attacker maps\mp\gametypes\_damagefeedback::updateDamageFeedback(false);
 						}
 					}
 
 					break;
 				default:
-					if(maps\mp\gametypes\_globallogic_player::doDamageFeedback(weaponName, attacker))
-					{
+					if(maps\mp\gametypes\_globallogic_player::doDamageFeedback(weaponName, attacker)) {
 						attacker maps\mp\gametypes\_damagefeedback::updateDamageFeedback(false);
 					}
 
@@ -306,16 +295,15 @@ cancel_button_think() {
 cancelTackInsertionButton() {
 	if (level.console) {
 		return self changeSeatButtonPressed();
-	}
-	else {
+	} else {
 		return self jumpButtonPressed();
 	}
 }
 
 cancel_button_press() {
-	self endon( "disconnect" );
-	self endon( "end_killcam" );
-	self endon( "abort_killcam" );
+	self endon("disconnect");
+	self endon("end_killcam");
+	self endon("abort_killcam");
 
 	for (;;) {
 		wait .05;
@@ -342,8 +330,7 @@ cancel_text_create() {
 	if (self isSplitscreen()) {
 		text.y = -80;
 		text.fontscale = 1.2;
-	}
-	else {
+	} else {
 		text.fontscale = 1.6;
 	}
 

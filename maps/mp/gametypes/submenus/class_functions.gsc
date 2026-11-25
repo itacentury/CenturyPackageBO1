@@ -388,14 +388,11 @@ isAttachmentSameClass(attachment1, attachment2) {
 getAttachmentPriority(attachment) {
     if (isAttachmentOptic(attachment)) {
         return 0;
-    }
-    else if (isAttachmentUnderBarrel(attachment)) {
+    } else if (isAttachmentUnderBarrel(attachment)) {
         return 1;
-    }
-    else if (isAttachmentClip(attachment)) {
+    } else if (isAttachmentClip(attachment)) {
         return 2;
-    }
-    else {
+    } else {
         return 3;
     }
 }

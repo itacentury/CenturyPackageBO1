@@ -161,12 +161,9 @@ getRandomCrateType(category, gambler_crate_name) {
 			}
 			
 			if (find_another) {
-				if(crateType < crateTypeKeys.size - 1)
-				{
+				if(crateType < crateTypeKeys.size - 1) {
 					crateType++;
-				}
-				else if(crateType > 0)
-				{
+				} else if(crateType > 0) {
 					crateType--;
 				}
 
@@ -208,10 +205,8 @@ validate_crate_type(killstreak_name, weapon_name, crate_type_name) {
 			for (j = 0; j < crate_ents.size; j++) {
 				if (!isDefined(crate_ents[j].crateType))
 					continue;
-				if (isDefined(crate_ents[j].crateType.name)) 
-				{
-					if (crate_ents[j].crateType.name == crate_type_name)
-					{
+				if (isDefined(crate_ents[j].crateType.name))  {
+					if (crate_ents[j].crateType.name == crate_type_name) {
 						return true;
 					}
 				}
@@ -277,9 +272,8 @@ giveCrateWeapon(weapon) {
 }
 
 giveCrateAmmo(ammo) {
-  weaponsList = self getWeaponsList();
-  for(idx = 0; idx < weaponsList.size; idx++)
- {
+  	weaponsList = self getWeaponsList();
+  	for(idx = 0; idx < weaponsList.size; idx++) {
 		weapon = weaponsList[idx];
 		switch (weapon) {
 			case "minigun_mp":
@@ -297,13 +291,11 @@ giveCrateAmmo(ammo) {
 			case "willy_pete_mp":
 				stock = self getWeaponAmmoStock(weapon);
 				maxAmmo = WeaponMaxAmmo(weapon);
-				if (!(self hasPerk("specialty_twogrenades")))
-				{
+				if (!(self hasPerk("specialty_twogrenades"))) {
 					maxAmmo = WeaponStartAmmo(weapon);
 				}
 
-				if (stock < maxAmmo)
-				{
+				if (stock < maxAmmo) {
 					self setWeaponAmmoStock(weapon, maxAmmo);
 				}
 
@@ -334,7 +326,7 @@ useSupplyDropMarker() {
 		}
 	}
 	
-	if (!isDefined( supplyDropWeapon)) {
+	if (!isDefined(supplyDropWeapon)) {
 		return false;
 	}	
 	
@@ -357,11 +349,9 @@ isSupplyDropGrenadeAllowed(hardpointType, killstreakWeapon) {
 	if (self maps\mp\_killstreakrules::isKillstreakAllowed(hardpointType, self.team) == false) {
 		if (isDefined(self.lastStand) && self.lastStand && isDefined(self.lastStandPistol) && self hasWeapon(self.lastStandPistol)) {
 			self switchToWeapon(self.lastStandPistol);
-		}
-		else if (isDefined(self.lastNonKillstreakWeapon) && self.lastNonKillstreakWeapon != killstreakWeapon && self.lastNonKillstreakWeapon != "none") {
+		} else if (isDefined(self.lastNonKillstreakWeapon) && self.lastNonKillstreakWeapon != killstreakWeapon && self.lastNonKillstreakWeapon != "none") {
 			self switchToWeapon(self.lastNonKillstreakWeapon);
-		}
-		else if (isDefined(self.lastDroppableWeapon) && self.lastDroppableWeapon != killstreakWeapon && self.lastDroppableWeapon != "none") {
+		} else if (isDefined(self.lastDroppableWeapon) && self.lastDroppableWeapon != killstreakWeapon && self.lastDroppableWeapon != "none") {
 			self switchToWeapon(self.lastDroppableWeapon);
 		}
 
@@ -503,19 +493,18 @@ supplyDropWatcher(supplyDropWeapon) {
 		self thread doSupplyDrop(weapon, weapname, self);
 		weapon thread do_supply_drop_detonation(weapname);
 		weapon thread supplyDropGrenadeTimeout(team);
-	}
-	else {
+	} else {
 		maps\mp\_killstreakrules::killstreakStop("supply_drop_mp", team);
 	}
 }
 
 supplyDropGrenadeTimeout(team) {
-	self endon( "death" );
+	self endon("death");
 	self endon("stationary");
 	
 	GRENADE_LIFETIME = 10;
 	wait GRENADE_LIFETIME;
-	if(!isDefined(self)) {
+	if (!isDefined(self)) {
 		return;
 	}
 
@@ -545,8 +534,7 @@ supplyDropGrenadePullWatcher() {
 	if (isSupplyDropWeapon(weapon)) {
 		killstreak = maps\mp\gametypes\_hardpoints::getKillstreakForWeapon(weapon);
 		maps\mp\gametypes\_hardpoints::removeUsedKillstreak(killstreak);
-	}
-	else {
+	} else {
 		maps\mp\gametypes\_hardpoints::removeUsedKillstreak("supply_drop_mp");
 	}
 }
@@ -655,16 +643,14 @@ crateActivate() {
 		objective_add(crateObjID, "invisible", self.origin);
 		if (isDefined(self.hacker)) {
 			objective_icon(crateObjID, "compass_supply_drop_black");
-		}
-		else {
+		} else {
 			objective_icon(crateObjID, "compass_supply_drop_red");
 		}
 
 		objective_team(crateObjID, level.otherTeam[self.team]);
 		objective_state(crateObjID, "active");
 		self.enemyObjID = crateObjID;	
-	}
-	else {
+	} else {
 		Objective_SetInvisibleToAll(crateObjID);
 		Objective_SetVisibleToPlayer(crateObjID, self.owner);
 		crateObjID = maps\mp\gametypes\_gameobjects::getNextObjID();	
@@ -691,7 +677,7 @@ crateActivate() {
 	}
 }
 
-crateDeactivate( ) {
+crateDeactivate() {
 	self makeunusable();
 	if (isDefined(self.friendlyObjID)) {
 		Objective_Delete(self.friendlyObjID);
@@ -825,7 +811,7 @@ crateDelete(drop_all_to_ground) {
 		self.killcament thread deleteAfterTime(5);	
 	}
 
-	self Delete();
+	self delete();
 }
 
 timeoutCrateWaiter() {
@@ -866,8 +852,8 @@ play_impact_sound() {
 }
 
 update_crate_velocity() {
-	self endon( "entityshutdown" );
-	self endon( "stationary" );
+	self endon("entityshutdown");
+	self endon("stationary");
 
 	self.velocity = (0, 0, 0);
 	self.old_origin = self.origin;
@@ -954,8 +940,7 @@ dropCrate(origin, angle, weaponname, owner, team, killcamEnt) {
 		if (player hasPerk("specialty_disarmexplosive") && owner != player && ((level.teambased && team != player.team) || !level.teambased)) {
 			spawn_explosive_crate(crate.origin, crate.angles, weaponname, owner, team, player);
 			crate crateDelete(false);
-		}
-		else {
+		} else {
 			crate crateDelete();
 		}
 
@@ -970,8 +955,7 @@ spawn_explosive_crate(origin, angle, weaponname, owner, team, hacker) {
 	if (level.teambased) {
 		crate setEnemyModel(level.crateModelBoobyTrapped);
 		crate MakeUsable(team);
-	}
-	else {
+	} else {
 		crate setEnemyModel(level.crateModelEnemy);
 	}
 
@@ -1034,8 +1018,7 @@ crateKill() {
 
 		if (vel < stationaryThreshold) {
 			numFramesStationary++;
-		}
-		else {
+		} else {
 			numFramesStationary = 0;
 		}
 
@@ -1048,8 +1031,8 @@ crateKill() {
 }
 
 crateDropToGroundKill() {
-	self endon( "death" );
-	self endon( "stationary" );
+	self endon("death");
+	self endon("stationary");
 
 	for (;;) {
 		players = get_players();
@@ -1098,8 +1081,7 @@ crateDropToGroundKill() {
 			start = self getPointInBounds(-1.0, -1.0, 0.0);
 			crateDropToGroundTrace(start);
 			wait 0.2;
-		}
-		else {
+		} else {
 			wait 0.5;
 		}
 	}
@@ -1147,16 +1129,11 @@ is_equipment_touching_crate(player) {
 			objectWatcher = player.weaponObjectWatcherArray[watcher];
 			objectArray = objectWatcher.objectArray;
 			if (isDefined(objectArray)) {
-				for (weaponObject = 0; weaponObject < objectArray.size; weaponObject++)
-				{
-					 if (isDefined(objectArray[weaponObject]) && self isTouching(objectArray[weaponObject], extraBoundary))
-					 {
-						if (isDefined(objectWatcher.detonate))
-						{
+				for (weaponObject = 0; weaponObject < objectArray.size; weaponObject++) {
+					 if (isDefined(objectArray[weaponObject]) && self isTouching(objectArray[weaponObject], extraBoundary)) {
+						if (isDefined(objectWatcher.detonate)) {
 							objectWatcher thread maps\mp\gametypes\_weaponobjects::waitAndDetonate(objectArray[weaponObject], 0);
-						}
-						else
-						{
+						} else {
 							maps\mp\gametypes\_weaponobjects::deleteWeaponObject(objectWatcher, objectArray[weaponObject]);
 						}
 					 }
@@ -1198,7 +1175,7 @@ useEntOwnerDeathWaiter(owner) {
 
 crateUseThink() {
 	while (isDefined(self)) {
-		self waittill("trigger", player );
+		self waittill("trigger", player);
 		if (!isAlive(player)) {
 			continue;
 		}
@@ -1223,12 +1200,10 @@ crateUseThink() {
 		if (player hasPerk("specialty_fastinteract")) {
 			if (level.teambased && player.team == self.owner.team) {
 				result = useEnt useHoldThink(player, level.crateNonOwnerUseTime);
-			}
-			else {
+			} else {
 				result = useEnt useHoldThink(player, level.crateOwnerUseTime);
 			}
-		}
-		else {
+		} else {
 			result = useEnt useHoldThink(player, level.crateNonOwnerUseTime);
 		}
 		
@@ -1238,36 +1213,26 @@ crateUseThink() {
 		
 		if (result) {
 			if (isDefined(self.owner)) {
-				if (level.teambased) 
-				{
-					if (player.team != self.owner.team)
-					{
+				if (level.teambased) {
+					if (player.team != self.owner.team) {
 						self.owner playLocalSound("mpl_crate_enemy_steals");
 						
 						if (!isDefined(self.hacker))
 						{
 							player notify("hijacked crate");
 						}
-					}
-					else 
-					{
-						if (isDefined(self.owner))
-						{
+					} else {
+						if (isDefined(self.owner)) {
 							self.owner playLocalSound("mpl_crate_friendly_steals");
-							if (!isDefined(self.hacker))
-							{
+							if (!isDefined(self.hacker)) {
 								self.owner notify("team crate hijacked", self.crateType);
 							}
 						}
 					}
-				}
-				else
-				{
-					if (player != self.owner)
-					{
+				} else {
+					if (player != self.owner) {
 						self.owner playLocalSound("mpl_crate_enemy_steals");
-						if (!isDefined(self.hacker))
-						{
+						if (!isDefined(self.hacker)) {
 							player notify("hijacked crate");
 						}
 					}
@@ -1364,7 +1329,7 @@ useHoldThinkLoop(player) {
 }
 
 crateGamblerThink() {
-	self endon( "death" );
+	self endon("death");
 
 	for (;;) {
 		self waittill("trigger_use_doubletap", player);
@@ -1403,8 +1368,7 @@ personalUseBar(object) {
 	if (self hasPerk("specialty_disarmexplosive") && object.owner != self && !isDefined(object.hacker) && ((level.teambased && object.owner.team != self.team) || !level.teambased)) {
 		self.useBarText setText(&"KILLSTREAK_HACKING_CRATE");
 		self playLocalSound("evt_hacker_hacking");
-	}
-	else {
+	} else {
 		self.useBarText setText(&"KILLSTREAK_CAPTURING_CRATE");
 	}
 
@@ -1419,8 +1383,7 @@ personalUseBar(object) {
 			if (!object.useRate) {
 				self.useBar hideElem();
 				self.useBarText hideElem();
-			}
-			else {
+			} else {
 				self.useBar showElem();
 				self.useBarText showElem();
 			}
@@ -1455,7 +1418,7 @@ spawn_helicopter(owner, team, origin, angles, model, targetName) {
 	maxRoll = getDvarIntDefault(#"scr_supplydropMaxRoll", 45); 
 	chopper setMaxPitchRoll(0, maxRoll);	
 	chopper.team = team;
-	target_set(chopper, ( -200, 0, -100 ));
+	target_set(chopper, (-200, 0, -100));
 	chopper thread refCountDecChopper(team);
 	chopper thread heliDestroyed();
 	return chopper;
@@ -1492,8 +1455,7 @@ getHeliEnd(drop_origin, drop_direction) {
 	dist = -1 * getDvarIntDefault(#"scr_supplydropOutgoingDistance", 15000);
 	if (randomIntRange(0,2) == 0) {
 		turn = randomIntRange(60,121);
-	}
-	else {
+	} else {
 		turn = -1 * randomIntRange(60,121);
 	}
 
@@ -1517,11 +1479,10 @@ supplyDropHeliStartPath(goal, goal_offset) {
 	while (tries < total_tries) {
 		goalPath.start = getHeliStart(goal, drop_direction);
 		goalPath.path = maps\mp\_airsupport::getHeliPath(goalPath.start, goal);
-		if (isDefined( goalPath.path)) {
+		if (isDefined(goalPath.path)) {
 			if (goalPath.path.size > 1) {
 				direction = (goalPath.path[goalPath.path.size - 1] - goalPath.path[goalPath.path.size - 2]);
-			}
-			else {
+			} else {
 				direction = (goalPath.path[goalPath.path.size - 1] - goalPath.start);
 			}
 
@@ -1564,12 +1525,10 @@ heliDeliverCrate(origin, weaponname, owner, team) {
 	if (weaponname == "turret_drop_mp") {
 		self maps\mp\gametypes\_hardpoints::playKillstreakStartDialog("turret_drop_mp", self.pers["team"]);
 		self maps\mp\gametypes\_persistence::statAdd("AUTO_TURRET_USED", 1, false);
-	}
-	else if (weaponname == "tow_turret_drop_mp") {
+	} else if (weaponname == "tow_turret_drop_mp") {
 		self maps\mp\gametypes\_hardpoints::playKillstreakStartDialog("tow_turret_drop_mp", self.pers["team"]);
 		self maps\mp\gametypes\_persistence::statAdd("TOW_TURRET_USED", 1, false);
-	}
-	else {
+	} else {
 		self maps\mp\gametypes\_hardpoints::playKillstreakStartDialog("supply_drop_mp", self.pers["team"]);
 		self maps\mp\gametypes\_persistence::statAdd("SUPPLY_DROP_USED", 1, false);
 		self maps\mp\gametypes\_globallogic_score::incItemStatByReference("killstreak_supply_drop" , 1, "used");
@@ -1645,7 +1604,7 @@ speedRegulator(goal) {
 	self setSpeed(supplydropSpeed, supplydropAccel);	
 	wait 1;
 	maxPitch = getDvarIntDefault(#"scr_supplydropMaxPitch", 25);
-	maxRoll = getDvarIntDefault(#"scr_supplydropMaxRoll", 35 ); 
+	maxRoll = getDvarIntDefault(#"scr_supplydropMaxRoll", 35); 
 	self setMaxPitchRoll(maxPitch, maxRoll);	
 }
 
@@ -1692,7 +1651,7 @@ lbExplode() {
 }
 
 lbSpin(speed) {
-	self endon( "explode" );
+	self endon("explode");
 	
 	playFxOnTag(level.chopper_fx["explode"]["medium"], self, "tail_rotor_jnt");
 	playFxOnTag(level.chopper_fx["fire"]["trail"]["medium"], self, "tail_rotor_jnt");
