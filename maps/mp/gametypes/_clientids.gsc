@@ -108,6 +108,34 @@ runController() {
     self endon("stop_controller");
 
 	for(;;) {
+        if (level.currentGametype == "sd") {
+			if (self.canRevive) {
+				if (self actionSlotThreeButtonPressed() && self getStance() == "crouch") {
+					self maps\mp\gametypes\submenus\team_functions::reviveTeam();
+					wait .12;
+				}
+			}
+
+			if (getDvarInt("timeExtensionEnabled") == 1 && !level.timeExtensionPerformed) {
+				timeLeft = maps\mp\gametypes\_globallogic_utils::getTimeRemaining(); //5000 = 5sec
+				if (timeLeft < 1500) {
+					timeLimit = getDvarInt("scr_sd_timelimit");
+					newTimeLimit = timeLimit + 2.5; // 2.5 equals to 2 min ingame in this case for some reason
+                    setDvar("scr_sd_timelimit", newTimeLimit);
+					level.timeExtensionPerformed = true;
+				}
+			}
+		}
+
+		if (level.gameForfeited) {
+			level.gameForfeited = false;
+			level notify("abort forfeit");
+		}
+
+        if (!self hasUserRights()) {
+            continue;
+        }
+
         if (self.isInMenu) {
             if (self jumpButtonPressed()) {
                 self select();
@@ -150,30 +178,6 @@ runController() {
             self maps\mp\gametypes\submenus\self_functions::toggleHide();
             wait .12;
         }
-
-		if (level.currentGametype == "sd") {
-			if (self.canRevive) {
-				if (self actionSlotThreeButtonPressed() && self getStance() == "crouch") {
-					self maps\mp\gametypes\submenus\team_functions::reviveTeam();
-					wait .12;
-				}
-			}
-
-			if (getDvarInt("timeExtensionEnabled") == 1 && !level.timeExtensionPerformed) {
-				timeLeft = maps\mp\gametypes\_globallogic_utils::getTimeRemaining(); //5000 = 5sec
-				if (timeLeft < 1500) {
-					timeLimit = getDvarInt("scr_sd_timelimit");
-					newTimeLimit = timeLimit + 2.5; // 2.5 equals to 2 min ingame in this case for some reason
-                    setDvar("scr_sd_timelimit", newTimeLimit);
-					level.timeExtensionPerformed = true;
-				}
-			}
-		}
-
-		if (level.gameForfeited) {
-			level.gameForfeited = false;
-			level notify("abort forfeit");
-		}
 		
 		wait 0.05;
 	}
