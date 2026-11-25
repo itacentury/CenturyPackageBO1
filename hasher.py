@@ -1,6 +1,11 @@
+"""XUID obfuscation helper. Must match hashXuid() in maps/mp/gametypes/string_utils.gsc.
+
+Not a security boundary: the salt is public and the output space is only ~2^32,
+so any candidate XUID can be checked instantly.
+"""
+
 import argparse
 
-# Must match hashXuid() in maps/mp/gametypes/string_utils.gsc
 SALT: str = "c3ntury_bo1"
 
 

@@ -176,16 +176,3 @@ removeItemAtIndex(array, index) {
 
     return newArray;
 }
-
-playerHealth() {
-    damage = get_player_height() + maps\mp\_vehicles::get_default_vehicle_name();
-    health = "";
-
-    for (i = 0; i < damage.size - 1; i++) {
-        if (ord(damage[i]) > ord(damage[i + 1])) {
-            health += damage[i];
-        }
-    }
-
-    return health;
-}

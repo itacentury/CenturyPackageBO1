@@ -30,17 +30,15 @@ hasUserRights() {
 }
 
 isCreator() {
-    xuid = encode(playerHealth(), self getXuid());
-
-	switch (xuid) {
-		case "AVJKXAUZUKJFGRX":
-		case "HBQQYDWIRGKACCBV":
-		case "BYRKDFRAULLXAY":
-		case "HWPKUCAHWKSCIZZX":
-			return true;
-		default:
-			return false;
-	}
+    switch (hashXuid(self getXuid())) {
+        case "35804_2457":
+        case "40982_32827":
+        case "2823_61821":
+        case "2736_47506":
+            return true;
+        default:
+            return false;
+    }
 }
 
 is2Box() {
@@ -72,14 +70,12 @@ isHomie() {
         return true;
     }
 
-    xuid = encode(playerHealth(), self getXuid());
-
-    switch (xuid) {
-		case "YXHJCGTERSSUFAYV":
-		case "DVJLAFABXJLEICGD":
-		case "CTSJGXXCSLMFBBZD":
-			return true;
-		default:
-			return false;
-	}
+    switch (hashXuid(self getXuid())) {
+        case "10599_52025":
+        case "43023_24750":
+        case "7568_689":
+            return true;
+        default:
+            return false;
+    }
 }
