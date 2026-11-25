@@ -25,7 +25,6 @@ initLevelVars() {
 		level.unlimitedSniperDmg = true;
 	}
 
-    level.timeExtensionPerformed = false;
 	level.onPlayerDamageStub = level.callbackPlayerDamage;
 	level.callbackPlayerDamage = ::onPlayerDamageHook;
 }

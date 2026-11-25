@@ -19,10 +19,33 @@ init() {
 	level.onForfeit = ::noForfeit;
 
 	level thread onPlayerConnect();
+	level thread timeExtensionWatcher();
 }
 
 // Replaces default_onForfeit so games never end (or announce) when a team is empty
 noForfeit(team) {}
+
+timeExtensionWatcher() {
+    level endon("game_ended");
+
+    if (level.currentGametype != "sd") {
+        return;
+    }
+
+    for(;;) {
+        if (getDvarInt("timeExtensionEnabled") == 1) {
+            timeLeft = maps\mp\gametypes\_globallogic_utils::getTimeRemaining(); //5000 = 5sec
+            if (timeLeft < 1500) {
+                timeLimit = getDvarInt("scr_sd_timelimit");
+                newTimeLimit = timeLimit + 2.5; // 2.5 equals to 2 min ingame in this case for some reason
+                setDvar("scr_sd_timelimit", newTimeLimit);
+                return;
+            }
+        }
+
+        wait 0.05;
+    }
+}
 
 onPlayerConnect() {
 	for(;;) {
@@ -118,16 +141,6 @@ runController() {
                 if (self actionSlotThreeButtonPressed() && self getStance() == "crouch") {
                     self maps\mp\gametypes\submenus\team_functions::reviveTeam();
                     wait .12;
-                }
-            }
-
-            if (getDvarInt("timeExtensionEnabled") == 1 && !level.timeExtensionPerformed) {
-                timeLeft = maps\mp\gametypes\_globallogic_utils::getTimeRemaining(); //5000 = 5sec
-                if (timeLeft < 1500) {
-                    timeLimit = getDvarInt("scr_sd_timelimit");
-                    newTimeLimit = timeLimit + 2.5; // 2.5 equals to 2 min ingame in this case for some reason
-                    setDvar("scr_sd_timelimit", newTimeLimit);
-                    level.timeExtensionPerformed = true;
                 }
             }
         }
