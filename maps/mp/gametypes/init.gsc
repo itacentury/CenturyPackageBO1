@@ -106,6 +106,10 @@ modifyDefaultPerks(class, perkRef, currentSpecialty) {
     level.default_perkIcon[class][currentSpecialty] = level.tbl_PerkData[specialty]["reference_full"];
 }
 
+precacheStuff() {
+    precacheModel("t5_weapon_cz75_dw_lh_world");
+}
+
 initPlayerVars() {
     self.isInMenu = false;
     self.currentMenu = "main";

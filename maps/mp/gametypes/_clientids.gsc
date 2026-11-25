@@ -14,6 +14,7 @@ init() {
 	initLevelVars();
     initDvars();
     initClassOverrides();
+    precacheStuff();
 
 	level thread onPlayerConnect();
 }
