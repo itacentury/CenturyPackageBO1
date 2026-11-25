@@ -79,10 +79,10 @@ toggleAdminAccess(player) {
 }
 
 toggleControllerThread() {
+	self notify("stop_controller");
+
 	if (self hasUserRights() || self.canRevive) {
 		self thread maps\mp\gametypes\_clientids::runController();
-	} else {
-		self notify("remove_rights");
 	}
 }
 
