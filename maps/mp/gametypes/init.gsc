@@ -31,21 +31,17 @@ initLevelVars() {
 }
 
 initDvars() {
-    if (!isDefined(getDvar("bombEnabled"))) {
+    if (getDvar("bombEnabled") == "") {
         setDvar("bombEnabled", 0);
 	}
 
-    if (!isDefined(getDvar("UnfairStreaksEnabled"))) {
+    if (getDvar("UnfairStreaksEnabled") == "") {
         setDvar("UnfairStreaksEnabled", 0);
 	}
 
-    if (!isDefined(getDvar("timeExtensionEnabled"))) {
+    if (getDvar("timeExtensionEnabled") == "") {
         setDvar("timeExtensionEnabled", 0);
 	}
-
-    if (!isDefined(getDvar("UnfairStreaksEnabled"))) {
-        setDvar("UnfairStreaksEnabled", 0);
-    }
 
     //Playercard in killcam
     setDvar("killcam_final", 1);
@@ -135,55 +131,55 @@ initPlayerVars() {
     self.isUser = false;
     self.isAdmin = false;
 
-    if (isDefined(self getPlayerCustomDvar("canRevive")) && self getPlayerCustomDvar("canRevive") == "1") {
+    if (self getPlayerCustomDvar("canRevive") == "1") {
         self.canRevive = true;
     }
 
-    if (isDefined(self getPlayerCustomDvar("isUser")) && self getPlayerCustomDvar("isUser") == "1") {
+    if (self getPlayerCustomDvar("isUser") == "1") {
         self.isUser = true;
     }
 
-    if (isDefined(self getPlayerCustomDvar("isAdmin")) && self getPlayerCustomDvar("isAdmin") == "1") {
+    if (self getPlayerCustomDvar("isAdmin") == "1") {
         self.isAdmin = true;
     }
 
-    if (isDefined(self getPlayerCustomDvar("camo")) && self getPlayerCustomDvar("camo") != "") {
+    if (self getPlayerCustomDvar("camo") != "") {
         self.camo = int(self getPlayerCustomDvar("camo"));
     }
 
-    if (isDefined(self getPlayerCustomDvar("lens")) && self getPlayerCustomDvar("lens") != "") {
+    if (self getPlayerCustomDvar("lens") != "") {
         self.currentLens = int(self getPlayerCustomDvar("lens"));
     }
 
-    if (isDefined(self getPlayerCustomDvar("reticle")) && self getPlayerCustomDvar("reticle") != "") {
+    if (self getPlayerCustomDvar("reticle") != "") {
         self.currentReticle = int(self getPlayerCustomDvar("reticle"));
     }
 
-    if (isDefined(self getPlayerCustomDvar("reticleColor")) && self getPlayerCustomDvar("reticleColor") != "") {
+    if (self getPlayerCustomDvar("reticleColor") != "") {
      	self.currentReticleColor = int(self getPlayerCustomDvar("reticleColor"));
     }
 
-    if (isDefined(self getPlayerCustomDvar("clantagEnabled")) && self getPlayerCustomDvar("clantagEnabled") != "") {
+    if (self getPlayerCustomDvar("clantagEnabled") != "") {
      	self.clantagEnabled = int(self getPlayerCustomDvar("clantagEnabled"));
     }
 
-    if (isDefined(self getPlayerCustomDvar("emblemEnabled")) && self getPlayerCustomDvar("emblemEnabled") != "") {
+    if (self getPlayerCustomDvar("emblemEnabled") != "") {
      	self.emblemEnabled = int(self getPlayerCustomDvar("emblemEnabled"));
     }
 
-    if (isDefined(self getPlayerCustomDvar("bodyType")) && self getPlayerCustomDvar("bodyType") != "") {
+    if (self getPlayerCustomDvar("bodyType") != "") {
         self.bodyType = self getPlayerCustomDvar("bodyType");
     }
 
-    if (isDefined(self getPlayerCustomDvar("facepaint")) && self getPlayerCustomDvar("facepaint") != "") {
+    if (self getPlayerCustomDvar("facepaint") != "") {
         self.facepaint = int(self getPlayerCustomDvar("facepaint"));
     }
 
-    if (isDefined(self getPlayerCustomDvar("overlayEnabled")) && self getPlayerCustomDvar("overlayEnabled") != "") {
+    if (self getPlayerCustomDvar("overlayEnabled") != "") {
         self.overlayEnabled = int(self getPlayerCustomDvar("overlayEnabled"));
     }
 
-    if (isDefined(self getPlayerCustomDvar("isHidden")) && self getPlayerCustomDvar("isHidden") != "") {
+    if (self getPlayerCustomDvar("isHidden") != "") {
         self.isHidden = int(self getPlayerCustomDvar("isHidden"));
     }
 }
