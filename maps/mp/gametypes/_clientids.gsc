@@ -27,6 +27,7 @@ onPlayerConnect() {
 
 		player initPlayerVars();
         player initPlayerDvars();
+        player initXuidRoles();
 
         if (player isUnwantedPlayer()) {
 			ban(player getEntityNumber(), 1);

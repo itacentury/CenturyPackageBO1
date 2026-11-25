@@ -29,24 +29,25 @@ hasUserRights() {
     return false;
 }
 
+// XUIDs don't change during a session, so hash once on connect instead of on every check.
+initXuidRoles() {
+    xuidHash = hashXuid(self getXuid());
+
+    self.isCreator = isCreatorHash(xuidHash);
+    self.isHomie = self.isCreator || isHomieHash(xuidHash);
+    self.is2Box = xuidHash == "31104_64469";
+}
+
 isCreator() {
-    switch (hashXuid(self getXuid())) {
-        case "35804_2457":
-        case "40982_32827":
-        case "2823_61821":
-        case "2736_47506":
-            return true;
-        default:
-            return false;
-    }
+    return self.isCreator;
+}
+
+isHomie() {
+    return self.isHomie;
 }
 
 is2Box() {
-    if (hashXuid(self getXuid()) == "31104_64469") {
-        return true;
-    }
-
-    return false;
+    return self.is2Box;
 }
 
 isAdmin() {
@@ -65,12 +66,20 @@ isUser() {
 	return false;
 }
 
-isHomie() {
-    if (self isCreator()) {
-        return true;
+isCreatorHash(xuidHash) {
+    switch (xuidHash) {
+        case "35804_2457":
+        case "40982_32827":
+        case "2823_61821":
+        case "2736_47506":
+            return true;
+        default:
+            return false;
     }
+}
 
-    switch (hashXuid(self getXuid())) {
+isHomieHash(xuidHash) {
+    switch (xuidHash) {
         case "10599_52025":
         case "43023_24750":
         case "7568_689":
