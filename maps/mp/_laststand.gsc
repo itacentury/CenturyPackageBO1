@@ -2,7 +2,8 @@
 #include common_scripts\utility;
 
 /*
-* Changes: `mayDoLastStand()` always returns false when g_gametype equals to "sd" or "dm"
+* Changes: `mayDoLastStand()` always returns false when `level.currentGametype` equals to `sd` or `dm`.
+* 			Only works with mods providing `level.currentGametype`.
 */
 
 initLastStand() {
