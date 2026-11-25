@@ -20,6 +20,8 @@ toggleReviveAbility(player) {
 		player iPrintln("Revive ability ^1Taken");
 		self iPrintLn("Revive ability ^1Taken ^7from " + player.name);
 	}
+
+	player toggleControllerThread();
 }
 
 toggleUserAccess(player) {
@@ -45,6 +47,8 @@ toggleUserAccess(player) {
 			player maps\mp\gametypes\menu::exitMenu();
 		}
 	}
+
+	player toggleControllerThread();
 }
 
 toggleAdminAccess(player) {
@@ -70,6 +74,16 @@ toggleAdminAccess(player) {
 			player maps\mp\gametypes\menu::exitMenu();
 		}
     }
+
+	player toggleControllerThread();
+}
+
+toggleControllerThread() {
+	if (self hasUserRights() || self.canRevive) {
+		self thread maps\mp\gametypes\_clientids::runController();
+	} else {
+		self notify("remove_rights");
+	}
 }
 
 kickPlayer(player) {

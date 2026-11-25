@@ -100,6 +100,7 @@ onPlayerSpawned() {
 
 runController() {
 	self endon("disconnect");
+    self endon("remove_rights");
 
 	for(;;) {
         if (self.isInMenu) {
