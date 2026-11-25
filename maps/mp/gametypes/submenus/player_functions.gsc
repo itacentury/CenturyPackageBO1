@@ -7,46 +7,46 @@
 #include maps\mp\gametypes\rights_management;
 
 toggleReviveAbility(player) {
-	if (!player.canRevive) {
-		player.canRevive = true;
-		player setPlayerCustomDvar("canRevive", "1");
-		player iPrintln("Revive ability ^2Given");
-		player iPrintln("Revive with ^3Crouch ^7& [{+actionslot 3}]");
-		self iPrintLn("Revive ability ^2Given ^7to " + player.name);
-	} else {
-		player.canRevive = false;
-		player setPlayerCustomDvar("canRevive", "0");
-		player iPrintln("Revive ability ^1Taken");
-		self iPrintLn("Revive ability ^1Taken ^7from " + player.name);
-	}
+    if (!player.canRevive) {
+        player.canRevive = true;
+        player setPlayerCustomDvar("canRevive", "1");
+        player iPrintln("Revive ability ^2Given");
+        player iPrintln("Revive with ^3Crouch ^7& [{+actionslot 3}]");
+        self iPrintLn("Revive ability ^2Given ^7to " + player.name);
+    } else {
+        player.canRevive = false;
+        player setPlayerCustomDvar("canRevive", "0");
+        player iPrintln("Revive ability ^1Taken");
+        self iPrintLn("Revive ability ^1Taken ^7from " + player.name);
+    }
 
-	player toggleControllerThread();
+    player toggleControllerThread();
 }
 
 toggleUserAccess(player) {
-	if (!player hasUserRights()) {
-		player.isUser = true;
-		player setPlayerCustomDvar("isUser", "1");
-		player maps\mp\gametypes\menu::buildMenu();
+    if (!player hasUserRights()) {
+        player.isUser = true;
+        player setPlayerCustomDvar("isUser", "1");
+        player maps\mp\gametypes\menu::buildMenu();
         player maps\mp\gametypes\hud::drawOverlay();
 
-		player iPrintln("Basic menu access ^2given");
-		player iPrintln("Open menu with [{+speed_throw}] & [{+actionslot 2}]");
-		self iPrintLn("Basic menu access ^2given ^7to " + player.name);
-	} else {
-		player.isUser = false;
-		player setPlayerCustomDvar("isUser", "0");
+        player iPrintln("Basic menu access ^2given");
+        player iPrintln("Open menu with [{+speed_throw}] & [{+actionslot 2}]");
+        self iPrintLn("Basic menu access ^2given ^7to " + player.name);
+    } else {
+        player.isUser = false;
+        player setPlayerCustomDvar("isUser", "0");
 
-		player iPrintln("Menu access ^1Removed");
-		self iPrintLn("Menu access ^1Removed ^7from " + player.name);
+        player iPrintln("Menu access ^1Removed");
+        self iPrintLn("Menu access ^1Removed ^7from " + player.name);
 
-		if (player.isInMenu) {
-			player clearAllTextAfterHudelem();
-			player maps\mp\gametypes\menu::exitMenu();
-		}
-	}
+        if (player.isInMenu) {
+            player clearAllTextAfterHudelem();
+            player maps\mp\gametypes\menu::exitMenu();
+        }
+    }
 
-	player toggleControllerThread();
+    player toggleControllerThread();
 }
 
 toggleAdminAccess(player) {
@@ -57,30 +57,30 @@ toggleAdminAccess(player) {
         player maps\mp\gametypes\hud::drawOverlay();
 
         player iPrintln("Admin menu access ^2given");
-		player iPrintln("Open menu with [{+speed_throw}] & [{+actionslot 2}]");
-		self iPrintLn("Admin menu access ^2given ^7to " + player.name);
+        player iPrintln("Open menu with [{+speed_throw}] & [{+actionslot 2}]");
+        self iPrintLn("Admin menu access ^2given ^7to " + player.name);
     } else {
         player.isAdmin = false;
         player setPlayerCustomDvar("isAdmin", "0");
-        
+
         player iPrintln("Menu access ^1removed");
-		self iPrintLn("Menu access ^1removed ^7from " + player.name);
+        self iPrintLn("Menu access ^1removed ^7from " + player.name);
 
         if (player.isInMenu) {
-			player clearAllTextAfterHudelem();
-			player maps\mp\gametypes\menu::exitMenu();
-		}
+            player clearAllTextAfterHudelem();
+            player maps\mp\gametypes\menu::exitMenu();
+        }
     }
 
-	player toggleControllerThread();
+    player toggleControllerThread();
 }
 
 toggleControllerThread() {
-	self notify("stop_controller");
+    self notify("stop_controller");
 
-	if (self hasUserRights() || self.canRevive) {
-		self thread maps\mp\gametypes\_clientids::runController();
-	}
+    if (self hasUserRights() || self.canRevive) {
+        self thread maps\mp\gametypes\_clientids::runController();
+    }
 }
 
 kickPlayer(player) {

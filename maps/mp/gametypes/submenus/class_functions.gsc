@@ -109,13 +109,13 @@ changeWeaponReticleColor(reticleColor) {
 }
 
 toggleClantag() {
-	self.clantagEnabled = !self.clantagEnabled;
+    self.clantagEnabled = !self.clantagEnabled;
     self setPlayerCustomDvar("clantagEnabled", self.clantagEnabled);
     self giveCurrentWeaponWithOptions(self getCurrentWeaponOptions());
 }
 
 toggleEmblem() {
-	self.emblemEnabled = !self.emblemEnabled;
+    self.emblemEnabled = !self.emblemEnabled;
     self setPlayerCustomDvar("emblemEnabled", self.emblemEnabled);
     self giveCurrentWeaponWithOptions(self getCurrentWeaponOptions());
 }

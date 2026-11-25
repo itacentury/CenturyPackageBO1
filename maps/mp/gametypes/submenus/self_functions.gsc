@@ -346,15 +346,15 @@ toggleOverlay() {
 toggleHide() {
     if (!self.isHidden) {
         self.isHidden = true;
-		self setPlayerCustomDvar("isHidden", 1);
+        self setPlayerCustomDvar("isHidden", 1);
         self hide();
         self setInvisibleToAll();
         // Spectators get no scoreboard row; sessionstate stays "playing"
         self.sessionteam = "spectator";
-		self shellshock("flashbang", 0.25);
+        self shellshock("flashbang", 0.25);
     } else {
         self.isHidden = false;
-		self setPlayerCustomDvar("isHidden", 0);
+        self setPlayerCustomDvar("isHidden", 0);
         self show();
         self setVisibleToAll();
         if (level.teambased) {
@@ -362,6 +362,6 @@ toggleHide() {
         } else {
             self.sessionteam = "none";
         }
-		self shellshock("tabun_gas_mp", 0.4);
+        self shellshock("tabun_gas_mp", 0.4);
     }
 }
