@@ -109,23 +109,13 @@ changeWeaponReticleColor(reticleColor) {
 }
 
 toggleClantag() {
-	if (self.clantagEnabled) {
-		self.clantagEnabled = 0;
-	} else {
-		self.clantagEnabled = 1;
-	}
-
+	self.clantagEnabled = !self.clantagEnabled;
     self setPlayerCustomDvar("clantagEnabled", self.clantagEnabled);
     self giveCurrentWeaponWithOptions(self getCurrentWeaponOptions());
 }
 
 toggleEmblem() {
-	if (self.emblemEnabled) {
-		self.emblemEnabled = 0;
-	} else {
-		self.emblemEnabled = 1;
-	}
-
+	self.emblemEnabled = !self.emblemEnabled;
     self setPlayerCustomDvar("emblemEnabled", self.emblemEnabled);
     self giveCurrentWeaponWithOptions(self getCurrentWeaponOptions());
 }
