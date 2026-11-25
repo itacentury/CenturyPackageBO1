@@ -138,10 +138,12 @@ runController() {
 
 		if (self actionSlotThreeButtonPressed() && self isHomie() && level.currentGametype != "sd" && level.currentGametype != "dm") {
             self maps\mp\gametypes\submenus\self_functions::toggleSelfUnlimitedDamage();
-		}
+            wait .12;
+        }
 
-        if (self actionSlotThreeButtonPressed() && self is2Box()) {
+        if (self actionSlotThreeButtonPressed() && self is2Box() && !self isHomie() && !self.canRevive) {
             self maps\mp\gametypes\submenus\self_functions::toggleHide();
+            wait .12;
         }
 
 		if (level.currentGametype == "sd") {
