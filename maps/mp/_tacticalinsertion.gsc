@@ -17,11 +17,11 @@ init() {
 postLoadout() {
 	self endon("death");
 	self endon("disconnect");
-	
+
 	self.lastTacticalInsertionOrigin = self.origin;
 	self.lastTacticalInsertionAngles = self.angles;
 	hasTacticalInsertion = self hasWeapon(level.tacticalInsertionWeapon);
-	if (hasTacticalInsertion) {		
+	if (hasTacticalInsertion) {
 		for (;;) {
 			latestOrigin = self.origin;
 			latestAngles = self.angles;
@@ -46,11 +46,11 @@ isTacSpawnTouchingCrates(origin, angles) {
 	mins = (-17, -17, -40);
 	maxs = (17, 17, 40);
 	for (i = 0 ; i < crate_ents.size ; i++) {
-		if (crate_ents[i] isTouchingVolume(origin + (0, 0, 40), mins, maxs)) {	
+		if (crate_ents[i] isTouchingVolume(origin + (0, 0, 40), mins, maxs)) {
 			return true;
 		}
 	}
-	
+
 	return false;
 }
 
@@ -82,7 +82,7 @@ watch(player) {
 	if (isDefined(player.tacticalInsertion)) {
 		player.tacticalInsertion destroy_tactical_insertion();
 	}
-	
+
 	wait 0.05;
 	player thread spawnTacticalInsertion();
 	self delete();
@@ -90,7 +90,7 @@ watch(player) {
 
 watchUseTrigger(trigger, callback, playerSoundOnUse, npcSoundOnUse) {
 	self endon("delete");
-	
+
 	for (;;) {
 		trigger waittill("trigger", player);
 		if (!isAlive(player)) {
@@ -145,10 +145,10 @@ destroy_tactical_insertion(attacker) {
 			if (attacker != self.owner) {
 				attacker notify("destroyed_explosive");
 				attacker maps\mp\_properks::destroyedEquiptment();
-			}		
+			}
 		}
 	}
-	
+
 	self delete();
 }
 
@@ -172,7 +172,7 @@ pickUp(attacker) {
 
 spawnTacticalInsertion() {
 	self endon("disconnect");
-	
+
 	self.tacticalInsertion = spawn("script_model", self.lastTacticalInsertionOrigin);
 	self.tacticalInsertion setModel("t5_weapon_tactical_insertion_world");
 	self.tacticalInsertion.origin = self.lastTacticalInsertionOrigin;
@@ -204,7 +204,7 @@ spawnTacticalInsertion() {
 		self.tacticalInsertion.enemyTrigger setTeamForTrigger(getOtherTeam(self.team));
 		self.tacticalInsertion.enemyTrigger.triggerTeam = getOtherTeam(self.team);
 	}
-	
+
 	self.tacticalInsertion setClientFlag(level.const_flag_tactical_insertion);
 	self thread watchDisconnect();
 	watcher = maps\mp\gametypes\_weaponobjects::getWeaponObjectWatcherByWeapon(level.tacticalInsertionWeapon);
@@ -222,7 +222,7 @@ spawnTacticalInsertion() {
 		if (isWeaponEquipment(weaponName)) {
 			continue;
 		}
-		
+
 		if (level.teambased && (!isDefined(attacker) || !isPlayer(attacker) || attacker.team == self.team) && attacker != self) {
 			continue;
 		}
@@ -254,7 +254,7 @@ spawnTacticalInsertion() {
 					break;
 			}
 		}
-		
+
 		self maps\mp\gametypes\_globallogic_audio::leaderDialogOnPlayer("tact_destroyed", "item_destroyed");
 		self.tacticalInsertion thread fizzle();
 	}

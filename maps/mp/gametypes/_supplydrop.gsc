@@ -115,7 +115,7 @@ registerCrateType(category, type, name, weight, hint, hint_gambler, shareStat, g
 	if (!isDefined(level.crateTypes[category])) {
 		level.crateTypes[category] = [];
 	}
-	
+
 	crateType = spawnStruct();
 	crateType.type = type;
 	crateType.name = name;
@@ -155,11 +155,11 @@ getRandomCrateType(category, gambler_crate_name) {
 				default:
 					break;
 			}
-			
+
 			if (isDefined(gambler_crate_name) && level.crateTypes[category][typeKey].name == gambler_crate_name) {
 				find_another = true;
 			}
-			
+
 			if (find_another) {
 				if(crateType < crateTypeKeys.size - 1) {
 					crateType++;
@@ -187,7 +187,7 @@ validate_crate_type(killstreak_name, weapon_name, crate_type_name) {
 					return true;
 				}
 			}
-			
+
 			primary_weapons = players[i] getWeaponsListPrimaries();
 			for (j = 0; j < primary_weapons.size; j++) {
 				if (primary_weapons[j] == weapon_name)
@@ -195,12 +195,12 @@ validate_crate_type(killstreak_name, weapon_name, crate_type_name) {
 					return true;
 				}
 			}
-			
+
 			ents = getEntArray("weapon_" + weapon_name, "className");
 			if (isDefined(ents) && ents.size > 0) {
 				return true;
 			}
-			
+
 			crate_ents = getEntArray("care_package", "script_noteworthy");
 			for (j = 0; j < crate_ents.size; j++) {
 				if (!isDefined(crate_ents[j].crateType))
@@ -235,14 +235,14 @@ giveCrateWeapon(weapon) {
 		self giveMaxAmmo(weapon);
 		return true;
 	}
-	
+
 	if (isSupplyDropWeapon(currentWeapon) || isDefined(level.grenade_array[currentWeapon])|| isDefined(level.inventory_array[currentWeapon])) {
 		self takeWeapon(self.lastdroppableweapon);
 		self giveWeapon(weapon);
 		self switchToWeapon(weapon);
 		return true;
 	}
-	
+
 	self maps\mp\gametypes\_globallogic_score::setWeaponStat(weapon, 1, "used");
 	switch (weapon) {
 		case "minigun_mp":
@@ -264,7 +264,7 @@ giveCrateWeapon(weapon) {
 		default:
 			break;
 	}
-	
+
 	self takeWeapon(currentWeapon);
 	self giveWeapon(weapon);
 	self switchToWeapon(weapon);
@@ -317,7 +317,7 @@ useSupplyDropMarker() {
 	if (isSupplyDropWeapon(currentWeapon)) {
 		supplyDropWeapon = currentWeapon;
 	}
-	
+
 	while (isSupplyDropWeapon(currentWeapon) && prevWeapon == currentWeapon) {
 		prevWeapon = currentWeapon;
 		self waittill("weapon_change", currentWeapon);
@@ -325,15 +325,15 @@ useSupplyDropMarker() {
 			supplyDropWeapon = currentWeapon;
 		}
 	}
-	
+
 	if (!isDefined(supplyDropWeapon)) {
 		return false;
 	}	
-	
+
 	if (self hasWeapon(supplyDropWeapon) && !self GetAmmoCount(supplyDropWeapon)) {
 		self takeWeapon(supplyDropWeapon);
 	}	
-	
+
 	if (self hasWeapon(supplyDropWeapon) || self GetAmmoCount(supplyDropWeapon)) {
 		return false;
 	}
@@ -551,7 +551,7 @@ watchForGrenadePutDown() {
 
 abortSupplyDropMarkerWaiter(waitTillString) {
 	self endon("supply_drop_marker_done");
-	
+
 	self waittill(waitTillString);
 	self notify("supply_drop_marker_done");
 }
@@ -565,7 +565,7 @@ playerChangeWeaponWaiter() {
 	while (isSupplyDropWeapon(currentWeapon)) {
 		self waittill("weapon_change", currentWeapon);
 	}
-	
+
 	waittillframeend;
 	self notify("supply_drop_marker_done");
 }
@@ -619,7 +619,7 @@ getIconForCrate() {
 		default:
 			break;
 	}
-	
+
 	return icon + "_drop";
 }
 
@@ -670,7 +670,7 @@ crateActivate() {
 			self.hackerObjID = crateObjID;
 		}
 	}
-	
+
 	self thread maps\mp\_entityheadIcons::setEntityHeadIcon(self.team, self, level.crate_headicon_offset, icon, true);	
 	if (isDefined(self.owner) && self.owner is_bot()) {
 		self.owner notify("bot_crate_landed", self);
@@ -684,19 +684,19 @@ crateDeactivate() {
 		maps\mp\gametypes\_gameobjects::releaseObjID(self.friendlyObjID);
 		self.friendlyObjID = undefined;
 	}
-	
+
 	if (isDefined(self.enemyObjID)) {
 		Objective_Delete(self.enemyObjID);
 		maps\mp\gametypes\_gameobjects::releaseObjID(self.enemyObjID);
 		self.enemyObjID = undefined;
 	}
-	
+
 	if (isDefined(self.hackerObjID)) {
 		Objective_Delete(self.hackerObjID);
 		maps\mp\gametypes\_gameobjects::releaseObjID(self.hackerObjID);
 		self.hackerObjID = undefined;
 	}
-	
+
 	self maps\mp\_entityheadicons::setEntityHeadIcon("none");
 }
 
@@ -733,7 +733,7 @@ dropCratesToGround(origin, radius) {
 
 dropCrateToGround() {
 	self endon("death");
-	
+
 	if (isDefined(self.droppingToGround)) {
 		return;
 	}
@@ -754,8 +754,10 @@ crateSpawn(weaponname, owner, team, drop_origin, drop_angle) {
 	crate setTeam(team);
 	crate setOwner(owner);
 	crate.script_noteworthy = "care_package";
-	if (!level.teambased || (isDefined(owner) && owner.team == team))
-	crate.owner = owner;
+	if (!level.teambased || (isDefined(owner) && owner.team == team)) {
+		crate.owner = owner;
+	}
+
 	crate thread ownerTeamChangeWatcher();
 	crate setModel(level.crateModelFriendly);
 	crate setEnemyModel(level.crateModelEnemy);
@@ -784,29 +786,29 @@ crateDelete(drop_all_to_ground) {
 	if (!isDefined(drop_all_to_ground)) {
 		drop_all_to_ground = true;
 	}
-	
+
 	if (isDefined(self.friendlyObjID)) {
 		Objective_Delete(self.friendlyObjID);
 		maps\mp\gametypes\_gameobjects::releaseObjID(self.friendlyObjID);
 		self.friendlyObjID = undefined;
 	}
-	
+
 	if (isDefined(self.enemyObjID)) {
 		Objective_Delete(self.enemyObjID);
 		maps\mp\gametypes\_gameobjects::releaseObjID(self.enemyObjID);
 		self.enemyObjID = undefined;
 	}
-	
+
 	if (isDefined(self.hackerObjID)) {
 		Objective_Delete(self.hackerObjID);
 		maps\mp\gametypes\_gameobjects::releaseObjID(self.hackerObjID);
 		self.hackerObjID = undefined;
 	}
-	
+
 	if (drop_all_to_ground) {
 		level thread dropAllToGroundAfterCrateDelete(self, self.origin);
 	}
-	
+
 	if (isDefined(self.killcament)) {
 		self.killcament thread deleteAfterTime(5);	
 	}
@@ -817,7 +819,7 @@ crateDelete(drop_all_to_ground) {
 timeoutCrateWaiter() {
 	self endon("death");
 	self endon("stationary");
-	
+
 	wait 20;
 	self crateDelete();
 }
@@ -847,7 +849,7 @@ play_impact_sound() {
 	while (abs(self.velocity[2]) > 5) {
 		wait 0.1;
 	}
-	
+
 	self PlaySound("phy_impact_supply");
 }
 
@@ -879,7 +881,7 @@ do_supply_drop_detonation(weapname) {
 	self endon("disconnect");
 	self endon("death");
 	self endon("grenade_timeout");
-	
+
 	self waitTillNotMoving();
 	self.angles = (0, self.angles[1], 90);
 	fuse_time = GetWeaponFuseTime(weapname) / 1000; 
@@ -923,7 +925,7 @@ dropCrate(origin, angle, weaponname, owner, team, killcamEnt) {
 	crate.killcamEnt = killcamEnt;
 	killcamEnt thread deleteAfterTime(15);
 	crate endon("death");
-	
+
 	crate thread crateKill();
 	crate cratePhysics();
 	crate crateActivate();
@@ -932,7 +934,7 @@ dropCrate(origin, angle, weaponname, owner, team, killcamEnt) {
 	if (isDefined(crate.crateType.hint_gambler)) {
 		crate thread crateGamblerThink();
 	}
-	
+
 	crate crateTimeOutThreader();
 	for (;;) {
 		crate waittill("captured", player);
@@ -1001,7 +1003,7 @@ loop_sound(alias, interval) {
 
 crateKill() {
 	self endon("death");
-	
+
 	stationaryThreshold = 2;
 	killThreshold = 15;
 	maxFramesTillStationary = 20;
@@ -1060,7 +1062,7 @@ crateDropToGroundKill() {
 			doTrace = true;
 			break;
 		}
-		
+
 		if (doTrace) {
 			start = self.origin;
 			crateDropToGroundTrace(start);
@@ -1141,7 +1143,7 @@ is_equipment_touching_crate(player) {
 			}
 		}
 	}
-	
+
 	extraBoundary = (15, 15, 15);
 	if (isDefined(player) && isDefined(player.tacticalInsertion) && self isTouching(player.tacticalInsertion, extraBoundary)) {
 		player.tacticalInsertion thread maps\mp\_tacticalinsertion::fizzle();
@@ -1154,7 +1156,7 @@ crateTimeOut(time) {
 	wait time;
 	self crateDelete();
 }
-	
+
 spawnUseEnt() {
 	useEnt = spawn("script_origin", self.origin);
 	useEnt.curProgress = 0;
@@ -1195,7 +1197,7 @@ crateUseThink() {
 		if (isDefined(self.hacker)) {
 			useEnt.hacker = self.hacker;
 		}
-		
+
 		self.useEnt = useEnt;
 		if (player hasPerk("specialty_fastinteract")) {
 			if (level.teambased && player.team == self.owner.team) {
@@ -1206,19 +1208,18 @@ crateUseThink() {
 		} else {
 			result = useEnt useHoldThink(player, level.crateNonOwnerUseTime);
 		}
-		
+
 		if (isDefined(useEnt)) {
 			useEnt Delete();
 		}
-		
+
 		if (result) {
 			if (isDefined(self.owner)) {
 				if (level.teambased) {
 					if (player.team != self.owner.team) {
 						self.owner playLocalSound("mpl_crate_enemy_steals");
-						
-						if (!isDefined(self.hacker))
-						{
+
+						if (!isDefined(self.hacker)) {
 							player notify("hijacked crate");
 						}
 					} else {
@@ -1287,18 +1288,18 @@ useHoldThink(player, useTime) {
 	if (isDefined(player)) {
 		player notify("done_using");
 	}
-	
+
 	if (isDefined(player)) {
 		if (isAlive(player)) {
 			player _enableWeapon();
 			player freeze_player_controls(false);
 		}
 	}
-	
+
 	if (isDefined(self)) {
 		self.inUse = false;
 	}
-	
+
 	if (isDefined(result) && result) {
 		return true;
 	}
@@ -1309,7 +1310,7 @@ useHoldThink(player, useTime) {
 useHoldThinkLoop(player) {
 	level endon("game_ended");
 	self endon("disabled");
-	
+
 	timedOut = 0;
 	while (isDefined(self) && isAlive(player) && player useButtonPressed() && !player.throwingGrenade && !player meleeButtonPressed() && !player isInVehicle() && self.curProgress < self.useTime) {
 		timedOut += 0.05;
@@ -1320,11 +1321,11 @@ useHoldThinkLoop(player) {
 			wait .05;
 			return isAlive(player);
 		}
-		
+
 		wait 0.05;
 		maps\mp\gametypes\_hostmigration::waitTillHostMigrationDone();
 	}
-	
+
 	return false;
 }
 
@@ -1338,10 +1339,9 @@ crateGamblerThink() {
 		}
 
 		if (isDefined(self.useEnt) && self.useEnt.inUse) {
-			
 			continue;
 		}
-		
+
 		player playLocalSound ("uin_gamble_perk");
 		self.crateType = getRandomCrateType("gambler_mp", self.crateType.name);
 		self crateReactivate();
@@ -1358,7 +1358,7 @@ crateReactivate() {
 
 personalUseBar(object) {
 	self endon("disconnect");
-	
+
 	if (isDefined(self.useBar)) {
 		return;
 	}
@@ -1392,7 +1392,7 @@ personalUseBar(object) {
 		lastRate = object.useRate;
 		wait 0.05;
 	}
-	
+
 	self.useBar destroyElem();
 	self.useBarText destroyElem();
 }
@@ -1489,11 +1489,11 @@ supplyDropHeliStartPath(goal, goal_offset) {
 			goalPath.path[goalPath.path.size - 1] = addOffsetOntoPoint(goalPath.path[goalPath.path.size - 1], direction, goal_offset);
 			return goalPath;
 		}
-		
+
 		drop_direction = getNextDropDirection(drop_direction, 30);
 		tries++;
 	}
-	
+
 	drop_direction = getDropDirection();
 	goalPath.start = getHeliStart(goal, drop_direction);
 	direction = (goal - goalPath.start);
@@ -1512,10 +1512,10 @@ supplyDropHeliEndPath(origin, drop_direction) {
 		if (isDefined(goalPath.path)) {
 			return goalPath;
 		}
-		
+
 		tries++;
 	}
-	
+
 	goalPath.path = [];
 	goalPath.path[0] = getHeliEnd(origin, drop_direction);
 	return goalPath;
@@ -1556,7 +1556,7 @@ heliDeliverCrate(origin, weaponname, owner, team) {
 
 	chopper thread heliDropCrate(weaponname, owner, rear_hatch_offset_local, killcamEnt);
 	chopper endon("death");
-	
+
 	chopper thread maps\mp\_airsupport::followPath(goalPath.path, "drop_goal", true);
 	chopper thread speedRegulator(heli_drop_goal);
 	chopper waittill("drop_goal");
@@ -1596,7 +1596,7 @@ samTurretWatcher(destination) {
 speedRegulator(goal) {
 	self endon("drop_goal");
 	self endon("death");
-	
+
 	wait 3;
 	supplydropSpeed = getDvarIntDefault(#"scr_supplydropSpeed", 75);
 	supplydropAccel = getDvarIntDefault(#"scr_supplydropAccel", 40);
@@ -1610,7 +1610,7 @@ speedRegulator(goal) {
 
 heliDropCrate(weaponname, owner, offset, killcamEnt) {
 	owner endon("disconnect");
-	
+
 	self waittill("drop_crate", origin, angles);
 	rear_hatch_offset_height = getDvarIntDefault(#"scr_supplydropOffsetHeight", 200);
 	rear_hatch_offset_world = rotatePoint((offset, 0, 0), angles);
@@ -1622,7 +1622,7 @@ heliDestroyed() {
 	self endon("leaving");
 	self endon("helicopter_gone");
 	self endon("death");
-	
+
 	for (;;) {
 		if (self.damageTaken > self.maxHealth) {
 			break;
@@ -1652,7 +1652,7 @@ lbExplode() {
 
 lbSpin(speed) {
 	self endon("explode");
-	
+
 	playFxOnTag(level.chopper_fx["explode"]["medium"], self, "tail_rotor_jnt");
 	playFxOnTag(level.chopper_fx["fire"]["trail"]["medium"], self, "tail_rotor_jnt");
 	self setYawSpeed(speed, speed, speed);
@@ -1669,7 +1669,7 @@ refCountDecChopper(team) {
 
 refCountDecChopperOnDisconnect(team) {
 	self endon("supply_drop_marker_done");
-	
+
 	self waittill("disconnecct");
 	maps\mp\_killstreakrules::killstreakStop("supply_drop_mp", team);
 }

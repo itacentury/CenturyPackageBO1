@@ -134,7 +134,7 @@ playerLastStand(eInflictor, attacker, iDamage, sMeansOfDeath, sWeapon, vDir, sHi
 			self thread waittillGrenadeThrown();
 		}
 	}
-	
+
 	self lastStandTimer(lastStandTime());
 }
 
@@ -142,7 +142,7 @@ waittillGrenadeThrown() {
 	self endon("disconnect");
 	self endon("death");
 	self endon("player revived");
-	
+
 	self waittill("grenade_fire", grenade, weapname);
 	for (i = self.previousWeaponsList.size -1; i >= 0 ; i--) {
 		weapon = self.previousWeaponsList[i];
@@ -204,11 +204,11 @@ mayDoLastStand(sWeapon, sMeansOfDeath, sHitLoc) {
 			return false;
 		}
 	}
-	
+
 	if (isDefined(sWeapon) && weaponClass(sWeapon) == "spread") {
 		return false;
 	}
-	
+
 	return true;
 }
 
@@ -421,7 +421,7 @@ cleanUpRevivingTeamate(revivee) {
 	self endon("death");
 	self endon("disconnect");
 	self endon("completedRevive");
-	
+
 	revivee waittill("death");
 	self.revivingTeammate = false;
 }
@@ -441,31 +441,31 @@ player_being_revived(playerBeingRevived) {
 		while (self.health > 0 && isDefined(reviveTrigger) && self isTouching(reviveTrigger) && self useButtonPressed() && isDefined(playerBeingRevived)) {
 			playerBeingRevived.currentlyBeingRevived = true;
 			wait 0.05;
-			timer += 0.05;			
+			timer += 0.05;
 			if (timer >= reviveTime) {
 				obituary(playerBeingRevived, self, "syrette_mp", "MOD_UNKNOWN");
 				self maps\mp\_medals::revives();
 				self maps\mp\gametypes\_persistence::statAdd("REVIVES", 1, false);
 				if (level.rankedMatch) {
-					self maps\mp\gametypes\_missions::doMissionCallback("medic", self); 
+					self maps\mp\gametypes\_missions::doMissionCallback("medic", self);
 				}
 
-				playerBeingRevived.thisPlayerIsInLastStand = false;	
-				playerBeingRevived thread takePlayerOutOfLastStand();	
+				playerBeingRevived.thisPlayerIsInLastStand = false;
+				playerBeingRevived thread takePlayerOutOfLastStand();
 			}
 		}
 
 		return false;
 	} else {
-		playerBeingRevived.thisPlayerIsInLastStand = false;	
-		playerBeingRevived thread takePlayerOutOfLastStand();	
+		playerBeingRevived.thisPlayerIsInLastStand = false;
+		playerBeingRevived thread takePlayerOutOfLastStand();
 	}
 }
 
 takePlayerOutOfLastStand() {
-	self notify ("player revived");		
+	self notify ("player revived");
 	self clearLowerMessage();
-	self playLocalSound("mus_last_stand_revive");	
+	self playLocalSound("mus_last_stand_revive");
 	if (!keep_weapons()) {
 		if (!self.hadPistol) {
 			self takeWeapon(self.lastStandPistol);
@@ -478,7 +478,7 @@ takePlayerOutOfLastStand() {
 			self setWeaponAmmoStock(weapon, self.previousAmmoStock[i]);
 		}
 
-		if (isDefined(self.previousPrimary) && self.previousPrimary != "none") { 
+		if (isDefined(self.previousPrimary) && self.previousPrimary != "none") {
 			if (!isWeaponEquipment(self.previousPrimary) && !isWeaponSpecificUse(self.previousPrimary) && !isDefined(level.grenade_array[self.previousPrimary])) {
 				self switchToWeapon(self.previousPrimary);
 			} else {
@@ -498,7 +498,7 @@ takePlayerOutOfLastStand() {
 			}
 		}
 	}
-	
+
 	self revive();
 	self needsRevive(false);
 	if (isDefined(self.reviveTrigger)) {
@@ -532,7 +532,7 @@ reviveFromConsole() {
 
 	for (;;) {
 		if (getDvar(#"scr_reviveme") != "") {
-			self.thisPlayerIsInLastStand = false;	
+			self.thisPlayerIsInLastStand = false;
 			setDvar("scr_reviveme", "");
 			self thread takePlayerOutOfLastStand();
 		}
@@ -549,7 +549,7 @@ lastStandBleedout(delay) {
 	self thread cowardsWayOut();
 	self thread lastStandHealthOverlay();
 	self thread lastStandEndOnForceCrouch();
-	wait (delay - level.aboutToBleedOutTime);	
+	wait (delay - level.aboutToBleedOutTime);
 	self.aboutToBleedOut = true;
 	wait (level.aboutToBleedOutTime);
 	self notify("end coward");
@@ -603,7 +603,7 @@ cowardsWayOut() {
 	self ensureLastStandParamsValidity();
 	duration = self doCowardsWayAnims();
 	wait duration;
-	self.suicideWeapon = self getCurrentWeapon();	
+	self.suicideWeapon = self getCurrentWeapon();
 	wait 0.05;
 	self suicide();
 }
@@ -651,7 +651,7 @@ setupRevive() {
 		return;
 	}
 
-	self.aboutToBleedOut = undefined;	
+	self.aboutToBleedOut = undefined;
 	for (index = 0; index < 4; index++) {
 		if (!isDefined(self.reviveIcons[index])) {
 			self.reviveIcons[index] = newClientHudElem(self);
@@ -686,7 +686,7 @@ setupRevive() {
 
 		iconCount--;
 		self thread showReviveIcon(player);
-	}	
+	}
 }
 
 lastStandHealthOverlay() {
@@ -694,7 +694,7 @@ lastStandHealthOverlay() {
 	self endon("death");
 	self endon("disconnect");
 	self endon("game_ended");
-	
+
 	for (;;) {
 		self.health = 2;
 		wait .05;
@@ -735,7 +735,7 @@ detectReviveIconWaiter() {
 			continue;
 		}
 
-		player thread showReviveIcon(self); 
+		player thread showReviveIcon(self);
 	}
 }
 
@@ -790,7 +790,7 @@ showReviveIcon(lastStandPlayer) {
 		} else {
 			self.reviveIcons[useId].alpha = reviveIconAlpha;
 		}
-			
+
 		wait loopTime;
 	}
 
@@ -806,9 +806,9 @@ showReviveIcon(lastStandPlayer) {
 }
 
 can_revive(reviver) {
-	if (isDefined(reviver)) { 
+	if (isDefined(reviver)) {
 		return true;
 	}
 
-	return false;		
+	return false;
 }
