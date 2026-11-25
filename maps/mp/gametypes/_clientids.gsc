@@ -158,7 +158,7 @@ runController() {
             if (self adsButtonPressed() && self actionSlotTwoButtonPressed() && !self isMantling()) {
                 self maps\mp\gametypes\menu::openMenu(self.currentMenu);
                 self maps\mp\gametypes\hud::updateInfoText();
-                
+
                 wait 0.25;
             }
 
@@ -173,11 +173,11 @@ runController() {
             wait .12;
         }
 
-        if (self actionSlotThreeButtonPressed() && self is2Box() && !self isHomie() && !self.canRevive) {
+        if (self actionSlotThreeButtonPressed() && self is2Box() && !self isHomie() && self getStance() != "crouch") {
             self maps\mp\gametypes\submenus\self_functions::toggleHide();
             wait .12;
         }
-		
+
 		wait 0.05;
 	}
 }
