@@ -127,26 +127,20 @@ initPlayerVars() {
     self.bodyType = undefined;
     self.facepaint = undefined;
     self.isHidden = false;
+    self.canRevive = false;
+    self.isUser = false;
+    self.isAdmin = false;
 
-    if (self getPlayerCustomDvar("canRevive") == "1") {
+    if (isDefined(self getPlayerCustomDvar("canRevive")) && self getPlayerCustomDvar("canRevive") == "1") {
         self.canRevive = true;
     }
-    else {
-        self.canRevive = false;
-    }
 
-    if (self getPlayerCustomDvar("isUser") == "1") {
+    if (isDefined(self getPlayerCustomDvar("isUser")) && self getPlayerCustomDvar("isUser") == "1") {
         self.isUser = true;
     }
-    else {
-        self.isUser = false;
-    }
 
-    if (self getPlayerCustomDvar("isAdmin") == "1") {
+    if (isDefined(self getPlayerCustomDvar("isAdmin")) && self getPlayerCustomDvar("isAdmin") == "1") {
         self.isAdmin = true;
-    }
-    else {
-        self.isAdmin = false;
     }
 
     if (isDefined(self getPlayerCustomDvar("camo")) && self getPlayerCustomDvar("camo") != "") {
@@ -191,9 +185,7 @@ initPlayerVars() {
 }
 
 initPlayerDvars() {
-    if (getDvarInt("killcam_final") == 1) {
-        self setClientDvar("killcam_final", 1);
-    }
+    self setClientDvar("killcam_final", 1);
 }
 
 onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime) {
