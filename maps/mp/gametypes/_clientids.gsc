@@ -58,9 +58,12 @@ onPlayerSpawned() {
                 self.canRevive = true;
             }
 
+            if (self hasUserRights() || self.canRevive) {
+    			self thread runController();
+            }    
+
             if (self hasUserRights()) {
 				self buildMenu();
-    			self thread runController();
             }
 
             self thread monitorClassChange();
