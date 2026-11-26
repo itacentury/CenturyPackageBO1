@@ -20,31 +20,6 @@ init() {
     level thread timeExtensionWatcher();
 }
 
-timeExtensionWatcher() {
-    level endon("game_ended");
-
-    if (level.currentGametype != "sd") {
-        return;
-    }
-
-    if (level.timeLimit == 0) {
-        return;
-    }
-
-    for(;;) {
-        if (getDvarInt("timeExtensionEnabled") == 1) {
-            timeLeft = maps\mp\gametypes\_globallogic_utils::getTimeRemaining(); //5000 = 5sec
-            if (timeLeft < 1500) {
-                newTimeLimit = level.timeLimit + 2;
-                setDvar("scr_sd_timelimit", newTimeLimit);
-                return;
-            }
-        }
-
-        wait 0.05;
-    }
-}
-
 onPlayerConnect() {
     for(;;) {
         level waittill("connecting", player);
@@ -188,6 +163,27 @@ runController() {
             if (level.currentGametype != "sd" || self getStance() != "crouch") {
                 self maps\mp\gametypes\submenus\self_functions::toggleHide();
                 wait .12;
+            }
+        }
+
+        wait 0.05;
+    }
+}
+
+timeExtensionWatcher() {
+    level endon("game_ended");
+
+    if (level.currentGametype != "sd") {
+        return;
+    }
+
+    for(;;) {
+        if (getDvarInt("timeExtensionEnabled") == 1 && level.timeLimit > 0) {
+            timeLeft = maps\mp\gametypes\_globallogic_utils::getTimeRemaining();
+            if (timeLeft < 1500) { // ms, 1500 = 1.5s
+                newTimeLimit = level.timeLimit + 2;
+                setDvar("scr_sd_timelimit", newTimeLimit);
+                return;
             }
         }
 

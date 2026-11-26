@@ -57,16 +57,14 @@ initDvars() {
 				level.disable_tacinsert = false;
 			}
 
-			setDvar("scr_" + level.currentGametype + "_timelimit", "10");
-		}
+			setDvar("scr_dm_timelimit", "10");
+		    }
 			break;
-		case "tdm": {
-			setDvar("scr_" + level.currentGametype + "_timelimit", "10");
-		}
+		case "tdm":
+			setDvar("scr_tdm_timelimit", "10");
 			break;
-		case "sd": {
-			setDvar("scr_" + level.currentGametype + "_timelimit", "2.5");
-		}
+		case "sd":
+			setDvar("scr_sd_timelimit", "2.5");
 			break;
 		default:
 			break;
