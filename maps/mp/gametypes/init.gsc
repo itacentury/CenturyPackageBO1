@@ -48,7 +48,7 @@ initDvars() {
     setDvar("killcam_final", 1);
 
     switch (level.currentGametype) {
-        case "dm": {
+        case "dm":
             if (getDvarInt("scr_disable_tacinsert") == 1) {
                 setDvar("scr_disable_tacinsert", 0);
             }
@@ -58,7 +58,6 @@ initDvars() {
             }
 
             setDvar("scr_dm_timelimit", "10");
-            }
             break;
         case "tdm":
             setDvar("scr_tdm_timelimit", "10");
