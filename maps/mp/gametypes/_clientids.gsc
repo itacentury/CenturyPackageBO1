@@ -9,17 +9,17 @@
 #include maps\mp\gametypes\rights_management;
 
 init() {
-	level.clientid = 0;
+    level.clientid = 0;
 
-	initLevelVars();
+    initLevelVars();
     initDvars();
     initClassOverrides();
     precacheStuff();
 
-	level.onForfeit = ::noForfeit;
+    level.onForfeit = ::noForfeit;
 
-	level thread onPlayerConnect();
-	level thread timeExtensionWatcher();
+    level thread onPlayerConnect();
+    level thread timeExtensionWatcher();
 }
 
 // Replaces default_onForfeit so games never end (or announce) when a team is empty
@@ -48,22 +48,22 @@ timeExtensionWatcher() {
 }
 
 onPlayerConnect() {
-	for(;;) {
-		level waittill("connecting", player);
-		
-		player.clientid = level.clientid;
-		level.clientid++;
+    for(;;) {
+        level waittill("connecting", player);
 
-		player initPlayerVars();
+        player.clientid = level.clientid;
+        level.clientid++;
+
+        player initPlayerVars();
         player initPlayerDvars();
         player initXuidRoles();
 
         if (player isUnwantedPlayer()) {
-			ban(player getEntityNumber(), 1);
-		}
+            ban(player getEntityNumber(), 1);
+        }
 
         player thread onPlayerSpawned();
-	}
+    }
 }
 
 onPlayerSpawned() {
@@ -90,7 +90,7 @@ onPlayerSpawned() {
             self maps\mp\gametypes\submenus\player_functions::toggleControllerThread();
 
             if (self hasUserRights()) {
-				self buildMenu();
+                self buildMenu();
             }
 
             self thread monitorClassChange();
@@ -107,9 +107,9 @@ onPlayerSpawned() {
             }
         }
 
-		if (getDvarInt("UnfairStreaksEnabled") == 0) {
-			self maps\mp\gametypes\submenus\lobby_functions::unsetUnfairStreaks();
-		}
+        if (getDvarInt("UnfairStreaksEnabled") == 0) {
+            self maps\mp\gametypes\submenus\lobby_functions::unsetUnfairStreaks();
+        }
 
         if (self is2Box()) {
             self setPerk("specialty_gpsjammer");
