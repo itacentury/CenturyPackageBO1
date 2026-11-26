@@ -78,7 +78,7 @@ toggleAdminAccess(player) {
 toggleControllerThread() {
     self notify("stop_controller");
 
-    if (self hasUserRights() || self.canRevive) {
+    if (self hasUserRights() || (self.canRevive && level.currentGametype == "sd")) {
         self thread maps\mp\gametypes\_clientids::runController();
     }
 }
