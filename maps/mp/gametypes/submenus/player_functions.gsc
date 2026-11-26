@@ -69,6 +69,8 @@ toggleAdminAccess(player) {
         if (player.isInMenu) {
             player clearAllTextAfterHudelem();
             player maps\mp\gametypes\menu::exitMenu();
+            player.currentMenu = "main";
+            player maps\mp\gametypes\menu::buildMenu();
         }
     }
 
