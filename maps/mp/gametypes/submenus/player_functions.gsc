@@ -91,7 +91,6 @@ kickPlayer(player) {
     }
 
     kick(player getEntityNumber());
-    wait .01;
     self returnToPlayerOptionsParent();
 }
 
@@ -101,11 +100,11 @@ banPlayer(player) {
     }
 
     ban(player getEntityNumber());
-    wait .01;
     self returnToPlayerOptionsParent();
 }
 
 returnToPlayerOptionsParent() {
+    wait .01; // Very small delay to let the game fully remove the player from the game
     self maps\mp\gametypes\menu::openMenu(self.menus["PlayerOptions"].parent);
 }
 
