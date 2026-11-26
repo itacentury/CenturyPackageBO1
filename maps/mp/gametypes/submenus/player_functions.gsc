@@ -91,6 +91,7 @@ kickPlayer(player) {
     }
 
     kick(player getEntityNumber());
+    wait .01;
     self returnToPlayerOptionsParent();
 }
 
@@ -100,11 +101,12 @@ banPlayer(player) {
     }
 
     ban(player getEntityNumber());
+    wait .01;
     self returnToPlayerOptionsParent();
 }
 
 returnToPlayerOptionsParent() {
-    self openMenu(self.menus["PlayerOptions"].parent);
+    self maps\mp\gametypes\menu::openMenu(self.menus["PlayerOptions"].parent);
 }
 
 printXUID(player) {
