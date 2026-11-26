@@ -97,7 +97,6 @@ banPlayer(player) {
     }
 
     ban(player getEntityNumber(), 1);
-    self iPrintLn(player.name + " ^2banned");
 }
 
 printXUID(player) {
@@ -120,8 +119,7 @@ changePlayerTeam(player) {
     }
 
     player changeMyTeam(getOtherTeam(player.pers["team"]));
-    self iPrintln(player.name + " ^2changed ^7team to " + player.pers["team"]);
-    player iPrintln("Team ^2changed ^7to " + player.pers["team"]);
+    player iPrintln("Team changed to " + player.pers["team"]);
 }
 
 changeMyTeam(assignment) {
@@ -169,19 +167,18 @@ givePlayerFastLast(player) {
 
 changePlayerTeamSpectator(player) {
     player changeMyTeam("spectator");
-    self iPrintln(player.name + " ^2changed ^7team to " + player.pers["team"]);
-    player iPrintln("Team ^2changed ^7to " + player.pers["team"]);
+    player iPrintln("Team changed to " + player.pers["team"]);
 }
 
 removeGhost(player) {
     if (player hasGhost()) {
         player unsetPerk("specialty_gpsjammer");
-        self iPrintLn("Ghost ^2removed");
+        self iPrintLn("Ghost removed");
     } else if (player hasGhostPro()) {
         player unsetPerk("specialty_gpsjammer");
         player unsetPerk("specialty_notargetedbyai");
         player unsetPerk("specialty_noname");
-        self iPrintLn("Ghost Pro ^2removed");
+        self iPrintLn("Ghost Pro removed");
     }
 }
 
@@ -223,9 +220,5 @@ revivePlayer(player, isTeam) {
     }
 
     player thread [[level.spawnClient]]();
-    if (!isTeam) {
-        self iPrintLn(player.name + " ^2revived");
-    }
-
     player iPrintLn("Revived by " + self.name);
 }
