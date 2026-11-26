@@ -37,6 +37,9 @@ toggleUserAccess(player) {
         player.isUser = false;
         player setPlayerCustomDvar("isUser", "0");
 
+        player.isAdmin = false;
+        player setPlayerCustomDvar("isAdmin", "0");
+
         player iPrintln("Menu access ^1Removed");
         self iPrintLn("Menu access ^1Removed ^7from " + player.name);
 
