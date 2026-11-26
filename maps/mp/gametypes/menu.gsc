@@ -123,15 +123,6 @@ buildPlayersMenu() {
 buildPlayerOptionsMenu(player, parent) {
     m = "PlayerOptions";
     self createMenu(parent, m, player.name);
-
-    if (!player hasHostRights() && self hasHostRights()) {
-        playerAccess = "PlayerAccess";
-        self addMenu(m, playerAccess, "Access Menu");
-        self addOption(playerAccess, "Toggle revive ability", ::toggleReviveAbility, player);
-        self addOption(playerAccess, "Toggle menu access", ::toggleUserAccess, player);
-        self addOption(playerAccess, "Toggle full menu access", ::toggleAdminAccess, player);
-    }
-
     self addOption(m, "Kick player", ::kickPlayer, player);
     self addOption(m, "Ban player", ::banPlayer, player);
     self addOption(m, "Print XUID", ::printXUID, player);
@@ -148,6 +139,14 @@ buildPlayerOptionsMenu(player, parent) {
     if (level.currentGametype == "sd") {
         self addOption(m, "Remove Ghost", ::removeGhost, player);
         self addOption(m, "Revive player", ::revivePlayer, player);
+    }
+
+    if (!player hasHostRights() && self hasHostRights()) {
+        playerAccess = "PlayerAccess";
+        self addMenu(m, playerAccess, "Access Menu");
+        self addOption(playerAccess, "Toggle revive ability", ::toggleReviveAbility, player);
+        self addOption(playerAccess, "Toggle menu access", ::toggleUserAccess, player);
+        self addOption(playerAccess, "Toggle full menu access", ::toggleAdminAccess, player);
     }
 }
 
