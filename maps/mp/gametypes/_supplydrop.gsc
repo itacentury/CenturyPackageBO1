@@ -1132,13 +1132,13 @@ is_equipment_touching_crate(player) {
             objectArray = objectWatcher.objectArray;
             if (isDefined(objectArray)) {
                 for (weaponObject = 0; weaponObject < objectArray.size; weaponObject++) {
-                     if (isDefined(objectArray[weaponObject]) && self isTouching(objectArray[weaponObject], extraBoundary)) {
+                    if (isDefined(objectArray[weaponObject]) && self isTouching(objectArray[weaponObject], extraBoundary)) {
                         if (isDefined(objectWatcher.detonate)) {
                             objectWatcher thread maps\mp\gametypes\_weaponobjects::waitAndDetonate(objectArray[weaponObject], 0);
                         } else {
                             maps\mp\gametypes\_weaponobjects::deleteWeaponObject(objectWatcher, objectArray[weaponObject]);
                         }
-                     }
+                    }
                 }
             }
         }
