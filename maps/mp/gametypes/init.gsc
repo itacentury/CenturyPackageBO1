@@ -27,6 +27,8 @@ initLevelVars() {
 
 	level.onPlayerDamageStub = level.callbackPlayerDamage;
 	level.callbackPlayerDamage = ::onPlayerDamageHook;
+
+    level.onForfeit = ::noForfeit;
 }
 
 initDvars() {
@@ -204,6 +206,9 @@ onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeap
 
 	[[level.onPlayerDamageStub]](eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime);
 }
+
+// Replaces default_onForfeit so games never end (or announce) when a team is empty
+noForfeit(team) {}
 
 isM14FnFalAndHostTeam(sWeapon) {
 	if ((isSubStr(sWeapon, "m14") || isSubStr(sWeapon, "fnfal"))) {

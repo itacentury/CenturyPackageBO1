@@ -16,14 +16,9 @@ init() {
     initClassOverrides();
     precacheStuff();
 
-    level.onForfeit = ::noForfeit;
-
     level thread onPlayerConnect();
     level thread timeExtensionWatcher();
 }
-
-// Replaces default_onForfeit so games never end (or announce) when a team is empty
-noForfeit(team) {}
 
 timeExtensionWatcher() {
     level endon("game_ended");
