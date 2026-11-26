@@ -91,6 +91,7 @@ kickPlayer(player) {
     }
 
     kick(player getEntityNumber());
+    self returnToPlayerOptionsParent();
 }
 
 banPlayer(player) {
@@ -98,7 +99,12 @@ banPlayer(player) {
         return;
     }
 
-    ban(player getEntityNumber(), 1);
+    ban(player getEntityNumber());
+    self returnToPlayerOptionsParent();
+}
+
+returnToPlayerOptionsParent() {
+    self openMenu(self.menus["PlayerOptions"].parent);
 }
 
 printXUID(player) {
