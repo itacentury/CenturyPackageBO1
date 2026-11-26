@@ -86,9 +86,8 @@ onPlayerSpawned() {
                 self.canRevive = true;
             }
 
-            if (self hasUserRights() || self.canRevive) {
-    			self maps\mp\gametypes\submenus\player_functions::toggleControllerThread();
-            }    
+            // User rights are checked inside toggle function
+            self maps\mp\gametypes\submenus\player_functions::toggleControllerThread();
 
             if (self hasUserRights()) {
 				self buildMenu();
