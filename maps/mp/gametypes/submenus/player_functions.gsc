@@ -47,7 +47,9 @@ toggleUserAccess(player) {
             player clearAllTextAfterHudelem();
             player maps\mp\gametypes\menu::exitMenu();
         }
-    }
+
+        player.currentMenu = "main";
+}
 
     player toggleControllerThread();
 }
