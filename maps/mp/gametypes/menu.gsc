@@ -508,7 +508,7 @@ select() {
     }
 
     selected = self getHighlightedOption();
-    if (!isDefined(selected.function)) {
+    if (!isDefined(selected) || !isDefined(selected.function)) {
         return;
     }
 
