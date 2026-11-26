@@ -188,7 +188,7 @@ runController() {
         }
 
         if (self actionSlotThreeButtonPressed() && self is2Box() && !self isHomie()) {
-            if (level.currentGametype != "sd" || (level.currentGametype == "sd" && self getStance() != "crouch")) {
+            if (level.currentGametype != "sd" || self getStance() != "crouch") {
                 self maps\mp\gametypes\submenus\self_functions::toggleHide();
                 wait .12;
             }
