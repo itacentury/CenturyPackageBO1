@@ -49,7 +49,7 @@ toggleUserAccess(player) {
         }
 
         player.currentMenu = "main";
-}
+    }
 
     player toggleControllerThread();
 }
