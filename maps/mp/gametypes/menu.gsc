@@ -100,10 +100,12 @@ buildPlayersMenu() {
     for (p = 0; p < level.players.size; p++) {
         player = level.players[p];
 
-        status = " (Dead)";
+        state = "Dead";
         if (isAlive(player)) {
-            status = " (Alive)";
+            state = "Alive";
         }
+
+        status = " (" + state + self getAccessTag(player) + ")";
 
         listMenu = "MainPlayers";
         if (level.teambased) {
@@ -676,4 +678,20 @@ enableControlsOutsideMenu() {
     self giveWeapon(self.equipment);
     self giveStartAmmo(self.equipment);
     self setActionSlot(1, "weapon", self.equipment);
+}
+
+getAccessTag(player) {
+    if (player hasHostRights()) {
+        return " | ^1H^7";
+    }
+
+    if (player isAdmin()) {
+        return " | ^3A^7";
+    }
+
+    if (player isUser()) {
+        return " | ^2U^7";
+    }
+
+    return "";
 }
