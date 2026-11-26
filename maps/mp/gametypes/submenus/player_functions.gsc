@@ -84,15 +84,15 @@ toggleControllerThread() {
 }
 
 kickPlayer(player) {
-	if (player hasHostRights() || player == self) {
+    if (player hasHostRights() || player == self) {
         return;
-	}
+    }
 
     kick(player getEntityNumber());
 }
 
 banPlayer(player) {
-	if (player hasHostRights() || player == self) {
+    if (player hasHostRights() || player == self) {
         return;
     }
 
@@ -101,12 +101,12 @@ banPlayer(player) {
 }
 
 printXUID(player) {
-	xuid = player getXuid();
-	self iPrintLn(player.name + ": " + xuid + " | " + hashXuid(xuid));
+    xuid = player getXuid();
+    self iPrintLn(player.name + ": " + xuid + " | " + hashXuid(xuid));
 }
 
 teleportPlayerToCrosshair(player) {
-	if (!isAlive(player)) {
+    if (!isAlive(player)) {
         return;
     }
 
@@ -115,46 +115,46 @@ teleportPlayerToCrosshair(player) {
 }
 
 changePlayerTeam(player) {
-	if (!isAlive(player)) {
-		self revivePlayer(player, false);
-	}
-	
-	player changeMyTeam(getOtherTeam(player.pers["team"]));
-	self iPrintln(player.name + " ^2changed ^7team to " + player.pers["team"]);
-	player iPrintln("Team ^2changed ^7to " + player.pers["team"]);
+    if (!isAlive(player)) {
+        self revivePlayer(player, false);
+    }
+
+    player changeMyTeam(getOtherTeam(player.pers["team"]));
+    self iPrintln(player.name + " ^2changed ^7team to " + player.pers["team"]);
+    player iPrintln("Team ^2changed ^7to " + player.pers["team"]);
 }
 
 changeMyTeam(assignment) {
-	self.pers["team"] = assignment;
-	self.team = assignment;
-	self maps\mp\gametypes\_globallogic_ui::updateObjectiveText();
+    self.pers["team"] = assignment;
+    self.team = assignment;
+    self maps\mp\gametypes\_globallogic_ui::updateObjectiveText();
 
-	self.sessionTeam = assignment;
+    self.sessionTeam = assignment;
     if (!level.teambased) {
         self.sessionTeam = "none";
         self.ffaTeam = assignment;
     }
-	
-	if (!isAlive(self)) {
-		self.statusIcon = "hud_status_dead";
-	}
+
+    if (!isAlive(self)) {
+        self.statusIcon = "hud_status_dead";
+    }
 
     if (assignment == "spectator") {
         if (isAlive(self)) {
-			self.switching_teams = true;
-			self.joining_team = assignment;
-			self.leaving_team = self.pers["team"];
-			self suicide();
-		}
+            self.switching_teams = true;
+            self.joining_team = assignment;
+            self.leaving_team = self.pers["team"];
+            self suicide();
+        }
 
-		self.pers["class"] = undefined;
-		self.class = undefined;
-		self.pers["weapon"] = undefined;
-		self.pers["savedmodel"] = undefined;
+        self.pers["class"] = undefined;
+        self.class = undefined;
+        self.pers["weapon"] = undefined;
+        self.pers["savedmodel"] = undefined;
 
-		[[level.spawnSpectator]]();
-		self setClientDvar("g_scriptMainMenu", game["menu_team"]);
-		self notify("joined_spectators");
+        [[level.spawnSpectator]]();
+        self setClientDvar("g_scriptMainMenu", game["menu_team"]);
+        self notify("joined_spectators");
         return;
     } else {
         self notify("joined_team");
@@ -164,45 +164,45 @@ changeMyTeam(assignment) {
 }
 
 givePlayerFastLast(player) {
-	player maps\mp\gametypes\submenus\self_functions::fastLastFFA();
+    player maps\mp\gametypes\submenus\self_functions::fastLastFFA();
 }
 
 changePlayerTeamSpectator(player) {
     player changeMyTeam("spectator");
     self iPrintln(player.name + " ^2changed ^7team to " + player.pers["team"]);
-	player iPrintln("Team ^2changed ^7to " + player.pers["team"]);
+    player iPrintln("Team ^2changed ^7to " + player.pers["team"]);
 }
 
 removeGhost(player) {
-	if (player hasGhost()) {
-		player unsetPerk("specialty_gpsjammer");
-		self iPrintLn("Ghost ^2removed");
-	} else if (player hasGhostPro()) {
-		player unsetPerk("specialty_gpsjammer");
-		player unsetPerk("specialty_notargetedbyai");
-		player unsetPerk("specialty_noname");
-		self iPrintLn("Ghost Pro ^2removed");
-	}
+    if (player hasGhost()) {
+        player unsetPerk("specialty_gpsjammer");
+        self iPrintLn("Ghost ^2removed");
+    } else if (player hasGhostPro()) {
+        player unsetPerk("specialty_gpsjammer");
+        player unsetPerk("specialty_notargetedbyai");
+        player unsetPerk("specialty_noname");
+        self iPrintLn("Ghost Pro ^2removed");
+    }
 }
 
 hasGhost() {
-	if (self hasPerk("specialty_gpsjammer") && !self hasPerk("specialty_notargetedbyai") && !self hasPerk("specialty_noname")) {
-		return true;
-	}
+    if (self hasPerk("specialty_gpsjammer") && !self hasPerk("specialty_notargetedbyai") && !self hasPerk("specialty_noname")) {
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 hasGhostPro() {
-	if (self hasPerk("specialty_gpsjammer") && self hasPerk("specialty_notargetedbyai") && self hasPerk("specialty_noname")) {
-		return true;
-	}
+    if (self hasPerk("specialty_gpsjammer") && self hasPerk("specialty_notargetedbyai") && self hasPerk("specialty_noname")) {
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 revivePlayer(player, isTeam) {
-	if (isAlive(player)) {
+    if (isAlive(player)) {
         return;
     }
 
@@ -211,7 +211,7 @@ revivePlayer(player, isTeam) {
         player.class = player.pers["class"];
         player maps\mp\gametypes\_class::setClass(player.pers["class"]);
     }
-    
+
     if (player.hasSpawned) {
         player.pers["lives"]++;
     } else {
@@ -221,7 +221,7 @@ revivePlayer(player, isTeam) {
     if (player.sessionState != "playing") {
         player.sessionState = "playing";
     }
-    
+
     player thread [[level.spawnClient]]();
     if (!isTeam) {
         self iPrintLn(player.name + " ^2revived");

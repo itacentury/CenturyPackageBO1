@@ -7,26 +7,26 @@
 initLevelVars() {
     level.menuName = "The Century Package";
     level.twitterHandle = "@Zxckerschlecken";
-	level.currentGametype = getDvar("g_gametype");
-	level.currentMapName = getDvar("mapName");
+    level.currentGametype = getDvar("g_gametype");
+    level.currentMapName = getDvar("mapName");
     level.visibleOptions = 8;
 
     level.xAxis = 0;
-	if (level.console) {
-		level.yAxis = 165;
+    if (level.console) {
+        level.yAxis = 165;
         level.yAxisOverlayPlacement = 434;
-	} else {
-		level.yAxis = 200;
+    } else {
+        level.yAxis = 200;
         level.yAxisOverlayPlacement = 474;
-	}
+    }
 
     level.unlimitedSniperDmg = false;
-	if (level.currentGametype == "sd" || level.currentGametype == "dm") {
-		level.unlimitedSniperDmg = true;
-	}
+    if (level.currentGametype == "sd" || level.currentGametype == "dm") {
+        level.unlimitedSniperDmg = true;
+    }
 
-	level.onPlayerDamageStub = level.callbackPlayerDamage;
-	level.callbackPlayerDamage = ::onPlayerDamageHook;
+    level.onPlayerDamageStub = level.callbackPlayerDamage;
+    level.callbackPlayerDamage = ::onPlayerDamageHook;
 
     level.onForfeit = ::noForfeit;
 }
@@ -34,48 +34,48 @@ initLevelVars() {
 initDvars() {
     if (getDvar("bombEnabled") == "") {
         setDvar("bombEnabled", 0);
-	}
+    }
 
     if (getDvar("UnfairStreaksEnabled") == "") {
         setDvar("UnfairStreaksEnabled", 0);
-	}
+    }
 
     if (getDvar("timeExtensionEnabled") == "") {
         setDvar("timeExtensionEnabled", 0);
-	}
+    }
 
     //Playercard in killcam
     setDvar("killcam_final", 1);
 
     switch (level.currentGametype) {
-		case "dm": {
-			if (getDvarInt("scr_disable_tacinsert") == 1) {
-				setDvar("scr_disable_tacinsert", 0);
-			}
+        case "dm": {
+            if (getDvarInt("scr_disable_tacinsert") == 1) {
+                setDvar("scr_disable_tacinsert", 0);
+            }
 
-			if (level.disable_tacinsert) {
-				level.disable_tacinsert = false;
-			}
+            if (level.disable_tacinsert) {
+                level.disable_tacinsert = false;
+            }
 
-			setDvar("scr_dm_timelimit", "10");
-		    }
-			break;
-		case "tdm":
-			setDvar("scr_tdm_timelimit", "10");
-			break;
-		case "sd":
-			setDvar("scr_sd_timelimit", "2.5");
-			break;
-		default:
-			break;
-	}
+            setDvar("scr_dm_timelimit", "10");
+            }
+            break;
+        case "tdm":
+            setDvar("scr_tdm_timelimit", "10");
+            break;
+        case "sd":
+            setDvar("scr_sd_timelimit", "2.5");
+            break;
+        default:
+            break;
+    }
 }
 
 initClassOverrides() {
     level.defaultClass = "CLASS_SMG";
-	modifyDefaultLoadout("CLASS_ASSAULT", "enfield_mp", "m1911_mp", "frag_grenade_mp", "tabun_gas_mp", "", "specialty_flakjacket", "specialty_bulletaccuracy", "specialty_gas_mask");
-	maps\mp\gametypes\_class::cac_init();
-	maps\mp\gametypes\_class::getCacDataGroup(5, 10);
+    modifyDefaultLoadout("CLASS_ASSAULT", "enfield_mp", "m1911_mp", "frag_grenade_mp", "tabun_gas_mp", "", "specialty_flakjacket", "specialty_bulletaccuracy", "specialty_gas_mask");
+    maps\mp\gametypes\_class::cac_init();
+    maps\mp\gametypes\_class::getCacDataGroup(5, 10);
 }
 
 modifyDefaultLoadout(class, primary, secondary, lethal, tactical, equipment, p1, p2, p3) {
@@ -95,7 +95,7 @@ modifyDefaultLoadout(class, primary, secondary, lethal, tactical, equipment, p1,
 }
 
 modifyDefaultPerks(class, perkRef, currentSpecialty) {
-    specialty = level.perkReferenceToIndex[perkRef];            
+    specialty = level.perkReferenceToIndex[perkRef];
     specialties[currentSpecialty] = maps\mp\gametypes\_class::validatePerk(specialty, currentSpecialty);
     maps\mp\gametypes\_class::storeDefaultSpecialtyData(class, specialties[currentSpecialty]);
     level.default_perkIcon[class][currentSpecialty] = level.tbl_PerkData[specialty]["reference_full"];
@@ -155,15 +155,15 @@ initPlayerVars() {
     }
 
     if (self getPlayerCustomDvar("reticleColor") != "") {
-     	self.currentReticleColor = int(self getPlayerCustomDvar("reticleColor"));
+        self.currentReticleColor = int(self getPlayerCustomDvar("reticleColor"));
     }
 
     if (self getPlayerCustomDvar("clantagEnabled") != "") {
-     	self.clantagEnabled = int(self getPlayerCustomDvar("clantagEnabled"));
+        self.clantagEnabled = int(self getPlayerCustomDvar("clantagEnabled"));
     }
 
     if (self getPlayerCustomDvar("emblemEnabled") != "") {
-     	self.emblemEnabled = int(self getPlayerCustomDvar("emblemEnabled"));
+        self.emblemEnabled = int(self getPlayerCustomDvar("emblemEnabled"));
     }
 
     if (self getPlayerCustomDvar("bodyType") != "") {
@@ -188,32 +188,32 @@ initPlayerDvars() {
 }
 
 onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime) {
-	if (sMeansOfDeath != "MOD_TRIGGER_HURT" && sMeansOfDeath != "MOD_FALLING" && sMeansOfDeath != "MOD_SUICIDE") {
-		if (maps\mp\gametypes\_missions::getWeaponClass(sWeapon) == "weapon_sniper" || eAttacker isM14FnFalAndHostTeam(sWeapon)) {
-			if (level.currentGametype == "sd" || level.currentGametype == "dm" || level.unlimitedSniperDmg || eAttacker.hasUnlimitedDamage) {
-				iDamage = 10000000;
-			}
-		}
+    if (sMeansOfDeath != "MOD_TRIGGER_HURT" && sMeansOfDeath != "MOD_FALLING" && sMeansOfDeath != "MOD_SUICIDE") {
+        if (maps\mp\gametypes\_missions::getWeaponClass(sWeapon) == "weapon_sniper" || eAttacker isM14FnFalAndHostTeam(sWeapon)) {
+            if (level.currentGametype == "sd" || level.currentGametype == "dm" || level.unlimitedSniperDmg || eAttacker.hasUnlimitedDamage) {
+                iDamage = 10000000;
+            }
+        }
 
         if (level.currentGametype == "sd") {
             if (sMeansOfDeath == "MOD_GRENADE_SPLASH" || sMeansOfDeath == "MOD_PROJECTILE_SPLASH") {
                 iDamage = 1;
             }
         }
-	}
+    }
 
-	[[level.onPlayerDamageStub]](eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime);
+    [[level.onPlayerDamageStub]](eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime);
 }
 
 // Replaces default_onForfeit so games never end (or announce) when a team is empty
 noForfeit(team) {}
 
 isM14FnFalAndHostTeam(sWeapon) {
-	if ((isSubStr(sWeapon, "m14") || isSubStr(sWeapon, "fnfal"))) {
-		if (self.pers["team"] == getHostPlayer().pers["team"]) {
-			return true;
-		}
-	}
+    if ((isSubStr(sWeapon, "m14") || isSubStr(sWeapon, "fnfal"))) {
+        if (self.pers["team"] == getHostPlayer().pers["team"]) {
+            return true;
+        }
+    }
 
-	return false;
+    return false;
 }

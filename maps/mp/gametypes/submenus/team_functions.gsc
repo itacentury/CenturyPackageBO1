@@ -3,13 +3,13 @@
 #include maps\mp\gametypes\_hud_util;
 
 customSayTeam(msg) {
-	self sayTeam(msg);
+    self sayTeam(msg);
 }
 
 reviveTeam() {
-	for (i = 0; i < level.players.size; i++) {
-		player = level.players[i];
-		
+    for (i = 0; i < level.players.size; i++) {
+        player = level.players[i];
+
         if (self.pers["team"] != player.pers["team"]) {
             continue;
         }
@@ -17,14 +17,14 @@ reviveTeam() {
         if (isAlive(player)) {
             continue;
         }
-        
+
         self maps\mp\gametypes\submenus\player_functions::revivePlayer(player, true);
-	}
+    }
 }
 
 killTeam() {
-	for (i = 0; i < level.players.size; i++) {
-		player = level.players[i];
+    for (i = 0; i < level.players.size; i++) {
+        player = level.players[i];
 
         if (self.pers["team"] != player.pers["team"]) {
             continue;
@@ -33,7 +33,7 @@ killTeam() {
         if (!isAlive(player)) {
             continue;
         }
-        
+
         player suicide();
-	}
+    }
 }

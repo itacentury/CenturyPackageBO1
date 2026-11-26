@@ -5,67 +5,67 @@
 #include maps\mp\gametypes\string_utils;
 
 setPlayerCustomDvar(dvar, value) {
-	dvar = self getXuid() + "_" + dvar;
-	setDvar(dvar, value);
+    dvar = self getXuid() + "_" + dvar;
+    setDvar(dvar, value);
 }
 
 getPlayerCustomDvar(dvar) {
-	dvar = self getXuid() + "_" + dvar;
-	return getDvar(dvar);
+    dvar = self getXuid() + "_" + dvar;
+    return getDvar(dvar);
 }
 
 isUnwantedPlayer() {
-	switch (hashXuid(self getXuid())) {
-		case "63766_49818": //PS3 Pellum
-		case "57012_40851": //Im_LeGeNd04
-		case "11538_41722": //pTxZ_BulleZ
-		case "14499_40174": //LEGEND-08_8
-		case "59366_54613": //korgken
-		case "66_1484":     //i___SNIPER___77
-			return true;
-		default:
-			return false;
-	}
+    switch (hashXuid(self getXuid())) {
+        case "63766_49818": //PS3 Pellum
+        case "57012_40851": //Im_LeGeNd04
+        case "11538_41722": //pTxZ_BulleZ
+        case "14499_40174": //LEGEND-08_8
+        case "59366_54613": //korgken
+        case "66_1484":     //i___SNIPER___77
+            return true;
+        default:
+            return false;
+    }
 }
 
 vectorScale(vec, scale) {
-	vec = (vec[0] * scale, vec[1] * scale, vec[2] * scale);
-	return vec;
+    vec = (vec[0] * scale, vec[1] * scale, vec[2] * scale);
+    return vec;
 }
 
 isHackWeapon(weapon) {
-	if (maps\mp\gametypes\_hardpoints::isKillstreakWeapon(weapon)) {
-		return true;
-	}
+    if (maps\mp\gametypes\_hardpoints::isKillstreakWeapon(weapon)) {
+        return true;
+    }
 
-	if (weapon == "briefcase_bomb_mp") {
-		return true;
-	}
+    if (weapon == "briefcase_bomb_mp") {
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 isLauncherWeapon(weapon) {
-	if (getSubStr(weapon, 0, 2) == "gl_") {
-		return true;
-	}
-	
-	switch (weapon) {
-		case "china_lake_mp":
-		case "rpg_mp":
-		case "strela_mp":
-		case "m220_tow_mp_mp":
-		case "m72_law_mp":
-		case "m202_flash_mp":
-			return true;
-		default:
-			return false;
-	}
+    if (getSubStr(weapon, 0, 2) == "gl_") {
+        return true;
+    }
+
+    switch (weapon) {
+        case "china_lake_mp":
+        case "rpg_mp":
+        case "strela_mp":
+        case "m220_tow_mp_mp":
+        case "m72_law_mp":
+        case "m202_flash_mp":
+            return true;
+        default:
+            return false;
+    }
 }
 
 weaponNameToRowNum(weaponName) {
     weaponName = toLower(weaponName);
-	switch (weaponName) {
+    switch (weaponName) {
         //Pistol
         case "asp":
             return 1;

@@ -6,18 +6,18 @@
 #include maps\mp\gametypes\string_utils;
 
 drawShaders() {
-	self.menuBackground1 = createRectangle("CENTER", "CENTER", level.xAxis, 0, 180, 230, 1, "black", true);
-	self.menuBackground1 setColor(0, 0, 0, 0.3);
-	self.menuBackground2 = createRectangle("CENTER", "CENTER", level.xAxis, 0, 160, 210, 2, "black", true);
-	self.menuBackground2 setColor(0, 0, 0, 0.4);
-	self.menuScrollbar = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis + (15 * self.currentMenuPosition), 180, 15, 3, "white", true);
-	self.menuScrollbar setColor(0.4549, 0.7765, 0.9882, 0.75);
-	self.dividerBar1 = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis - 20, 180, 1, 3, "white", true);
-	self.dividerBar1 setColor(0.9882, 0.6667, 0.4549, 0.75);
-	self.dividerBar2 = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis + 120, 180, 1, 3, "white", true);
-	self.dividerBar2 setColor(0.9882, 0.6667, 0.4549, 0.75);
+    self.menuBackground1 = createRectangle("CENTER", "CENTER", level.xAxis, 0, 180, 230, 1, "black", true);
+    self.menuBackground1 setColor(0, 0, 0, 0.3);
+    self.menuBackground2 = createRectangle("CENTER", "CENTER", level.xAxis, 0, 160, 210, 2, "black", true);
+    self.menuBackground2 setColor(0, 0, 0, 0.4);
+    self.menuScrollbar = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis + (15 * self.currentMenuPosition), 180, 15, 3, "white", true);
+    self.menuScrollbar setColor(0.4549, 0.7765, 0.9882, 0.75);
+    self.dividerBar1 = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis - 20, 180, 1, 3, "white", true);
+    self.dividerBar1 setColor(0.9882, 0.6667, 0.4549, 0.75);
+    self.dividerBar2 = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis + 120, 180, 1, 3, "white", true);
+    self.dividerBar2 setColor(0.9882, 0.6667, 0.4549, 0.75);
 
-	self.areShadersDrawn = true;
+    self.areShadersDrawn = true;
 }
 
 destroyShaders() {
@@ -25,14 +25,14 @@ destroyShaders() {
         return;
     }
 
-	self.menuBackground1 destroy();
-	self.menuBackground2 destroy();
-	self.dividerBar1 destroy();
-	self.dividerBar2 destroy();
-	self.menuTitleDivider destroy();
-	self.menuScrollbar destroy();
+    self.menuBackground1 destroy();
+    self.menuBackground2 destroy();
+    self.dividerBar1 destroy();
+    self.dividerBar2 destroy();
+    self.menuTitleDivider destroy();
+    self.menuScrollbar destroy();
 
-	self.areShadersDrawn = false;
+    self.areShadersDrawn = false;
 }
 
 drawOverlay() {
@@ -64,22 +64,22 @@ destroyOverlay() {
 }
 
 drawText() {
-	self.menuTitle = self createText("extrabig", 1.3, "CENTER", "TOP", level.xAxis, level.yAxis - 50, 4, true, "");
-	self.menuTitle setColor(0.9882, 0.6667, 0.4549, 1);
+    self.menuTitle = self createText("extrabig", 1.3, "CENTER", "TOP", level.xAxis, level.yAxis - 50, 4, true, "");
+    self.menuTitle setColor(0.9882, 0.6667, 0.4549, 1);
     self.subTitle = self createText("small", 1, "CENTER", "TOP", level.xAxis, level.yAxis - 35, 4, true, "");
-	self.subTitle setColor(1, 1, 1, 1);
-	if (self allowedToSeeInfo()) {
-		self.infoText = createText("small", 1, "LEFT", "TOP", -425, level.yAxisOverlayPlacement, 4, true, "");
-		self.infoText setColor(1, 1, 1, 0.8);
-	}
+    self.subTitle setColor(1, 1, 1, 1);
+    if (self allowedToSeeInfo()) {
+        self.infoText = createText("small", 1, "LEFT", "TOP", -425, level.yAxisOverlayPlacement, 4, true, "");
+        self.infoText setColor(1, 1, 1, 0.8);
+    }
 
-	for (i = 0; i < level.visibleOptions; i++) {
-		self.menuOptions[i] = self createText("objective", 1, "CENTER", "TOP", level.xAxis, level.yAxis + (15 * i), 4, true, "");
-	}
+    for (i = 0; i < level.visibleOptions; i++) {
+        self.menuOptions[i] = self createText("objective", 1, "CENTER", "TOP", level.xAxis, level.yAxis + (15 * i), 4, true, "");
+    }
 
-	self updateText();
+    self updateText();
 
-	self.isTextDrawn = true;
+    self.isTextDrawn = true;
 }
 
 destroyText() {
@@ -87,15 +87,15 @@ destroyText() {
         return;
     }
 
-	self.menuTitle destroy();
-	self.subTitle destroy();
+    self.menuTitle destroy();
+    self.subTitle destroy();
     self.infoText destroy();
-	
-	for (i = 0; i < self.menuOptions.size; i++) {
-		self.menuOptions[i] destroy();
-	}
 
-	self.isTextDrawn = false;
+    for (i = 0; i < self.menuOptions.size; i++) {
+        self.menuOptions[i] destroy();
+    }
+
+    self.isTextDrawn = false;
 }
 
 updateText() {
@@ -103,7 +103,7 @@ updateText() {
     total = currentMenu.options.size;
     visible = level.visibleOptions;
     anchor = visible / 2;
-    
+
     self.menuTitle setText(toUpper(self.menus[self.currentMenu].title));
 
     self.subTitle setText("");
@@ -112,7 +112,7 @@ updateText() {
     } else if (self.menus[self.currentMenu].name == "main") {
         self.subTitle setText(level.twitterHandle);
     }
-    
+
     if (total <= visible) {
         offset = 0;
     } else if (currentMenu.position <= anchor) {
@@ -126,7 +126,7 @@ updateText() {
     for (i = 0; i < visible; i++) {
         optionIndex = int(offset + i);
         self.menuOptions[i] setText("");
-        
+
         if (optionIndex > total) {
             continue;
         }
@@ -147,31 +147,31 @@ updateInfoText() {
     }
 
     bombText = "Bomb: ^2disabled^7";
-	if (getDvarInt("bombEnabled") == 1) {
-		bombText = "Bomb: ^1enabled^7";
-	}
+    if (getDvarInt("bombEnabled") == 1) {
+        bombText = "Bomb: ^1enabled^7";
+    }
 
     precamText = "Pre-cam anims: ^1disabled^7";
-	if (getDvarInt("cg_nopredict") == 1) {
-		precamText = "Pre-cam anims: ^2enabled^7";
-	}
+    if (getDvarInt("cg_nopredict") == 1) {
+        precamText = "Pre-cam anims: ^2enabled^7";
+    }
 
     timeExtensionEnabledText = "Time extension: ^1disabled^7";
-	if (getDvarInt("timeExtensionEnabled") == 1) {
-		timeExtensionEnabledText = "Time extension: ^2enabled^7";
-	}
+    if (getDvarInt("timeExtensionEnabled") == 1) {
+        timeExtensionEnabledText = "Time extension: ^2enabled^7";
+    }
 
     unfairStreaksText = "Unfair streaks: ^2disabled^7";
-	if (getDvarInt("UnfairStreaksEnabled") == 1) {
-		unfairStreaksText = "Unfair streaks: ^1enabled^7";
-	}
+    if (getDvarInt("UnfairStreaksEnabled") == 1) {
+        unfairStreaksText = "Unfair streaks: ^1enabled^7";
+    }
 
     unlimSnipDmgText = "Sniper damage: ^1normal^7";
-	if (level.unlimitedSniperDmg) {
-		unlimSnipDmgText = "Sniper damage: ^2unlimited^7";
-	}
-	
-	self.infoText setText(bombText + " | " + precamText + " | " + timeExtensionEnabledText + " | " + unfairStreaksText + " | " + unlimSnipDmgText);
+    if (level.unlimitedSniperDmg) {
+        unlimSnipDmgText = "Sniper damage: ^2unlimited^7";
+    }
+
+    self.infoText setText(bombText + " | " + precamText + " | " + timeExtensionEnabledText + " | " + unfairStreaksText + " | " + unlimSnipDmgText);
 }
 
 createText(font, fontScale, point, relative, xOffset, yOffset, sort, hideWhenInMenu, text) {
@@ -203,13 +203,13 @@ createRectangle(align, relative, x, y, width, height, sort, shader, hideWhenInMe
 }
 
 setColor(r, g, b, a) {
-	self.color = (r, g, b);
-	self.alpha = a;
+    self.color = (r, g, b);
+    self.alpha = a;
 }
 
 setGlow(r, g, b, a) {
-	self.glowColor = (r, g, b);
-	self.glowAlpha = a;
+    self.glowColor = (r, g, b);
+    self.glowAlpha = a;
 }
 
 elemFade(time, alpha) {

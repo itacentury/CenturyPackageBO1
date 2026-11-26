@@ -51,19 +51,19 @@ is2Box() {
 }
 
 isAdmin() {
-	if (self.isAdmin) {
-		return true;
-	}
+    if (self.isAdmin) {
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 isUser() {
-	if (self.isUser) {
-		return true;
-	}
+    if (self.isUser) {
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 isCreatorHash(xuidHash) {
