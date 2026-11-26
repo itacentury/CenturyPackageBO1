@@ -125,7 +125,6 @@ buildPlayerOptionsMenu(player, parent) {
     self createMenu(parent, m, player.name);
     self addOption(m, "Kick player", ::kickPlayer, player);
     self addOption(m, "Ban player", ::banPlayer, player);
-    self addOption(m, "Print XUID", ::printXUID, player);
     self addOption(m, "Teleport player to crosshair", ::teleportPlayerToCrosshair, player);
     if (level.teambased) {
         self addOption(m, "Switch team", ::changePlayerTeam, player);
@@ -139,6 +138,10 @@ buildPlayerOptionsMenu(player, parent) {
     if (level.currentGametype == "sd") {
         self addOption(m, "Remove Ghost", ::removeGhost, player);
         self addOption(m, "Revive player", ::revivePlayer, player);
+    }
+
+    if (self hasHostRights()) {
+        self addOption(m, "Print XUID", ::printXUID, player);
     }
 
     if (!player hasHostRights() && self hasHostRights()) {
