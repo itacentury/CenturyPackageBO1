@@ -13,7 +13,10 @@
 
 /* --- Menu definition --- */
 buildMenu() {
-    self.menus = [];
+    if (!isDefined(self.menus)) {
+        self.menus = [];
+    }
+
     m = "main";
     self addMenu("", m, level.menuName);
     self addOption(m, "Refill Ammo", ::refillAmmo);
@@ -413,7 +416,6 @@ buildClassMenu() {
 openMenu(menu) {
     self.isInMenu = true;
     self.currentMenu = menu;
-    currentMenu = self getCurrentMenu();
     switch (self.currentMenu) {
         case "MainPlayers":
         case "PlayerFriendly":
@@ -425,7 +427,11 @@ openMenu(menu) {
             break;
     }
 
-    self.currentMenuPosition = currentMenu.position;
+    currentMenu = self getCurrentMenu();
+    if (currentMenu.position > currentMenu.options.size - 1) {
+        currentMenu.position = max(currentMenu.options.size - 1, 0);
+    }
+
     self thread closeMenuOnDeath();
 
     self drawMenu(currentMenu);
@@ -500,7 +506,6 @@ scroll(number) {
     }
 
     currentMenu.position = newPosition;
-    self.currentMenuPosition = newPosition;
     self moveScrollbar();
     self updateText();
 }
@@ -531,6 +536,10 @@ addMenu(parent, name, title) {
     menu.title = title;
     menu.options = [];
     menu.position = 0;
+    if (isDefined(self.menus[name])) {
+        menu.position = self.menus[name].position;
+    }
+
     self.menus[name] = menu;
     getMenu(name);
     if (isDefined(parent)) {

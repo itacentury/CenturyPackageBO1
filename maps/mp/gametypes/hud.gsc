@@ -10,13 +10,14 @@ drawShaders() {
     self.menuBackground1 setColor(0, 0, 0, 0.3);
     self.menuBackground2 = createRectangle("CENTER", "CENTER", level.xAxis, 0, 160, 210, 2, "black", true);
     self.menuBackground2 setColor(0, 0, 0, 0.4);
-    self.menuScrollbar = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis + (15 * self.currentMenuPosition), 180, 15, 3, "white", true);
+    self.menuScrollbar = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis + 15, 180, 15, 3, "white", true);
     self.menuScrollbar setColor(0.4549, 0.7765, 0.9882, 0.75);
     self.dividerBar1 = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis - 20, 180, 1, 3, "white", true);
     self.dividerBar1 setColor(0.9882, 0.6667, 0.4549, 0.75);
     self.dividerBar2 = createRectangle("CENTER", "TOP", level.xAxis, level.yAxis + 120, 180, 1, 3, "white", true);
     self.dividerBar2 setColor(0.9882, 0.6667, 0.4549, 0.75);
 
+    self moveScrollbar();
     self.areShadersDrawn = true;
 }
 
@@ -127,7 +128,7 @@ updateText() {
         optionIndex = int(offset + i);
         self.menuOptions[i] setText("");
 
-        if (optionIndex > total) {
+        if (optionIndex >= total) {
             continue;
         }
 
