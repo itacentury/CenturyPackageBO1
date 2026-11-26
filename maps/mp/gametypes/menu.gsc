@@ -121,7 +121,7 @@ buildPlayersMenu() {
 }
 
 buildPlayerOptionsMenu(player, parent) {
-    m = "PlayerOptions"; 
+    m = "PlayerOptions";
     self createMenu(parent, m, player.name);
 
     if (!player hasHostRights() && self hasHostRights()) {
