@@ -83,64 +83,71 @@ buildMenu() {
     self addOption(m, "Say team: revive team bind", ::customSayTeam, "^2Crouch ^7& ^5DPAD Left ^7to revive your team!");
     self addOption(m, "Revive whole team", ::reviveTeam);
     self addOption(m, "Kill whole team", ::killTeam);
+}
 
+buildPlayersMenu() {
     m = "MainPlayers";
+    self.menus[m].options = [];
+
     myTeam = self.pers["team"];
     otherTeam = getOtherTeam(myTeam);
     if (level.teambased) {
-        self addMenu(m, "PlayerFriendly", "Friendly Players");
-        self addMenu(m, "PlayerEnemy", "Enemy Players");
-        self addMenu(m, "PlayerOther", "Other Players");
+        self addMenu(m, "PlayersFriendly", "Friendly Players");
+        self addMenu(m, "PlayersEnemy", "Enemy Players");
+        self addMenu(m, "PlayersOther", "Other Players");
     }
 
     for (p = 0; p < level.players.size; p++) {
         player = level.players[p];
-        name = player.name;
-        player_name = "player_" + name;
 
-        deadOrAlive = " (Dead)";
+        status = " (Dead)";
         if (isAlive(player)) {
-            deadOrAlive = " (Alive)";
+            status = " (Alive)";
         }
 
+        listMenu = "MainPlayers";
         if (level.teambased) {
             if (player.pers["team"] == myTeam) {
-                m = "PlayerFriendly";
+                listMenu = "PlayersFriendly";
             } else if (player.pers["team"] == otherTeam) {
-                m = "PlayerEnemy";
+                listMenu = "PlayersEnemy";
             } else {
-                m = "PlayerOther";
+                listMenu = "PlayersOther";
             }
         }
 
-        self addMenu(m, player_name, name + deadOrAlive);
+        self addOption(listMenu, player.name + status, ::openPlayerMenu, player);
+    }
+}
 
-        if (!player hasHostRights() && self hasHostRights()) {
-            m = player_name + "Access";
-            self addMenu(player_name, m, "" + name + " Access Menu");
-            self addOption(m, "Toggle revive ability", ::toggleReviveAbility, player);
-            self addOption(m, "Toggle menu access", ::toggleUserAccess, player);
-            self addOption(m, "Toggle full menu access", ::toggleAdminAccess, player);
-        }
+buildPlayerOptionsMenu(player, parent) {
+    m = "PlayerOptions"; 
+    self createMenu(parent, m, player.name);
 
-        self addOption(player_name, "Kick player", ::kickPlayer, player);
-        self addOption(player_name, "Ban player", ::banPlayer, player);
-        self addOption(player_name, "Print XUID", ::printXUID, player);
-        self addOption(player_name, "Teleport player to crosshair", ::teleportPlayerToCrosshair, player);
+    if (!player hasHostRights() && self hasHostRights()) {
+        playerAccess = "PlayerAccess";
+        self addMenu(m, playerAccess, "Access Menu");
+        self addOption(playerAccess, "Toggle revive ability", ::toggleReviveAbility, player);
+        self addOption(playerAccess, "Toggle menu access", ::toggleUserAccess, player);
+        self addOption(playerAccess, "Toggle full menu access", ::toggleAdminAccess, player);
+    }
 
-        if (level.teambased) {
-            self addOption(player_name, "Switch team", ::changePlayerTeam, player);
-        }
+    self addOption(m, "Kick player", ::kickPlayer, player);
+    self addOption(m, "Ban player", ::banPlayer, player);
+    self addOption(m, "Print XUID", ::printXUID, player);
+    self addOption(m, "Teleport player to crosshair", ::teleportPlayerToCrosshair, player);
+    if (level.teambased) {
+        self addOption(m, "Switch team", ::changePlayerTeam, player);
+    }
 
-        if (level.currentGametype == "dm") {
-            self addOption(player_name, "Give fast last", ::givePlayerFastLast, player);
-        }
+    if (level.currentGametype == "dm") {
+        self addOption(m, "Give fast last", ::givePlayerFastLast, player);
+    }
 
-        self addOption(player_name, "Change team to spectator", ::changePlayerTeamSpectator, player);
-        if (level.currentGametype == "sd") {
-            self addOption(player_name, "Remove Ghost", ::removeGhost, player);
-            self addOption(player_name, "Revive player", ::revivePlayer, player);
-        }
+    self addOption(m, "Change team to spectator", ::changePlayerTeamSpectator, player);
+    if (level.currentGametype == "sd") {
+        self addOption(m, "Remove Ghost", ::removeGhost, player);
+        self addOption(m, "Revive player", ::revivePlayer, player);
     }
 }
 
@@ -418,10 +425,18 @@ openMenu(menu) {
     self.currentMenu = menu;
     switch (self.currentMenu) {
         case "MainPlayers":
-        case "PlayerFriendly":
-        case "PlayerEnemy":
-        case "PlayerOther":
-            self buildMenu();
+        case "PlayersFriendly":
+        case "PlayersEnemy":
+        case "PlayersOther":
+            self buildPlayersMenu();
+            break;
+        case "PlayerOptions":
+        case "PlayerAccess":
+            if (!isDefined(self.selectedPlayer)) {
+                // If player is gone return to list
+                self.currentMenu = "MainPlayers";
+                self buildPlayersMenu();
+            }
             break;
         default:
             break;
@@ -438,6 +453,17 @@ openMenu(menu) {
     self disableControlsInsideMenu();
 
     self destroyOverlay();
+}
+
+openPlayerMenu(player) {
+    if (!isDefined(player)) {
+        self iPrintLn("Player not found");
+        return;
+    }
+
+    self.selectedPlayer = player;
+    self buildPlayerOptionsMenu(player, self.currentMenu);
+    self openMenu("PlayerOptions");
 }
 
 closeMenu() {
@@ -475,6 +501,12 @@ exitMenu() {
 }
 
 select() {
+    if ((self.currentMenu == "PlayerOptions" || self.currentMenu == "PlayerAccess") && !isDefined(self.selectedPlayer)) {
+        self iPrintLn("Player not found");
+        self openMenu("MainPlayers");
+        return;
+    }
+
     selected = self getHighlightedOption();
     if (!isDefined(selected.function)) {
         return;
@@ -529,7 +561,7 @@ moveScrollbar() {
     self.menuScrollbar.y = level.yAxis + (localIndex * 15);
 }
 
-addMenu(parent, name, title) {
+createMenu(parent, name, title) {
     menu = spawnStruct();
     menu.parent = parent;
     menu.name = name;
@@ -541,7 +573,10 @@ addMenu(parent, name, title) {
     }
 
     self.menus[name] = menu;
-    getMenu(name);
+}
+
+addMenu(parent, name, title) {
+    self createMenu(parent, name, title);
     if (isDefined(parent)) {
         self addOption(parent, title, ::openMenu, name);
     }

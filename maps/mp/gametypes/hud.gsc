@@ -132,7 +132,8 @@ updateText() {
             continue;
         }
 
-        if (currentMenu.options[optionIndex].function == ::openMenu) {
+        func = currentMenu.options[optionIndex].function;
+        if (func == ::openMenu || func == ::openPlayerMenu) {
             self.menuOptions[i] setColor(0.2588, 0.6980, 0.9843, 1);
             self.menuOptions[i] setText(currentMenu.options[optionIndex].label);
         } else {
