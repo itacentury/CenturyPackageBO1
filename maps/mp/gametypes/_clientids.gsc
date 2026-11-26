@@ -27,12 +27,15 @@ timeExtensionWatcher() {
         return;
     }
 
+    if (level.timeLimit == 0) {
+        return;
+    }
+
     for(;;) {
         if (getDvarInt("timeExtensionEnabled") == 1) {
             timeLeft = maps\mp\gametypes\_globallogic_utils::getTimeRemaining(); //5000 = 5sec
             if (timeLeft < 1500) {
-                timeLimit = getDvarInt("scr_sd_timelimit");
-                newTimeLimit = timeLimit + 2.5; // 2.5 equals to 2 min ingame in this case for some reason
+                newTimeLimit = level.timeLimit + 2;
                 setDvar("scr_sd_timelimit", newTimeLimit);
                 return;
             }
