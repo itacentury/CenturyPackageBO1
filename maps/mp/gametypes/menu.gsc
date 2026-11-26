@@ -139,7 +139,7 @@ buildMenu() {
         self addOption(player_name, "Change team to spectator", ::changePlayerTeamSpectator, player);
         if (level.currentGametype == "sd") {
             self addOption(player_name, "Remove Ghost", ::removeGhost, player);
-            self addOption(player_name, "Revive player", ::revivePlayer, player, false);
+            self addOption(player_name, "Revive player", ::revivePlayer, player);
         }
     }
 }

@@ -115,7 +115,7 @@ teleportPlayerToCrosshair(player) {
 
 changePlayerTeam(player) {
     if (!isAlive(player)) {
-        self revivePlayer(player, false);
+        self revivePlayer(player);
     }
 
     player changeMyTeam(getOtherTeam(player.pers["team"]));
@@ -198,7 +198,7 @@ hasGhostPro() {
     return false;
 }
 
-revivePlayer(player, isTeam) {
+revivePlayer(player) {
     if (isAlive(player)) {
         return;
     }
