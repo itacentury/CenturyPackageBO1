@@ -105,7 +105,7 @@ banPlayer(player) {
         return;
     }
 
-    ban(player getEntityNumber());
+    ban(player getEntityNumber(), 1);
     self returnToPlayerOptionsParent();
 }
 
