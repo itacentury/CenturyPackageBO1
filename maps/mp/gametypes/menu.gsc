@@ -458,6 +458,7 @@ openMenu(menu) {
 openPlayerMenu(player) {
     if (!isDefined(player)) {
         self iPrintLn("Player not found");
+        self openMenu(self.currentMenu);
         return;
     }
 
