@@ -47,7 +47,7 @@ git tag -a X.Y.Z -m "Century Package X.Y.Z"
 git push origin X.Y.Z
 ```
 
-Alternatively, create the tag while drafting the GitHub release (step 4) and choose `master` as the target.
+Always tag with `git tag -a` so every release tag is annotated (GitHub's release form would create a lightweight tag instead); step 3 builds from this tag.
 
 ### 3. Build the PS3 package
 
@@ -68,7 +68,7 @@ PC users install by cloning the repository (see README), so no PC package is nee
 
 On GitHub: **Releases → Draft a new release**
 
-- Tag: `X.Y.Z`
+- Tag: choose the existing `X.Y.Z` tag pushed in step 2
 - Title: `Century Package X.Y.Z`
 - Description: the `X.Y.Z` section from `CHANGELOG.md`
 - Attach `CenturyPackageBO1-X.Y.Z-PS3.zip`
