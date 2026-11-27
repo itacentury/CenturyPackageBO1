@@ -1,6 +1,6 @@
 # Releasing
 
-Releases are done manually. `master` is protected, so every change to it goes through a pull request. Tags are not affected by branch protection and can be pushed directly.
+Releases are done manually. `master` is protected, so every change to it goes through a pull request. Tags can currently be pushed directly.
 
 ## Versioning
 
