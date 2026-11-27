@@ -82,22 +82,22 @@ fastLastFFA() {
 
 giveUnlockAll() {
     if (level.players.size > 1) {
-        self iPrintLn("^1Too many players in your game.");
+        self iPrintLn("^1Too many players ingame.");
         return;
     }
 
-    // RANKED GAME
+    // Ranked game
     level.rankedMatch = true;
     level.contractsEnabled = true;
     setDvar("onlineGame", 1);
     setDvar("xblive_rankedmatch", 1);
     setDvar("xblive_privatematch", 0);
-    // LEVEL 50
+    // Level 50
     self maps\mp\gametypes\_persistence::statSet("rankxp", 1262500, false);
     self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "rankxp", 1262500);
     self.pers["rank"] = 49;
     self setRank(49);
-    // PRESTIGE
+    // Prestige
     prestigeLevel = 15;
     self.pers["plevel"] = prestigeLevel;
     self.pers["prestige"] = prestigeLevel;
@@ -105,7 +105,7 @@ giveUnlockAll() {
     self maps\mp\gametypes\_persistence::statSet("plevel", prestigeLevel, true);
     self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "plevel", prestigeLevel);
     self setRank(self.pers["rank"], prestigeLevel);
-    // PERKS
+    // Perks
     perks = [];
     perks[0]  = "PERKS_SLEIGHT_OF_HAND";
     perks[1]  = "PERKS_GHOST";
@@ -129,20 +129,13 @@ giveUnlockAll() {
         }
     }
 
-    // COD POINTS
+    // Cod points
     points = 1000000000;
     self maps\mp\gametypes\_persistence::statSet("codpoints", points, false);
     self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "codpoints", points);
     self maps\mp\gametypes\_persistence::setPlayerStat("PlayerStatsList", "CODPOINTS", points);
     self.pers["codpoints"] = points;
-    // ITEMS
-    self setClientDvar("allItemsPurchased", "1");
-    self setClientDvar("allItemsUnlocked", "1");
-    // EMBLEMS
-    self setClientDvar("allEmblemsPurchased", "1");
-    self setClientDvar("allEmblemsUnlocked", "1");
-    self setClientDvar("ui_items_no_cost", "1");
-    self setClientDvar("lb_prestige", "1");
+    // Announcement
     self maps\mp\gametypes\_rank::updateRankAnnounceHUD();
     self iPrintLn("Full unlock all ^2given");
 }
