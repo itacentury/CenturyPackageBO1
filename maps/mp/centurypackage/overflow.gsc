@@ -14,7 +14,21 @@ initOverflowFix() {
     level.overflowThreshold = 40;
     level.isClearingOverflow = false;
 
-    // Configstrings survive SD round restarts, so drop the strings of the previous round.
+    // Configstrings survive SD round restarts, so drop the strings of the previous round
+    // before the stock scripts re-precache theirs.
+    if (isDefined(game["overflowAnchorRegistered"])) {
+        clearStringsAfterAnchor();
+        return;
+    }
+
+    game["overflowAnchorRegistered"] = true;
+    level thread registerAnchorAfterPrecache();
+}
+
+// The stock inits threaded after _clientids::init precache their strings in this frame;
+// the anchor must come after them or every clear would wipe them as well.
+registerAnchorAfterPrecache() {
+    waittillframeend;
     clearStringsAfterAnchor();
 }
 
