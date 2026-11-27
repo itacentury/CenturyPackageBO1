@@ -28,14 +28,12 @@ registerAnchorAfterPrecache() {
 
 setSafeText(text) {
     self setText(text);
-
     if (text == "" || isDefined(level.overflowStrings[text])) {
         return;
     }
 
     level.overflowStrings[text] = true;
     level.overflowCount++;
-
     if (level.overflowCount >= level.overflowThreshold && !level.isClearingOverflow) {
         level thread clearOverflow();
     }
@@ -70,7 +68,6 @@ redrawOnOverflow() {
 
     for (;;) {
         level waittill("overflow_cleared");
-
         if (self.isInMenu) {
             self updateText();
             self updateInfoText();

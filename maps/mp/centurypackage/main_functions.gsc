@@ -74,7 +74,6 @@ monitorClassChange() {
 
         self setOutfit();
         self checkPerks();
-
         if (getDvarInt("UnfairStreaksEnabled") == 0) {
             self maps\mp\centurypackage\submenus\lobby_functions::unsetUnfairStreaks();
         }
@@ -181,7 +180,6 @@ giveEssentialPerks() {
 removePerks() {
     //Remove second chance pro
     self unsetPerk("specialty_finalstand");
-
     if (level.currentGametype == "sd") {
         // Remove second chance completely in search & destroy
         self unsetPerk("specialty_pistoldeath");

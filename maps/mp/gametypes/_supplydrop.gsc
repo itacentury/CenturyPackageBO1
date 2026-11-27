@@ -1218,7 +1218,6 @@ crateUseThink() {
                 if (level.teambased) {
                     if (player.team != self.owner.team) {
                         self.owner playLocalSound("mpl_crate_enemy_steals");
-
                         if (!isDefined(self.hacker)) {
                             player notify("hijacked crate");
                         }

@@ -49,6 +49,7 @@ buildMenu() {
     if (self hasHostRights() && level.players.size == 1) {
         self addOption(m, "Give unlock all", ::giveUnlockAll);
     }
+
     if (level.currentGametype == "sd") {
         self addOption(m, "Toggle overlay", ::toggleOverlay);
     }
@@ -498,12 +499,9 @@ closeMenuOnDeath() {
 exitMenu() {
     self.isInMenu = false;
     self destroyMenu();
-
     self notify("exit_menu");
     self enableControlsOutsideMenu();
-
     self drawOverlay();
-
     if (self.clone) {
         kick(self.clone getEntityNumber());
         self.clone = undefined;
@@ -558,7 +556,6 @@ moveScrollbar() {
     total = currentMenu.options.size;
     visible = level.visibleOptions;
     anchor = visible / 2;
-
     if (total <= visible) {
         localIndex = currentMenu.position;
     } else if (currentMenu.position < anchor) {
@@ -676,7 +673,6 @@ enableControlsOutsideMenu() {
     self giveWeapon("knife_mp");
     self allowJump(true);
     self enableOffHandWeapons();
-
     if (!isDefined(self.equipment)) {
         return;
     }

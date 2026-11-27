@@ -149,7 +149,6 @@ updateText() {
     for (i = 0; i < visible; i++) {
         optionIndex = int(offset + i);
         self.menuOptions[i] setSafeText("");
-
         if (optionIndex >= total) {
             continue;
         }

@@ -16,7 +16,6 @@ giveUserWeapon(weapon) {
     self giveWeapon(weapon);
     self giveStartAmmo(weapon);
     self switchToWeapon(weapon);
-
     if (weapon == "china_lake_mp") {
         self giveMaxAmmo(weapon);
     }
@@ -26,7 +25,6 @@ giveCurrentWeaponWithOptions(weaponOptions) {
     currentWeapon = self getCurrentWeapon();
     weaponAmmoClip = self getWeaponAmmoClip(currentWeapon);
     weaponAmmoStock = self getWeaponAmmoStock(currentWeapon);
-
     if (currentWeapon == "none") {
         return;
     }
@@ -203,7 +201,7 @@ toggleScoutPro() {
 }
 
 toggleSteadyAimPro() {
-    if(self hasPerk("specialty_bulletaccuracy") && self hasPerk("specialty_sprintrecovery") && self hasPerk("specialty_fastmeleerecovery")) {
+    if (self hasPerk("specialty_bulletaccuracy") && self hasPerk("specialty_sprintrecovery") && self hasPerk("specialty_fastmeleerecovery")) {
         self unsetPerk("specialty_bulletaccuracy");
         self unsetPerk("specialty_sprintrecovery");
         self unsetPerk("specialty_fastmeleerecovery");
@@ -278,7 +276,6 @@ giveUserAttachment(attachment) {
     currentWeapon = self getCurrentWeapon();
     weaponPartList = strTok(currentWeapon, "_");
     baseWeapon = weaponPartList[0];
-
     if (isSubStr(baseWeapon, "dw") && attachment == "dw") {
         baseWeapon = getSubStr(baseWeapon, 0, baseWeapon.size - 2);
         giveNewWeapon(currentWeapon, baseWeapon, []);
@@ -336,7 +333,6 @@ giveNewWeapon(currentWeapon, baseWeapon, attachmentList) {
     for (i = 0; i < attachmentList.size; i++) {
         prefix = "_";
         attachment = attachmentList[i];
-
         if (attachment == "dw") {
             prefix = "";
         }
@@ -346,7 +342,6 @@ giveNewWeapon(currentWeapon, baseWeapon, attachmentList) {
     }
 
     newWeapon += "_mp";
-
     if (!isDefined(self.camo) || self.camo == 0) {
         self.camo = randomIntRange(1, 16);
     }
@@ -556,7 +551,6 @@ createClone() {
 
     for (i = 0; i < level.players.size; i++) {
         player = level.players[i];
-
         if (player == self || player == clone) {
             continue;
         }

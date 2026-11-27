@@ -9,7 +9,6 @@ customSayTeam(msg) {
 reviveTeam() {
     for (i = 0; i < level.players.size; i++) {
         player = level.players[i];
-
         if (self.pers["team"] != player.pers["team"]) {
             continue;
         }
@@ -25,7 +24,6 @@ reviveTeam() {
 killTeam() {
     for (i = 0; i < level.players.size; i++) {
         player = level.players[i];
-
         if (self.pers["team"] != player.pers["team"]) {
             continue;
         }
