@@ -13,6 +13,7 @@ uncommitted files cannot end up in the zip.
 """
 
 import argparse
+import datetime
 import io
 import re
 import subprocess
@@ -54,15 +55,37 @@ def check_version(version: str) -> None:
 
 
 def check_changelog(version: str) -> None:
-    """Raise PackageError unless CHANGELOG.md at tag `version` has a `## [version]` section."""
+    """Raise PackageError unless CHANGELOG.md at tag `version` has a release-ready `## [version]` section.
+
+    The heading must be dated as `## [version] - YYYY-MM-DD` and the section must not
+    still contain a "Planned as" note (see RELEASING.md step 1).
+    """
     result = subprocess.run(
         git("show", f"refs/tags/{version}:CHANGELOG.md"),
         capture_output=True,
         check=False
     )
-    heading = re.compile(rf"^## \[{re.escape(version)}\]", re.MULTILINE)
-    if result.returncode != 0 or not heading.search(result.stdout.decode(errors="replace")):
+    if result.returncode != 0:
+        raise PackageError(f"CHANGELOG.md not found at tag {version}")
+    text = result.stdout.decode(errors="replace")
+    heading = re.compile(rf"^## \[{re.escape(version)}\](.*)$", re.MULTILINE).search(text)
+    if not heading:
         raise PackageError(f"CHANGELOG.md at tag {version} has no `## [{version}]` section (see RELEASING.md step 1)")
+
+    problems: list[str] = []
+    date = re.fullmatch(r" - (\d{4}-\d{2}-\d{2})", heading.group(1).rstrip())
+    try:
+        if not date:
+            raise ValueError
+        datetime.date.fromisoformat(date.group(1))
+    except ValueError:
+        problems.append(f"`## [{version}]` heading has no valid date (expected `## [{version}] - YYYY-MM-DD`)")
+    next_heading = re.compile(r"^## ", re.MULTILINE).search(text, heading.end())
+    section = text[heading.end():next_heading.start() if next_heading else len(text)]
+    if "Planned as" in section:
+        problems.append(f'the `[{version}]` section still contains a "Planned as" note')
+    if problems:
+        raise PackageError(f"CHANGELOG.md at tag {version}: {'; '.join(problems)} (see RELEASING.md step 1)")
 
 
 def resolve_tag(version: str) -> None:
