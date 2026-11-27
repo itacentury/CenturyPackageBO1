@@ -50,8 +50,8 @@ getWeaponSlotCost(weapon) {
     return cost;
 }
 
-// Takes primaries (the current weapon if it is one, else the first) until `needed` slots
-// are free. Only primaries, so killstreak weapons, bomb/syrette and alt-mode underbarrels
+// Takes primaries (the current weapon, or its parent gun when in alt mode, else the first)
+// until `needed` slots are free. Only primaries, so killstreak weapons, bomb/syrette and alt-mode underbarrels
 // are never taken. Returns false if it could not free enough.
 // A pick that needs 2 slots (alt mode or dual wield, see getWeaponSlotCost) can take 2
 // weapons when the inventory is full: after the first take the current weapon is "none",
@@ -66,7 +66,16 @@ ensureFreeWeaponSlots(needed) {
 
         weaponToTake = self getCurrentWeapon();
         if (!is_in_array(primaries, weaponToTake)) {
+            // In alt mode the current weapon is the underbarrel; its alt weapon is the gun in hand.
+            parentWeapon = "none";
+            if (weaponToTake != "none") {
+                parentWeapon = weaponAltWeaponName(weaponToTake);
+            }
+
             weaponToTake = primaries[0];
+            if (is_in_array(primaries, parentWeapon)) {
+                weaponToTake = parentWeapon;
+            }
         }
 
         slotCount = self getHeldWeaponSlotCount();
