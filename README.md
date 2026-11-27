@@ -72,6 +72,14 @@ It is advised to use `The Century Package` in combination with [Silinium](https:
 
 See the [FEATURES.md](FEATURES.md) file for a list of all features.
 
+## Changelog
+
+See the [CHANGELOG.md](CHANGELOG.md) file for changes between versions.
+
+## Releasing
+
+See the [RELEASING.md](RELEASING.md) file for the release process.
+
 ## Credits
 
 See the [CREDITS.md](CREDITS.md) file for a list of all credits.

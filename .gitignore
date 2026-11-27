@@ -2,3 +2,4 @@
 *.log
 *.local.code-workspace
 *.local.json
+*.zip
