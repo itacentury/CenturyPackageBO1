@@ -471,6 +471,11 @@ openPlayerMenu(player) {
 
     self.selectedPlayer = player;
     self buildPlayerOptionsMenu(player, self.currentMenu);
+    // Don't carry the Access Menu cursor over from the previously opened player
+    if (isDefined(self.menus["PlayerAccess"])) {
+        self.menus["PlayerAccess"].position = 0;
+    }
+
     self openMenu("PlayerOptions");
 }
 

@@ -118,8 +118,20 @@ refreshPlayerAccessMenu(player) {
         return;
     }
 
+    label = self maps\mp\centurypackage\menu::getHighlightedOption().label;
+
     // Keep the original player-list parent; openPlayerMenu would re-parent to "PlayerAccess"
     self maps\mp\centurypackage\menu::buildPlayerOptionsMenu(player, self.menus["PlayerOptions"].parent);
+
+    // "Toggle revive ability" comes and goes with admin rights, so restore the cursor by label, not index
+    menu = self.menus["PlayerAccess"];
+    for (i = 0; i < menu.options.size; i++) {
+        if (menu.options[i].label == label) {
+            menu.position = i;
+            break;
+        }
+    }
+
     self maps\mp\centurypackage\menu::openMenu("PlayerAccess");
 }
 
