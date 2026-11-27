@@ -25,8 +25,13 @@ MOD_PREFIX: PurePosixPath = PurePosixPath("mp", MOD_NAME)
 MOD_FILE: str = f"mp/{MOD_NAME}.mod"
 SILINIUM_DIR: PurePosixPath = PurePosixPath("silinium", "maps")
 SILINIUM_STUBS: PurePosixPath = SILINIUM_DIR / "mp" / "centurypackage" / "stubs.gsc"
-# silinium/maps comes second so its stubs.gsc replaces the PC no-op version
-SOURCE_DIRS: list[PurePosixPath] = [PurePosixPath("maps"), SILINIUM_DIR]
+ZIP_MAPS_DIR: PurePosixPath = MOD_PREFIX / "maps"
+# Source folder in the repo -> folder in the zip. Later entries override earlier ones,
+# so silinium/maps comes second and its stubs.gsc replaces the PC no-op version.
+SOURCE_DIRS: dict[PurePosixPath, PurePosixPath] = {
+    PurePosixPath("maps"): ZIP_MAPS_DIR,
+    SILINIUM_DIR: ZIP_MAPS_DIR,
+}
 VERSION_PATTERN: re.Pattern[str] = re.compile(r"\d+\.\d+\.\d+")
 
 
@@ -87,7 +92,7 @@ def read_tree(version: str) -> dict[PurePosixPath, bytes]:
 
 def arcname(path: PurePosixPath, source_dir: PurePosixPath) -> str:
     """Zip entry name for `path` from `source_dir`, e.g. silinium/maps/x -> mp/CenturyPackageBO1/maps/x."""
-    return str(MOD_PREFIX / path.relative_to(source_dir.parent))
+    return str(SOURCE_DIRS[source_dir] / path.relative_to(source_dir))
 
 
 def collect_entries(files: dict[PurePosixPath, bytes]) -> dict[str, bytes]:
