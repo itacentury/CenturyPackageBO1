@@ -57,7 +57,7 @@ git fetch --tags
 uv run package.py X.Y.Z
 ```
 
-`package.py` reads `maps` and `silinium/maps` straight from the tag `X.Y.Z` with `git archive`, so it can run from any branch and untracked, ignored or uncommitted files (`.DS_Store`, editor backups, local edits) never end up in the zip. It needs [uv](https://docs.astral.sh/uv/) and works the same on Windows, Linux and macOS. It writes `CenturyPackageBO1-X.Y.Z-PS3.zip` to the repository root, with `silinium/maps` overwriting `stubs.gsc` from `maps`.
+`package.py` reads `maps` and `silinium/maps` straight from the tag `X.Y.Z` with `git archive`, so it can run from any branch and untracked, ignored or uncommitted files (`.DS_Store`, editor backups, local edits) never end up in the zip. It refuses versions that aren't `MAJOR.MINOR.PATCH` and tags whose `CHANGELOG.md` has no `## [X.Y.Z]` section. It needs [uv](https://docs.astral.sh/uv/) and works the same on Windows, Linux and macOS. It writes `CenturyPackageBO1-X.Y.Z-PS3.zip` to the repository root, with `silinium/maps` overwriting `stubs.gsc` from `maps`.
 
 Check that the zip contains `mp/CenturyPackageBO1.mod` and `mp/CenturyPackageBO1/maps/mp/centurypackage/stubs.gsc` with the Silinium implementation.
 

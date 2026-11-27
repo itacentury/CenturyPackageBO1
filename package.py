@@ -12,6 +12,7 @@ uncommitted files cannot end up in the zip.
 """
 
 import argparse
+import re
 import subprocess
 import sys
 import tarfile
@@ -23,10 +24,29 @@ MOD_NAME: str = "CenturyPackageBO1"
 MOD_PREFIX: PurePosixPath = PurePosixPath("mp", MOD_NAME)
 # silinium/maps comes second so its stubs.gsc replaces the PC no-op version
 SOURCE_DIRS: list[PurePosixPath] = [PurePosixPath("maps"), PurePosixPath("silinium", "maps")]
+VERSION_PATTERN: re.Pattern[str] = re.compile(r"\d+\.\d+\.\d+")
 
 
 def git(*args: str) -> list[str]:
     return ["git", "-C", str(REPO_ROOT), *args]
+
+
+def check_version(version: str) -> None:
+    """Exit unless `version` is MAJOR.MINOR.PATCH, which also keeps it safe in the zip filename."""
+    if not VERSION_PATTERN.fullmatch(version):
+        sys.exit(f"Invalid version {version!r}: expected MAJOR.MINOR.PATCH, e.g. 3.0.0 (no v prefix)")
+
+
+def check_changelog(version: str) -> None:
+    """Exit unless CHANGELOG.md at tag `version` has a `## [version]` section."""
+    result = subprocess.run(
+        git("show", f"refs/tags/{version}:CHANGELOG.md"),
+        capture_output=True,
+        check=False
+    )
+    heading = re.compile(rf"^## \[{re.escape(version)}\]", re.MULTILINE)
+    if result.returncode != 0 or not heading.search(result.stdout.decode(errors="replace")):
+        sys.exit(f"CHANGELOG.md at tag {version} has no `## [{version}]` section (see RELEASING.md step 1)")
 
 
 def resolve_tag(version: str) -> None:
@@ -76,7 +96,9 @@ def collect_entries(files: dict[PurePosixPath, bytes]) -> dict[str, bytes]:
 
 
 def build_zip(version: str, output_dir: Path) -> Path:
+    check_version(version)
     resolve_tag(version)
+    check_changelog(version)
     entries = collect_entries(read_tree(version))
 
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -93,7 +115,7 @@ def build_zip(version: str, output_dir: Path) -> Path:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Build the PS3 release zip from a git tag")
-    parser.add_argument("version", type=str, help="Existing release tag, e.g. 3.0.0")
+    parser.add_argument("version", type=str, help="Existing release tag as MAJOR.MINOR.PATCH without a v prefix, e.g. 3.0.0")
     parser.add_argument("-o", "--output", type=Path, default=REPO_ROOT,
                         help="Output directory (default: repository root)")
     args = parser.parse_args()
