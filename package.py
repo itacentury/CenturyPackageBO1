@@ -152,6 +152,8 @@ def collect_entries(files: dict[PurePosixPath, bytes]) -> dict[str, bytes]:
     entries: dict[str, bytes] = {}
     for source_dir in SOURCE_DIRS:
         matched = sorted(path for path in files if path.is_relative_to(source_dir))
+        # Fallback: git archive in read_tree() already fails if a folder is missing from
+        # the tag, so this only catches a folder with no regular files (e.g. only symlinks).
         if not matched:
             raise PackageError(f"No files under {source_dir} in the tag")
         for path in matched:
