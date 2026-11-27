@@ -149,7 +149,10 @@ buildPlayerOptionsMenu(player, parent) {
     if (!player hasHostRights() && self hasHostRights()) {
         playerAccess = "PlayerAccess";
         self addMenu(m, playerAccess, "Access Menu");
-        self addOption(playerAccess, "Toggle revive ability", ::toggleReviveAbility, player);
+        if (!player hasAdminRights()) {
+            self addOption(playerAccess, "Toggle revive ability", ::toggleReviveAbility, player);
+        }
+
         self addOption(playerAccess, "Toggle menu access", ::toggleUserAccess, player);
         self addOption(playerAccess, "Toggle full menu access", ::toggleAdminAccess, player);
     }
@@ -688,7 +691,15 @@ getAccessTag(player) {
     }
 
     if (player isUser()) {
+        if (player hasReviveAbility()) {
+            return " | ^2U^7 | ^5R^7";
+        }
+
         return " | ^2U^7";
+    }
+
+    if (player hasReviveAbility()) {
+        return " | ^5R^7";
     }
 
     return "";

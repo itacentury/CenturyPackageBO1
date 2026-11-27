@@ -13,6 +13,14 @@ hasHostRights() {
     return false;
 }
 
+hasReviveAbility() {
+    if (self hasAdminRights() || self.canRevive) {
+        return true;
+    }
+
+    return false;
+}
+
 hasAdminRights() {
     if (self hasHostRights() || self isAdmin()) {
         return true;

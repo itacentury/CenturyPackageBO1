@@ -58,13 +58,8 @@ onPlayerSpawned() {
                 }
             }
 
-            if (self hasHostRights() && !self.canRevive) {
-                self.canRevive = true;
-            }
-
             // User rights are checked inside toggle function
             self maps\mp\centurypackage\submenus\player_functions::toggleControllerThread();
-
             if (self hasUserRights()) {
                 self buildMenu();
             }
@@ -112,7 +107,7 @@ runController() {
 
     for(;;) {
         if (level.currentGametype == "sd") {
-            if (self.canRevive) {
+            if (self hasReviveAbility()) {
                 if (self actionSlotThreeButtonPressed() && self getStance() == "crouch") {
                     self maps\mp\centurypackage\submenus\team_functions::reviveTeam();
                     wait 0.12;
