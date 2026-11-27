@@ -35,17 +35,18 @@ getHeldWeaponSlotCount() {
     return count;
 }
 
-// Takes weapons (current first, else first primary) until `needed` slots are free.
-// Returns false if it could not free enough.
+// Takes primaries (the current weapon if it is one, else the first) until `needed` slots
+// are free. Only primaries, so killstreak weapons, bomb/syrette and alt-mode underbarrels
+// are never taken. Returns false if it could not free enough.
 ensureFreeWeaponSlots(needed) {
     while (self getHeldWeaponSlotCount() > getMaxHeldWeapons() - needed) {
-        weaponToTake = self getCurrentWeapon();
-        if (weaponToTake == "none") {
-            primaries = self getWeaponsListPrimaries();
-            if (primaries.size == 0) {
-                return false;
-            }
+        primaries = self getWeaponsListPrimaries();
+        if (primaries.size == 0) {
+            return false;
+        }
 
+        weaponToTake = self getCurrentWeapon();
+        if (!is_in_array(primaries, weaponToTake)) {
             weaponToTake = primaries[0];
         }
 
