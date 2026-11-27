@@ -13,17 +13,15 @@ dropCurrentWeapon() {
 }
 
 giveUserWeapon(weapon) {
-    if (self hasWeapon(weapon)) {
-        self switchToWeapon(weapon);
-        return;
+    if (!self hasWeapon(weapon)) {
+        // Keep 2 slots free: the weapon itself plus a linked one (dual wield half or alt mode).
+        if (!self ensureFreeWeaponSlots(2)) {
+            return;
+        }
+
+        self giveWeapon(weapon);
     }
 
-    // Keep 2 slots free: the weapon itself plus a linked one (dual wield half or alt mode).
-    if (!self ensureFreeWeaponSlots(2)) {
-        return;
-    }
-
-    self giveWeapon(weapon);
     self giveStartAmmo(weapon);
     self switchToWeapon(weapon);
     if (weapon == "china_lake_mp") {
