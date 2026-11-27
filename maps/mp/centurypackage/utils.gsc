@@ -51,8 +51,8 @@ getWeaponSlotCost(weapon) {
 }
 
 // Takes primaries (the current weapon, or its parent gun when in alt mode, else the first)
-// until `needed` slots are free. Only primaries, so killstreak weapons, bomb/syrette and alt-mode underbarrels
-// are never taken. Returns false if it could not free enough.
+// until `needed` slots are free. Only primaries, so killstreak weapons, bomb/syrette and
+// alt-mode underbarrels are never taken. Returns false if it could not free enough.
 // A pick that needs 2 slots (alt mode or dual wield, see getWeaponSlotCost) can take 2
 // weapons when the inventory is full: after the first take the current weapon is "none",
 // so primaries[0] goes too. Intended, since anything less would still overflow.
