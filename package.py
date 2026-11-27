@@ -60,7 +60,7 @@ def check_version(version: str) -> None:
 
 
 def is_iso_date(text: str) -> bool:
-    """Return True if `text` is a real calendar date in YYYY-MM-DD form."""
+    """Return True if `text` is a real calendar date. The caller checks the YYYY-MM-DD format."""
     try:
         datetime.date.fromisoformat(text)
     except ValueError:
