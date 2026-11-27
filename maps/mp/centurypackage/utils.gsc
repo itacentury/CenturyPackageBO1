@@ -42,6 +42,7 @@ ensureFreeWeaponSlots(needed) {
     while (self getHeldWeaponSlotCount() > getMaxHeldWeapons() - needed) {
         primaries = self getWeaponsListPrimaries();
         if (primaries.size == 0) {
+            self iPrintLn("^1No free weapon slot");
             return false;
         }
 
@@ -53,6 +54,7 @@ ensureFreeWeaponSlots(needed) {
         slotCount = self getHeldWeaponSlotCount();
         self takeWeapon(weaponToTake);
         if (self getHeldWeaponSlotCount() >= slotCount) {
+            self iPrintLn("^1No free weapon slot");
             return false;
         }
     }
