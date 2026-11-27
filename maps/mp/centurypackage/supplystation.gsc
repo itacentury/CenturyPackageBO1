@@ -3,7 +3,9 @@
 
 // Cut BO1 "Supply Station" killstreak, revived from raw/maps/mp/_supplystation.gsc.
 // Its marker weapon (supplystation_mp) is not in any fastfile, so the unused
-// minigun_drop_mp marker stands in. The stock station logic (timer, refills,
+// minigun_drop_mp marker stands in. The D-pad shows the marker's dpadIcon
+// (hud_ks_minigun); it is baked into the weapon asset and cannot be changed
+// from GSC. The stock station logic (timer, refills,
 // heal buff, capture) was never wired into _supplydrop; stationThink does that.
 // The crate itself is delivered by the normal care package path in _supplydrop.
 
