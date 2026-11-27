@@ -32,7 +32,7 @@ It is advised to use `The Century Package` in combination with [Silinium](https:
                         ├── gametypes/
                         │   ├── _clientids.gsc
                         │   └── _supplydrop.gsc
-                        └── CenturyPackage/
+                        └── centurypackage/
                             ├── hud.gsc
                             ├── init.gsc
                             ├── main_functions.gsc
@@ -51,7 +51,7 @@ It is advised to use `The Century Package` in combination with [Silinium](https:
 ```
 
 1. Copy the repo's `maps` folder into `/dev_hdd0/tmp/Silinium/mp/CenturyPackageBO1/` and create an empty file `CenturyPackageBO1.mod` in `/dev_hdd0/tmp/Silinium/mp/`.
-   Then copy the repo's `silinium/maps` folder on top of it, overwriting `maps/mp/CenturyPackage/stubs.gsc`. The default `stubs.gsc` only contains no-op fallbacks for PC; without this step the custom say / say team options do nothing.
+   Then copy the repo's `silinium/maps` folder on top of it, overwriting `maps/mp/centurypackage/stubs.gsc`. The default `stubs.gsc` only contains no-op fallbacks for PC; without this step the custom say / say team options do nothing.
 2. Place `Silinium.sprx` in `/dev_hdd0/tmp/`.
 3. Place the `EBOOT.BIN` (see the `Silinium` repository) as usual in your game folder `USRDIR`.
 

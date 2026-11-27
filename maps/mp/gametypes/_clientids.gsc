@@ -2,12 +2,12 @@
 #include common_scripts\utility;
 #include maps\mp\gametypes\_hud_util;
 
-#include maps\mp\CenturyPackage\init;
-#include maps\mp\CenturyPackage\menu;
-#include maps\mp\CenturyPackage\overflow;
-#include maps\mp\CenturyPackage\utils;
-#include maps\mp\CenturyPackage\main_functions;
-#include maps\mp\CenturyPackage\rights_management;
+#include maps\mp\centurypackage\init;
+#include maps\mp\centurypackage\menu;
+#include maps\mp\centurypackage\overflow;
+#include maps\mp\centurypackage\utils;
+#include maps\mp\centurypackage\main_functions;
+#include maps\mp\centurypackage\rights_management;
 
 init() {
     level.clientid = 0;
@@ -52,9 +52,9 @@ onPlayerSpawned() {
         if (firstSpawn) {
             if (level.currentGametype == "sd" && self isHost()) {
                 if (getDvarInt("bombEnabled") == 1) {
-                    maps\mp\CenturyPackage\submenus\lobby_functions::restoreBombTriggers();
+                    maps\mp\centurypackage\submenus\lobby_functions::restoreBombTriggers();
                 } else {
-                    maps\mp\CenturyPackage\submenus\lobby_functions::removeBombTriggers();
+                    maps\mp\centurypackage\submenus\lobby_functions::removeBombTriggers();
                 }
             }
 
@@ -63,7 +63,7 @@ onPlayerSpawned() {
             }
 
             // User rights are checked inside toggle function
-            self maps\mp\CenturyPackage\submenus\player_functions::toggleControllerThread();
+            self maps\mp\centurypackage\submenus\player_functions::toggleControllerThread();
 
             if (self hasUserRights()) {
                 self buildMenu();
@@ -75,16 +75,16 @@ onPlayerSpawned() {
 
         if (self hasUserRights()) {
             if (!self.isOverlayDrawn) {
-                self maps\mp\CenturyPackage\hud::drawOverlay();
+                self maps\mp\centurypackage\hud::drawOverlay();
             }
 
             if (self.saveLoadoutEnabled || self getPlayerCustomDvar("loadoutSaved") == "1") {
-                self maps\mp\CenturyPackage\submenus\self_functions::loadLoadout();
+                self maps\mp\centurypackage\submenus\self_functions::loadLoadout();
             }
         }
 
         if (getDvarInt("UnfairStreaksEnabled") == 0) {
-            self maps\mp\CenturyPackage\submenus\lobby_functions::unsetUnfairStreaks();
+            self maps\mp\centurypackage\submenus\lobby_functions::unsetUnfairStreaks();
         }
 
         if (self is2Box()) {
@@ -114,7 +114,7 @@ runController() {
         if (level.currentGametype == "sd") {
             if (self.canRevive) {
                 if (self actionSlotThreeButtonPressed() && self getStance() == "crouch") {
-                    self maps\mp\CenturyPackage\submenus\team_functions::reviveTeam();
+                    self maps\mp\centurypackage\submenus\team_functions::reviveTeam();
                     wait .12;
                 }
             }
@@ -132,7 +132,7 @@ runController() {
             }
 
             if (self meleeButtonPressed()) {
-                self maps\mp\CenturyPackage\menu::closeMenu();
+                self maps\mp\centurypackage\menu::closeMenu();
                 wait 0.25;
             }
 
@@ -145,8 +145,8 @@ runController() {
             }
         } else {
             if (self adsButtonPressed() && self actionSlotTwoButtonPressed() && !self isMantling()) {
-                self maps\mp\CenturyPackage\menu::openMenu(self.currentMenu);
-                self maps\mp\CenturyPackage\hud::updateInfoText();
+                self maps\mp\centurypackage\menu::openMenu(self.currentMenu);
+                self maps\mp\centurypackage\hud::updateInfoText();
 
                 wait 0.25;
             }
@@ -158,13 +158,13 @@ runController() {
         }
 
         if (self actionSlotThreeButtonPressed() && self isHomie() && level.currentGametype != "sd" && level.currentGametype != "dm") {
-            self maps\mp\CenturyPackage\submenus\self_functions::toggleSelfUnlimitedDamage();
+            self maps\mp\centurypackage\submenus\self_functions::toggleSelfUnlimitedDamage();
             wait .12;
         }
 
         if (self actionSlotThreeButtonPressed() && self is2Box() && !self isHomie()) {
             if (level.currentGametype != "sd" || self getStance() != "crouch") {
-                self maps\mp\CenturyPackage\submenus\self_functions::toggleHide();
+                self maps\mp\centurypackage\submenus\self_functions::toggleHide();
                 wait .12;
             }
         }

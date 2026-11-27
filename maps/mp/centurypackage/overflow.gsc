@@ -1,4 +1,4 @@
-#include maps\mp\CenturyPackage\hud;
+#include maps\mp\centurypackage\hud;
 
 /*
     Localized strings (setText) live in a server configstring table that is never freed.

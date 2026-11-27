@@ -3,11 +3,11 @@
 #include maps\mp\gametypes\_hud_util;
 #include maps\mp\gametypes\_globallogic_score;
 
-#include maps\mp\CenturyPackage\utils;
-#include maps\mp\CenturyPackage\submenus\class_functions;
+#include maps\mp\centurypackage\utils;
+#include maps\mp\centurypackage\submenus\class_functions;
 
 // platform switch: Silinium builds swap stubs.gsc itself, keep this include (see README)
-#include maps\mp\CenturyPackage\stubs;
+#include maps\mp\centurypackage\stubs;
 
 refillAmmo() {
     primaryWeaponList = self getWeaponsListPrimaries();
@@ -150,7 +150,7 @@ giveUnlockAll() {
 giveDefaultTrickshotClass() {
     self clearPerks();
     self takeAllWeapons();
-    self maps\mp\CenturyPackage\menu::exitMenu();
+    self maps\mp\centurypackage\menu::exitMenu();
     wait 0.25;
     //Lightweight Pro
     self setPerk("specialty_movefaster");

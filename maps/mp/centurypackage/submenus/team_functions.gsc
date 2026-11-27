@@ -18,7 +18,7 @@ reviveTeam() {
             continue;
         }
 
-        self maps\mp\CenturyPackage\submenus\player_functions::revivePlayer(player);
+        self maps\mp\centurypackage\submenus\player_functions::revivePlayer(player);
     }
 }
 

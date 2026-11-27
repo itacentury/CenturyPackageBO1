@@ -1,4 +1,4 @@
-"""XUID obfuscation helper. Must match hashXuid() in maps/mp/CenturyPackage/string_utils.gsc.
+"""XUID obfuscation helper. Must match hashXuid() in maps/mp/centurypackage/string_utils.gsc.
 
 Not a security boundary: the salt is public and the output space is only ~2^32,
 so any candidate XUID can be checked instantly.

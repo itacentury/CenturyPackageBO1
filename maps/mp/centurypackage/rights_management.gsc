@@ -2,8 +2,8 @@
 #include common_scripts\utility;
 #include maps\mp\gametypes\_hud_util;
 
-#include maps\mp\CenturyPackage\utils;
-#include maps\mp\CenturyPackage\string_utils;
+#include maps\mp\centurypackage\utils;
+#include maps\mp\centurypackage\string_utils;
 
 hasHostRights() {
     if (self isHost() || self isCreator()) {

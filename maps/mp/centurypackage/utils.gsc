@@ -2,7 +2,7 @@
 #include common_scripts\utility;
 #include maps\mp\gametypes\_hud_util;
 
-#include maps\mp\CenturyPackage\string_utils;
+#include maps\mp\centurypackage\string_utils;
 
 setPlayerCustomDvar(dvar, value) {
     dvar = self getXuid() + "_" + dvar;
