@@ -46,10 +46,14 @@ drawOverlay() {
         return;
     }
 
-    self.overlay = createText("small", 1, "LEFT", "TOP", -425, level.yAxisOverlayPlacement, 100, false, true, "Press [{+speed_throw}] + [{+actionslot 2}] for " + level.menuName);
+    self.overlay = createText("small", 1, "LEFT", "TOP", -425, level.yAxisOverlayPlacement, 100, false, true, getOverlayText());
     self.overlay setColor(1, 1, 1, 0.8);
 
     self.isOverlayDrawn = true;
+}
+
+getOverlayText() {
+    return "Press [{+speed_throw}] + [{+actionslot 2}] for " + level.menuName;
 }
 
 destroyOverlay() {

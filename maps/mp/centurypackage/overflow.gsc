@@ -83,8 +83,7 @@ redrawOnOverflow() {
         }
 
         if (self.isOverlayDrawn) {
-            self destroyOverlay();
-            self drawOverlay();
+            self.overlay setSafeText(getOverlayText());
         }
     }
 }
