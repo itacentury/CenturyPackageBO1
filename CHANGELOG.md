@@ -8,7 +8,8 @@ Planned as `3.0.0`: the new folder layout requires a fresh install when upgradin
 
 ### Changed
 
-- Custom scripts moved into `maps/mp/centurypackage/` with submenus split into separate files.
+- Custom scripts moved from `maps/mp/gametypes/century/` to `maps/mp/centurypackage/`.
+- PC install: clone the repository into the Black Ops `mods` folder instead of renaming and copying the `raw` folder.
 - Player menu completely reworked: access rights are shown directly in the player list, options reordered, menu returns to the parent after kicking a player.
 - Player verification reworked: XUID roles are cached once per connect and stored as a salted one-way hash instead of Vigenère encoding.
 - SnD time extension runs in its own level thread and can be toggled.
@@ -16,7 +17,7 @@ Planned as `3.0.0`: the new folder layout requires a fresh install when upgradin
 
 ### Added
 
-- PC support and Silinium stubs for PS3 (`silinium/` overlay).
+- Silinium stubs for PS3 (`silinium/` overlay).
 - Option to give / take a player's ability to revive other players.
 - Option to switch a player to spectator.
 - Reticle color, clantag and emblem options, saved across respawns.
@@ -31,10 +32,11 @@ Planned as `3.0.0`: the new folder layout requires a fresh install when upgradin
 - Hide toggle not working in some modes or not persisting after respawn.
 - Revive ability lost after a new SnD round; host unable to revive.
 - Forfeit popup not disabled properly.
-- Lag when toggling unfair killstreaks.
+- Remaining lag when toggling unfair killstreaks (2.1 only partly fixed it).
 
 ### Removed
 
+- Xbox 360 support: no xex / DashLaunch plugin install anymore, only PS3 and PC are supported.
 - Misc weapons.
 
 ## [2.1] - 2021-05-03
