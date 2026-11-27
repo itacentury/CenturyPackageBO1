@@ -13,6 +13,30 @@ dropCurrentWeapon() {
 }
 
 giveUserWeapon(weapon) {
+    if (self hasWeapon(weapon)) {
+        self switchToWeapon(weapon);
+        return;
+    }
+
+    // Keep 2 slots free: the weapon itself plus a linked one (dual wield half or alt mode).
+    while (self getHeldWeaponSlotCount() > getMaxHeldWeapons() - 2) {
+        weaponToTake = self getCurrentWeapon();
+        if (weaponToTake == "none") {
+            primaries = self getWeaponsListPrimaries();
+            if (primaries.size == 0) {
+                return;
+            }
+
+            weaponToTake = primaries[0];
+        }
+
+        slotCount = self getHeldWeaponSlotCount();
+        self takeWeapon(weaponToTake);
+        if (self getHeldWeaponSlotCount() >= slotCount) {
+            return;
+        }
+    }
+
     self giveWeapon(weapon);
     self giveStartAmmo(weapon);
     self switchToWeapon(weapon);

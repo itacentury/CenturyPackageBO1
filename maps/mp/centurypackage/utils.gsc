@@ -14,6 +14,27 @@ getPlayerCustomDvar(dvar) {
     return getDvar(dvar);
 }
 
+// playerState_t holds exactly 15 weapons. G_GivePlayerWeapon (PS3 MP 0x377208) has no
+// bounds check: giving a weapon with all slots taken writes through NULL -> "Fatal Error".
+getMaxHeldWeapons() {
+    return 15;
+}
+
+// Slots in use. getWeaponsList() skips alt-mode weapons (gl_/mk_/ft_ underbarrels),
+// but they still occupy a slot, so count them on top.
+getHeldWeaponSlotCount() {
+    weapons = self getWeaponsList();
+    count = weapons.size;
+    for (i = 0; i < weapons.size; i++) {
+        altWeapon = weaponAltWeaponName(weapons[i]);
+        if (altWeapon != "none" && !is_in_array(weapons, altWeapon)) {
+            count++;
+        }
+    }
+
+    return count;
+}
+
 hasAllSpecialties(specialties) {
     for (i = 0; i < specialties.size; i++) {
         if (!self hasPerk(specialties[i])) {
