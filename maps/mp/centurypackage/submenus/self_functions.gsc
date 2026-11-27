@@ -227,9 +227,7 @@ loadLoadout() {
     }
 
     for (i = 0; i < self.primaryWeaponList.size; i++) {
-        if (!isDefined(self.camo) || self.camo == 0) {
-            self.camo = randomIntRange(1, 16);
-        }
+        self ensureCamo();
 
         weapon = self.primaryWeaponList[i];
         self giveWeapon(weapon, 0, self getCurrentWeaponOptions());

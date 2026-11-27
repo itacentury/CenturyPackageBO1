@@ -152,7 +152,7 @@ initPlayerVars() {
     self.isOverlayDrawn = false;
     self.isTwitterHandleDrawn = false;
     self.overlayEnabled = true;
-    self.camo = 0;
+    self.camo = -1;
     self.currentLens = 0;
     self.currentReticle = 0;
     self.currentReticleColor = 0;

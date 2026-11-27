@@ -44,8 +44,21 @@ giveCurrentWeaponWithOptions(weaponOptions) {
     self setWeaponAmmoStock(currentWeapon, weaponAmmoStock);
 }
 
+// -1 means no camo was picked yet, so roll one. 0 is the "None" choice and is kept.
+ensureCamo() {
+    if (!isDefined(self.camo) || self.camo < 0) {
+        self.camo = randomIntRange(1, 16);
+    }
+}
+
 getCurrentWeaponOptions() {
-    weaponOptions = self calcWeaponOptions(self.camo, self.currentLens, self.currentReticle, self.clantagEnabled, self.emblemEnabled);
+    // Paths that skip ensureCamo() (lens, reticle, ...) get no camo while it is still unset.
+    camo = self.camo;
+    if (!isDefined(camo) || camo < 0) {
+        camo = 0;
+    }
+
+    weaponOptions = self calcWeaponOptions(camo, self.currentLens, self.currentReticle, self.clantagEnabled, self.emblemEnabled);
 
     // calcWeaponOptions() returns a C bitfield (camo:6, lens:4, reticle:6, reticleColor:3, ...)
     // but never sets reticleColor, so it is added here. Bitfields are LSB-first on PC (color at
@@ -211,9 +224,7 @@ giveNewWeapon(currentWeapon, baseWeapon, attachmentList) {
 
     newWeapon += "_mp";
 
-    if (!isDefined(self.camo) || self.camo == 0) {
-        self.camo = randomIntRange(1, 16);
-    }
+    self ensureCamo();
 
     weaponOptions = self getCurrentWeaponOptions();
 
@@ -307,9 +318,7 @@ removeAllAttachments() {
     if (isSubStr(baseWeapon, "dw")) {
         baseWeaponOnly = getSubStr(baseWeapon, 0, baseWeapon.size - 2);
         newWeapon = baseWeaponOnly + "_mp";
-        if (!isDefined(self.camo) || self.camo == 0) {
-            self.camo = randomIntRange(1, 16);
-        }
+        self ensureCamo();
 
         self takeWeapon(weapon);
         self giveWeapon(newWeapon, 0, self getCurrentWeaponOptions());
@@ -318,9 +327,7 @@ removeAllAttachments() {
     }
 
     self takeWeapon(weapon);
-    if (!isDefined(self.camo) || self.camo == 0) {
-        self.camo = randomIntRange(1, 16);
-    }
+    self ensureCamo();
 
     self giveWeapon(newWeapon, 0, self getCurrentWeaponOptions());
     self setSpawnWeapon(newWeapon);
