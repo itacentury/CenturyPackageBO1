@@ -25,6 +25,7 @@ printOwnXUID() {
 }
 
 printWeaponLoop() {
+    self endon("disconnect");
     self endon("death");
 
     for (;;) {

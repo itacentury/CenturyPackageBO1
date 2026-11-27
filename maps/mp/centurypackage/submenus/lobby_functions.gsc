@@ -50,10 +50,10 @@ toggleTimeExtension() {
 togglePrecamAnims() {
     if (getDvarInt("cg_nopredict") == 0 || getDvar("cg_nopredict") == "") {
         setDvar("cg_nopredict", 1);
-        self iPrintLn("Precam ^2enabled");
+        self iPrintLn("Precam animations ^2enabled");
     } else {
         setDvar("cg_nopredict", 0);
-        self iPrintLn("Precam ^1disabled");
+        self iPrintLn("Precam animations ^1disabled");
     }
 
     self maps\mp\centurypackage\hud::updateInfoText();

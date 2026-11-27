@@ -82,7 +82,7 @@ fastLastFFA() {
 
 giveUnlockAll() {
     if (level.players.size > 1) {
-        self iPrintLn("^1Too many ^7players in your game!");
+        self iPrintLn("^1Too many players in your game.");
         return;
     }
 

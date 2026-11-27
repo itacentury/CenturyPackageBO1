@@ -71,7 +71,7 @@ giveUserLethal(grenade) {
                 self takeWeapon(offHandWeapon);
                 self giveWeapon(grenade);
                 self giveStartAmmo(grenade);
-                self iPrintLn(grenade + " ^2Given");
+                self iPrintLn(grenade + " ^2given");
                 break;
             default:
                 break;

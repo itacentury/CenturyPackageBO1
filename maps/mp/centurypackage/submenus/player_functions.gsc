@@ -10,14 +10,12 @@ toggleReviveAbility(player) {
     if (!player.canRevive) {
         player.canRevive = true;
         player setPlayerCustomDvar("canRevive", "1");
-        player iPrintln("Revive ability ^2Given");
+        player iPrintln("Revive ability ^2given");
         player iPrintln("Revive with ^3Crouch ^7& [{+actionslot 3}]");
-        self iPrintLn("Revive ability ^2Given ^7to " + player.name);
     } else {
         player.canRevive = false;
         player setPlayerCustomDvar("canRevive", "0");
-        player iPrintln("Revive ability ^1Taken");
-        self iPrintLn("Revive ability ^1Taken ^7from " + player.name);
+        player iPrintln("Revive ability ^1taken");
     }
 
     player toggleControllerThread();
@@ -30,9 +28,8 @@ toggleUserAccess(player) {
         player maps\mp\centurypackage\menu::buildMenu();
         player maps\mp\centurypackage\hud::drawOverlay();
 
-        player iPrintln("Basic menu access ^2given");
+        player iPrintln("User rights ^2given");
         player iPrintln("Open menu with [{+speed_throw}] & [{+actionslot 2}]");
-        self iPrintLn("Basic menu access ^2given ^7to " + player.name);
     } else {
         player.isUser = false;
         player setPlayerCustomDvar("isUser", "0");
@@ -40,9 +37,7 @@ toggleUserAccess(player) {
         player.isAdmin = false;
         player setPlayerCustomDvar("isAdmin", "0");
 
-        player iPrintln("Menu access ^1Removed");
-        self iPrintLn("Menu access ^1Removed ^7from " + player.name);
-
+        player iPrintln("User rights ^1taken");
         if (player.isInMenu) {
             player maps\mp\centurypackage\menu::exitMenu();
         }
@@ -60,16 +55,13 @@ toggleAdminAccess(player) {
         player maps\mp\centurypackage\menu::buildMenu();
         player maps\mp\centurypackage\hud::drawOverlay();
 
-        player iPrintln("Admin menu access ^2given");
+        player iPrintln("Admin rights ^2given");
         player iPrintln("Open menu with [{+speed_throw}] & [{+actionslot 2}]");
-        self iPrintLn("Admin menu access ^2given ^7to " + player.name);
     } else {
         player.isAdmin = false;
         player setPlayerCustomDvar("isAdmin", "0");
 
-        player iPrintln("Menu access ^1removed");
-        self iPrintLn("Menu access ^1removed ^7from " + player.name);
-
+        player iPrintln("Admim rights ^1taken");
         if (player.isInMenu) {
             player maps\mp\centurypackage\menu::exitMenu();
         }
