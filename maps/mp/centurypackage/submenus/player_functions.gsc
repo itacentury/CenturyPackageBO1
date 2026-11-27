@@ -61,7 +61,7 @@ toggleAdminAccess(player) {
         player.isAdmin = false;
         player setPlayerCustomDvar("isAdmin", "0");
 
-        player iPrintln("Admim rights ^1taken");
+        player iPrintln("Admin rights ^1taken");
         if (player.isInMenu) {
             player maps\mp\centurypackage\menu::exitMenu();
         }
