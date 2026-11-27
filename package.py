@@ -260,11 +260,6 @@ def main() -> None:
                         help="Output directory (default: repository root)")
     args = parser.parse_args()
     try:
-        check_version(args.version)
-    except PackageError as error:
-        parser.error(str(error))
-
-    try:
         build_zip(args.version, args.output)
     except PackageError as error:
         sys.exit(f"error: {error}")
