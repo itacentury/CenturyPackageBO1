@@ -1,0 +1,268 @@
+#include maps\mp\_utility;
+#include common_scripts\utility;
+#include maps\mp\gametypes\_hud_util;
+
+#include maps\mp\centurypackage\utils;
+#include maps\mp\centurypackage\string_utils;
+#include maps\mp\centurypackage\rights_management;
+
+toggleReviveAbility(player) {
+    if (!player.canRevive) {
+        player.canRevive = true;
+        player setPlayerCustomDvar("canRevive", "1");
+        player iPrintln("Revive ability ^2given");
+        player iPrintln("Revive with ^3Crouch ^7& [{+actionslot 3}]");
+        self iPrintLn("Revive ability ^2given ^7to " + player.name);
+    } else {
+        player.canRevive = false;
+        player setPlayerCustomDvar("canRevive", "0");
+        player iPrintln("Revive ability ^1taken");
+        self iPrintLn("Revive ability ^1taken ^7from " + player.name);
+    }
+
+    player toggleControllerThread();
+    self refreshPlayerAccessMenu(player);
+}
+
+toggleUserAccess(player) {
+    if (!player hasUserRights()) {
+        player.isUser = true;
+        player setPlayerCustomDvar("isUser", "1");
+        player maps\mp\centurypackage\menu::buildMenu();
+        player maps\mp\centurypackage\hud::drawOverlay();
+
+        player iPrintln("User rights ^2given");
+        player iPrintln("Open menu with [{+speed_throw}] & [{+actionslot 2}]");
+        self iPrintLn("User rights ^2given ^7to " + player.name);
+    } else {
+        player.isUser = false;
+        player setPlayerCustomDvar("isUser", "0");
+
+        player.isAdmin = false;
+        player setPlayerCustomDvar("isAdmin", "0");
+
+        player iPrintln("User rights ^1taken");
+        self iPrintLn("User rights ^1taken ^7from " + player.name);
+        if (player.isInMenu) {
+            player maps\mp\centurypackage\menu::exitMenu();
+        }
+
+        if (!player hasUserRights()) {
+            player maps\mp\centurypackage\hud::destroyOverlay();
+        }
+
+        player.currentMenu = "main";
+    }
+
+    player toggleControllerThread();
+    self refreshPlayerAccessMenu(player);
+}
+
+toggleAdminAccess(player) {
+    if (!player hasAdminRights()) {
+        player.isAdmin = true;
+        player setPlayerCustomDvar("isAdmin", "1");
+        player maps\mp\centurypackage\menu::buildMenu();
+        player maps\mp\centurypackage\hud::drawOverlay();
+
+        player iPrintln("Admin rights ^2given");
+        player iPrintln("Open menu with [{+speed_throw}] & [{+actionslot 2}]");
+        self iPrintLn("Admin rights ^2given ^7to " + player.name);
+    } else {
+        player.isAdmin = false;
+        player setPlayerCustomDvar("isAdmin", "0");
+
+        player iPrintln("Admin rights ^1taken");
+        self iPrintLn("Admin rights ^1taken ^7from " + player.name);
+        if (player.isInMenu) {
+            player maps\mp\centurypackage\menu::exitMenu();
+        }
+
+        if (!player hasUserRights()) {
+            player maps\mp\centurypackage\hud::destroyOverlay();
+        }
+
+        player.currentMenu = "main";
+        player maps\mp\centurypackage\menu::buildMenu();
+    }
+
+    player toggleControllerThread();
+    self refreshPlayerAccessMenu(player);
+}
+
+toggleControllerThread() {
+    self notify("stop_controller");
+
+    if (self hasUserRights() || (self hasReviveAbility() && level.currentGametype == "sd")) {
+        self thread maps\mp\gametypes\_clientids::runController();
+    }
+}
+
+kickPlayer(player) {
+    if (player hasHostRights() || player == self) {
+        return;
+    }
+
+    kick(player getEntityNumber());
+    self returnToPlayerOptionsParent();
+}
+
+banPlayer(player) {
+    if (player hasHostRights() || player == self) {
+        return;
+    }
+
+    ban(player getEntityNumber(), 1);
+    self returnToPlayerOptionsParent();
+}
+
+returnToPlayerOptionsParent() {
+    wait 0.05; // One server frame, so the engine finishes removing the kicked/banned player
+    self maps\mp\centurypackage\menu::openMenu(self.menus["PlayerOptions"].parent);
+}
+
+refreshPlayerAccessMenu(player) {
+    if (!self.isInMenu || self.currentMenu != "PlayerAccess") {
+        return;
+    }
+
+    label = self maps\mp\centurypackage\menu::getHighlightedOption().label;
+
+    // Keep the original player-list parent; openPlayerMenu would re-parent to "PlayerAccess"
+    self maps\mp\centurypackage\menu::buildPlayerOptionsMenu(player, self.menus["PlayerOptions"].parent);
+
+    // "Toggle revive ability" comes and goes with admin rights, so restore the cursor by label, not index
+    menu = self.menus["PlayerAccess"];
+    for (i = 0; i < menu.options.size; i++) {
+        if (menu.options[i].label == label) {
+            menu.position = i;
+            break;
+        }
+    }
+
+    self maps\mp\centurypackage\menu::openMenu("PlayerAccess");
+}
+
+printXUID(player) {
+    xuid = player getXuid();
+    self iPrintLn(player.name + ": " + xuid + " | " + hashXuid(xuid));
+}
+
+teleportPlayerToCrosshair(player) {
+    if (!isAlive(player)) {
+        return;
+    }
+
+    origin = bullettrace(self getTagOrigin("j_head"), self getTagOrigin("j_head") + anglesToForward(self getPlayerAngles()) * 1000000, 0, self)["position"];
+    player setOrigin(origin);
+}
+
+changePlayerTeam(player) {
+    if (!isAlive(player)) {
+        self revivePlayer(player);
+    }
+
+    player changeMyTeam(getOtherTeam(player.pers["team"]));
+    player iPrintln("Team changed to " + player.pers["team"]);
+}
+
+changeMyTeam(assignment) {
+    self.pers["team"] = assignment;
+    self.team = assignment;
+    self maps\mp\gametypes\_globallogic_ui::updateObjectiveText();
+
+    self.sessionTeam = assignment;
+    if (!level.teambased) {
+        self.sessionTeam = "none";
+        self.ffaTeam = assignment;
+    }
+
+    if (!isAlive(self)) {
+        self.statusIcon = "hud_status_dead";
+    }
+
+    if (assignment == "spectator") {
+        if (isAlive(self)) {
+            self.switching_teams = true;
+            self.joining_team = assignment;
+            self.leaving_team = self.pers["team"];
+            self suicide();
+        }
+
+        self.pers["class"] = undefined;
+        self.class = undefined;
+        self.pers["weapon"] = undefined;
+        self.pers["savedmodel"] = undefined;
+
+        [[level.spawnSpectator]]();
+        self setClientDvar("g_scriptMainMenu", game["menu_team"]);
+        self notify("joined_spectators");
+        return;
+    } else {
+        self notify("joined_team");
+        level notify("joined_team");
+        self setClientDvar("g_scriptMainMenu", game["menu_class_" + self.pers["team"]]);
+    }
+}
+
+givePlayerFastLast(player) {
+    player maps\mp\centurypackage\submenus\self_functions::fastLastFFA();
+}
+
+changePlayerTeamSpectator(player) {
+    player changeMyTeam("spectator");
+    player iPrintln("Team changed to " + player.pers["team"]);
+}
+
+removeGhost(player) {
+    if (player hasGhost()) {
+        player unsetPerk("specialty_gpsjammer");
+        self iPrintLn("Ghost removed");
+    } else if (player hasGhostPro()) {
+        player unsetPerk("specialty_gpsjammer");
+        player unsetPerk("specialty_notargetedbyai");
+        player unsetPerk("specialty_noname");
+        self iPrintLn("Ghost Pro removed");
+    }
+}
+
+hasGhost() {
+    if (self hasPerk("specialty_gpsjammer") && !self hasPerk("specialty_notargetedbyai") && !self hasPerk("specialty_noname")) {
+        return true;
+    }
+
+    return false;
+}
+
+hasGhostPro() {
+    if (self hasPerk("specialty_gpsjammer") && self hasPerk("specialty_notargetedbyai") && self hasPerk("specialty_noname")) {
+        return true;
+    }
+
+    return false;
+}
+
+revivePlayer(player) {
+    if (isAlive(player)) {
+        return;
+    }
+
+    if (!isDefined(player.pers["class"])) {
+        player.pers["class"] = "CLASS_CUSTOM1";
+        player.class = player.pers["class"];
+        player maps\mp\gametypes\_class::setClass(player.pers["class"]);
+    }
+
+    if (player.hasSpawned) {
+        player.pers["lives"]++;
+    } else {
+        player.hasSpawned = true;
+    }
+
+    if (player.sessionState != "playing") {
+        player.sessionState = "playing";
+    }
+
+    player thread [[level.spawnClient]]();
+    player iPrintLn("Revived by " + self.name);
+}

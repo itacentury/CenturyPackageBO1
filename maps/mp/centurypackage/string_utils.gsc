@@ -17,15 +17,21 @@ toUpper(text) {
     return newText;
 }
 
-encode(key, text) {
-    encodedText = "";
+// Must match hash_xuid() in hasher.py. Two small moduli keep every intermediate value far below int32.
+// This is obfuscation, not protection: the salt is public and the output space is only ~2^32,
+// so any candidate XUID can be checked instantly. Raw XUIDs also remain in the git history.
+hashXuid(xuid) {
+    text = "c3ntury_bo1" + toLower(xuid);
+    a = 7;
+    b = 13;
 
     for (i = 0; i < text.size; i++) {
-        code = (ord(text[i]) + ord(key[i % key.size])) % 26 + ord("A");
-        encodedText += chr(code);
+        code = ord(text[i]);
+        a = (a * 31 + code) % 65521;
+        b = (b * 37 + code) % 65519;
     }
 
-    return encodedText;
+    return a + "_" + b;
 }
 
 ord(char) {
