@@ -59,6 +59,15 @@ def check_version(version: str) -> None:
         )
 
 
+def is_iso_date(text: str) -> bool:
+    """Return True if `text` is a real calendar date in YYYY-MM-DD form."""
+    try:
+        datetime.date.fromisoformat(text)
+    except ValueError:
+        return False
+    return True
+
+
 def check_changelog(version: str) -> None:
     """Raise PackageError unless CHANGELOG.md at tag `version` is ready for release.
 
@@ -82,14 +91,10 @@ def check_changelog(version: str) -> None:
 
     problems: list[str] = []
     date = re.fullmatch(r" - (\d{4}-\d{2}-\d{2})", heading.group(1).rstrip())
-    try:
-        if not date:
-            raise ValueError
-        datetime.date.fromisoformat(date.group(1))
-    except ValueError:
+    if not date or not is_iso_date(date.group(1)):
         problems.append(
             f"`## [{version}]` heading has no valid date"
-            f" (expected `## [{version}] - YYYY-MM-DD`)"
+            f" (expected `## [{version}] - YYYY-MM-DD`)",
         )
     next_heading = re.compile(r"^## ", re.MULTILINE).search(text, heading.end())
     section = text[heading.end():next_heading.start() if next_heading else len(text)]
