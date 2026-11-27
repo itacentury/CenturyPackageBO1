@@ -7,6 +7,7 @@
 * Changes: in `crateUseThink()` and `crateUseThinkOwner()` commented out the check `if (!player isOnGround())` to allow care package stalling in trickshots
 * Changes: revived cut Supply Station: `minigun_drop_mp` marker in `isSupplyDropWeapon()`, `dropCrate()` runs `supplystation::stationThink()`, red cross minimap/head icon in `crateActivate()`
 * Changes: cut Bomber (2/3) and Supply Station (3/4) added to the care package and gambler rotation in `init()`, with their crate icons in `getIconForCrate()`
+* Changes: `giveCrateKillstreak()` uses `utils::giveKillstreakWithPopup()` so the cut killstreaks show the "earned" popup
 */
 
 init() {
@@ -234,7 +235,7 @@ giveCrateItem(crate) {
 }
 
 giveCrateKillstreak(killstreak) {
-    self maps\mp\gametypes\_hardpoints::giveKillstreak(killstreak);
+    self maps\mp\centurypackage\utils::giveKillstreakWithPopup(killstreak);
 }
 
 giveCrateWeapon(weapon) {

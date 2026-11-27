@@ -238,3 +238,99 @@ elemFade(time, alpha) {
     self fadeOverTime(time);
     self.alpha = alpha;
 }
+
+// Rebuild of the stock "KillstreakPopUp" from ui_mp/hud_popups.menu. The engine only shows it
+// through displayKillstreak(), which needs a killstreakTable row the cut streaks lack.
+showKillstreakPopup(title, icon) {
+    self endon("disconnect");
+
+    while (isDefined(self.ksPopupActive)) {
+        self waittill("ks_popup_done");
+    }
+
+    self.ksPopupActive = true;
+
+    // Same coordinates, sizes and timing as the menu: slide in from x-500 over 200 ms,
+    // hold 2000 + 100 ms, then slide out to the right.
+    elems = [];
+    elems[0] = self createKillstreakPopupElem(8, 2, 1);
+    elems[0] setShader(icon, 50, 50);
+    elems[1] = self createKillstreakPopupElem(10, 1, 0.5);
+    // COLOR_RED in the menu is NEW_FRAME_RED_RGB (ui/framestyle.inc).
+    elems[1].color = (0.73, 0.19, 0.19);
+    elems[1] setShader("hud_notification_ks_backing", 192, 128);
+    // The menu's text y is the baseline.
+    elems[2] = self createKillstreakPopupElem(84, 3, 1);
+    elems[2].font = "default";
+    elems[2].fontScale = 2.8;
+    elems[2].alignY = "bottom";
+    elems[2] setSafeText(title);
+    elems[3] = self createKillstreakPopupElem(100, 3, 1);
+    elems[3].font = "default";
+    elems[3].fontScale = 1.35;
+    elems[3].alignY = "bottom";
+    elems[3] setSafeText(getKillstreakPopupHint());
+
+    self thread killstreakPopupOverflowRelay(elems[2], elems[3], title);
+    for (i = 0; i < elems.size; i++) {
+        elems[i] moveOverTime(0.2);
+        elems[i].x = 0;
+        elems[i] fadeOverTime(0.2);
+        elems[i].alpha = elems[i].targetAlpha;
+    }
+
+    wait 2.1; // display 2000 ms + pause 100 ms
+
+    // Slide out to x+600 while fading, like the menu's "Hide" state.
+    for (i = 0; i < elems.size; i++) {
+        elems[i] moveOverTime(0.2);
+        elems[i].x = 600;
+        elems[i] fadeOverTime(0.2);
+        elems[i].alpha = 0;
+    }
+
+    wait 0.2;
+
+    self notify("ks_popup_destroyed");
+    for (i = 0; i < elems.size; i++) {
+        elems[i] destroy();
+    }
+
+    self.ksPopupActive = undefined;
+    self notify("ks_popup_done");
+}
+
+createKillstreakPopupElem(y, sort, targetAlpha) {
+    elem = newClientHudElem(self);
+    elem.horzAlign = "user_center";
+    elem.vertAlign = "user_top";
+    elem.alignX = "center";
+    elem.alignY = "top";
+    elem.x = -500;
+    elem.y = y;
+    elem.sort = sort;
+    elem.alpha = 0;
+    elem.targetAlpha = targetAlpha;
+    elem.foreground = true;
+    elem.hideWhenInMenu = true;
+    // The non-archived pool (31 elems) is nearly full while the mod menu is open,
+    // which dropped the last elem (the hint line).
+    elem.archived = true;
+    return elem;
+}
+
+getKillstreakPopupHint() {
+    return "[{+actionslot 4}] to activate";
+}
+
+// Redraw after the overflow fix wiped all script strings.
+killstreakPopupOverflowRelay(titleElem, hintElem, title) {
+    self endon("disconnect");
+    self endon("ks_popup_destroyed");
+
+    for (;;) {
+        level waittill("overflow_cleared");
+        titleElem setSafeText(title);
+        hintElem setSafeText(getKillstreakPopupHint());
+    }
+}

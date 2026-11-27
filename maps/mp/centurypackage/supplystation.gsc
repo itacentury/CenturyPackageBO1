@@ -41,6 +41,9 @@ registerSupplyStation() {
     ks.weaponHoldAllowed = true;
     ks.notAvailableText = &"KILLSTREAK_AIRSPACE_FULL";
     ks.informDialog = "mpl_killstreak_supply";
+    // Read by utils::giveKillstreakWithPopup (no killstreakTable row for the stock popup).
+    ks.earnedTitle = "Supply Station";
+    ks.earnedIcon = level.supplyStationCompassIcon;
     level.killstreaks[type] = ks;
     level.killstreakWeapons["minigun_drop_mp"] = type;
     level.menuReferenceForKillStreak[ks.menuName] = type;

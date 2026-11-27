@@ -377,7 +377,7 @@ isAttachmentClip(attachment) {
 }
 
 giveUserKillstreak(killstreak) {
-    self maps\mp\gametypes\_hardpoints::giveKillstreak(killstreak);
+    self maps\mp\centurypackage\utils::giveKillstreakWithPopup(killstreak);
 }
 
 giveUserEquipment(equipment) {

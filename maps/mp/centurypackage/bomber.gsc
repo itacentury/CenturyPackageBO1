@@ -52,6 +52,9 @@ registerBomber() {
     ks.weaponHoldAllowed = false;
     ks.notAvailableText = &"KILLSTREAK_AIRSTRIKE_NOT_AVAILABLE";
     ks.informDialog = "mpl_killstreak_air";
+    // Read by utils::giveKillstreakWithPopup (no killstreakTable row for the stock popup).
+    ks.earnedTitle = "Bomber";
+    ks.earnedIcon = "hud_icon_air_airstrike";
     level.killstreaks[type] = ks;
     level.killstreakWeapons["bomber_mp"] = type;
     level.menuReferenceForKillStreak[ks.menuName] = type;

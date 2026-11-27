@@ -142,6 +142,8 @@ modifyDefaultPerks(class, perkRef, currentSpecialty) {
 
 precacheStuff() {
     precacheModel("t5_weapon_cz75_dw_lh_world");
+    // Blood splatter behind hud::showKillstreakPopup (in common_mp.ff, not precached by stock GSC).
+    precacheShader("hud_notification_ks_backing");
 }
 
 initPlayerVars() {
