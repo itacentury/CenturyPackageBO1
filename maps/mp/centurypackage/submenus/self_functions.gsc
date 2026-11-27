@@ -219,7 +219,7 @@ saveLoadout() {
 }
 
 deleteSavedLoadout() {
-    if (!self.saveLoadoutEnabled && self getPlayerCustomDvar("loadoutSaved") == "1") {
+    if (!self.saveLoadoutEnabled && self getPlayerCustomDvar("loadoutSaved") != "1") {
         return;
     }
 
