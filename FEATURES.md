@@ -38,6 +38,10 @@
 
 ## Class Options
 * Weapon Selector
+* Glitch Weapon Selector (admins only)
+
+        Weapons you normally can't get: left-hand pistols/SMGs, bomb, defuse kit, syrette and more.
+
 * Grenade Selector
 * Camo Selector
 * Perk Selector
