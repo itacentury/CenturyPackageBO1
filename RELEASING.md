@@ -23,6 +23,7 @@ git switch -c release/X.Y.Z
 In `CHANGELOG.md`:
 
 - Rename `## [Unreleased]` to `## [X.Y.Z] - YYYY-MM-DD` and add a new empty `## [Unreleased]` above it.
+- Remove any "Planned as `X.Y.Z`" note from the released section, since it would otherwise end up in the release text. Keep the information it carries as a normal sentence, e.g. "The new folder layout requires a fresh install when upgrading from `2.1`."
 - Update the link references at the bottom:
 
   ```md
@@ -74,7 +75,7 @@ On GitHub: **Releases → Draft a new release**
 
 ## Checklist
 
-- [ ] `CHANGELOG.md` section renamed, dated and links updated
+- [ ] `CHANGELOG.md` section renamed, dated, "Planned as" note removed and links updated
 - [ ] Release PR merged into `master`
 - [ ] Tag `X.Y.Z` points to the merge commit and is pushed
 - [ ] PS3 zip built from the tag
