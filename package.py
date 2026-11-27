@@ -79,7 +79,7 @@ def resolve_tag(version: str) -> None:
 def read_tree(version: str) -> dict[PurePosixPath, bytes]:
     """Return the contents of every file under SOURCE_DIRS at tag `version`."""
     result = subprocess.run(
-        git("archive", "--format=tar", version, "--", *map(str, SOURCE_DIRS)),
+        git("archive", "--format=tar", f"refs/tags/{version}", "--", *map(str, SOURCE_DIRS)),
         capture_output=True,
         check=False
     )
