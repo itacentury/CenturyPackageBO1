@@ -163,7 +163,7 @@ giveTrickshotLoadout() {
     self maps\mp\gametypes\_hud_util::showPerk(1, "perk_deep_impact_pro", -30);
     self maps\mp\gametypes\_hud_util::showPerk(2, "perk_steady_aim_pro", -30);
     self maps\mp\gametypes\_hud_util::showPerk(3, "perk_marathon_pro", -60);
-    self.camo = randomIntRange(1, 16);
+    self ensureCamo();
     self giveWeapon("l96a1_extclip_mp", 0, self getCurrentWeaponOptions());
     self giveWeapon("python_speed_mp");
     self.equipment = "claymore_mp";
