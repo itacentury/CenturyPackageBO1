@@ -88,15 +88,17 @@
 * Kill whole team
 
 ## Players Menu
+
+        The player list shows each player's rights: H = Host, A = Full menu access, U = Menu access, R = Revive ability.
+
 * Give fast last (FFA only)
 
-* Toggle menu access (Host only)
+* Access Menu (Host only)
 
-        Gives the player basic menu access. He has access to Refill ammo, Self Options and Class Options
-
-* Toggle full menu access (Host only)
-
-        Gives the player access to all other options
+        Manage the selected player's rights. Rights are kept over rounds.
+        - Toggle revive ability (SnD only): lets the player revive their whole team with Crouch + Actionslot 3 (D-Pad left). Hidden for players with full menu access, since they already have it.
+        - Toggle menu access: basic menu access (Refill ammo, Self Options, Class Options). Taking it away also removes full menu access.
+        - Toggle full menu access: access to all other options, including the revive ability.
 
 * Change team
 
