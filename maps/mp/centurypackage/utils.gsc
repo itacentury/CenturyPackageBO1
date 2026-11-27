@@ -21,7 +21,8 @@ getMaxHeldWeapons() {
 }
 
 // Slots in use. getWeaponsList() skips alt-mode weapons (gl_/mk_/ft_ underbarrels),
-// but they still occupy a slot, so count them on top.
+// but they still occupy a slot, so count them on top. The dual wield left-hand half
+// (xxlh_mp) is counted too unless already listed, matching getWeaponSlotCost.
 getHeldWeaponSlotCount() {
     weapons = self getWeaponsList();
     count = weapons.size;
@@ -29,6 +30,14 @@ getHeldWeaponSlotCount() {
         altWeapon = weaponAltWeaponName(weapons[i]);
         if (altWeapon != "none" && !is_in_array(weapons, altWeapon)) {
             count++;
+        }
+
+        baseName = strTok(weapons[i], "_")[0];
+        if (isSubStr(baseName, "dw")) {
+            lhWeapon = getSubStr(baseName, 0, baseName.size - 2) + "lh_mp";
+            if (!is_in_array(weapons, lhWeapon)) {
+                count++;
+            }
         }
     }
 
