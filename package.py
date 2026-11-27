@@ -13,6 +13,7 @@ uncommitted files cannot end up in the zip.
 """
 
 import argparse
+import io
 import re
 import subprocess
 import sys
@@ -77,23 +78,21 @@ def resolve_tag(version: str) -> None:
 
 def read_tree(version: str) -> dict[PurePosixPath, bytes]:
     """Return the contents of every file under SOURCE_DIRS at tag `version`."""
-    proc = subprocess.Popen(
+    result = subprocess.run(
         git("archive", "--format=tar", version, "--", *map(str, SOURCE_DIRS)),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
+        check=False
     )
-    assert proc.stdout is not None and proc.stderr is not None
+    if result.returncode != 0:
+        raise PackageError(f"git archive failed: {result.stderr.decode(errors='replace').strip()}")
     files: dict[PurePosixPath, bytes] = {}
-    with tarfile.open(fileobj=proc.stdout, mode="r|") as tar:
+    with tarfile.open(fileobj=io.BytesIO(result.stdout), mode="r") as tar:
         for member in tar:
             if not member.isfile():
                 continue
             data = tar.extractfile(member)
             assert data is not None
             files[PurePosixPath(member.name)] = data.read()
-    stderr = proc.stderr.read().decode(errors="replace")
-    if proc.wait() != 0:
-        raise PackageError(f"git archive failed: {stderr.strip()}")
     return files
 
 
