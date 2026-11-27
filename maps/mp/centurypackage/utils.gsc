@@ -50,6 +50,23 @@ getWeaponSlotCost(weapon) {
     return cost;
 }
 
+// The gun in hand. In alt mode getCurrentWeapon() is the underbarrel (gl_ak47_mp),
+// whose alt weapon is the parent gun (ak47_gl_mp).
+getCurrentHeldGun() {
+    weapon = self getCurrentWeapon();
+    primaries = self getWeaponsListPrimaries();
+    if (weapon == "none" || is_in_array(primaries, weapon)) {
+        return weapon;
+    }
+
+    parentWeapon = weaponAltWeaponName(weapon);
+    if (is_in_array(primaries, parentWeapon)) {
+        return parentWeapon;
+    }
+
+    return weapon;
+}
+
 // Takes primaries (the current weapon, or its parent gun when in alt mode, else the first)
 // until `needed` slots are free. Only primaries, so killstreak weapons, bomb/syrette and
 // alt-mode underbarrels are never taken. Returns false if it could not free enough.
@@ -64,18 +81,9 @@ ensureFreeWeaponSlots(needed) {
             return false;
         }
 
-        weaponToTake = self getCurrentWeapon();
+        weaponToTake = self getCurrentHeldGun();
         if (!is_in_array(primaries, weaponToTake)) {
-            // In alt mode the current weapon is the underbarrel; its alt weapon is the gun in hand.
-            parentWeapon = "none";
-            if (weaponToTake != "none") {
-                parentWeapon = weaponAltWeaponName(weaponToTake);
-            }
-
             weaponToTake = primaries[0];
-            if (is_in_array(primaries, parentWeapon)) {
-                weaponToTake = parentWeapon;
-            }
         }
 
         slotCount = self getHeldWeaponSlotCount();

@@ -143,7 +143,7 @@ toggleUserPerk(id) {
 }
 
 giveUserAttachment(attachment) {
-    currentWeapon = self getCurrentWeapon();
+    currentWeapon = self getCurrentHeldGun();
     weaponPartList = strTok(currentWeapon, "_");
     baseWeapon = weaponPartList[0];
     if (isSubStr(baseWeapon, "dw") && attachment == "dw") {
