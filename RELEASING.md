@@ -50,15 +50,14 @@ Alternatively, create the tag while drafting the GitHub release (step 4) and cho
 
 ### 3. Build the PS3 package
 
-From a clean checkout of the tag, build the folder layout described in the README:
+Build the folder layout described in the README from the tag:
 
 ```sh
-git switch --detach X.Y.Z
+git fetch --tags
 uv run package.py X.Y.Z
-git switch master
 ```
 
-`package.py` needs [uv](https://docs.astral.sh/uv/) and works the same on Windows, Linux and macOS. It writes `CenturyPackageBO1-X.Y.Z-PS3.zip` to the repository root, with `silinium/maps` overwriting `stubs.gsc` from `maps`.
+`package.py` reads `maps` and `silinium/maps` straight from the tag `X.Y.Z` with `git archive`, so it can run from any branch and untracked, ignored or uncommitted files (`.DS_Store`, editor backups, local edits) never end up in the zip. It needs [uv](https://docs.astral.sh/uv/) and works the same on Windows, Linux and macOS. It writes `CenturyPackageBO1-X.Y.Z-PS3.zip` to the repository root, with `silinium/maps` overwriting `stubs.gsc` from `maps`.
 
 Check that the zip contains `mp/CenturyPackageBO1.mod` and `mp/CenturyPackageBO1/maps/mp/centurypackage/stubs.gsc` with the Silinium implementation.
 
