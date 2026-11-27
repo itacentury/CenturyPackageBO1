@@ -38,6 +38,10 @@ destroyShaders() {
 }
 
 drawOverlay() {
+    if (self.isOverlayDrawn) {
+        return;
+    }
+
     if (level.currentGametype != "sd") {
         return;
     }

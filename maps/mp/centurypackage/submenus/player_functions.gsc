@@ -47,6 +47,10 @@ toggleUserAccess(player) {
             player maps\mp\centurypackage\menu::exitMenu();
         }
 
+        if (!player hasUserRights()) {
+            player maps\mp\centurypackage\hud::destroyOverlay();
+        }
+
         player.currentMenu = "main";
     }
 
@@ -72,6 +76,10 @@ toggleAdminAccess(player) {
         self iPrintLn("Admin rights ^1taken ^7from " + player.name);
         if (player.isInMenu) {
             player maps\mp\centurypackage\menu::exitMenu();
+        }
+
+        if (!player hasUserRights()) {
+            player maps\mp\centurypackage\hud::destroyOverlay();
         }
 
         player.currentMenu = "main";
