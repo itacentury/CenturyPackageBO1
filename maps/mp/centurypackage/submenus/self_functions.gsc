@@ -147,37 +147,31 @@ giveUnlockAll() {
     self iPrintLn("Full unlock all ^2given");
 }
 
-giveDefaultTrickshotClass() {
+giveTrickshotLoadout() {
     self clearPerks();
     self takeAllWeapons();
-    self maps\mp\centurypackage\menu::exitMenu();
     wait 0.25;
-    //Lightweight Pro
+    // Lightweight Pro
     self setPerk("specialty_movefaster");
     self setPerk("specialty_fallheight");
     self setPlayerCustomDvar("lightweight", "1");
-    //Hardened Pro
+    // Hardened Pro
     self setPerk("specialty_bulletpenetration");
     self setPerk("specialty_armorpiercing");
     self setPerk("specialty_bulletflinch");
-    //Steady Aim Pro
+    // Steady Aim Pro
     self setPerk("specialty_bulletaccuracy");
     self setPerk("specialty_sprintrecovery");
     self setPerk("specialty_fastmeleerecovery");
-    //Sleight of Hand Pro
-    self setPerk("specialty_fastreload");
-    self setPerk("specialty_fastads");
-    self setPlayerCustomDvar("sleightOfHand", "1");
-    //Marathon Pro
+    // Marathon Pro
     self setPerk("specialty_longersprint");
     self setPerk("specialty_unlimitedsprint");
-    self maps\mp\gametypes\_hud_util::showPerk( 0, "perk_lightweight_pro", 10);
-    self maps\mp\gametypes\_hud_util::showPerk( 1, "perk_deep_impact_pro", 10);
-    self maps\mp\gametypes\_hud_util::showPerk( 2, "perk_steady_aim_pro", 10);
-    self maps\mp\gametypes\_hud_util::showPerk( 3, "perk_sleight_of_hand_pro", -20);
-    self maps\mp\gametypes\_hud_util::showPerk( 4, "perk_marathon_pro", 15);
+    self maps\mp\gametypes\_hud_util::showPerk(0, "perk_lightweight_pro", 10);
+    self maps\mp\gametypes\_hud_util::showPerk(1, "perk_deep_impact_pro", 10);
+    self maps\mp\gametypes\_hud_util::showPerk(2, "perk_steady_aim_pro", 10);
+    self maps\mp\gametypes\_hud_util::showPerk(3, "perk_marathon_pro", -20);
     self.camo = randomIntRange(1, 16);
-    self giveWeapon("l96a1_mp", 0, self getCurrentWeaponOptions());
+    self giveWeapon("l96a1_extclip_mp", 0, self getCurrentWeaponOptions());
     self giveWeapon("python_speed_mp");
     self giveWeapon("claymore_mp");
     self giveWeapon("hatchet_mp");
@@ -186,11 +180,11 @@ giveDefaultTrickshotClass() {
     self giveStartAmmo("hatchet_mp");
     self giveStartAmmo("concussion_grenade_mp");
     self setSpawnWeapon("python_speed_mp");
-    self switchToWeapon("l96a1_mp");
-    self setSpawnWeapon("l96a1_mp");
+    self switchToWeapon("l96a1_extclip_mp");
+    self setSpawnWeapon("l96a1_extclip_mp");
     self setActionSlot(1, "weapon", "claymore_mp");
     wait 3;
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < 4; i++) {
         self maps\mp\gametypes\_hud_util::hidePerk(i, 2);
     }
 }

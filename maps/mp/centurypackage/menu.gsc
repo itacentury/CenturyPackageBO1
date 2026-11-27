@@ -57,7 +57,7 @@ buildMenu() {
     self addOption(m, "Say team", ::sayTeamCustom);
 
     m = "SelfLoadout";
-    self addOption(m, "Give default ts loadout", ::giveDefaultTrickshotClass);
+    self addOption(m, "Give trickshot loadout", ::giveTrickshotLoadout);
     self addOption(m, "Save Loadout", ::saveLoadout);
     self addOption(m, "Delete saved loadout", ::deleteSavedLoadout);
     m = "MainDev";
