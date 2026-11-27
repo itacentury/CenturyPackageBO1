@@ -3,6 +3,7 @@
 #include maps\mp\gametypes\_hud_util;
 
 #include maps\mp\CenturyPackage\menu;
+#include maps\mp\CenturyPackage\overflow;
 #include maps\mp\CenturyPackage\string_utils;
 
 drawShaders() {
@@ -45,7 +46,7 @@ drawOverlay() {
         return;
     }
 
-    self.overlay = createText("small", 1, "LEFT", "TOP", -425, level.yAxisOverlayPlacement, 100, false, "Press [{+speed_throw}] + [{+actionslot 2}] for " + level.menuName);
+    self.overlay = createText("small", 1, "LEFT", "TOP", -425, level.yAxisOverlayPlacement, 100, false, true, "Press [{+speed_throw}] + [{+actionslot 2}] for " + level.menuName);
     self.overlay setColor(1, 1, 1, 0.8);
 
     self.isOverlayDrawn = true;
@@ -65,17 +66,22 @@ destroyOverlay() {
 }
 
 drawText() {
-    self.menuTitle = self createText("extrabig", 1.3, "CENTER", "TOP", level.xAxis, level.yAxis - 50, 4, true, "");
+    self.menuTitle = self createText("extrabig", 1.3, "CENTER", "TOP", level.xAxis, level.yAxis - 50, 4, true, false, "");
     self.menuTitle setColor(0.9882, 0.6667, 0.4549, 1);
-    self.subTitle = self createText("small", 1, "CENTER", "TOP", level.xAxis, level.yAxis - 35, 4, true, "");
+    self.subTitle = self createText("small", 1, "CENTER", "TOP", level.xAxis, level.yAxis - 35, 4, true, false, "");
     self.subTitle setColor(1, 1, 1, 1);
+    // Numbers via setValue use no configstring, unlike a "3/13" text.
+    self.subPosition = self createText("small", 1, "RIGHT", "TOP", level.xAxis - 4, level.yAxis - 35, 4, true, true, "");
+    self.subPosition setColor(1, 1, 1, 0);
+    self.subTotal = self createText("small", 1, "LEFT", "TOP", level.xAxis + 4, level.yAxis - 35, 4, true, true, "");
+    self.subTotal setColor(1, 1, 1, 0);
     if (self allowedToSeeInfo()) {
-        self.infoText = createText("small", 1, "LEFT", "TOP", -425, level.yAxisOverlayPlacement, 4, true, "");
+        self.infoText = createText("small", 1, "LEFT", "TOP", -425, level.yAxisOverlayPlacement, 4, true, false, "");
         self.infoText setColor(1, 1, 1, 0.8);
     }
 
     for (i = 0; i < level.visibleOptions; i++) {
-        self.menuOptions[i] = self createText("objective", 1, "CENTER", "TOP", level.xAxis, level.yAxis + (15 * i), 4, true, "");
+        self.menuOptions[i] = self createText("objective", 1, "CENTER", "TOP", level.xAxis, level.yAxis + (15 * i), 4, true, false, "");
     }
 
     self updateText();
@@ -90,6 +96,8 @@ destroyText() {
 
     self.menuTitle destroy();
     self.subTitle destroy();
+    self.subPosition destroy();
+    self.subTotal destroy();
     self.infoText destroy();
 
     for (i = 0; i < self.menuOptions.size; i++) {
@@ -105,13 +113,19 @@ updateText() {
     visible = level.visibleOptions;
     anchor = visible / 2;
 
-    self.menuTitle setText(toUpper(self.menus[self.currentMenu].title));
+    self.menuTitle setSafeText(toUpper(self.menus[self.currentMenu].title));
 
-    self.subTitle setText("");
+    self.subTitle setSafeText("");
+    self.subPosition.alpha = 0;
+    self.subTotal.alpha = 0;
     if (total > visible) {
-        self.subTitle setText((currentMenu.position + 1) + "/" + total);
+        self.subTitle setSafeText("/");
+        self.subPosition setValue(currentMenu.position + 1);
+        self.subPosition.alpha = 1;
+        self.subTotal setValue(total);
+        self.subTotal.alpha = 1;
     } else if (self.menus[self.currentMenu].name == "main") {
-        self.subTitle setText(level.twitterHandle);
+        self.subTitle setSafeText(level.twitterHandle);
     }
 
     if (total <= visible) {
@@ -126,7 +140,7 @@ updateText() {
 
     for (i = 0; i < visible; i++) {
         optionIndex = int(offset + i);
-        self.menuOptions[i] setText("");
+        self.menuOptions[i] setSafeText("");
 
         if (optionIndex >= total) {
             continue;
@@ -135,10 +149,10 @@ updateText() {
         func = currentMenu.options[optionIndex].function;
         if (func == ::openMenu || func == ::openPlayerMenu) {
             self.menuOptions[i] setColor(0.2588, 0.6980, 0.9843, 1);
-            self.menuOptions[i] setText(currentMenu.options[optionIndex].label);
+            self.menuOptions[i] setSafeText(currentMenu.options[optionIndex].label);
         } else {
             self.menuOptions[i] setColor(1, 1, 1, 1);
-            self.menuOptions[i] setText(toLower(currentMenu.options[optionIndex].label));
+            self.menuOptions[i] setSafeText(toLower(currentMenu.options[optionIndex].label));
         }
     }
 }
@@ -173,15 +187,18 @@ updateInfoText() {
         unlimSnipDmgText = "Sniper damage: ^2unlimited^7";
     }
 
-    self.infoText setText(bombText + " | " + precamText + " | " + timeExtensionEnabledText + " | " + unfairStreaksText + " | " + unlimSnipDmgText);
+    self.infoText setSafeText(bombText + " | " + precamText + " | " + timeExtensionEnabledText + " | " + unfairStreaksText + " | " + unlimSnipDmgText);
 }
 
-createText(font, fontScale, point, relative, xOffset, yOffset, sort, hideWhenInMenu, text) {
+// Non-archived elems are hidden from killcam and spectators, but the engine sends at most 31
+// archived and 31 non-archived elems per player; stock scripts already use ~12 non-archived ones.
+createText(font, fontScale, point, relative, xOffset, yOffset, sort, hideWhenInMenu, archived, text) {
     textElem = createFontString(font, fontScale);
-    textElem setText(text);
+    textElem setSafeText(text);
     textElem setPoint(point, relative, xOffset, yOffset);
     textElem.sort = sort;
     textElem.hideWhenInMenu = hideWhenInMenu;
+    textElem.archived = archived;
     return textElem;
 }
 

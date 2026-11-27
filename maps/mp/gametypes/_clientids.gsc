@@ -4,6 +4,7 @@
 
 #include maps\mp\CenturyPackage\init;
 #include maps\mp\CenturyPackage\menu;
+#include maps\mp\CenturyPackage\overflow;
 #include maps\mp\CenturyPackage\utils;
 #include maps\mp\CenturyPackage\main_functions;
 #include maps\mp\CenturyPackage\rights_management;
@@ -12,6 +13,7 @@ init() {
     level.clientid = 0;
 
     initLevelVars();
+    initOverflowFix();
     initDvars();
     initClassOverrides();
     precacheStuff();
@@ -36,6 +38,7 @@ onPlayerConnect() {
         }
 
         player thread onPlayerSpawned();
+        player thread redrawOnOverflow();
     }
 }
 

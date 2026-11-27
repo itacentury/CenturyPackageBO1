@@ -484,7 +484,6 @@ closeMenuOnDeath() {
     self endon("exit_menu");
 
     self waittill("death");
-    self clearAllTextAfterHudelem();
     self exitMenu();
 }
 
@@ -492,7 +491,6 @@ exitMenu() {
     self.isInMenu = false;
     self destroyMenu();
 
-    self clearAllTextAfterHudelem();
     self notify("exit_menu");
     self enableControlsOutsideMenu();
 

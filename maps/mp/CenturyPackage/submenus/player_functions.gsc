@@ -44,7 +44,6 @@ toggleUserAccess(player) {
         self iPrintLn("Menu access ^1Removed ^7from " + player.name);
 
         if (player.isInMenu) {
-            player clearAllTextAfterHudelem();
             player maps\mp\CenturyPackage\menu::exitMenu();
         }
 
@@ -72,7 +71,6 @@ toggleAdminAccess(player) {
         self iPrintLn("Menu access ^1removed ^7from " + player.name);
 
         if (player.isInMenu) {
-            player clearAllTextAfterHudelem();
             player maps\mp\CenturyPackage\menu::exitMenu();
         }
 
