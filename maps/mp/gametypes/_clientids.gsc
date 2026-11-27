@@ -17,6 +17,7 @@ init() {
     initDvars();
     initClassOverrides();
     precacheStuff();
+    maps\mp\centurypackage\bomber::init();
 
     level thread onPlayerConnect();
     level thread timeExtensionWatcher();
