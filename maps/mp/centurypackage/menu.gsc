@@ -4,6 +4,8 @@
 
 #include maps\mp\centurypackage\hud;
 #include maps\mp\centurypackage\rights_management;
+// platform switch: Silinium builds swap stubs.gsc itself, keep this include (see README)
+#include maps\mp\centurypackage\stubs;
 #include maps\mp\centurypackage\submenus\dev_functions;
 #include maps\mp\centurypackage\submenus\self_functions;
 #include maps\mp\centurypackage\submenus\team_functions;
@@ -54,7 +56,7 @@ buildMenu() {
         self addOption(m, "Toggle overlay", ::toggleOverlay);
     }
 
-    if (level.ps3) {
+    if (hasKeyboardSupport()) {
         self addOption(m, "Say all", ::sayAllCustom);
         self addOption(m, "Say team", ::sayTeamCustom);
     }

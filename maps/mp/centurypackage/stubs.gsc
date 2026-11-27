@@ -7,3 +7,7 @@
 callkeyboard(message, clientNum) {
     return 0;
 }
+
+hasKeyboardSupport() {
+    return false;
+}
