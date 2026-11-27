@@ -573,6 +573,7 @@ playerChangeWeaponWaiter() {
 isSupplyDropWeapon(weapon) {
     switch (weapon) {
         case "supplystation_mp":
+        case "minigun_drop_mp":
         case "supplydrop_mp":
         case "turret_drop_mp":
         case "tow_turret_drop_mp":
@@ -612,7 +613,8 @@ getIconForCrate() {
                 }
             }
             break;
-        case "ammo": {
+        case "ammo":
+        case "supplystation": {
                 icon = "hud_ammo_refill";
             }
             break;
@@ -633,10 +635,19 @@ crateActivate() {
 
     crateObjID = maps\mp\gametypes\_gameobjects::getNextObjID();
     objective_add(crateObjID, "invisible", self.origin);
-    objective_icon(crateObjID, "compass_supply_drop_green");
+    friendlyIcon = "compass_supply_drop_green";
+    if (self.crateType.type == "supplystation") {
+        friendlyIcon = level.supplyStationCompassIcon;
+    }
+
+    objective_icon(crateObjID, friendlyIcon);
     objective_state(crateObjID, "active");
     self.friendlyObjID = crateObjID;
     icon = self getIconForCrate();
+    if (self.crateType.type == "supplystation") {
+        icon = level.supplyStationCompassIcon;
+    }
+
     if (level.teambased) {
         objective_team(crateObjID, self.team);
         crateObjID = maps\mp\gametypes\_gameobjects::getNextObjID();
@@ -769,7 +780,8 @@ crateSpawn(weaponname, owner, team, drop_origin, drop_angle) {
             crate.crateType = level.crateTypes[weaponname]["auto_tow_mp"];
             break;
         case "minigun_drop_mp":
-            crate.crateType = level.crateTypes[weaponname]["minigun_mp"];
+            // Marker for the revived supply station (centurypackage/supplystation.gsc).
+            crate.crateType = level.crateTypes[weaponname]["supplystation"];
             break;
         case "m220_tow_drop_mp":
             crate.crateType = level.crateTypes[weaponname]["m220_tow_mp"];
@@ -931,6 +943,11 @@ dropCrate(origin, angle, weaponname, owner, team, killcamEnt) {
     crate crateActivate();
     crate thread crateUseThink();
     crate thread crateUseThinkOwner();
+    if (weaponname == "minigun_drop_mp") {
+        crate thread maps\mp\centurypackage\supplystation::stationThink(owner, team);
+        return;
+    }
+
     if (isDefined(crate.crateType.hint_gambler)) {
         crate thread crateGamblerThink();
     }
