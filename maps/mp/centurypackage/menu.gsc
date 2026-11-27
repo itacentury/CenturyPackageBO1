@@ -367,7 +367,7 @@ buildClassMenu() {
     self addOption(m, "Spy Plane", ::giveUserKillstreak, "radar_mp");
     self addOption(m, "RC-XD", ::giveUserKillstreak, "rcbomb_mp");
     self addOption(m, "Counter-Spy Plane", ::giveUserKillstreak, "counteruav_mp");
-    self addOption(m, "Sam Turret", ::giveUserKillstreak, "auto_tow_mp");
+    self addOption(m, "SAM Turret", ::giveUserKillstreak, "auto_tow_mp");
     self addOption(m, "Care Package", ::giveUserKillstreak, "supply_drop_mp");
     self addOption(m, "Napalm Strike", ::giveUserKillstreak, "napalm_mp");
     self addOption(m, "Sentry Gun", ::giveUserKillstreak, "autoturret_mp");
@@ -380,7 +380,7 @@ buildClassMenu() {
     self addOption(m, "Attack Dogs", ::giveUserKillstreak, "dogs_mp");
     self addOption(m, "Gunship", ::giveUserKillstreak, "helicopter_player_firstperson_mp");
     self addOption(m, "Grim Reaper", ::giveUserKillstreak, "m202_flash_mp");
-    self addOption(m, "Minigun", ::giveUserKillstreak, "minigun_mp");
+    self addOption(m, "Death Machine", ::giveUserKillstreak, "minigun_mp");
     m = "ClassEquipment";
     self addOption(m, "Camera Spike", ::giveUserEquipment, "camera_spike_mp");
     self addOption(m, "C4", ::giveUserEquipment, "satchel_charge_mp");
