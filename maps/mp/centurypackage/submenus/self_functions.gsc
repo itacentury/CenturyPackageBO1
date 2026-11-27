@@ -226,9 +226,8 @@ loadLoadout() {
         }
     }
 
+    self ensureCamo();
     for (i = 0; i < self.primaryWeaponList.size; i++) {
-        self ensureCamo();
-
         weapon = self.primaryWeaponList[i];
         self giveWeapon(weapon, 0, self getCurrentWeaponOptions());
         if (weapon == "china_lake_mp") {
