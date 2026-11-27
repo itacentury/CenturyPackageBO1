@@ -5,6 +5,7 @@
 """Build the PS3 release zip in the folder layout described in README.md.
 
 Usage: uv run package.py X.Y.Z
+   or: python package.py X.Y.Z   (Python 3.10+, standard library only)
 
 X.Y.Z must be an existing git tag. Files are read from that tag with
 `git archive`, never from the working folder, so untracked, ignored or
