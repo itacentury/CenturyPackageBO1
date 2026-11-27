@@ -7,7 +7,15 @@
 * Suicide
 * Third person
 * Fast last (Only in FFA)
-* Give default ts loadout
+* Say all (Silinium only)
+
+        Opens the on-screen keyboard and sends the entered message to all chat.
+
+* Say team (Silinium only)
+
+        Opens the on-screen keyboard and sends the entered message to team chat.
+
+* Give trickshot loadout
 
         Everything will be taken from you and you will be given a default Trickshot loadout:
         L96A1 (Extended Mag), Python (Speed Reloader), Tomahawk, Concussion Grenades, Claymore, Lightweight Pro, Hardened Pro, Steady Aim Pro and Marathon Pro.
@@ -34,7 +42,7 @@
 * Camo Selector
 * Perk Selector
 
-        Choose between a variety of perks that can be toggled on and off.
+        Toggle any of the 15 pro perks on and off. Toggled perks are kept after respawning.
 
 * Attachment Selector
 
@@ -59,7 +67,7 @@
 * Tacticals Selector
 * Killstreak Selector
 
-        Choose between a variety of killstreaks.
+        Give yourself any of the regular killstreaks.
 
 ## Lobby Options
 * Fast last (TDM only)
