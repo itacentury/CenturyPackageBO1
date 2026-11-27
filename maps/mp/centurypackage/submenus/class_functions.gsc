@@ -118,158 +118,21 @@ toggleEmblem() {
     self giveCurrentWeaponWithOptions(self getCurrentWeaponOptions());
 }
 
-giveUserPerk(perkDesk) {
-    switch (perkDesk) {
-        case "lightweightPro":
-            self toggleLightweightPro();
-            break;
-        case "flakJacketPro":
-            self toggleFlakJacketPro();
-            break;
-        case "scoutPro":
-            self toggleScoutPro();
-            break;
-        case "steadyAimPro":
-            self toggleSteadyAimPro();
-            break;
-        case "sleightOfHandPro":
-            self toggleSleightOfHandPro();
-            break;
-        case "ninjaPro":
-            self toggleNinjaPro();
-            break;
-        case "tacticalMaskPro":
-            self toggleTacticalMaskPro();
-            break;
-        default:
-            self iPrintLn("^1Perk not implemented.");
-            break;
+toggleUserPerk(id) {
+    perk = level.perks[id];
+    if (self hasAllSpecialties(perk.specialties)) {
+        self unsetSpecialties(perk.specialties);
+        self setPlayerCustomDvar(id, "0");
+        self iPrintLn(perk.name + " ^1removed");
+        return;
     }
-}
 
-toggleLightweightPro() {
-    if (self hasPerk("specialty_fallheight") && self hasPerk("specialty_movefaster")) {
-        self unsetPerk("specialty_fallheight");
-        self unsetPerk("specialty_movefaster");
-        self setPlayerCustomDvar("lightweight", "0");
-        self iPrintLn("Lightweight Pro ^1removed");
-    } else {
-        self setPerk("specialty_fallheight");
-        self setPerk("specialty_movefaster");
-        self setPlayerCustomDvar("lightweight", "1");
-        self iPrintLn("Lightweight Pro ^2given");
-        self maps\mp\gametypes\_hud_util::showPerk(0, "perk_lightweight_pro", 10);
-        wait 1;
-        self maps\mp\gametypes\_hud_util::hidePerk(0, 1);
-    }
-}
-
-toggleFlakJacketPro() {
-    if (self hasPerk("specialty_flakjacket") && self hasPerk("specialty_fireproof") && self hasPerk("specialty_pin_back")) {
-        self unsetPerk("specialty_flakjacket");
-        self unsetPerk("specialty_fireproof");
-        self unsetPerk("specialty_pin_back");
-        self setPlayerCustomDvar("flakJacket", "0");
-        self iPrintLn("Flak Jacket Pro ^1removed");
-    } else {
-        self setPerk("specialty_flakjacket");
-        self setPerk("specialty_fireproof");
-        self setPerk("specialty_pin_back");
-        self setPlayerCustomDvar("flakJacket", "1");
-        self iPrintLn("Flak Jacket Pro ^2given");
-        self maps\mp\gametypes\_hud_util::showPerk(0, "perk_flak_jacket_pro", 10);
-        wait 1;
-        self maps\mp\gametypes\_hud_util::hidePerk(0, 1);
-    }
-}
-
-toggleScoutPro() {
-    if (self hasPerk("specialty_holdbreath") && self hasPerk("specialty_fastweaponswitch")) {
-        self unsetPerk("specialty_holdbreath");
-        self unsetPerk("specialty_fastweaponswitch");
-        self setPlayerCustomDvar("scout", "0");
-        self iPrintLn("Scout Pro ^1removed");
-    } else {
-        self setPerk("specialty_holdbreath");
-        self setPerk("specialty_fastweaponswitch");
-        self setPlayerCustomDvar("scout", "1");
-        self iPrintLn("Scout Pro ^2given");
-        self maps\mp\gametypes\_hud_util::showPerk(0, "perk_scout_pro", 10);
-        wait 1;
-        self maps\mp\gametypes\_hud_util::hidePerk(0, 1);
-    }
-}
-
-toggleSteadyAimPro() {
-    if (self hasPerk("specialty_bulletaccuracy") && self hasPerk("specialty_sprintrecovery") && self hasPerk("specialty_fastmeleerecovery")) {
-        self unsetPerk("specialty_bulletaccuracy");
-        self unsetPerk("specialty_sprintrecovery");
-        self unsetPerk("specialty_fastmeleerecovery");
-        self setPlayerCustomDvar("steadyAim", "0");
-        self iPrintLn("Steady Aim Pro ^1removed");
-    } else {
-        self setPerk("specialty_bulletaccuracy");
-        self setPerk("specialty_sprintrecovery");
-        self setPerk("specialty_fastmeleerecovery");
-        self setPlayerCustomDvar("steadyAim", "1");
-        self iPrintLn("Steady Aim Pro ^2given");
-        self maps\mp\gametypes\_hud_util::showPerk(0, "perk_steady_aim_pro", 10);
-        wait 1;
-        self maps\mp\gametypes\_hud_util::hidePerk(0, 1);
-    }
-}
-
-toggleSleightOfHandPro() {
-    if (self hasPerk("specialty_fastreload") && self hasPerk("specialty_fastads")) {
-        self unsetPerk("specialty_fastreload");
-        self unsetPerk("specialty_fastads");
-        self setPlayerCustomDvar("sleightOfHand", "0");
-        self iPrintLn("Sleight of Hand Pro ^1removed");
-    } else {
-        self setPerk("specialty_fastreload");
-        self setPerk("specialty_fastads");
-        self setPlayerCustomDvar("sleightOfHand", "1");
-        self iPrintLn("Sleight of Hand Pro ^2given");
-        self maps\mp\gametypes\_hud_util::showPerk(0, "perk_sleight_of_hand_pro", 10);
-        wait 1;
-        self maps\mp\gametypes\_hud_util::hidePerk(0, 1);
-    }
-}
-
-toggleNinjaPro() {
-    if (self hasPerk("specialty_quieter") && self hasPerk("specialty_loudenemies")) {
-        self unsetPerk("specialty_quieter");
-        self unsetPerk("specialty_loudenemies");
-        self setPlayerCustomDvar("ninja", "0");
-        self iPrintLn("Ninja Pro ^1removed");
-    } else {
-        self setPerk("specialty_quieter");
-        self setPerk("specialty_loudenemies");
-        self setPlayerCustomDvar("ninja", "1");
-        self iPrintLn("Ninja Pro ^2given");
-        self maps\mp\gametypes\_hud_util::showPerk(0, "perk_ninja_pro", 10);
-        wait 1;
-        self maps\mp\gametypes\_hud_util::hidePerk(0, 1);
-    }
-}
-
-toggleTacticalMaskPro() {
-    if (self hasPerk("specialty_gas_mask") && self hasPerk("specialty_stunprotection") && self hasPerk("specialty_shades")) {
-        self unsetPerk("specialty_gas_mask");
-        self unsetPerk("specialty_stunprotection");
-        self unsetPerk("specialty_shades");
-        self setPlayerCustomDvar("tacMask", "0");
-        self iPrintLn("Tactical Mask Pro ^1removed");
-    } else {
-        self setPerk("specialty_gas_mask");
-        self setPerk("specialty_stunprotection");
-        self setPerk("specialty_shades");
-        self setPlayerCustomDvar("tacMask", "1");
-        self iPrintLn("Tactical Mask Pro ^2given");
-        self maps\mp\gametypes\_hud_util::showPerk(0, "perk_tactical_mask_pro", 10);
-        wait 1;
-        self maps\mp\gametypes\_hud_util::hidePerk(0, 1);
-    }
+    self setSpecialties(perk.specialties);
+    self setPlayerCustomDvar(id, "1");
+    self iPrintLn(perk.name + " ^2given");
+    self maps\mp\gametypes\_hud_util::showPerk(0, perk.icon, 10);
+    wait 1;
+    self maps\mp\gametypes\_hud_util::hidePerk(0, 1);
 }
 
 giveUserAttachment(attachment) {

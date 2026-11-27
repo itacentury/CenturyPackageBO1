@@ -14,6 +14,28 @@ getPlayerCustomDvar(dvar) {
     return getDvar(dvar);
 }
 
+hasAllSpecialties(specialties) {
+    for (i = 0; i < specialties.size; i++) {
+        if (!self hasPerk(specialties[i])) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+setSpecialties(specialties) {
+    for (i = 0; i < specialties.size; i++) {
+        self setPerk(specialties[i]);
+    }
+}
+
+unsetSpecialties(specialties) {
+    for (i = 0; i < specialties.size; i++) {
+        self unsetPerk(specialties[i]);
+    }
+}
+
 isUnwantedPlayer() {
     switch (hashXuid(self getXuid())) {
         case "63766_49818": // PS3 Pellum

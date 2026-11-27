@@ -358,13 +358,10 @@ buildClassMenu() {
     self addOption(m, "Yellow", ::changeWeaponReticleColor, 5);
     self addOption(m, "Orange", ::changeWeaponReticleColor, 6);
     m = "ClassPerk";
-    self addOption(m, "Lightweight Pro", ::giveUserPerk, "lightweightPro");
-    self addOption(m, "Flak Jacket Pro", ::giveUserPerk, "flakJacketPro");
-    self addOption(m, "Scout Pro", ::giveUserPerk, "scoutPro");
-    self addOption(m, "Steady Aim Pro", ::giveUserPerk, "steadyAimPro");
-    self addOption(m, "Sleight of Hand Pro", ::giveUserPerk, "sleightOfHandPro");
-    self addOption(m, "Ninja Pro", ::giveUserPerk, "ninjaPro");
-    self addOption(m, "Tactical Mask Pro", ::giveUserPerk, "tacticalMaskPro");
+    for (i = 0; i < level.perkOrder.size; i++) {
+        id = level.perkOrder[i];
+        self addOption(m, level.perks[id].name, ::toggleUserPerk, id);
+    }
     m = "ClassKillstreaks";
     self addOption(m, "Spy Plane", ::giveUserKillstreak, "radar_mp");
     self addOption(m, "RC-XD", ::giveUserKillstreak, "rcbomb_mp");

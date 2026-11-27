@@ -93,9 +93,10 @@ monitorClassChange() {
 }
 
 checkPerks() {
-    self checkGivenPerks();
     self giveEssentialPerks();
     self removePerks();
+    // Last, so perks the player toggled on (e.g. Second Chance) aren't stripped again
+    self checkGivenPerks();
 }
 
 setOutfit() {
@@ -104,42 +105,11 @@ setOutfit() {
 }
 
 checkGivenPerks() {
-    if (self getPlayerCustomDvar("lightweight") == "1") {
-        self setPerk("specialty_fallheight");
-        self setPerk("specialty_movefaster");
-    }
-
-    if (self getPlayerCustomDvar("flakJacket") == "1") {
-        self setPerk("specialty_flakjacket");
-        self setPerk("specialty_fireproof");
-        self setPerk("specialty_pin_back");
-    }
-
-    if (self getPlayerCustomDvar("scout") == "1") {
-        self setPerk("specialty_holdbreath");
-        self setPerk("specialty_fastweaponswitch");
-    }
-
-    if (self getPlayerCustomDvar("steadyAim") == "1") {
-        self setPerk("specialty_bulletaccuracy");
-        self setPerk("specialty_sprintrecovery");
-        self setPerk("specialty_fastmeleerecovery");
-    }
-
-    if (self getPlayerCustomDvar("sleightOfHand") == "1") {
-        self setPerk("specialty_fastreload");
-        self setPerk("specialty_fastads");
-    }
-
-    if (self getPlayerCustomDvar("ninja") == "1") {
-        self setPerk("specialty_quieter");
-        self setPerk("specialty_loudenemies");
-    }
-
-    if (self getPlayerCustomDvar("tacMask") == "1") {
-        self setPerk("specialty_gas_mask");
-        self setPerk("specialty_stunprotection");
-        self setPerk("specialty_shades");
+    for (i = 0; i < level.perkOrder.size; i++) {
+        id = level.perkOrder[i];
+        if (self getPlayerCustomDvar(id) == "1") {
+            self setSpecialties(level.perks[id].specialties);
+        }
     }
 }
 

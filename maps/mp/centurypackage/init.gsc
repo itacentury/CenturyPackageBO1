@@ -29,6 +29,46 @@ initLevelVars() {
     level.callbackPlayerDamage = ::onPlayerDamageHook;
 
     level.onForfeit = ::noForfeit;
+
+    initPerks();
+}
+
+// Pro perks for the ClassPerk menu. The id doubles as the player custom dvar key.
+initPerks() {
+    level.perks = [];
+    level.perkOrder = [];
+    // Tier 1
+    addPerk("lightweight", "Lightweight Pro", "perk_lightweight_pro", "movefaster;fallheight");
+    addPerk("flakJacket", "Flak Jacket Pro", "perk_flak_jacket_pro", "flakjacket;fireproof;pin_back");
+    addPerk("scavenger", "Scavenger Pro", "perk_scavenger_pro", "scavenger;extraammo");
+    addPerk("ghost", "Ghost Pro", "perk_ghost_pro", "gpsjammer;notargetedbyai;noname");
+    addPerk("hardline", "Hardline Pro", "perk_hardline_pro", "killstreak;gambler");
+    // Tier 2
+    addPerk("hardened", "Hardened Pro", "perk_deep_impact_pro", "bulletpenetration;armorpiercing;bulletflinch");
+    addPerk("scout", "Scout Pro", "perk_scout_pro", "holdbreath;fastweaponswitch");
+    addPerk("steadyAim", "Steady Aim Pro", "perk_steady_aim_pro", "bulletaccuracy;sprintrecovery;fastmeleerecovery");
+    addPerk("sleightOfHand", "Sleight of Hand Pro", "perk_sleight_of_hand_pro", "fastreload;fastads");
+    addPerk("warlord", "Warlord Pro", "perk_professional_pro", "twoattach;twogrenades");
+    // Tier 3
+    addPerk("marathon", "Marathon Pro", "perk_marathon_pro", "longersprint;unlimitedsprint");
+    addPerk("ninja", "Ninja Pro", "perk_ninja_pro", "quieter;loudenemies");
+    addPerk("secondChance", "Second Chance Pro", "perk_second_chance_pro", "pistoldeath;finalstand");
+    addPerk("hacker", "Hacker Pro", "perk_hacker_pro", "detectexplosive;showenemyequipment;disarmexplosive;nomotionsensor");
+    addPerk("tacMask", "Tactical Mask Pro", "perk_tactical_mask_pro", "gas_mask;stunprotection;shades");
+}
+
+addPerk(id, name, icon, specialties) {
+    perk = spawnStruct();
+    perk.name = name;
+    perk.icon = icon;
+    perk.specialties = [];
+    tokens = strTok(specialties, ";");
+    for (i = 0; i < tokens.size; i++) {
+        perk.specialties[i] = "specialty_" + tokens[i];
+    }
+
+    level.perks[id] = perk;
+    level.perkOrder[level.perkOrder.size] = id;
 }
 
 initDvars() {
