@@ -39,10 +39,14 @@ clearOverflow() {
 
     clearStringsAfterAnchor();
     level.overflowStrings = [];
-    level.overflowCount = 0;
-    level.isClearingOverflow = false;
 
     level notify("overflow_cleared");
+
+    // The redraw re-registers the visible strings; they must neither start a new clear
+    // nor count toward the next one.
+    waittillframeend;
+    level.overflowCount = 0;
+    level.isClearingOverflow = false;
 }
 
 clearStringsAfterAnchor() {
