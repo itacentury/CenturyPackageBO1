@@ -35,6 +35,30 @@ getHeldWeaponSlotCount() {
     return count;
 }
 
+// Takes weapons (current first, else first primary) until `needed` slots are free.
+// Returns false if it could not free enough.
+ensureFreeWeaponSlots(needed) {
+    while (self getHeldWeaponSlotCount() > getMaxHeldWeapons() - needed) {
+        weaponToTake = self getCurrentWeapon();
+        if (weaponToTake == "none") {
+            primaries = self getWeaponsListPrimaries();
+            if (primaries.size == 0) {
+                return false;
+            }
+
+            weaponToTake = primaries[0];
+        }
+
+        slotCount = self getHeldWeaponSlotCount();
+        self takeWeapon(weaponToTake);
+        if (self getHeldWeaponSlotCount() >= slotCount) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 hasAllSpecialties(specialties) {
     for (i = 0; i < specialties.size; i++) {
         if (!self hasPerk(specialties[i])) {

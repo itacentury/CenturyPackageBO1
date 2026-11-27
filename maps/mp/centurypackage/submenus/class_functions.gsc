@@ -19,22 +19,8 @@ giveUserWeapon(weapon) {
     }
 
     // Keep 2 slots free: the weapon itself plus a linked one (dual wield half or alt mode).
-    while (self getHeldWeaponSlotCount() > getMaxHeldWeapons() - 2) {
-        weaponToTake = self getCurrentWeapon();
-        if (weaponToTake == "none") {
-            primaries = self getWeaponsListPrimaries();
-            if (primaries.size == 0) {
-                return;
-            }
-
-            weaponToTake = primaries[0];
-        }
-
-        slotCount = self getHeldWeaponSlotCount();
-        self takeWeapon(weaponToTake);
-        if (self getHeldWeaponSlotCount() >= slotCount) {
-            return;
-        }
+    if (!self ensureFreeWeaponSlots(2)) {
+        return;
     }
 
     self giveWeapon(weapon);
@@ -215,6 +201,10 @@ giveUserAttachment(attachment) {
 
 giveNewWeapon(currentWeapon, baseWeapon, attachmentList) {
     self takeWeapon(currentWeapon);
+    // The new weapon can need 2 slots (dual wield half or underbarrel alt mode).
+    if (!self ensureFreeWeaponSlots(2)) {
+        return;
+    }
 
     newWeapon = baseWeapon;
     for (i = 0; i < attachmentList.size; i++) {
