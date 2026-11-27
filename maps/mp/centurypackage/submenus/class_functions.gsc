@@ -213,23 +213,50 @@ giveNewWeapon(currentWeapon, baseWeapon, attachmentList) {
 
     // Take the current weapon first so its slots count as free, then ask only for what
     // newWeapon needs. Asking for more would take an unrelated weapon.
-    weaponAmmoClip = self getWeaponAmmoClip(currentWeapon);
-    weaponAmmoStock = self getWeaponAmmoStock(currentWeapon);
-    self takeWeapon(currentWeapon);
-    if (!self ensureFreeWeaponSlots(self getWeaponSlotCost(newWeapon))) {
-        // Its slots were just freed, so giving it back can't overflow.
-        self giveWeapon(currentWeapon, 0, self getCurrentWeaponOptions());
-        self setWeaponAmmoClip(currentWeapon, weaponAmmoClip);
-        self setWeaponAmmoStock(currentWeapon, weaponAmmoStock);
-        self setSpawnWeapon(currentWeapon);
-        return;
-    }
-
     if (!isDefined(self.camo) || self.camo == 0) {
         self.camo = randomIntRange(1, 16);
     }
 
-    self giveWeapon(newWeapon, 0, self getCurrentWeaponOptions());
+    weaponOptions = self getCurrentWeaponOptions();
+
+    // Snapshot the ammo so the failure path can restore it, including the linked weapons
+    // that have their own clip: the alt-mode underbarrel and the left-hand dual wield half.
+    weaponAmmoClip = self getWeaponAmmoClip(currentWeapon);
+    weaponAmmoStock = self getWeaponAmmoStock(currentWeapon);
+    altWeapon = weaponAltWeaponName(currentWeapon);
+    if (altWeapon != "none") {
+        altAmmoClip = self getWeaponAmmoClip(altWeapon);
+        altAmmoStock = self getWeaponAmmoStock(altWeapon);
+    }
+
+    leftHandWeapon = "none";
+    currentBaseWeapon = strTok(currentWeapon, "_")[0];
+    if (isSubStr(currentBaseWeapon, "dw")) {
+        // No builtin for DualWieldWeapon; the left half is named <base>lh_mp (aspdw_mp -> asplh_mp).
+        leftHandWeapon = getSubStr(currentBaseWeapon, 0, currentBaseWeapon.size - 2) + "lh_mp";
+        leftHandAmmoClip = self getWeaponAmmoClip(leftHandWeapon);
+    }
+
+    self takeWeapon(currentWeapon);
+    if (!self ensureFreeWeaponSlots(self getWeaponSlotCost(newWeapon))) {
+        // Its slots were just freed, so giving it back can't overflow.
+        self giveWeapon(currentWeapon, 0, weaponOptions);
+        self setWeaponAmmoClip(currentWeapon, weaponAmmoClip);
+        self setWeaponAmmoStock(currentWeapon, weaponAmmoStock);
+        if (altWeapon != "none") {
+            self setWeaponAmmoClip(altWeapon, altAmmoClip);
+            self setWeaponAmmoStock(altWeapon, altAmmoStock);
+        }
+
+        if (leftHandWeapon != "none") {
+            self setWeaponAmmoClip(leftHandWeapon, leftHandAmmoClip);
+        }
+
+        self setSpawnWeapon(currentWeapon);
+        return;
+    }
+
+    self giveWeapon(newWeapon, 0, weaponOptions);
     self setSpawnWeapon(newWeapon);
 }
 
