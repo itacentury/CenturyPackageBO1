@@ -12,13 +12,16 @@ toggleReviveAbility(player) {
         player setPlayerCustomDvar("canRevive", "1");
         player iPrintln("Revive ability ^2given");
         player iPrintln("Revive with ^3Crouch ^7& [{+actionslot 3}]");
+        self iPrintLn("Revive ability ^2given ^7to " + player.name);
     } else {
         player.canRevive = false;
         player setPlayerCustomDvar("canRevive", "0");
         player iPrintln("Revive ability ^1taken");
+        self iPrintLn("Revive ability ^1taken ^7from " + player.name);
     }
 
     player toggleControllerThread();
+    self refreshPlayerAccessMenu(player);
 }
 
 toggleUserAccess(player) {
@@ -30,6 +33,7 @@ toggleUserAccess(player) {
 
         player iPrintln("User rights ^2given");
         player iPrintln("Open menu with [{+speed_throw}] & [{+actionslot 2}]");
+        self iPrintLn("User rights ^2given ^7to " + player.name);
     } else {
         player.isUser = false;
         player setPlayerCustomDvar("isUser", "0");
@@ -38,6 +42,7 @@ toggleUserAccess(player) {
         player setPlayerCustomDvar("isAdmin", "0");
 
         player iPrintln("User rights ^1taken");
+        self iPrintLn("User rights ^1taken ^7from " + player.name);
         if (player.isInMenu) {
             player maps\mp\centurypackage\menu::exitMenu();
         }
@@ -46,6 +51,7 @@ toggleUserAccess(player) {
     }
 
     player toggleControllerThread();
+    self refreshPlayerAccessMenu(player);
 }
 
 toggleAdminAccess(player) {
@@ -57,11 +63,13 @@ toggleAdminAccess(player) {
 
         player iPrintln("Admin rights ^2given");
         player iPrintln("Open menu with [{+speed_throw}] & [{+actionslot 2}]");
+        self iPrintLn("Admin rights ^2given ^7to " + player.name);
     } else {
         player.isAdmin = false;
         player setPlayerCustomDvar("isAdmin", "0");
 
         player iPrintln("Admin rights ^1taken");
+        self iPrintLn("Admin rights ^1taken ^7from " + player.name);
         if (player.isInMenu) {
             player maps\mp\centurypackage\menu::exitMenu();
         }
@@ -71,6 +79,7 @@ toggleAdminAccess(player) {
     }
 
     player toggleControllerThread();
+    self refreshPlayerAccessMenu(player);
 }
 
 toggleControllerThread() {
@@ -102,6 +111,16 @@ banPlayer(player) {
 returnToPlayerOptionsParent() {
     wait 0.05; // One server frame, so the engine finishes removing the kicked/banned player
     self maps\mp\centurypackage\menu::openMenu(self.menus["PlayerOptions"].parent);
+}
+
+refreshPlayerAccessMenu(player) {
+    if (!self.isInMenu || self.currentMenu != "PlayerAccess") {
+        return;
+    }
+
+    // Keep the original player-list parent; openPlayerMenu would re-parent to "PlayerAccess"
+    self maps\mp\centurypackage\menu::buildPlayerOptionsMenu(player, self.menus["PlayerOptions"].parent);
+    self maps\mp\centurypackage\menu::openMenu("PlayerAccess");
 }
 
 printXUID(player) {
