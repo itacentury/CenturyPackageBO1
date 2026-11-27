@@ -219,15 +219,13 @@ saveLoadout() {
 }
 
 deleteSavedLoadout() {
-    if (self.saveLoadoutEnabled) {
-        self.saveLoadoutEnabled = false;
-        self iPrintLn("Saved weapons ^2deleted");
+    if (!self.saveLoadoutEnabled && self getPlayerCustomDvar("loadoutSaved") == "1") {
+        return;
     }
 
-    if (self getPlayerCustomDvar("loadoutSaved") == "1") {
-        self setPlayerCustomDvar("loadoutSaved", "0");
-        self iPrintLn("Saved weapons ^2deleted");
-    }
+    self.saveLoadoutEnabled = false;
+    self setPlayerCustomDvar("loadoutSaved", "0");
+    self iPrintLn("Saved weapons ^2deleted");
 }
 
 loadLoadout() {
