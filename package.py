@@ -72,7 +72,7 @@ def check_changelog(version: str) -> None:
     """Raise PackageError unless CHANGELOG.md at tag `version` is ready for release.
 
     It needs a `## [version] - YYYY-MM-DD` heading with a valid date, and the section
-    must not still contain a "Planned as" note (see RELEASING.md step 1).
+    must not still contain a line starting with a "Planned as" note (see RELEASING.md step 1).
     """
     result = subprocess.run(
         git("show", f"refs/tags/{version}:CHANGELOG.md"),
@@ -98,7 +98,7 @@ def check_changelog(version: str) -> None:
         )
     next_heading = re.compile(r"^## ", re.MULTILINE).search(text, heading.end())
     section = text[heading.end():next_heading.start() if next_heading else len(text)]
-    if "planned as" in section.casefold():
+    if re.search(r"^planned as\b", section, re.IGNORECASE | re.MULTILINE):
         problems.append(f'the `[{version}]` section still contains a "Planned as" note')
     if problems:
         raise PackageError(
