@@ -35,8 +35,6 @@ Planned as `3.0.0`: the new folder layout requires a fresh install when upgradin
 - Fatal error when the 15 weapon slots overflow.
 - String overflow: menu text no longer exhausts the game's string limit.
 - "None" camo choice was ignored and replaced with a random camo.
-- "Ban player" not working.
-- Menu overflow clear retriggering itself every frame; overflow anchor is registered after precaching in every round.
 - Menu could be opened without rights; removed admins kept admin access.
 - Multiple controller threads and binds clashing with other binds.
 - Hide toggle not working in some modes or not persisting after respawn.
