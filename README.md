@@ -37,6 +37,7 @@ It is advised to use `The Century Package` in combination with [Silinium](https:
                             ├── init.gsc
                             ├── main_functions.gsc
                             ├── menu.gsc
+                            ├── overflow.gsc
                             ├── rights_management.gsc
                             ├── string_utils.gsc
                             ├── stubs.gsc
@@ -71,6 +72,14 @@ It is advised to use `The Century Package` in combination with [Silinium](https:
 ## Features
 
 See the [FEATURES.md](FEATURES.md) file for a list of all features.
+
+## Changelog
+
+See the [CHANGELOG.md](CHANGELOG.md) file for changes between versions.
+
+## Releasing
+
+See the [RELEASING.md](RELEASING.md) file for the release process.
 
 ## Credits
 
