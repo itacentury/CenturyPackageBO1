@@ -14,8 +14,7 @@ dropCurrentWeapon() {
 
 giveUserWeapon(weapon) {
     if (!self hasWeapon(weapon)) {
-        // Keep 2 slots free: the weapon itself plus a linked one (dual wield half or alt mode).
-        if (!self ensureFreeWeaponSlots(2)) {
+        if (!self ensureFreeWeaponSlots(self getWeaponSlotCost(weapon))) {
             return;
         }
 
@@ -198,12 +197,6 @@ giveUserAttachment(attachment) {
 }
 
 giveNewWeapon(currentWeapon, baseWeapon, attachmentList) {
-    self takeWeapon(currentWeapon);
-    // The new weapon can need 2 slots (dual wield half or underbarrel alt mode).
-    if (!self ensureFreeWeaponSlots(2)) {
-        return;
-    }
-
     newWeapon = baseWeapon;
     for (i = 0; i < attachmentList.size; i++) {
         prefix = "_";
@@ -217,6 +210,21 @@ giveNewWeapon(currentWeapon, baseWeapon, attachmentList) {
     }
 
     newWeapon += "_mp";
+
+    // Take the current weapon first so its slots count as free, then ask only for what
+    // newWeapon needs. Asking for more would take an unrelated weapon.
+    weaponAmmoClip = self getWeaponAmmoClip(currentWeapon);
+    weaponAmmoStock = self getWeaponAmmoStock(currentWeapon);
+    self takeWeapon(currentWeapon);
+    if (!self ensureFreeWeaponSlots(self getWeaponSlotCost(newWeapon))) {
+        // Its slots were just freed, so giving it back can't overflow.
+        self giveWeapon(currentWeapon, 0, self getCurrentWeaponOptions());
+        self setWeaponAmmoClip(currentWeapon, weaponAmmoClip);
+        self setWeaponAmmoStock(currentWeapon, weaponAmmoStock);
+        self setSpawnWeapon(currentWeapon);
+        return;
+    }
+
     if (!isDefined(self.camo) || self.camo == 0) {
         self.camo = randomIntRange(1, 16);
     }

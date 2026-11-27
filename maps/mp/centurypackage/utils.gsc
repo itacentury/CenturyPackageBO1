@@ -35,12 +35,27 @@ getHeldWeaponSlotCount() {
     return count;
 }
 
+// Slots a weapon takes once given: itself, plus its alt-mode underbarrel (gl_/mk_/ft_)
+// or its dual wield left-hand half, which each get their own slot.
+getWeaponSlotCost(weapon) {
+    cost = 1;
+    if (weaponAltWeaponName(weapon) != "none") {
+        cost++;
+    }
+
+    if (isSubStr(strTok(weapon, "_")[0], "dw")) {
+        cost++;
+    }
+
+    return cost;
+}
+
 // Takes primaries (the current weapon if it is one, else the first) until `needed` slots
 // are free. Only primaries, so killstreak weapons, bomb/syrette and alt-mode underbarrels
 // are never taken. Returns false if it could not free enough.
-// If the inventory was already full from elsewhere (pickups, supply drops), freeing 2 slots
-// can take 2 weapons for one pick: after the first take the current weapon is "none", so
-// primaries[0] goes too. Intended, since anything less would still overflow.
+// A pick that needs 2 slots (alt mode or dual wield, see getWeaponSlotCost) can take 2
+// weapons when the inventory is full: after the first take the current weapon is "none",
+// so primaries[0] goes too. Intended, since anything less would still overflow.
 ensureFreeWeaponSlots(needed) {
     while (self getHeldWeaponSlotCount() > getMaxHeldWeapons() - needed) {
         primaries = self getWeaponsListPrimaries();
