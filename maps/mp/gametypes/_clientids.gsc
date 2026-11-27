@@ -68,10 +68,7 @@ onPlayerSpawned() {
         }
 
         if (self hasUserRights()) {
-            if (!self.isOverlayDrawn) {
-                self maps\mp\centurypackage\hud::drawOverlay();
-            }
-
+            self maps\mp\centurypackage\hud::drawOverlay();
             if (self.saveLoadoutEnabled || self getPlayerCustomDvar("loadoutSaved") == "1") {
                 self maps\mp\centurypackage\submenus\self_functions::loadLoadout();
             }
