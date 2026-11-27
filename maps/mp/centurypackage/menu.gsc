@@ -53,8 +53,11 @@ buildMenu() {
     if (level.currentGametype == "sd") {
         self addOption(m, "Toggle overlay", ::toggleOverlay);
     }
-    self addOption(m, "Say all", ::sayAllCustom);
-    self addOption(m, "Say team", ::sayTeamCustom);
+
+    if (level.ps3) {
+        self addOption(m, "Say all", ::sayAllCustom);
+        self addOption(m, "Say team", ::sayTeamCustom);
+    }
 
     m = "SelfLoadout";
     self addOption(m, "Give trickshot loadout", ::giveTrickshotLoadout);
