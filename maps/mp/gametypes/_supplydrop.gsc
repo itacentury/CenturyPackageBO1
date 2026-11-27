@@ -5,6 +5,8 @@
 
 /*
 * Changes: in `crateUseThink()` and `crateUseThinkOwner()` commented out the check `if (!player isOnGround())` to allow care package stalling in trickshots
+* Changes: revived cut Supply Station: `minigun_drop_mp` marker in `isSupplyDropWeapon()`, `dropCrate()` runs `supplystation::stationThink()`, red cross minimap/head icon in `crateActivate()`
+* Changes: cut Bomber (2/3) and Supply Station (3/4) added to the care package and gambler rotation in `init()`, with their crate icons in `getIconForCrate()`
 */
 
 init() {
@@ -82,6 +84,12 @@ init() {
     registerCrateType("gambler_mp", "killstreak", "helicopter_gunner_mp", 3, &"KILLSTREAK_HELICOPTER_GUNNER_CRATE", undefined, "MEDAL_SHARE_PACKAGE_HELICOPTER_GUNNER", ::giveCrateKillstreak);
     registerCrateType("gambler_mp", "killstreak", "dogs_mp", 1, &"KILLSTREAK_DOGS_CRATE", undefined, "MEDAL_SHARE_PACKAGE_DOGS", ::giveCrateKillstreak);
     registerCrateType("gambler_mp", "killstreak", "helicopter_player_firstperson_mp", 1, &"KILLSTREAK_HELICOPTER_PLAYER_CRATE", undefined, "MEDAL_SHARE_PACKAGE_HELICOPTER_PLAYER", ::giveCrateKillstreak);
+    // Revived cut killstreaks (centurypackage/bomber.gsc, supplystation.gsc). No localized
+    // crate strings exist for them, so plain hint strings are used.
+    registerCrateType("supplydrop_mp", "killstreak", "bomber_mp", 2, "Hold [{+activate}] for Bomber", undefined, "MEDAL_SHARE_PACKAGE_AIRSTRIKE", ::giveCrateKillstreak);
+    registerCrateType("supplydrop_mp", "killstreak", "supply_station_mp", 3, "Hold [{+activate}] for Supply Station", undefined, "MEDAL_SHARE_PACKAGE_AMMO", ::giveCrateKillstreak);
+    registerCrateType("gambler_mp", "killstreak", "bomber_mp", 3, "Hold [{+activate}] for Bomber", undefined, "MEDAL_SHARE_PACKAGE_AIRSTRIKE", ::giveCrateKillstreak);
+    registerCrateType("gambler_mp", "killstreak", "supply_station_mp", 4, "Hold [{+activate}] for Supply Station", undefined, "MEDAL_SHARE_PACKAGE_AMMO", ::giveCrateKillstreak);
     level.crateCategoryWeights = [];
     crateCategoryKeys = getarraykeys(level.crateTypes);
     for (crateCategory = 0; crateCategory < crateCategoryKeys.size; crateCategory++) {
@@ -588,6 +596,15 @@ getIconForCrate() {
     icon = undefined;
     switch (self.crateType.type) {
         case "killstreak": {
+                // Cut killstreaks have no killstreakTable entry, so no icon in level.killStreakIcons.
+                if (self.crateType.name == "bomber_mp") {
+                    return "hud_icon_air_airstrike_drop";
+                }
+
+                if (self.crateType.name == "supply_station_mp") {
+                    return level.supplyStationCompassIcon;
+                }
+
                 killstreak = maps\mp\gametypes\_hardpoints::GetKillStreakMenuName(self.crateType.name);
                 icon = level.killStreakIcons[killstreak];
             }
