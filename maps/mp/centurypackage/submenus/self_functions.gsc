@@ -220,6 +220,7 @@ saveLoadout() {
 
 deleteSavedLoadout() {
     if (!self.saveLoadoutEnabled && self getPlayerCustomDvar("loadoutSaved") != "1") {
+        self iPrintLn("No saved weapons");
         return;
     }
 
