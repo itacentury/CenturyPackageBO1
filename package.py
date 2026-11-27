@@ -22,8 +22,11 @@ from pathlib import Path, PurePosixPath
 REPO_ROOT: Path = Path(__file__).resolve().parent
 MOD_NAME: str = "CenturyPackageBO1"
 MOD_PREFIX: PurePosixPath = PurePosixPath("mp", MOD_NAME)
+MOD_FILE: str = f"mp/{MOD_NAME}.mod"
+SILINIUM_DIR: PurePosixPath = PurePosixPath("silinium", "maps")
+SILINIUM_STUBS: PurePosixPath = SILINIUM_DIR / "mp" / "centurypackage" / "stubs.gsc"
 # silinium/maps comes second so its stubs.gsc replaces the PC no-op version
-SOURCE_DIRS: list[PurePosixPath] = [PurePosixPath("maps"), PurePosixPath("silinium", "maps")]
+SOURCE_DIRS: list[PurePosixPath] = [PurePosixPath("maps"), SILINIUM_DIR]
 VERSION_PATTERN: re.Pattern[str] = re.compile(r"\d+\.\d+\.\d+")
 
 
@@ -82,6 +85,11 @@ def read_tree(version: str) -> dict[PurePosixPath, bytes]:
     return files
 
 
+def arcname(path: PurePosixPath, source_dir: PurePosixPath) -> str:
+    """Zip entry name for `path` from `source_dir`, e.g. silinium/maps/x -> mp/CenturyPackageBO1/maps/x."""
+    return str(MOD_PREFIX / path.relative_to(source_dir.parent))
+
+
 def collect_entries(files: dict[PurePosixPath, bytes]) -> dict[str, bytes]:
     """Map zip entry names to file contents; later SOURCE_DIRS override earlier ones."""
     entries: dict[str, bytes] = {}
@@ -90,26 +98,50 @@ def collect_entries(files: dict[PurePosixPath, bytes]) -> dict[str, bytes]:
         if not matched:
             sys.exit(f"No files under {source_dir} in the tag")
         for path in matched:
-            relative = path.relative_to(source_dir.parent)
-            entries[str(MOD_PREFIX / relative)] = files[path]
+            entries[arcname(path, source_dir)] = files[path]
     return entries
+
+
+def write_zip(zip_path: Path, entries: dict[str, bytes]) -> None:
+    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as archive:
+        archive.writestr(MOD_FILE, "")
+        for name in sorted(entries):
+            archive.writestr(name, entries[name])
+
+
+def verify_zip(zip_path: Path, files: dict[PurePosixPath, bytes]) -> None:
+    """Reopen the written zip and check the PS3 layout; delete the zip and exit if it is wrong."""
+    problems: list[str] = []
+    if SILINIUM_STUBS not in files:
+        problems.append(f"{SILINIUM_STUBS} is missing from the tag, so the zip would ship the PC stubs")
+    with zipfile.ZipFile(zip_path) as archive:
+        names = set(archive.namelist())
+        if MOD_FILE not in names:
+            problems.append(f"{MOD_FILE} is missing")
+        for path in sorted(p for p in files if p.is_relative_to(SILINIUM_DIR)):
+            name = arcname(path, SILINIUM_DIR)
+            if name not in names:
+                problems.append(f"{name} is missing")
+            elif archive.read(name) != files[path]:
+                problems.append(f"{name} is not the version from {path}")
+    if problems:
+        zip_path.unlink()
+        sys.exit(f"Deleted {zip_path}, verification failed:\n  " + "\n  ".join(problems))
 
 
 def build_zip(version: str, output_dir: Path) -> Path:
     check_version(version)
     resolve_tag(version)
     check_changelog(version)
-    entries = collect_entries(read_tree(version))
+    files = read_tree(version)
+    entries = collect_entries(files)
 
     output_dir.mkdir(parents=True, exist_ok=True)
     zip_path = output_dir / f"{MOD_NAME}-{version}-PS3.zip"
+    write_zip(zip_path, entries)
+    verify_zip(zip_path, files)
 
-    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as archive:
-        archive.writestr(f"mp/{MOD_NAME}.mod", "")
-        for arcname in sorted(entries):
-            archive.writestr(arcname, entries[arcname])
-
-    print(f"Wrote {zip_path} ({len(entries) + 1} files from tag {version})")
+    print(f"Wrote and verified {zip_path} ({len(entries) + 1} files from tag {version})")
     return zip_path
 
 
