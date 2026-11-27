@@ -211,8 +211,6 @@ giveNewWeapon(currentWeapon, baseWeapon, attachmentList) {
 
     newWeapon += "_mp";
 
-    // Take the current weapon first so its slots count as free, then ask only for what
-    // newWeapon needs. Asking for more would take an unrelated weapon.
     if (!isDefined(self.camo) || self.camo == 0) {
         self.camo = randomIntRange(1, 16);
     }
@@ -237,6 +235,8 @@ giveNewWeapon(currentWeapon, baseWeapon, attachmentList) {
         leftHandAmmoClip = self getWeaponAmmoClip(leftHandWeapon);
     }
 
+    // Take the current weapon first so its slots count as free, then ask only for what
+    // newWeapon needs. Asking for more would take an unrelated weapon.
     self takeWeapon(currentWeapon);
     if (!self ensureFreeWeaponSlots(self getWeaponSlotCost(newWeapon))) {
         // Its slots were just freed, so giving it back can't overflow.
