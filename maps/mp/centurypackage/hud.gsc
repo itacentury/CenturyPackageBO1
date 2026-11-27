@@ -65,14 +65,6 @@ destroyOverlay() {
         return;
     }
 
-    if (level.currentGametype != "sd") {
-        return;
-    }
-
-    if (!self.overlayEnabled) {
-        return;
-    }
-
     self.overlay destroy();
     self.isOverlayDrawn = false;
 }
