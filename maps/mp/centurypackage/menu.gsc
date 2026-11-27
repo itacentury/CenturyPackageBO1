@@ -362,6 +362,7 @@ buildClassMenu() {
         id = level.perkOrder[i];
         self addOption(m, level.perks[id].name, ::toggleUserPerk, id);
     }
+
     m = "ClassKillstreaks";
     self addOption(m, "Spy Plane", ::giveUserKillstreak, "radar_mp");
     self addOption(m, "RC-XD", ::giveUserKillstreak, "rcbomb_mp");
