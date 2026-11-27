@@ -108,7 +108,7 @@ banPlayer(player) {
 }
 
 returnToPlayerOptionsParent() {
-    wait .01; // Very small delay to let the game fully remove the player from the game
+    wait 0.05; // One server frame, so the engine finishes removing the kicked/banned player
     self maps\mp\centurypackage\menu::openMenu(self.menus["PlayerOptions"].parent);
 }
 
