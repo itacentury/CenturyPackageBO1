@@ -98,7 +98,7 @@ def check_changelog(version: str) -> None:
         )
     next_heading = re.compile(r"^## ", re.MULTILINE).search(text, heading.end())
     section = text[heading.end():next_heading.start() if next_heading else len(text)]
-    if "Planned as" in section:
+    if "planned as" in section.casefold():
         problems.append(f'the `[{version}]` section still contains a "Planned as" note')
     if problems:
         raise PackageError(
