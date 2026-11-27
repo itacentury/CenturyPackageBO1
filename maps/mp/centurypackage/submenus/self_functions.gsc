@@ -86,18 +86,18 @@ giveUnlockAll() {
         return;
     }
 
-    //RANKED GAME
+    // RANKED GAME
     level.rankedMatch = true;
     level.contractsEnabled = true;
     setDvar("onlineGame", 1);
     setDvar("xblive_rankedmatch", 1);
     setDvar("xblive_privatematch", 0);
-    //LEVEL 50
+    // LEVEL 50
     self maps\mp\gametypes\_persistence::statSet("rankxp", 1262500, false);
     self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "rankxp", 1262500);
     self.pers["rank"] = 49;
     self setRank(49);
-    //PRESTIGE
+    // PRESTIGE
     prestigeLevel = 15;
     self.pers["plevel"] = prestigeLevel;
     self.pers["prestige"] = prestigeLevel;
@@ -105,7 +105,7 @@ giveUnlockAll() {
     self maps\mp\gametypes\_persistence::statSet("plevel", prestigeLevel, true);
     self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "plevel", prestigeLevel);
     self setRank(self.pers["rank"], prestigeLevel);
-    //PERKS
+    // PERKS
     perks = [];
     perks[0]  = "PERKS_SLEIGHT_OF_HAND";
     perks[1]  = "PERKS_GHOST";
@@ -129,16 +129,16 @@ giveUnlockAll() {
         }
     }
 
-    //COD POINTS
+    // COD POINTS
     points = 1000000000;
     self maps\mp\gametypes\_persistence::statSet("codpoints", points, false);
     self maps\mp\gametypes\_persistence::statSetInternal("PlayerStatsList", "codpoints", points);
     self maps\mp\gametypes\_persistence::setPlayerStat("PlayerStatsList", "CODPOINTS", points);
     self.pers["codpoints"] = points;
-    //ITEMS
+    // ITEMS
     self setClientDvar("allItemsPurchased", "1");
     self setClientDvar("allItemsUnlocked", "1");
-    //EMBLEMS
+    // EMBLEMS
     self setClientDvar("allEmblemsPurchased", "1");
     self setClientDvar("allEmblemsUnlocked", "1");
     self setClientDvar("ui_items_no_cost", "1");

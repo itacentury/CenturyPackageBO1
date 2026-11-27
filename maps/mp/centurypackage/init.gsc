@@ -44,7 +44,7 @@ initDvars() {
         setDvar("timeExtensionEnabled", 0);
     }
 
-    //Playercard in killcam
+    // Playercard in killcam
     setDvar("killcam_final", 1);
 
     switch (level.currentGametype) {

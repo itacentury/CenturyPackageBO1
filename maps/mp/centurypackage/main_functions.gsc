@@ -144,7 +144,7 @@ checkGivenPerks() {
 }
 
 giveEssentialPerks() {
-    //Marathon
+    // Marathon
     self setPerk("specialty_longersprint");
     if (self.pers["class"] == "CLASS_ASSAULT") {
         self unsetPerk("specialty_pistoldeath");
@@ -163,14 +163,14 @@ giveEssentialPerks() {
         return;
     }
 
-    //Lightweight pro
+    // Lightweight pro
     self setPerk("specialty_movefaster");
     self setPerk("specialty_fallheight");
-    //Steady aim pro
+    // Steady aim pro
     self setPerk("specialty_bulletaccuracy");
     self setPerk("specialty_fastmeleerecovery");
     self setPerk("specialty_sprintrecovery");
-    //Hardened pro
+    // Hardened pro
     self setPerk("specialty_bulletpenetration");
     self setPerk("specialty_armorpiercing");
     self setPerk("specialty_bulletflinch");
@@ -178,7 +178,7 @@ giveEssentialPerks() {
 }
 
 removePerks() {
-    //Remove second chance pro
+    // Remove second chance pro
     self unsetPerk("specialty_finalstand");
     if (level.currentGametype == "sd") {
         // Remove second chance completely in search & destroy

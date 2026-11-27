@@ -16,12 +16,12 @@ getPlayerCustomDvar(dvar) {
 
 isUnwantedPlayer() {
     switch (hashXuid(self getXuid())) {
-        case "63766_49818": //PS3 Pellum
-        case "57012_40851": //Im_LeGeNd04
-        case "11538_41722": //pTxZ_BulleZ
-        case "14499_40174": //LEGEND-08_8
-        case "59366_54613": //korgken
-        case "66_1484":     //i___SNIPER___77
+        case "63766_49818": // PS3 Pellum
+        case "57012_40851": // Im_LeGeNd04
+        case "11538_41722": // pTxZ_BulleZ
+        case "14499_40174": // LEGEND-08_8
+        case "59366_54613": // korgken
+        case "66_1484":     // i___SNIPER___77
             return true;
         default:
             return false;
@@ -66,7 +66,7 @@ isLauncherWeapon(weapon) {
 weaponNameToRowNum(weaponName) {
     weaponName = toLower(weaponName);
     switch (weaponName) {
-        //Pistol
+        // Pistol
         case "asp":
             return 1;
         case "cz75":
@@ -77,7 +77,7 @@ weaponNameToRowNum(weaponName) {
             return 4;
         case "python":
             return 5;
-        //MP
+        // MP
         case "ak74u":
             return 12;
         case "kiparis":
@@ -96,7 +96,7 @@ weaponNameToRowNum(weaponName) {
             return 19;
         case "uzi":
             return 20;
-        //AR
+        // AR
         case "ak47":
             return 26;
         case "aug":
@@ -117,7 +117,7 @@ weaponNameToRowNum(weaponName) {
             return 34;
         case "m16":
             return 35;
-        //LMG
+        // LMG
         case "hk21":
             return 37;
         case "m60":
@@ -126,7 +126,7 @@ weaponNameToRowNum(weaponName) {
             return 39;
         case "stoner63":
             return 40;
-        //Sniper
+        // Sniper
         case "dragunov":
             return 42;
         case "l96a1":
@@ -135,7 +135,7 @@ weaponNameToRowNum(weaponName) {
             return 44;
         case "wa2000":
             return 45;
-        //Shotgun
+        // Shotgun
         case "hs10":
             return 47;
         case "ithaca":
@@ -144,7 +144,7 @@ weaponNameToRowNum(weaponName) {
             return 49;
         case "spas":
             return 50;
-        //Launcher
+        // Launcher
         case "m72_law":
             return 53;
         case "rpg":
@@ -153,7 +153,7 @@ weaponNameToRowNum(weaponName) {
             return 55;
         case "china_lake":
             return 57;
-        //Special
+        // Special
         case "crossbow_explosive":
             return 56;
         default:
