@@ -3,3 +3,4 @@
 *.local.code-workspace
 *.local.json
 *.zip
+__pycache__/
