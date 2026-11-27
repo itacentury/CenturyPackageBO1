@@ -2,7 +2,7 @@
 #include common_scripts\utility;
 #include maps\mp\gametypes\_hud_util;
 
-#include maps\mp\gametypes\utils;
+#include maps\mp\CenturyPackage\utils;
 
 startUfoMode() {
     if (self.ufoEnabled) {
@@ -76,7 +76,7 @@ monitorClassChange() {
         self checkPerks();
 
         if (getDvarInt("UnfairStreaksEnabled") == 0) {
-            self maps\mp\gametypes\submenus\lobby_functions::unsetUnfairStreaks();
+            self maps\mp\CenturyPackage\submenus\lobby_functions::unsetUnfairStreaks();
         }
 
         if (self getCurrentWeapon() == "china_lake_mp") {

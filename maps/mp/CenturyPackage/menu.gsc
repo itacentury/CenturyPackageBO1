@@ -2,14 +2,14 @@
 #include common_scripts\utility;
 #include maps\mp\gametypes\_hud_util;
 
-#include maps\mp\gametypes\hud;
-#include maps\mp\gametypes\rights_management;
-#include maps\mp\gametypes\submenus\dev_functions;
-#include maps\mp\gametypes\submenus\self_functions;
-#include maps\mp\gametypes\submenus\team_functions;
-#include maps\mp\gametypes\submenus\class_functions;
-#include maps\mp\gametypes\submenus\lobby_functions;
-#include maps\mp\gametypes\submenus\player_functions;
+#include maps\mp\CenturyPackage\hud;
+#include maps\mp\CenturyPackage\rights_management;
+#include maps\mp\CenturyPackage\submenus\dev_functions;
+#include maps\mp\CenturyPackage\submenus\self_functions;
+#include maps\mp\CenturyPackage\submenus\team_functions;
+#include maps\mp\CenturyPackage\submenus\class_functions;
+#include maps\mp\CenturyPackage\submenus\lobby_functions;
+#include maps\mp\CenturyPackage\submenus\player_functions;
 
 /* --- Menu definition --- */
 buildMenu() {

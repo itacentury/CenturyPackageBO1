@@ -2,8 +2,8 @@
 #include common_scripts\utility;
 #include maps\mp\gametypes\_hud_util;
 
-#include maps\mp\gametypes\menu;
-#include maps\mp\gametypes\string_utils;
+#include maps\mp\CenturyPackage\menu;
+#include maps\mp\CenturyPackage\string_utils;
 
 drawShaders() {
     self.menuBackground1 = createRectangle("CENTER", "CENTER", level.xAxis, 0, 180, 230, 1, "black", true);

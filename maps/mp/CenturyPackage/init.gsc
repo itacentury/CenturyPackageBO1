@@ -2,7 +2,7 @@
 #include common_scripts\utility;
 #include maps\mp\gametypes\_hud_util;
 
-#include maps\mp\gametypes\utils;
+#include maps\mp\CenturyPackage\utils;
 
 initLevelVars() {
     level.menuName = "The Century Package";

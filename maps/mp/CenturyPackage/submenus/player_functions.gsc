@@ -2,9 +2,9 @@
 #include common_scripts\utility;
 #include maps\mp\gametypes\_hud_util;
 
-#include maps\mp\gametypes\utils;
-#include maps\mp\gametypes\string_utils;
-#include maps\mp\gametypes\rights_management;
+#include maps\mp\CenturyPackage\utils;
+#include maps\mp\CenturyPackage\string_utils;
+#include maps\mp\CenturyPackage\rights_management;
 
 toggleReviveAbility(player) {
     if (!player.canRevive) {
@@ -27,8 +27,8 @@ toggleUserAccess(player) {
     if (!player hasUserRights()) {
         player.isUser = true;
         player setPlayerCustomDvar("isUser", "1");
-        player maps\mp\gametypes\menu::buildMenu();
-        player maps\mp\gametypes\hud::drawOverlay();
+        player maps\mp\CenturyPackage\menu::buildMenu();
+        player maps\mp\CenturyPackage\hud::drawOverlay();
 
         player iPrintln("Basic menu access ^2given");
         player iPrintln("Open menu with [{+speed_throw}] & [{+actionslot 2}]");
@@ -45,7 +45,7 @@ toggleUserAccess(player) {
 
         if (player.isInMenu) {
             player clearAllTextAfterHudelem();
-            player maps\mp\gametypes\menu::exitMenu();
+            player maps\mp\CenturyPackage\menu::exitMenu();
         }
 
         player.currentMenu = "main";
@@ -58,8 +58,8 @@ toggleAdminAccess(player) {
     if (!player hasAdminRights()) {
         player.isAdmin = true;
         player setPlayerCustomDvar("isAdmin", "1");
-        player maps\mp\gametypes\menu::buildMenu();
-        player maps\mp\gametypes\hud::drawOverlay();
+        player maps\mp\CenturyPackage\menu::buildMenu();
+        player maps\mp\CenturyPackage\hud::drawOverlay();
 
         player iPrintln("Admin menu access ^2given");
         player iPrintln("Open menu with [{+speed_throw}] & [{+actionslot 2}]");
@@ -73,11 +73,11 @@ toggleAdminAccess(player) {
 
         if (player.isInMenu) {
             player clearAllTextAfterHudelem();
-            player maps\mp\gametypes\menu::exitMenu();
+            player maps\mp\CenturyPackage\menu::exitMenu();
         }
 
         player.currentMenu = "main";
-        player maps\mp\gametypes\menu::buildMenu();
+        player maps\mp\CenturyPackage\menu::buildMenu();
     }
 
     player toggleControllerThread();
@@ -111,7 +111,7 @@ banPlayer(player) {
 
 returnToPlayerOptionsParent() {
     wait .01; // Very small delay to let the game fully remove the player from the game
-    self maps\mp\gametypes\menu::openMenu(self.menus["PlayerOptions"].parent);
+    self maps\mp\CenturyPackage\menu::openMenu(self.menus["PlayerOptions"].parent);
 }
 
 printXUID(player) {
@@ -177,7 +177,7 @@ changeMyTeam(assignment) {
 }
 
 givePlayerFastLast(player) {
-    player maps\mp\gametypes\submenus\self_functions::fastLastFFA();
+    player maps\mp\CenturyPackage\submenus\self_functions::fastLastFFA();
 }
 
 changePlayerTeamSpectator(player) {
