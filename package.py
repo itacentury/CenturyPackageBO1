@@ -49,28 +49,36 @@ def git(*args: str) -> list[str]:
 
 
 def check_version(version: str) -> None:
-    """Raise PackageError unless `version` is MAJOR.MINOR.PATCH, which also keeps it safe in the zip filename."""
+    """Raise PackageError unless `version` is MAJOR.MINOR.PATCH.
+
+    This also keeps `version` safe to use in the zip filename.
+    """
     if not VERSION_PATTERN.fullmatch(version):
-        raise PackageError(f"Invalid version {version!r}: expected MAJOR.MINOR.PATCH, e.g. 3.0.0 (no v prefix)")
+        raise PackageError(
+            f"Invalid version {version!r}: expected MAJOR.MINOR.PATCH, e.g. 3.0.0 (no v prefix)"
+        )
 
 
 def check_changelog(version: str) -> None:
-    """Raise PackageError unless CHANGELOG.md at tag `version` has a release-ready `## [version]` section.
+    """Raise PackageError unless CHANGELOG.md at tag `version` is ready for release.
 
-    The heading must be dated as `## [version] - YYYY-MM-DD` and the section must not
-    still contain a "Planned as" note (see RELEASING.md step 1).
+    It needs a `## [version] - YYYY-MM-DD` heading with a valid date, and the section
+    must not still contain a "Planned as" note (see RELEASING.md step 1).
     """
     result = subprocess.run(
         git("show", f"refs/tags/{version}:CHANGELOG.md"),
         capture_output=True,
-        check=False
+        check=False,
     )
     if result.returncode != 0:
         raise PackageError(f"CHANGELOG.md not found at tag {version}")
     text = result.stdout.decode(errors="replace")
     heading = re.compile(rf"^## \[{re.escape(version)}\](.*)$", re.MULTILINE).search(text)
     if not heading:
-        raise PackageError(f"CHANGELOG.md at tag {version} has no `## [{version}]` section (see RELEASING.md step 1)")
+        raise PackageError(
+            f"CHANGELOG.md at tag {version} has no `## [{version}]` section"
+            " (see RELEASING.md step 1)"
+        )
 
     problems: list[str] = []
     date = re.fullmatch(r" - (\d{4}-\d{2}-\d{2})", heading.group(1).rstrip())
@@ -79,13 +87,18 @@ def check_changelog(version: str) -> None:
             raise ValueError
         datetime.date.fromisoformat(date.group(1))
     except ValueError:
-        problems.append(f"`## [{version}]` heading has no valid date (expected `## [{version}] - YYYY-MM-DD`)")
+        problems.append(
+            f"`## [{version}]` heading has no valid date"
+            f" (expected `## [{version}] - YYYY-MM-DD`)"
+        )
     next_heading = re.compile(r"^## ", re.MULTILINE).search(text, heading.end())
     section = text[heading.end():next_heading.start() if next_heading else len(text)]
     if "Planned as" in section:
         problems.append(f'the `[{version}]` section still contains a "Planned as" note')
     if problems:
-        raise PackageError(f"CHANGELOG.md at tag {version}: {'; '.join(problems)} (see RELEASING.md step 1)")
+        raise PackageError(
+            f"CHANGELOG.md at tag {version}: {'; '.join(problems)} (see RELEASING.md step 1)"
+        )
 
 
 def resolve_tag(version: str) -> None:
@@ -93,10 +106,12 @@ def resolve_tag(version: str) -> None:
     result = subprocess.run(
         git("rev-parse", "--verify", "--quiet", f"refs/tags/{version}^{{commit}}"),
         capture_output=True,
-        check=False
+        check=False,
     )
     if result.returncode != 0:
-        raise PackageError(f"Tag {version} not found (run `git fetch --tags` if it was created on GitHub)")
+        raise PackageError(
+            f"Tag {version} not found (run `git fetch --tags` if it was created on GitHub)"
+        )
 
 
 def read_tree(version: str) -> dict[PurePosixPath, bytes]:
@@ -104,7 +119,7 @@ def read_tree(version: str) -> dict[PurePosixPath, bytes]:
     result = subprocess.run(
         git("archive", "--format=tar", f"refs/tags/{version}", "--", *map(str, SOURCE_DIRS)),
         capture_output=True,
-        check=False
+        check=False,
     )
     if result.returncode != 0:
         raise PackageError(f"git archive failed: {result.stderr.decode(errors='replace').strip()}")
@@ -120,7 +135,10 @@ def read_tree(version: str) -> dict[PurePosixPath, bytes]:
 
 
 def arcname(path: PurePosixPath, source_dir: PurePosixPath) -> str:
-    """Zip entry name for `path` from `source_dir`, e.g. silinium/maps/x -> mp/CenturyPackageBO1/maps/x."""
+    """Zip entry name for `path` from `source_dir`.
+
+    For example, silinium/maps/x becomes mp/CenturyPackageBO1/maps/x.
+    """
     return str(SOURCE_DIRS[source_dir] / path.relative_to(source_dir))
 
 
@@ -141,10 +159,11 @@ def commit_time(rev: str) -> time.struct_time:
     result = subprocess.run(
         git("log", "-1", "--format=%ct", f"{rev}^{{commit}}"),
         capture_output=True,
-        check=False
+        check=False,
     )
     if result.returncode != 0:
-        raise PackageError(f"Could not read the commit time of {rev}: {result.stderr.decode(errors='replace').strip()}")
+        stderr = result.stderr.decode(errors="replace").strip()
+        raise PackageError(f"Could not read the commit time of {rev}: {stderr}")
     return time.gmtime(int(result.stdout))
 
 
@@ -181,10 +200,15 @@ def write_zip(zip_path: Path, entries: dict[str, bytes], timestamp: time.struct_
 
 
 def verify_zip(zip_path: Path, files: dict[PurePosixPath, bytes]) -> None:
-    """Reopen the written zip and check the PS3 layout; delete it and raise PackageError if it is wrong."""
+    """Reopen the written zip and check the PS3 layout.
+
+    If the layout is wrong, delete the zip and raise PackageError.
+    """
     problems: list[str] = []
     if SILINIUM_STUBS not in files:
-        problems.append(f"{SILINIUM_STUBS} is missing from the tag, so the zip would ship the PC stubs")
+        problems.append(
+            f"{SILINIUM_STUBS} is missing from the tag, so the zip would ship the PC stubs"
+        )
     with zipfile.ZipFile(zip_path) as archive:
         names = set(archive.namelist())
         if MOD_FILE not in names:
@@ -224,7 +248,9 @@ def build_zip(version: str, output_dir: Path) -> Path:
 def main() -> None:
     """Command-line entry point: report errors as messages instead of tracebacks."""
     parser = argparse.ArgumentParser(description="Build the PS3 release zip from a git tag")
-    parser.add_argument("version", type=str, help="Existing release tag as MAJOR.MINOR.PATCH without a v prefix, e.g. 3.0.0")
+    parser.add_argument("version", type=str,
+                        help="Existing release tag as MAJOR.MINOR.PATCH without a v prefix,"
+                             " e.g. 3.0.0")
     parser.add_argument("-o", "--output", type=Path, default=REPO_ROOT,
                         help="Output directory (default: repository root)")
     args = parser.parse_args()
