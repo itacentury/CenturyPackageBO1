@@ -17,6 +17,7 @@ import re
 import subprocess
 import sys
 import tarfile
+import time
 import zipfile
 from pathlib import Path, PurePosixPath
 
@@ -113,12 +114,48 @@ def collect_entries(files: dict[PurePosixPath, bytes]) -> dict[str, bytes]:
     return entries
 
 
-def write_zip(zip_path: Path, entries: dict[str, bytes]) -> None:
-    """Write the empty .mod marker file and all entries to `zip_path`."""
-    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as archive:
-        archive.writestr(MOD_FILE, "")
-        for name in sorted(entries):
-            archive.writestr(name, entries[name])
+def commit_time(rev: str) -> time.struct_time:
+    """Return the commit time of `rev` in UTC, used as the timestamp of every zip entry."""
+    result = subprocess.run(
+        git("log", "-1", "--format=%ct", f"{rev}^{{commit}}"),
+        capture_output=True,
+        check=False
+    )
+    if result.returncode != 0:
+        raise PackageError(f"Could not read the commit time of {rev}: {result.stderr.decode(errors='replace').strip()}")
+    return time.gmtime(int(result.stdout))
+
+
+def zip_info(name: str, timestamp: time.struct_time) -> zipfile.ZipInfo:
+    """Zip entry header with fixed time, OS and permissions, so builds are reproducible."""
+    date_time = (timestamp.tm_year, timestamp.tm_mon, timestamp.tm_mday,
+                 timestamp.tm_hour, timestamp.tm_min, timestamp.tm_sec)
+    info = zipfile.ZipInfo(name, date_time=date_time)
+    info.create_system = 3  # Unix, regardless of the OS that builds the zip
+    if name.endswith("/"):
+        info.external_attr = (0o40755 << 16) | 0x10  # directory
+    else:
+        info.external_attr = 0o644 << 16
+        info.compress_type = zipfile.ZIP_DEFLATED
+    return info
+
+
+def write_zip(zip_path: Path, entries: dict[str, bytes], timestamp: time.struct_time) -> None:
+    """Write folder entries, the empty .mod marker file and all entries to `zip_path`.
+
+    Every entry gets `timestamp` and fixed metadata, and entries are sorted, so the
+    same tag always produces the same zip.
+    """
+    contents = {MOD_FILE: b"", **entries}
+    folders = {
+        f"{parent}/"
+        for name in contents
+        for parent in PurePosixPath(name).parents
+        if parent != PurePosixPath(".")
+    }
+    with zipfile.ZipFile(zip_path, "w") as archive:
+        for name in sorted(folders | contents.keys()):
+            archive.writestr(zip_info(name, timestamp), contents.get(name, b""))
 
 
 def verify_zip(zip_path: Path, files: dict[PurePosixPath, bytes]) -> None:
@@ -155,7 +192,7 @@ def build_zip(version: str, output_dir: Path) -> Path:
 
     output_dir.mkdir(parents=True, exist_ok=True)
     zip_path = output_dir / f"{MOD_NAME}-{version}-PS3.zip"
-    write_zip(zip_path, entries)
+    write_zip(zip_path, entries, commit_time(f"refs/tags/{version}"))
     verify_zip(zip_path, files)
 
     print(f"Wrote and verified {zip_path} ({len(entries) + 1} files from tag {version})")
