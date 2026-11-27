@@ -306,7 +306,7 @@ cancel_button_press() {
     self endon("abort_killcam");
 
     for (;;) {
-        wait .05;
+        wait 0.05;
         if (self cancelTackInsertionButton()) {
             break;
         }

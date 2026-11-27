@@ -115,7 +115,7 @@ runController() {
             if (self.canRevive) {
                 if (self actionSlotThreeButtonPressed() && self getStance() == "crouch") {
                     self maps\mp\centurypackage\submenus\team_functions::reviveTeam();
-                    wait .12;
+                    wait 0.12;
                 }
             }
         }
@@ -153,19 +153,19 @@ runController() {
 
             if (self actionSlotTwoButtonPressed() && self getStance() == "crouch" && self isCreator()) {
                 self startUfoMode();
-                wait .12;
+                wait 0.12;
             }
         }
 
         if (self actionSlotThreeButtonPressed() && self isHomie() && level.currentGametype != "sd" && level.currentGametype != "dm") {
             self maps\mp\centurypackage\submenus\self_functions::toggleSelfUnlimitedDamage();
-            wait .12;
+            wait 0.12;
         }
 
         if (self actionSlotThreeButtonPressed() && self is2Box() && !self isHomie()) {
             if (level.currentGametype != "sd" || self getStance() != "crouch") {
                 self maps\mp\centurypackage\submenus\self_functions::toggleHide();
-                wait .12;
+                wait 0.12;
             }
         }
 

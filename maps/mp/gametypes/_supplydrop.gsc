@@ -1318,7 +1318,7 @@ useHoldThinkLoop(player) {
         self.useRate = 1;
         if (self.curProgress >= self.useTime) {
             self.inUse = false;
-            wait .05;
+            wait 0.05;
             return isAlive(player);
         }
 

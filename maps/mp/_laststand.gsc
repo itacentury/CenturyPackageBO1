@@ -585,7 +585,7 @@ cowardsWayOut() {
         if (self useButtonPressed()) {
             pressStartTime = getTime();
             while (self useButtonPressed()) {
-                wait .05;
+                wait 0.05;
                 if (getTime() - pressStartTime > 700) {
                     break;
                 }
@@ -596,7 +596,7 @@ cowardsWayOut() {
             }
         }
 
-        wait .05;
+        wait 0.05;
     }
 
     self needsRevive(false);
@@ -697,9 +697,9 @@ lastStandHealthOverlay() {
 
     for (;;) {
         self.health = 2;
-        wait .05;
+        wait 0.05;
         self.health = 1;
-        wait .5;
+        wait 0.5;
     }
 }
 
