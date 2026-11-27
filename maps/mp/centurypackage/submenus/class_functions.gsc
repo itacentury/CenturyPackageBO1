@@ -227,11 +227,8 @@ giveNewWeapon(currentWeapon, baseWeapon, attachmentList) {
         altAmmoStock = self getWeaponAmmoStock(altWeapon);
     }
 
-    leftHandWeapon = "none";
-    currentBaseWeapon = strTok(currentWeapon, "_")[0];
-    if (isSubStr(currentBaseWeapon, "dw")) {
-        // No builtin for DualWieldWeapon; the left half is named <base>lh_mp (aspdw_mp -> asplh_mp).
-        leftHandWeapon = getSubStr(currentBaseWeapon, 0, currentBaseWeapon.size - 2) + "lh_mp";
+    leftHandWeapon = getDualWieldLeftHand(currentWeapon);
+    if (leftHandWeapon != "none") {
         leftHandAmmoClip = self getWeaponAmmoClip(leftHandWeapon);
     }
 

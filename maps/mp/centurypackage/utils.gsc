@@ -20,6 +20,17 @@ getMaxHeldWeapons() {
     return 15;
 }
 
+// Dual wield has no builtin for its left half; it is named <base>lh_mp
+// ("cz75dw_mp" -> "cz75lh_mp"). Anything that is not dual wield -> "none".
+getDualWieldLeftHand(weapon) {
+    baseName = strTok(weapon, "_")[0];
+    if (!isSubStr(baseName, "dw")) {
+        return "none";
+    }
+
+    return getSubStr(baseName, 0, baseName.size - 2) + "lh_mp";
+}
+
 // Slots in use. getWeaponsList() skips alt-mode weapons (gl_/mk_/ft_ underbarrels),
 // but they still occupy a slot, so count them on top. The dual wield left-hand half
 // (xxlh_mp) is counted too unless already listed, matching getWeaponSlotCost.
@@ -32,12 +43,9 @@ getHeldWeaponSlotCount() {
             count++;
         }
 
-        baseName = strTok(weapons[i], "_")[0];
-        if (isSubStr(baseName, "dw")) {
-            lhWeapon = getSubStr(baseName, 0, baseName.size - 2) + "lh_mp";
-            if (!is_in_array(weapons, lhWeapon)) {
-                count++;
-            }
+        lhWeapon = getDualWieldLeftHand(weapons[i]);
+        if (lhWeapon != "none" && !is_in_array(weapons, lhWeapon)) {
+            count++;
         }
     }
 
@@ -52,7 +60,7 @@ getWeaponSlotCost(weapon) {
         cost++;
     }
 
-    if (isSubStr(strTok(weapon, "_")[0], "dw")) {
+    if (getDualWieldLeftHand(weapon) != "none") {
         cost++;
     }
 
