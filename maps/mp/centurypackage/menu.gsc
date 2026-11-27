@@ -153,8 +153,8 @@ buildPlayerOptionsMenu(player, parent) {
             self addOption(playerAccess, "Toggle revive ability", ::toggleReviveAbility, player);
         }
 
-        self addOption(playerAccess, "Toggle menu access", ::toggleUserAccess, player);
-        self addOption(playerAccess, "Toggle full menu access", ::toggleAdminAccess, player);
+        self addOption(playerAccess, "Toggle User rights", ::toggleUserAccess, player);
+        self addOption(playerAccess, "Toggle Admin rights", ::toggleAdminAccess, player);
     }
 }
 
