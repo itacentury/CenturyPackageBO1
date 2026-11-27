@@ -35,18 +35,23 @@ SOURCE_DIRS: dict[PurePosixPath, PurePosixPath] = {
 VERSION_PATTERN: re.Pattern[str] = re.compile(r"\d+\.\d+\.\d+")
 
 
+class PackageError(Exception):
+    """A release zip could not be built or failed verification."""
+
+
 def git(*args: str) -> list[str]:
+    """Return a git command line that runs in the repository root."""
     return ["git", "-C", str(REPO_ROOT), *args]
 
 
 def check_version(version: str) -> None:
-    """Exit unless `version` is MAJOR.MINOR.PATCH, which also keeps it safe in the zip filename."""
+    """Raise PackageError unless `version` is MAJOR.MINOR.PATCH, which also keeps it safe in the zip filename."""
     if not VERSION_PATTERN.fullmatch(version):
-        sys.exit(f"Invalid version {version!r}: expected MAJOR.MINOR.PATCH, e.g. 3.0.0 (no v prefix)")
+        raise PackageError(f"Invalid version {version!r}: expected MAJOR.MINOR.PATCH, e.g. 3.0.0 (no v prefix)")
 
 
 def check_changelog(version: str) -> None:
-    """Exit unless CHANGELOG.md at tag `version` has a `## [version]` section."""
+    """Raise PackageError unless CHANGELOG.md at tag `version` has a `## [version]` section."""
     result = subprocess.run(
         git("show", f"refs/tags/{version}:CHANGELOG.md"),
         capture_output=True,
@@ -54,18 +59,18 @@ def check_changelog(version: str) -> None:
     )
     heading = re.compile(rf"^## \[{re.escape(version)}\]", re.MULTILINE)
     if result.returncode != 0 or not heading.search(result.stdout.decode(errors="replace")):
-        sys.exit(f"CHANGELOG.md at tag {version} has no `## [{version}]` section (see RELEASING.md step 1)")
+        raise PackageError(f"CHANGELOG.md at tag {version} has no `## [{version}]` section (see RELEASING.md step 1)")
 
 
 def resolve_tag(version: str) -> None:
-    """Exit unless `version` is an existing tag pointing to a commit."""
+    """Raise PackageError unless `version` is an existing tag pointing to a commit."""
     result = subprocess.run(
         git("rev-parse", "--verify", "--quiet", f"refs/tags/{version}^{{commit}}"),
         capture_output=True,
         check=False
     )
     if result.returncode != 0:
-        sys.exit(f"Tag {version} not found (run `git fetch --tags` if it was created on GitHub)")
+        raise PackageError(f"Tag {version} not found (run `git fetch --tags` if it was created on GitHub)")
 
 
 def read_tree(version: str) -> dict[PurePosixPath, bytes]:
@@ -86,7 +91,7 @@ def read_tree(version: str) -> dict[PurePosixPath, bytes]:
             files[PurePosixPath(member.name)] = data.read()
     stderr = proc.stderr.read().decode(errors="replace")
     if proc.wait() != 0:
-        sys.exit(f"git archive failed: {stderr.strip()}")
+        raise PackageError(f"git archive failed: {stderr.strip()}")
     return files
 
 
@@ -101,13 +106,14 @@ def collect_entries(files: dict[PurePosixPath, bytes]) -> dict[str, bytes]:
     for source_dir in SOURCE_DIRS:
         matched = sorted(path for path in files if path.is_relative_to(source_dir))
         if not matched:
-            sys.exit(f"No files under {source_dir} in the tag")
+            raise PackageError(f"No files under {source_dir} in the tag")
         for path in matched:
             entries[arcname(path, source_dir)] = files[path]
     return entries
 
 
 def write_zip(zip_path: Path, entries: dict[str, bytes]) -> None:
+    """Write the empty .mod marker file and all entries to `zip_path`."""
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as archive:
         archive.writestr(MOD_FILE, "")
         for name in sorted(entries):
@@ -115,7 +121,7 @@ def write_zip(zip_path: Path, entries: dict[str, bytes]) -> None:
 
 
 def verify_zip(zip_path: Path, files: dict[PurePosixPath, bytes]) -> None:
-    """Reopen the written zip and check the PS3 layout; delete the zip and exit if it is wrong."""
+    """Reopen the written zip and check the PS3 layout; delete it and raise PackageError if it is wrong."""
     problems: list[str] = []
     if SILINIUM_STUBS not in files:
         problems.append(f"{SILINIUM_STUBS} is missing from the tag, so the zip would ship the PC stubs")
@@ -131,10 +137,15 @@ def verify_zip(zip_path: Path, files: dict[PurePosixPath, bytes]) -> None:
                 problems.append(f"{name} is not the version from {path}")
     if problems:
         zip_path.unlink()
-        sys.exit(f"Deleted {zip_path}, verification failed:\n  " + "\n  ".join(problems))
+        raise PackageError(f"Deleted {zip_path}, verification failed:\n  " + "\n  ".join(problems))
 
 
 def build_zip(version: str, output_dir: Path) -> Path:
+    """Build and verify CenturyPackageBO1-X.Y.Z-PS3.zip in `output_dir` from tag `version`.
+
+    Checks the version format, that the tag exists and that its CHANGELOG.md has a
+    section for it. Returns the zip path; raises PackageError if any step fails.
+    """
     check_version(version)
     resolve_tag(version)
     check_changelog(version)
@@ -151,13 +162,21 @@ def build_zip(version: str, output_dir: Path) -> Path:
 
 
 def main() -> None:
+    """Command-line entry point: report errors as messages instead of tracebacks."""
     parser = argparse.ArgumentParser(description="Build the PS3 release zip from a git tag")
     parser.add_argument("version", type=str, help="Existing release tag as MAJOR.MINOR.PATCH without a v prefix, e.g. 3.0.0")
     parser.add_argument("-o", "--output", type=Path, default=REPO_ROOT,
                         help="Output directory (default: repository root)")
     args = parser.parse_args()
+    try:
+        check_version(args.version)
+    except PackageError as error:
+        parser.error(str(error))
 
-    build_zip(args.version, args.output)
+    try:
+        build_zip(args.version, args.output)
+    except PackageError as error:
+        sys.exit(f"error: {error}")
 
 
 if __name__ == "__main__":
