@@ -10,7 +10,7 @@
 * Give default ts loadout
 
         Everything will be taken from you and you will be given a default Trickshot loadout:
-        L96A1, Python, Tomahawk, Stun Grenades, Claymore, Lightweight Pro, Hardened Pro, Steady Aim Pro, Sleight of Hand Pro and Marathon Pro.
+        L96A1 (Extended Mag), Python (Speed Reloader), Tomahawk, Concussion Grenades, Claymore, Lightweight Pro, Hardened Pro, Steady Aim Pro and Marathon Pro.
 
 * Save Loadout
 

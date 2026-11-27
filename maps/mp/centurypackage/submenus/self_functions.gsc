@@ -159,23 +159,21 @@ giveTrickshotLoadout() {
     // Marathon Pro
     self setPerk("specialty_longersprint");
     self setPerk("specialty_unlimitedsprint");
-    self maps\mp\gametypes\_hud_util::showPerk(0, "perk_lightweight_pro", 10);
-    self maps\mp\gametypes\_hud_util::showPerk(1, "perk_deep_impact_pro", 10);
-    self maps\mp\gametypes\_hud_util::showPerk(2, "perk_steady_aim_pro", 10);
-    self maps\mp\gametypes\_hud_util::showPerk(3, "perk_marathon_pro", -20);
+    self maps\mp\gametypes\_hud_util::showPerk(0, "perk_lightweight_pro", -30);
+    self maps\mp\gametypes\_hud_util::showPerk(1, "perk_deep_impact_pro", -30);
+    self maps\mp\gametypes\_hud_util::showPerk(2, "perk_steady_aim_pro", -30);
+    self maps\mp\gametypes\_hud_util::showPerk(3, "perk_marathon_pro", -60);
     self.camo = randomIntRange(1, 16);
     self giveWeapon("l96a1_extclip_mp", 0, self getCurrentWeaponOptions());
     self giveWeapon("python_speed_mp");
-    self giveWeapon("claymore_mp");
+    self.equipment = "claymore_mp";
     self giveWeapon("hatchet_mp");
     self giveWeapon("concussion_grenade_mp");
-    self giveStartAmmo("claymore_mp");
     self giveStartAmmo("hatchet_mp");
     self giveStartAmmo("concussion_grenade_mp");
     self setSpawnWeapon("python_speed_mp");
     self switchToWeapon("l96a1_extclip_mp");
     self setSpawnWeapon("l96a1_extclip_mp");
-    self setActionSlot(1, "weapon", "claymore_mp");
     wait 3;
     for (i = 0; i < 4; i++) {
         self maps\mp\gametypes\_hud_util::hidePerk(i, 2);
