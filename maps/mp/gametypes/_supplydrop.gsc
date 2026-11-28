@@ -5,7 +5,7 @@
 
 /*
 * Changes: in `crateUseThink()` and `crateUseThinkOwner()` commented out the check `if (!player isOnGround())` to allow care package stalling in trickshots
-* Changes: revived cut Supply Station: `minigun_drop_mp` marker in `isSupplyDropWeapon()`, red cross minimap/head icon in `crateActivate()`
+* Changes: revived cut Supply Station: `minigun_drop_mp` D-pad weapon in `isSupplyDropWeapon()` (for the crate weapon swaps), red cross minimap/head icon in `crateActivate()`
 * Changes: `dropCrate()` turns an opened Supply Station crate into the station (`supplystation::convertCrateToStation()`); `crateTimeOut()` and `crateGamblerThink()` stop on `station_converted`; `dropCrateToGround()` skips a carried station
 * Changes: cut Bomber (2/3) and Supply Station (3/4) added to the care package and gambler rotation in `init()`, with their crate icons in `getIconForCrate()`
 * Changes: `giveCrateKillstreak()` uses `utils::giveKillstreakWithPopup()` so the cut killstreaks show the "earned" popup
@@ -601,6 +601,8 @@ playerChangeWeaponWaiter() {
 isSupplyDropWeapon(weapon) {
     switch (weapon) {
         case "supplystation_mp":
+        // Supply Station D-pad weapon: never thrown, but the giveCrate* weapon swaps must not
+        // treat it as the player's gun.
         case "minigun_drop_mp":
         case "supplydrop_mp":
         case "turret_drop_mp":
