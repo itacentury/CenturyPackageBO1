@@ -145,6 +145,9 @@ setStationOwner(player) {
     oldOwner = self.owner;
     self.owner = player;
     self setOwner(player);
+    // Retarget the team-change watcher; the old one still waits on oldOwner.
+    self notify("owner_changed");
+    self thread maps\mp\gametypes\_supplydrop::ownerTeamChangeWatcher();
     if (self.ownerTeam != player.team) {
         self.ownerTeam = player.team;
         self.team = player.team;

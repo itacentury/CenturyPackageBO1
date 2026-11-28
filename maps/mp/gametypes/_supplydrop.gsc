@@ -741,13 +741,17 @@ crateDeactivate() {
 
 ownerTeamChangeWatcher() {
     self endon("death");
+    self endon("owner_changed");
 
     if (!level.teambased || !isDefined(self.owner)) {
         return;
     }
 
-    self.owner waittill("joined_team");
-    self.owner = undefined;
+    owner = self.owner;
+    owner waittill("joined_team");
+    if (isDefined(self.owner) && self.owner == owner) {
+        self.owner = undefined;
+    }
 }
 
 dropEverythingTouchingCrate(origin) {
