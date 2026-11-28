@@ -491,6 +491,22 @@ carryStationLoop(station, player) {
     team = player.team;
     hud = player maps\mp\centurypackage\hud::createText("small", 1.2, "CENTER", "BOTTOM", 0, -75, 10, false, false, "");
     hud thread carryHudOverflowRelay(station);
+    // Placed before: its timer keeps running while carried, so keep showing it.
+    timeLabel = undefined;
+    timer = undefined;
+    if (isDefined(station.stationEndTime)) {
+        timeLabel = player maps\mp\centurypackage\hud::createText("small", 1.2, "RIGHT", "BOTTOM", -2, -60, 10, false, false, "Time left:");
+        timeLabel.safeText = "Time left:";
+        timeLabel thread carryHudOverflowRelay(station);
+        timer = player maps\mp\centurypackage\hud::createText("small", 1.2, "LEFT", "BOTTOM", 2, -60, 10, false, false, "");
+        timeLeft = (station.stationEndTime - getTime()) / 1000;
+        if (timeLeft < 1) {
+            timeLeft = 1;
+        }
+
+        timer setTimer(timeLeft);
+    }
+
     lastValid = undefined;
     lastState = -1;
     attackReleased = false;
@@ -567,6 +583,14 @@ carryStationLoop(station, player) {
 
     if (isDefined(hud)) {
         hud destroy();
+    }
+
+    if (isDefined(timeLabel)) {
+        timeLabel destroy();
+    }
+
+    if (isDefined(timer)) {
+        timer destroy();
     }
 
     if (isDefined(player)) {
