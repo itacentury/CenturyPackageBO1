@@ -599,7 +599,7 @@ getStationPlacement(station) {
     placement = spawnStruct();
     placement.angles = (0, yaw, 0);
     placement.valid = false;
-    trace = bulletTrace(target + (0, 0, 40), target - (0, 0, 64), false, self);
+    trace = bulletTrace(target + (0, 0, 40), target - (0, 0, 64), false, station);
     if (trace["fraction"] >= 1) {
         placement.origin = target + (0, 0, station.stationBottomOffset);
         return placement;
@@ -614,12 +614,12 @@ getStationPlacement(station) {
 
     mid = ground + (0, 0, station.stationHeight * 0.5);
     // No placing through walls or windows.
-    if (!bulletTracePassed(eye, mid, false, self)) {
+    if (!bulletTracePassed(eye, mid, false, station)) {
         return placement;
     }
 
     // Room for the lid.
-    if (!bulletTracePassed(mid, ground + (0, 0, station.stationHeight + 2), true, self)) {
+    if (!bulletTracePassed(mid, ground + (0, 0, station.stationHeight + 2), true, station)) {
         return placement;
     }
 
@@ -627,12 +627,12 @@ getStationPlacement(station) {
         for (sy = -1; sy <= 1; sy += 2) {
             corner = mid + forward * (sx * station.stationHalfLength) + right * (sy * station.stationHalfWidth);
             // Nothing between the center and this corner.
-            if (!bulletTracePassed(mid, corner, true, self)) {
+            if (!bulletTracePassed(mid, corner, true, station)) {
                 return placement;
             }
 
             // Ground under this corner, so it doesn't hang over a ledge.
-            if (bulletTracePassed(corner, corner - (0, 0, station.stationHeight * 0.5 + 16), false, self)) {
+            if (bulletTracePassed(corner, corner - (0, 0, station.stationHeight * 0.5 + 16), false, station)) {
                 return placement;
             }
         }
