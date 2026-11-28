@@ -136,6 +136,7 @@ stationThink(team) {
     self thread stationBuffThink();
     self thread stationHintThink();
     self thread stationPickupThink();
+    self thread stationDoubleTapThink();
 
     for (;;) {
         self waittill("captured", player);
@@ -361,7 +362,8 @@ getStationHintText(station) {
 }
 
 // Owner double taps use on the placed station to carry it again. Holding use still refills.
-// The engine's trigger_use_doubletap only fires for Gambler players, so taps are timed here.
+// The engine's trigger_use_doubletap only fires for Gambler players, so taps are timed here;
+// stationDoubleTapThink covers Gambler owners in case their taps arrive only as that event.
 stationPickupThink() {
     self endon("death");
 
@@ -376,15 +378,7 @@ stationPickupThink() {
         // Second short tap shortly after the first: pick up.
         if (isDefined(lastTapEnd) && getTime() - lastTapEnd <= 350) {
             lastTapEnd = undefined;
-            // The second tap also starts the owner's hold-to-refill; let it end first.
-            for (i = 0; i < 20 && isDefined(self.inUse) && self.inUse; i++) {
-                wait 0.05;
-            }
-
-            if (self canPickUpStation(player)) {
-                player startCarryStation(self);
-            }
-
+            self tryPickUpStation(player);
             continue;
         }
 
@@ -399,6 +393,28 @@ stationPickupThink() {
         if (held < 300) {
             lastTapEnd = getTime();
         }
+    }
+}
+
+// Fallback for Hardline Pro owners: the engine may send their double tap as this event
+// instead of two "trigger"s.
+stationDoubleTapThink() {
+    self endon("death");
+
+    for (;;) {
+        self waittill("trigger_use_doubletap", player);
+        self tryPickUpStation(player);
+    }
+}
+
+// The tap also starts the owner's hold-to-refill; let it end first.
+tryPickUpStation(player) {
+    for (i = 0; i < 20 && isDefined(self.inUse) && self.inUse; i++) {
+        wait 0.05;
+    }
+
+    if (self canPickUpStation(player)) {
+        player startCarryStation(self);
     }
 }
 
