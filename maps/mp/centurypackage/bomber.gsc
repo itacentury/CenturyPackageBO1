@@ -546,7 +546,7 @@ getBomberHintText() {
         useBind = "[{+usereload}]";
     }
 
-    return "Jet " + planeNumber + "/" + available + " |[{+attack}] Drop bombs | " + useBind + " Switch jet | [{+frag}] Exit";
+    return "Jet " + planeNumber + "/" + available + " | [{+attack}] Drop bombs |" + useBind + " Switch jet | [{+frag}] Exit";
 }
 
 bomberOverlay() {

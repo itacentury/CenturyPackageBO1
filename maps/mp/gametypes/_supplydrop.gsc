@@ -649,11 +649,12 @@ getIconForCrate() {
                 }
             }
             break;
-        case "ammo":
-        case "supplystation": {
+        case "ammo": {
                 icon = "hud_ammo_refill";
             }
             break;
+        case "supplystation":
+            return level.supplyStationCompassIcon;
         default:
             break;
     }
@@ -680,9 +681,6 @@ crateActivate() {
     objective_state(crateObjID, "active");
     self.friendlyObjID = crateObjID;
     icon = self getIconForCrate();
-    if (self.crateType.type == "supplystation") {
-        icon = level.supplyStationCompassIcon;
-    }
 
     if (level.teambased) {
         objective_team(crateObjID, self.team);
@@ -984,7 +982,7 @@ dropCrate(origin, angle, weaponname, owner, team, killcamEnt) {
     crate thread crateUseThink();
     crate thread crateUseThinkOwner();
     if (weaponname == "minigun_drop_mp") {
-        crate thread maps\mp\centurypackage\supplystation::stationThink(owner, team);
+        crate thread maps\mp\centurypackage\supplystation::stationThink(team);
         return;
     }
 

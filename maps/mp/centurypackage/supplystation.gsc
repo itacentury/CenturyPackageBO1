@@ -84,7 +84,7 @@ useKillstreakSupplyStation(hardpointType) {
 }
 
 // Runs on the landed crate instead of the one-shot care package loop.
-stationThink(owner, team) {
+stationThink(team) {
     self endon("death");
 
     self.ownerTeam = team;
