@@ -408,8 +408,6 @@ bomberCameraThink() {
 
 // World marker on the ground where the first bomb of the current jet would land.
 bomberImpactMarker() {
-    self endon("disconnect");
-
     // The waypoint follows an entity: entity origins are interpolated by the
     // client, raw hud x/y/z are not (the marker would jump ~100 units per frame).
     ent = spawn("script_model", self.bomberStrike.flightPlan.target);
@@ -426,9 +424,16 @@ bomberImpactMarker() {
     marker setTargetEnt(ent);
     self thread bomberImpactMarkerUpdate(marker, ent);
 
-    self waittill_any("bombing_done", "death");
-    marker destroy();
-    ent delete();
+    // Wait on "disconnect" instead of ending on it, or the entity leaks.
+    self waittill_any_return("bombing_done", "death", "disconnect");
+    // The engine frees a client's hud elems on disconnect.
+    if (isDefined(marker)) {
+        marker destroy();
+    }
+
+    if (isDefined(ent)) {
+        ent delete();
+    }
 }
 
 bomberImpactMarkerUpdate(marker, ent) {
