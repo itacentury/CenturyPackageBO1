@@ -59,6 +59,12 @@ registerBomber() {
     ks.earnedTitle = "Bomber";
     ks.earnedIcon = "hud_icon_air_airstrike";
     level.killstreaks[type] = ks;
+    // Same rule as Napalm: one air support at a time. _bot's isKillstreakAllowed also needs the entry.
+    if (isDefined(level.killstreakrules)) {
+        level.killstreaktype[type] = [];
+        maps\mp\_killstreakrules::addKillstreakToRule(type, "airsupport", true, true);
+    }
+
     level.killstreakWeapons["bomber_mp"] = type;
     // Bombs are fired as mk82_mp; without this their kills count toward the next streak.
     maps\mp\gametypes\_hardpoints::registerKillstreakAltWeapon(type, "mk82_mp");
@@ -72,8 +78,7 @@ registerBomber() {
 }
 
 useKillstreakBomber(hardpointType) {
-    if (isDefined(level.airSupportInProgress)) {
-        self iPrintLnBold(level.killstreaks[hardpointType].notAvailableText);
+    if (!self maps\mp\_killstreakrules::isKillstreakAllowed(hardpointType, self.team)) {
         return false;
     }
 
@@ -94,8 +99,7 @@ selectBomberLocation() {
         return false;
     }
 
-    if (isDefined(level.airSupportInProgress)) {
-        self iPrintLnBold(level.killstreaks["bomber_mp"].notAvailableText);
+    if (!self maps\mp\_killstreakrules::isKillstreakAllowed("bomber_mp", self.team)) {
         return false;
     }
 
@@ -104,7 +108,10 @@ selectBomberLocation() {
 }
 
 useBomber(pos) {
-    level.airSupportInProgress = true;
+    if (!self maps\mp\_killstreakrules::killstreakStart("bomber_mp", self.team)) {
+        return;
+    }
+
     // All state of one strike lives here, never on level: jets, flight plan, counters.
     strike = spawnStruct();
     strike.planes = [];
@@ -137,7 +144,7 @@ doBomber(origin, owner, team, strike) {
     // kill this thread too and leave the Bomber locked for the rest of the match.
     level thread callStrike(flightPlan);
 
-    // Hold the lock until every jet has left the map. If the owner disconnects,
+    // Hold the airsupport slot until every jet has left the map. If the owner disconnects,
     // callStrike stops spawning, so only wait for the jets already in the air.
     // Safety net: never hold the lock longer than the whole strike can take, in case a jet
     // is removed without its "delete" notify.
@@ -158,7 +165,7 @@ doBomber(origin, owner, team, strike) {
         owner.bomberStrike = undefined;
     }
 
-    level.airSupportInProgress = undefined;
+    maps\mp\_killstreakrules::killstreakStop("bomber_mp", team);
 }
 
 planeSpawnedCallback(owner, requiredDeathCount, pathStart, pathEnd, bombTime, bombSpeedScale, flyTime, flyspeed) {
