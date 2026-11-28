@@ -179,6 +179,11 @@ bombDropWaiter(owner) {
     owner endon("bombing_done");
 
     strike = self.bomberStrike;
+    // On PC the location is confirmed with +attack: that click must not count as a drop.
+    while (owner attackButtonPressed()) {
+        wait 0.05;
+    }
+
     while (!isDefined(owner.currentPlane) || self != owner.currentPlane || !owner attackButtonPressed()) {
         wait 0.05;
     }
