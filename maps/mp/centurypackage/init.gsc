@@ -226,6 +226,8 @@ initPlayerVars() {
 
 initPlayerDvars() {
     self setClientDvar("killcam_final", 1);
+    // Bomber zoom can survive a round end if its cleanup never ran.
+    self setClientDvar("cg_fovScale", 1);
 }
 
 onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime) {

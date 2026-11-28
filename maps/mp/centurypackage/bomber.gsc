@@ -255,6 +255,7 @@ bomberAttachPlayer(player) {
     player thread changePlanes();
     player thread bomberDetachOnDone(cam, look);
     player thread bomberDetachOnFrag();
+    player thread bomberDetachOnGameEnd();
 }
 
 attachToPlane(player) {
@@ -337,6 +338,16 @@ bomberDetachOnFrag() {
         wait 0.05;
     }
 
+    self notify("bombing_done");
+}
+
+// endGame kills the round's threads soon after: detach while cleanup can still run.
+bomberDetachOnGameEnd() {
+    self endon("disconnect");
+    self endon("death");
+    self endon("bombing_done");
+
+    level waittill("game_ended");
     self notify("bombing_done");
 }
 
