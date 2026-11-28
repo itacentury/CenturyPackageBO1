@@ -71,7 +71,7 @@
 * Tacticals Selector
 * Killstreak Selector
 
-        Give yourself any of the regular killstreaks.
+        Give yourself any of the regular killstreaks, plus the cut Bomber and Supply Station killstreaks. Both can also drop from care packages.
 
 ## Lobby Options
 * Fast last (TDM only)

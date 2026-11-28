@@ -23,6 +23,7 @@ Planned as `3.0.0`: the new folder layout requires a fresh install when upgradin
 - Silinium stubs for PS3 (`silinium/` overlay).
 - Access Menu (host only) to manage a player's menu access.
 - Killstreaks: Attack Helicopter, Chopper Gunner, Attack Dogs and Gunship.
+- Cut killstreaks Bomber and Supply Station revived: available in the Killstreak Selector and in care packages (including Hardline Pro rerolls), with a "Killstreak Earned" pop-up.
 - More glitch weapons.
 - Option to give / take a player's ability to revive other players.
 - Option to switch a player to spectator.
