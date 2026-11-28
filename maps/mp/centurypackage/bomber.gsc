@@ -100,49 +100,75 @@ selectBomberLocation() {
 
 useBomber(pos) {
     level.airSupportInProgress = true;
-    level.bomberPlanes = [];
+    // All state of one strike lives here, never on level: jets, flight plan, counters.
+    strike = spawnStruct();
+    strike.planes = [];
+    strike.planesSpawned = 0;
+    strike.planesAlive = 0;
+    self.bomberStrike = strike;
     // No walking around until the first jet (and the camera) arrives.
     self freezeControls(true);
-    level thread doBomber(pos, self, self.team);
+    level thread doBomber(pos, self, self.team, strike);
 }
 
-doBomber(origin, owner, team) {
+doBomber(origin, owner, team, strike) {
     targetPoint = determineTargetPoint(owner, origin);
     owner maps\mp\gametypes\_hardpoints::playKillstreakStartDialog("bomber_mp", team);
     owner notify("begin_bomber");
 
-    if (!isDefined(level.bomberFlightPlan)) {
-        level.bomberFlightPlan = spawnStruct();
+    flightPlan = spawnStruct();
+    flightPlan.distance = 48000;
+    flightPlan.height = 4000;
+    flightPlan.speed = 2000;
+    flightPlan.bombSpeedScale = 1;
+    flightPlan.target = targetPoint;
+    flightPlan.owner = owner;
+    flightPlan.yaw = "random";
+    flightPlan.planeSpawnCallback = ::planeSpawnedCallback;
+    flightPlan.planeSpacing = calculateFallTime(flightPlan.height) + 1;
+    strike.flightPlan = flightPlan;
+
+    // Own thread: callStrike does owner endon("disconnect"), which would otherwise
+    // kill this thread too and leave the Bomber locked for the rest of the match.
+    level thread callStrike(flightPlan);
+
+    // Hold the lock until every jet has left the map. If the owner disconnects,
+    // callStrike stops spawning, so only wait for the jets already in the air.
+    for (;;) {
+        wait 0.5;
+        if (strike.planesAlive == 0 && (strike.planesSpawned >= level.bomberPlaneCount || !isDefined(owner))) {
+            break;
+        }
     }
 
-    level.bomberFlightPlan.distance = 48000;
-    level.bomberFlightPlan.height = 4000;
-    level.bomberFlightPlan.speed = 2000;
-    level.bomberFlightPlan.bombSpeedScale = 1;
-    level.bomberFlightPlan.target = targetPoint;
-    level.bomberFlightPlan.owner = owner;
-    level.bomberFlightPlan.yaw = "random";
-    level.bomberFlightPlan.planeSpawnCallback = ::planeSpawnedCallback;
-    level.bomberFlightPlan.planeSpacing = calculateFallTime(level.bomberFlightPlan.height) + 1;
+    if (isDefined(owner)) {
+        owner.bomberStrike = undefined;
+    }
 
-    callStrike(level.bomberFlightPlan);
-
-    wait 8.5;
     level.airSupportInProgress = undefined;
 }
 
 planeSpawnedCallback(owner, requiredDeathCount, pathStart, pathEnd, bombTime, bombSpeedScale, flyTime, flyspeed) {
     self setModel(level.bomberPlaneModel);
-    if (level.bomberPlanes.size == 0 && isDefined(owner) && isAlive(owner)) {
+    strike = owner.bomberStrike;
+    self.bomberStrike = strike;
+    if (strike.planes.size == 0 && isAlive(owner)) {
         self thread bomberAttachPlayer(owner);
     }
 
-    level.bomberPlanes[level.bomberPlanes.size] = self;
-    level notify("bomber_plane_spawned");
+    strike.planes[strike.planes.size] = self;
+    strike.planesSpawned++;
+    strike.planesAlive++;
+    self thread bomberPlaneLifetime(strike);
+    owner notify("bomber_plane_spawned");
     self thread bombDropWaiter(owner);
-    if (isDefined(owner)) {
-        self thread bomberDetachOnPlaneDelete(owner);
-    }
+    self thread bomberDetachOnPlaneDelete(owner);
+}
+
+// planeStrike notifies "delete" right before removing the jet.
+bomberPlaneLifetime(strike) {
+    self waittill("delete");
+    strike.planesAlive--;
 }
 
 bombDropWaiter(owner) {
@@ -150,6 +176,7 @@ bombDropWaiter(owner) {
     owner endon("death");
     owner endon("bombing_done");
 
+    strike = self.bomberStrike;
     while (!isDefined(owner.currentPlane) || self != owner.currentPlane || !owner attackButtonPressed()) {
         wait 0.05;
     }
@@ -162,11 +189,11 @@ bombDropWaiter(owner) {
         wait 0.05;
     }
 
-    plane = getNextAvailablePlane(self);
-    if (!isDefined(plane) && level.bomberPlanes.size < level.bomberPlaneCount) {
+    plane = getNextAvailablePlane(strike, self);
+    if (!isDefined(plane) && strike.planes.size < level.bomberPlaneCount) {
         // Dropped before all jets arrived: wait for the next one.
-        level waittill("bomber_plane_spawned");
-        plane = getNextAvailablePlane(self);
+        owner waittill("bomber_plane_spawned");
+        plane = getNextAvailablePlane(strike, self);
     }
 
     if (isDefined(plane)) {
@@ -179,8 +206,9 @@ bombDropWaiter(owner) {
 
 bombsAway(owner) {
     owner endon("disconnect");
+    flightPlan = self.bomberStrike.flightPlan;
     for (i = 0; i < 10; i++) {
-        velocity = vector_scale(anglesToForward(self.angles), level.bomberFlightPlan.speed * level.bomberFlightPlan.bombSpeedScale);
+        velocity = vector_scale(anglesToForward(self.angles), flightPlan.speed * flightPlan.bombSpeedScale);
         offset = (randomFloatRange(-50, 50), randomFloatRange(-50, 50), randomFloatRange(-50, 50));
         velOffset = (randomFloatRange(-10, 10), 10, 0);
         owner launchBomb("mk82_mp", self.origin + offset, velocity + velOffset);
@@ -219,13 +247,14 @@ bomberAttachPlayer(player) {
 }
 
 attachToPlane(player) {
-    bombX = getBombForwardDistance();
+    strike = self.bomberStrike;
+    bombX = getBombForwardDistance(strike);
     playerOffset = (-1000, 0, -100);
     if (playerOffset[0] > bombX) {
         playerOffset = (bombX, playerOffset[1], playerOffset[2]);
     }
 
-    angles = (atan((level.bomberFlightPlan.height + playerOffset[2]) / (bombX - playerOffset[0])), 0, 0);
+    angles = (atan((strike.flightPlan.height + playerOffset[2]) / (bombX - playerOffset[0])), 0, 0);
     player.bomberCam unlink();
     player.bomberCam.origin = self.origin;
     player.bomberCam linkTo(self, "tag_origin", playerOffset, angles);
@@ -236,23 +265,24 @@ attachToPlane(player) {
 }
 
 // Horizontal distance a bomb travels ahead of the jet before it hits the ground.
-getBombForwardDistance() {
-    falltime = calculateFallTime(level.bomberFlightPlan.height);
-    return (level.bomberFlightPlan.speed * level.bomberFlightPlan.bombSpeedScale) * falltime;
+getBombForwardDistance(strike) {
+    falltime = calculateFallTime(strike.flightPlan.height);
+    return (strike.flightPlan.speed * strike.flightPlan.bombSpeedScale) * falltime;
 }
 
-// Next jet after current (wrapping) that still exists and has not dropped yet.
-getNextAvailablePlane(current) {
+// Next jet of this strike after current (wrapping) that still exists and has not dropped yet.
+getNextAvailablePlane(strike, current) {
+    planes = strike.planes;
     index = -1;
-    for (i = 0; i < level.bomberPlanes.size; i++) {
-        if (isDefined(current) && isDefined(level.bomberPlanes[i]) && level.bomberPlanes[i] == current) {
+    for (i = 0; i < planes.size; i++) {
+        if (isDefined(current) && isDefined(planes[i]) && planes[i] == current) {
             index = i;
             break;
         }
     }
 
-    for (i = 1; i <= level.bomberPlanes.size; i++) {
-        plane = level.bomberPlanes[(index + i) % level.bomberPlanes.size];
+    for (i = 1; i <= planes.size; i++) {
+        plane = planes[(index + i) % planes.size];
         if (!isDefined(plane) || (isDefined(current) && plane == current) || isDefined(plane.bomberDropped)) {
             continue;
         }
@@ -275,7 +305,7 @@ changePlanes() {
 
         // Only while the current jet still has its bombs (otherwise bombDropWaiter switches).
         if (isDefined(self.currentPlane) && !isDefined(self.currentPlane.bomberDropped)) {
-            plane = getNextAvailablePlane(self.currentPlane);
+            plane = getNextAvailablePlane(self.bomberStrike, self.currentPlane);
             if (isDefined(plane)) {
                 plane attachToPlane(self);
             }
@@ -305,6 +335,7 @@ bomberDetachOnPlaneDelete(player) {
     player endon("death");
     player endon("bombing_done");
 
+    strike = self.bomberStrike;
     self waittill("delete");
     if (!isDefined(player.currentPlane) || player.currentPlane != self) {
         return;
@@ -312,7 +343,7 @@ bomberDetachOnPlaneDelete(player) {
 
     // Unlink first: the camera entity would be removed together with the jet.
     player.bomberCam unlink();
-    plane = getNextAvailablePlane(self);
+    plane = getNextAvailablePlane(strike, self);
     if (isDefined(plane)) {
         plane attachToPlane(player);
     } else {
@@ -373,7 +404,7 @@ bomberImpactMarker() {
 
     // The waypoint follows an entity: entity origins are interpolated by the
     // client, raw hud x/y/z are not (the marker would jump ~100 units per frame).
-    ent = spawn("script_model", level.bomberFlightPlan.target);
+    ent = spawn("script_model", self.bomberStrike.flightPlan.target);
     ent setModel("tag_origin");
 
     marker = newClientHudElem(self);
@@ -397,8 +428,9 @@ bomberImpactMarkerUpdate(marker, ent) {
     self endon("death");
     self endon("bombing_done");
 
-    bombX = getBombForwardDistance();
-    targetZ = level.bomberFlightPlan.target[2];
+    strike = self.bomberStrike;
+    bombX = getBombForwardDistance(strike);
+    targetZ = strike.flightPlan.target[2];
     groundZ = targetZ;
     for (;;) {
         plane = self.currentPlane;
@@ -450,8 +482,20 @@ bomberHintRefreshRelay() {
     self endon("death");
     self endon("bombing_done");
 
+    self thread bomberHintOverflowRelay();
     for (;;) {
-        level waittill_any("overflow_cleared", "bomber_plane_spawned");
+        self waittill("bomber_plane_spawned");
+        self notify("bomber_hint_refresh");
+    }
+}
+
+bomberHintOverflowRelay() {
+    self endon("disconnect");
+    self endon("death");
+    self endon("bombing_done");
+
+    for (;;) {
+        level waittill("overflow_cleared");
         self notify("bomber_hint_refresh");
     }
 }
@@ -462,10 +506,11 @@ getBomberInfoText() {
 
 getBomberHintText() {
     // Count only jets that still have their bombs.
+    planes = self.bomberStrike.planes;
     planeNumber = 0;
     available = 0;
-    for (i = 0; i < level.bomberPlanes.size; i++) {
-        plane = level.bomberPlanes[i];
+    for (i = 0; i < planes.size; i++) {
+        plane = planes[i];
         if (!isDefined(plane) || isDefined(plane.bomberDropped)) {
             continue;
         }
