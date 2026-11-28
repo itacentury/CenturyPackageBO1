@@ -5,7 +5,8 @@
 
 /*
 * Changes: in `crateUseThink()` and `crateUseThinkOwner()` commented out the check `if (!player isOnGround())` to allow care package stalling in trickshots
-* Changes: revived cut Supply Station: `minigun_drop_mp` marker in `isSupplyDropWeapon()`, `dropCrate()` runs `supplystation::stationThink()`, red cross minimap/head icon in `crateActivate()`
+* Changes: revived cut Supply Station: `minigun_drop_mp` marker in `isSupplyDropWeapon()`, red cross minimap/head icon in `crateActivate()`
+* Changes: `dropCrate()` turns an opened Supply Station crate into the station (`supplystation::convertCrateToStation()`); `crateTimeOut()` and `crateGamblerThink()` stop on `station_converted`; `dropCrateToGround()` skips a carried station
 * Changes: cut Bomber (2/3) and Supply Station (3/4) added to the care package and gambler rotation in `init()`, with their crate icons in `getIconForCrate()`
 * Changes: `giveCrateKillstreak()` uses `utils::giveKillstreakWithPopup()` so the cut killstreaks show the "earned" popup
 * Changes: `crateUseThink()` routes Supply Station uses to `stationUseFeedback()`: no "friendly steals" sound on teammate refills, share/hijack medal notifies once per player per station
@@ -783,7 +784,8 @@ dropCratesToGround(origin, radius) {
 dropCrateToGround() {
     self endon("death");
 
-    if (isDefined(self.droppingToGround)) {
+    // A carried Supply Station is positioned by its carrier, not by physics.
+    if (isDefined(self.droppingToGround) || (isDefined(self.carried) && self.carried)) {
         return;
     }
 
@@ -981,11 +983,6 @@ dropCrate(origin, angle, weaponname, owner, team, killcamEnt) {
     crate crateActivate();
     crate thread crateUseThink();
     crate thread crateUseThinkOwner();
-    if (weaponname == "minigun_drop_mp") {
-        crate thread maps\mp\centurypackage\supplystation::stationThink(team);
-        return;
-    }
-
     if (isDefined(crate.crateType.hint_gambler)) {
         crate thread crateGamblerThink();
     }
@@ -993,6 +990,12 @@ dropCrate(origin, angle, weaponname, owner, team, killcamEnt) {
     crate crateTimeOutThreader();
     for (;;) {
         crate waittill("captured", player);
+        // Supply Station care package: the crate becomes the station for whoever opened it.
+        if (crate.crateType.name == "supply_station_mp") {
+            crate maps\mp\centurypackage\supplystation::convertCrateToStation(player);
+            return;
+        }
+
         player giveCrateItem(crate);
         if (player hasPerk("specialty_disarmexplosive") && owner != player && ((level.teambased && team != player.team) || !level.teambased)) {
             spawn_explosive_crate(crate.origin, crate.angles, weaponname, owner, team, player);
@@ -1207,6 +1210,7 @@ is_equipment_touching_crate(player) {
 
 crateTimeOut(time) {
     self endon("death");
+    self endon("station_converted");
 
     wait time;
     self crateDelete();
@@ -1421,6 +1425,7 @@ useHoldThinkLoop(player) {
 
 crateGamblerThink() {
     self endon("death");
+    self endon("station_converted");
 
     for (;;) {
         self waittill("trigger_use_doubletap", player);

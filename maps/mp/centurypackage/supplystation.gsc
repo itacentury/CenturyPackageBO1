@@ -2,12 +2,15 @@
 #include common_scripts\utility;
 
 // Cut BO1 "Supply Station" killstreak, revived from raw/maps/mp/_supplystation.gsc.
-// Its marker weapon (supplystation_mp) is not in any fastfile, so the unused
-// minigun_drop_mp marker stands in. The D-pad shows the marker's dpadIcon
-// (hud_ks_minigun); it is baked into the weapon asset and cannot be changed
-// from GSC. The stock station logic (timer, refills,
-// heal buff, capture) was never wired into _supplydrop; stationThink does that.
-// The crate itself is delivered by the normal care package path in _supplydrop.
+// No helicopter delivery: a Supply Station care package turns into the station where it
+// lies (convertCrateToStation), and using the killstreak puts a station straight into the
+// player's hands (carryNewStation). The owner can double tap use to pick it up and place it
+// again, like the Sentry Gun / SAM Turret, so it also fits inside buildings.
+// The killstreak weapon is the unused minigun_drop_mp marker (supplystation_mp is not in
+// any fastfile); it only fills the D-pad slot and is never thrown. The D-pad shows its
+// dpadIcon (hud_ks_minigun), which is baked into the weapon asset.
+// The stock station logic (timer, refills, heal buff, capture) was never wired into
+// _supplydrop; stationThink does that.
 
 // Must run synchronously from _clientids::init (precache window).
 init() {
@@ -21,6 +24,7 @@ init() {
     level.supplyStationBuffInterval = 2;
     level.supplyStationBuffRadius = 175;
     level.supplyStationHealthBuff = 0.25;
+    level.supplyStationPlaceDistance = 30;
 
     level thread registerSupplyStation();
 }
@@ -48,7 +52,8 @@ registerSupplyStation() {
     ks.menuName = "killstreak_supply_station";
     ks.allowAssists = false;
     ks.weapon = "minigun_drop_mp";
-    ks.weaponHoldAllowed = true;
+    // false: _hardpoints switches back to the previous weapon once the station is in hand.
+    ks.weaponHoldAllowed = false;
     ks.notAvailableText = &"KILLSTREAK_AIRSPACE_FULL";
     ks.informDialog = "mpl_killstreak_supply";
     // Read by utils::giveKillstreakWithPopup (no killstreakTable row for the stock popup).
@@ -69,21 +74,41 @@ registerSupplyStation() {
 }
 
 useKillstreakSupplyStation(hardpointType) {
-    if (self maps\mp\gametypes\_supplydrop::isSupplyDropGrenadeAllowed(hardpointType, "minigun_drop_mp") == false) {
+    if (isDefined(self.carryingStation) && self.carryingStation) {
         return false;
     }
 
-    self thread maps\mp\gametypes\_supplydrop::refCountDecChopperOnDisconnect(self.team);
-    result = self maps\mp\gametypes\_supplydrop::useSupplyDropMarker();
-    self notify("supply_drop_marker_done");
-    if (!isDefined(result) || !result) {
-        return false;
-    }
-
-    return result;
+    // Like the stock turrets: the streak counts as used now and is given back if the
+    // first placement is cancelled (carryStationLoop).
+    self thread carryNewStation(hardpointType);
+    return true;
 }
 
-// Runs on the landed crate instead of the one-shot care package loop.
+carryNewStation(hardpointType) {
+    station = maps\mp\gametypes\_supplydrop::crateSpawn("minigun_drop_mp", self, self.team, self.origin, (0, self.angles[1], 0));
+    station.killstreakType = hardpointType;
+    station.hasBeenPlaced = false;
+    // No wait before startCarryStation makes it non-solid, so the player never gets stuck in it.
+    station thread maps\mp\gametypes\_supplydrop::crateUseThink();
+    station thread maps\mp\gametypes\_supplydrop::crateUseThinkOwner();
+    self startCarryStation(station);
+}
+
+// A Supply Station care package was opened: the crate stays and becomes the station,
+// owned by whoever opened it.
+convertCrateToStation(player) {
+    self notify("station_converted");
+    self.crateType = level.crateTypes["minigun_drop_mp"]["supplystation"];
+    self.hasBeenPlaced = true;
+    self setHintStringForPerk("specialty_gambler", "");
+    self maps\mp\gametypes\_supplydrop::crateDeactivate();
+    self.ownerTeam = self.team;
+    self setStationOwner(player);
+    self maps\mp\gametypes\_supplydrop::crateActivate();
+    self thread stationThink(self.team);
+}
+
+// Runs once the station is first active (care package opened or first placement).
 stationThink(team) {
     self endon("death");
 
@@ -92,9 +117,15 @@ stationThink(team) {
     self thread stationTimer();
     self thread stationBuffThink();
     self thread stationHintThink();
+    self thread stationPickupThink();
 
     for (;;) {
         self waittill("captured", player);
+        // A capture that started before the owner picked the station up.
+        if (self isStationCarried()) {
+            continue;
+        }
+
         if (self canUseStation(player)) {
             // Stock refill: skips killstreak weapons and caps lethals/tacticals.
             player maps\mp\gametypes\_supplydrop::giveCrateAmmo();
@@ -107,8 +138,13 @@ stationThink(team) {
 stationTimer() {
     self endon("death");
 
+    // Keeps running while the station is carried; carryStationLoop cleans up the carrier.
     wait level.supplyStationDuration;
     self maps\mp\gametypes\_supplydrop::crateDelete();
+}
+
+isStationCarried() {
+    return isDefined(self.carried) && self.carried;
 }
 
 stationBuffThink() {
@@ -116,6 +152,10 @@ stationBuffThink() {
 
     for (;;) {
         wait level.supplyStationBuffInterval;
+        if (self isStationCarried()) {
+            continue;
+        }
+
         players = level.players;
         for (i = 0; i < players.size; i++) {
             player = players[i];
@@ -202,10 +242,11 @@ stationHintThink() {
 
     radiusSq = level.supplyStationBuffRadius * level.supplyStationBuffRadius;
     for (;;) {
+        carried = self isStationCarried();
         players = level.players;
         for (i = 0; i < players.size; i++) {
             player = players[i];
-            inRange = isAlive(player) && player.sessionstate == "playing" && distanceSquared(self.origin, player.origin) <= radiusSq;
+            inRange = !carried && isAlive(player) && player.sessionstate == "playing" && distanceSquared(self.origin, player.origin) <= radiusSq;
             hasHint = isDefined(player.stationHintStation) && player.stationHintStation == self;
             if (inRange && !isDefined(player.stationHintStation)) {
                 player.stationHintStation = self;
@@ -290,9 +331,351 @@ getStationHintText(station) {
         useBind = "[{+usereload}]";
     }
 
+    if (isDefined(station.owner) && station.owner == self) {
+        return "Supply Station - heals you while nearby | Double tap " + useBind + " to move";
+    }
+
     if (station canUseStation(self)) {
         return "Supply Station - heals you while nearby";
     }
 
     return "Enemy Supply Station | Hold " + useBind + " to capture";
+}
+
+// Owner double taps use on the placed station to carry it again. Holding use still refills.
+stationPickupThink() {
+    self endon("death");
+
+    for (;;) {
+        self waittill("trigger_use_doubletap", player);
+        if (!isDefined(self.owner) || player != self.owner) {
+            continue;
+        }
+
+        // The second tap also starts the owner's hold-to-refill; let it end first.
+        for (i = 0; i < 20 && isDefined(self.inUse) && self.inUse; i++) {
+            wait 0.05;
+        }
+
+        if (!self canPickUpStation(player)) {
+            continue;
+        }
+
+        player startCarryStation(self);
+    }
+}
+
+canPickUpStation(player) {
+    if (self isStationCarried() || !isDefined(self.owner) || player != self.owner) {
+        return false;
+    }
+
+    if (!isAlive(player) || player.sessionstate != "playing" || player isInVehicle()) {
+        return false;
+    }
+
+    if (isDefined(player.carryingStation) && player.carryingStation) {
+        return false;
+    }
+
+    if (isDefined(player.lastStand) && player.lastStand) {
+        return false;
+    }
+
+    // An enemy capture in progress.
+    if (isDefined(self.useEnt) && self.useEnt.inUse) {
+        return false;
+    }
+
+    return true;
+}
+
+// Called on the player. Hides the station from use, minimap and head icons and starts the
+// placement loop. Based on stock _turret_killstreak::startCarryTurret.
+startCarryStation(station) {
+    station.carried = true;
+    station notSolid();
+    if (station.hasBeenPlaced) {
+        station maps\mp\gametypes\_supplydrop::crateDeactivate();
+        station.pickupOrigin = station.origin;
+        station.pickupAngles = station.angles;
+        // Drop claymores, crates, etc. that were resting on it (dropCrateToGround skips
+        // carried stations).
+        level thread dropAllToGround(station.origin, 70, 70);
+    }
+
+    station measureStation();
+    self.carryingStation = true;
+    self _disableWeapon();
+    level thread carryStationLoop(station, self);
+}
+
+// Measures the crate once with flat angles, so the extents line up with its local axes.
+measureStation() {
+    if (isDefined(self.stationHeight)) {
+        return;
+    }
+
+    self.angles = (0, 0, 0);
+    center = self getPointInBounds(0, 0, 0);
+    bottom = self getPointInBounds(0, 0, -1);
+    top = self getPointInBounds(0, 0, 1);
+    self.stationHeight = top[2] - bottom[2];
+    self.stationBottomOffset = self.origin[2] - bottom[2];
+    self.stationHalfLength = distance2d(center, self getPointInBounds(1, 0, 0));
+    self.stationHalfWidth = distance2d(center, self getPointInBounds(0, 1, 0));
+    if (self.stationHeight <= 0 || self.stationHalfLength <= 0 || self.stationHalfWidth <= 0) {
+        self.stationHeight = 32;
+        self.stationBottomOffset = 0;
+        self.stationHalfLength = 24;
+        self.stationHalfWidth = 18;
+    }
+}
+
+// Level thread so it survives both the carrier disconnecting and the station timing out.
+carryStationLoop(station, player) {
+    team = player.team;
+    hud = player maps\mp\centurypackage\hud::createText("small", 1.2, "CENTER", "BOTTOM", 0, -75, 10, false, false, "");
+    hud thread carryHudOverflowRelay(station);
+    lastValid = undefined;
+    lastState = -1;
+    attackReleased = false;
+    cancelReleased = false;
+    result = "interrupted";
+    for (;;) {
+        if (!isDefined(station)) {
+            result = "station_gone";
+            break;
+        }
+
+        if (!isDefined(player) || !isAlive(player) || player.sessionstate != "playing" || player.team != team || level.gameEnded) {
+            break;
+        }
+
+        if (isDefined(player.lastStand) && player.lastStand) {
+            break;
+        }
+
+        placement = player getStationPlacement(station);
+        station.origin = placement.origin;
+        station.angles = placement.angles;
+        valid = placement.valid && !station stationInBadTrigger();
+        if (valid) {
+            lastValid = placement;
+        }
+
+        state = 0;
+        if (valid) {
+            state = 1;
+        }
+
+        if (state != lastState) {
+            lastState = state;
+            if (valid) {
+                station setModel(level.crateModelFriendly);
+                text = "Press [{+attack}] to place";
+            } else {
+                station setModel(level.crateModelEnemy);
+                text = "Cannot place here";
+            }
+
+            if (!station.hasBeenPlaced) {
+                text += " | [{+actionslot 4}] to cancel";
+            }
+
+            hud.safeText = text;
+            hud maps\mp\centurypackage\overflow::setSafeText(text);
+        }
+
+        // Ignore an attack press that was already held when carrying started.
+        if (!player attackButtonPressed()) {
+            attackReleased = true;
+        } else if (attackReleased && valid) {
+            result = "placed";
+            break;
+        }
+
+        // Same for the D-pad press that used the killstreak.
+        if (!player actionSlotFourButtonPressed()) {
+            cancelReleased = true;
+        } else if (cancelReleased && !station.hasBeenPlaced) {
+            result = "cancelled";
+            break;
+        }
+
+        wait 0.05;
+    }
+
+    if (isDefined(station)) {
+        station notify("station_carry_end");
+    }
+
+    if (isDefined(hud)) {
+        hud destroy();
+    }
+
+    if (isDefined(player)) {
+        player.carryingStation = false;
+        // _disableWeapon is reset on spawn, so only undo it on a living player.
+        if (isAlive(player)) {
+            player _enableWeapon();
+        }
+    }
+
+    if (!isDefined(station)) {
+        return;
+    }
+
+    if (result == "placed") {
+        station placeStation(lastValid.origin, lastValid.angles, player);
+        return;
+    }
+
+    if (!station.hasBeenPlaced) {
+        // Never placed: give the killstreak back (stock turret behaviour) and remove it.
+        if (isDefined(player) && player.team == team && !level.gameEnded) {
+            player maps\mp\gametypes\_hardpoints::giveKillstreak(station.killstreakType, undefined, undefined, true);
+        }
+
+        station maps\mp\gametypes\_supplydrop::crateDelete(false);
+        return;
+    }
+
+    // Carrier died, left or switched team: drop it at the last valid spot, else where it was.
+    if (isDefined(lastValid)) {
+        station placeStation(lastValid.origin, lastValid.angles, player);
+    } else {
+        station placeStation(station.pickupOrigin, station.pickupAngles, player);
+    }
+}
+
+carryHudOverflowRelay(station) {
+    station endon("death");
+    station endon("station_carry_end");
+
+    for (;;) {
+        level waittill("overflow_cleared");
+        if (isDefined(self) && isDefined(self.safeText)) {
+            self maps\mp\centurypackage\overflow::setSafeText(self.safeText);
+        }
+    }
+}
+
+placeStation(origin, angles, player) {
+    self.origin = origin;
+    self.angles = angles;
+    self setModel(level.crateModelFriendly);
+    self solid();
+    self.carried = false;
+    self maps\mp\gametypes\_supplydrop::crateActivate();
+    players = level.players;
+    for (i = 0; i < players.size; i++) {
+        self maps\mp\gametypes\_supplydrop::is_equipment_touching_crate(players[i]);
+    }
+
+    if (isDefined(player) && isAlive(player)) {
+        player playRumbleOnEntity("damage_heavy");
+    }
+
+    if (!self.hasBeenPlaced) {
+        self.hasBeenPlaced = true;
+        if (isDefined(player)) {
+            player maps\mp\gametypes\_hardpoints::playKillstreakStartDialog(self.killstreakType, self.team);
+        }
+
+        self thread stationThink(self.team);
+    }
+}
+
+// Script version of the engine's canPlayerPlaceTurret, which only works on turrets.
+// Puts the crate on the ground in front of the player and checks that it fits.
+getStationPlacement(station) {
+    yaw = self.angles[1];
+    forward = anglesToForward((0, yaw, 0));
+    right = anglesToRight((0, yaw, 0));
+    eye = self.origin + (0, 0, 40);
+    target = self.origin + forward * (station.stationHalfLength + level.supplyStationPlaceDistance);
+    placement = spawnStruct();
+    placement.angles = (0, yaw, 0);
+    placement.valid = false;
+    trace = bulletTrace(target + (0, 0, 40), target - (0, 0, 64), false, self);
+    if (trace["fraction"] >= 1) {
+        placement.origin = target + (0, 0, station.stationBottomOffset);
+        return placement;
+    }
+
+    ground = trace["position"];
+    placement.origin = ground + (0, 0, station.stationBottomOffset);
+    // Too steep.
+    if (trace["normal"][2] < 0.8) {
+        return placement;
+    }
+
+    mid = ground + (0, 0, station.stationHeight * 0.5);
+    // No placing through walls or windows.
+    if (!bulletTracePassed(eye, mid, false, self)) {
+        return placement;
+    }
+
+    // Room for the lid.
+    if (!bulletTracePassed(mid, ground + (0, 0, station.stationHeight + 2), true, self)) {
+        return placement;
+    }
+
+    for (sx = -1; sx <= 1; sx += 2) {
+        for (sy = -1; sy <= 1; sy += 2) {
+            corner = mid + forward * (sx * station.stationHalfLength) + right * (sy * station.stationHalfWidth);
+            // Nothing between the center and this corner.
+            if (!bulletTracePassed(mid, corner, true, self)) {
+                return placement;
+            }
+
+            // Ground under this corner, so it doesn't hang over a ledge.
+            if (bulletTracePassed(corner, corner - (0, 0, station.stationHeight * 0.5 + 16), false, self)) {
+                return placement;
+            }
+        }
+    }
+
+    // Not on top of or inside a player.
+    radius = station.stationHalfLength + 16;
+    players = level.players;
+    for (i = 0; i < players.size; i++) {
+        other = players[i];
+        if (!isAlive(other) || other.sessionstate != "playing") {
+            continue;
+        }
+
+        if (distance2d(other.origin, ground) > radius) {
+            continue;
+        }
+
+        if (abs(other.origin[2] - ground[2]) < station.stationHeight + 72) {
+            return placement;
+        }
+    }
+
+    placement.valid = true;
+    return placement;
+}
+
+// Same triggers the stock turret placement refuses.
+stationInBadTrigger() {
+    if (isDefined(level.fatal_triggers)) {
+        for (i = 0; i < level.fatal_triggers.size; i++) {
+            if (self isTouching(level.fatal_triggers[i])) {
+                return true;
+            }
+        }
+    }
+
+    if (isDefined(level.noTurretPlacementTriggers)) {
+        for (i = 0; i < level.noTurretPlacementTriggers.size; i++) {
+            if (self isTouching(level.noTurretPlacementTriggers[i])) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
