@@ -998,6 +998,7 @@ dropCrate(origin, angle, weaponname, owner, team, killcamEnt) {
     for (;;) {
         crate waittill("captured", player);
         // Supply Station care package: the crate becomes the station for whoever opened it.
+        // No Hacker booby-trap: an enemy with Hacker simply captures the station.
         if (crate.crateType.name == "supply_station_mp") {
             crate maps\mp\centurypackage\supplystation::convertCrateToStation(player);
             return;
