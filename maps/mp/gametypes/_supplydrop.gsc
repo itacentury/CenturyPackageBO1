@@ -8,6 +8,7 @@
 * Changes: revived cut Supply Station: `minigun_drop_mp` marker in `isSupplyDropWeapon()`, `dropCrate()` runs `supplystation::stationThink()`, red cross minimap/head icon in `crateActivate()`
 * Changes: cut Bomber (2/3) and Supply Station (3/4) added to the care package and gambler rotation in `init()`, with their crate icons in `getIconForCrate()`
 * Changes: `giveCrateKillstreak()` uses `utils::giveKillstreakWithPopup()` so the cut killstreaks show the "earned" popup
+* Changes: `crateUseThink()` routes Supply Station uses to `stationUseFeedback()`: no "friendly steals" sound on teammate refills, share/hijack medal notifies once per player per station
 */
 
 init() {
@@ -1257,7 +1258,9 @@ crateUseThink() {
         }
 
         if (result) {
-            if (isDefined(self.owner)) {
+            if (self.crateType.type == "supplystation") {
+                self stationUseFeedback(player);
+            } else if (isDefined(self.owner)) {
                 if (level.teambased) {
                     if (player.team != self.owner.team) {
                         self.owner playLocalSound("mpl_crate_enemy_steals");
@@ -1284,6 +1287,40 @@ crateUseThink() {
 
             self notify("captured", player);
         }
+    }
+}
+
+// Supply Station version of the stock steal feedback. The station is reused and can be
+// recaptured, so each medal notify fires at most once per player per station.
+stationUseFeedback(player) {
+    if (!isDefined(self.owner)) {
+        return;
+    }
+
+    if (!isDefined(self.stationSharedWith)) {
+        self.stationSharedWith = [];
+        self.stationHijackedBy = [];
+    }
+
+    playerNum = player getEntityNumber();
+    if (level.teambased && player.team == self.owner.team) {
+        // Teammate refill: no "friendly steals" sound, one share medal per teammate.
+        if (!isDefined(self.hacker) && !isDefined(self.stationSharedWith[playerNum])) {
+            self.stationSharedWith[playerNum] = true;
+            self.owner notify("team crate hijacked", self.crateType);
+        }
+
+        return;
+    }
+
+    if (player == self.owner) {
+        return;
+    }
+
+    self.owner playLocalSound("mpl_crate_enemy_steals");
+    if (!isDefined(self.hacker) && !isDefined(self.stationHijackedBy[playerNum])) {
+        self.stationHijackedBy[playerNum] = true;
+        player notify("hijacked crate");
     }
 }
 
