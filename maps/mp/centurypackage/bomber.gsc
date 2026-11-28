@@ -227,7 +227,8 @@ bomberAttachPlayer(player) {
     player endon("disconnect");
     player endon("death");
 
-    player setClientDvar("cg_fov", 30);
+    // Scale instead of setting cg_fov, so the player's own FOV survives: ~30 at the default 65.
+    player setClientDvar("cg_fovScale", 0.46);
     player thread bomberOverlay();
     player freezeControls(true);
 
@@ -376,7 +377,7 @@ bomberDetachOnDone(cam, look) {
     if (!level.gameEnded) {
         self freezeControls(false);
     }
-    self setClientDvar("cg_fov", 65);
+    self setClientDvar("cg_fovScale", 1);
     self.currentPlane = undefined;
     if (isDefined(self.bomberStartAngles)) {
         self setPlayerAngles(self.bomberStartAngles);
