@@ -676,11 +676,13 @@ getStationPlacement(station) {
     }
 
     // Not on top of or inside a player.
-    radius = station.stationHalfLength + 16;
+    // Corners reach to the half-diagonal; 16 covers the 15-unit player hull.
+    radius = sqrt(station.stationHalfLength * station.stationHalfLength + station.stationHalfWidth * station.stationHalfWidth) + 16;
     players = level.players;
     for (i = 0; i < players.size; i++) {
         other = players[i];
-        if (!isAlive(other) || other.sessionstate != "playing") {
+        // The carrier stands placeDistance behind the crate's back face, never inside it.
+        if (other == self || !isAlive(other) || other.sessionstate != "playing") {
             continue;
         }
 
