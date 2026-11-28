@@ -25,6 +25,9 @@ init() {
     level.supplyStationBuffRadius = 175;
     level.supplyStationHealthBuff = 0.25;
     level.supplyStationPlaceDistance = 30;
+    // Stations alive at once (each holds 2 objective IDs). FFA uses the per-team value.
+    level.supplyStationMax = 4;
+    level.supplyStationMaxPerTeam = 2;
 
     level thread registerSupplyStation();
 }
@@ -38,12 +41,13 @@ registerSupplyStation() {
     }
 
     type = "supply_station_mp";
-    // Stock _killstreakrules lists supply_station_mp, but don't rely on the shipped script:
-    // without an entry isKillstreakAllowed does GetArrayKeys(undefined).
-    if (isDefined(level.killstreakrules) && !isDefined(level.killstreaktype[type])) {
-        maps\mp\_killstreakrules::addKillstreakToRule(type, "vehicle", true, true);
-        maps\mp\_killstreakrules::addKillstreakToRule(type, "supplydrop", true, true);
-        maps\mp\_killstreakrules::addKillstreakToRule(type, "targetableent", true, true);
+    // Own rule instead of the stock vehicle/supplydrop ones, which would block care packages
+    // and other streaks while a station stands. Stock may already list the type: reset it.
+    // _bot also calls isKillstreakAllowed, which needs an entry (GetArrayKeys(undefined)).
+    if (isDefined(level.killstreakrules)) {
+        maps\mp\_killstreakrules::createRule("supplystation", level.supplyStationMax, level.supplyStationMaxPerTeam);
+        level.killstreaktype[type] = [];
+        maps\mp\_killstreakrules::addKillstreakToRule(type, "supplystation", true, true);
     }
 
     ks = spawnStruct();
@@ -78,6 +82,11 @@ useKillstreakSupplyStation(hardpointType) {
         return false;
     }
 
+    // Checks the cap and counts the station; prints notAvailableText when full.
+    if (!self maps\mp\_killstreakrules::killstreakStart(hardpointType, self.team, false, false)) {
+        return false;
+    }
+
     // Like the stock turrets: the streak counts as used now and is given back if the
     // first placement is cancelled (carryStationLoop).
     self thread carryNewStation(hardpointType);
@@ -88,10 +97,19 @@ carryNewStation(hardpointType) {
     station = maps\mp\gametypes\_supplydrop::crateSpawn("minigun_drop_mp", self, self.team, self.origin, (0, self.angles[1], 0));
     station.killstreakType = hardpointType;
     station.hasBeenPlaced = false;
+    level thread releaseStationSlot(station, hardpointType, self.team);
     // No wait before startCarryStation makes it non-solid, so the player never gets stuck in it.
     station thread maps\mp\gametypes\_supplydrop::crateUseThink();
     station thread maps\mp\gametypes\_supplydrop::crateUseThinkOwner();
     self startCarryStation(station);
+}
+
+// One slot per killstreak station, freed however it goes: timer, cancelled first placement,
+// crate removed. Care package stations are not counted (supplydrop caps them at delivery).
+// The start team is kept: a captured station changes station.team.
+releaseStationSlot(station, hardpointType, team) {
+    station waittill("death");
+    maps\mp\_killstreakrules::killstreakStop(hardpointType, team);
 }
 
 // A Supply Station care package was opened: the crate stays and becomes the station,
