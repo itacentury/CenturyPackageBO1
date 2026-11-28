@@ -56,7 +56,7 @@ registerSupplyStation() {
     game["dialog"][type + "_enemy_end"] = "";
     game["dialog"][type] = "kls_supply_ready";
 
-    maps\mp\gametypes\_supplydrop::registerCrateType("minigun_drop_mp", "supplystation", "supplystation", 1, &"KILLSTREAK_AMMO_CRATE", undefined, "MEDAL_SHARE_PACKAGE_AMMO", ::giveStationAmmo);
+    maps\mp\gametypes\_supplydrop::registerCrateType("minigun_drop_mp", "supplystation", "supplystation", 1, &"KILLSTREAK_AMMO_CRATE", undefined, "MEDAL_SHARE_PACKAGE_AMMO", maps\mp\gametypes\_supplydrop::giveCrateAmmo);
     level.crateCategoryWeights["minigun_drop_mp"] = 1;
 }
 
@@ -75,13 +75,6 @@ useKillstreakSupplyStation(hardpointType) {
     return result;
 }
 
-giveStationAmmo(name) {
-    weapons = self getWeaponsList();
-    for (i = 0; i < weapons.size; i++) {
-        self giveMaxAmmo(weapons[i]);
-    }
-}
-
 // Runs on the landed crate instead of the one-shot care package loop.
 stationThink(owner, team) {
     self endon("death");
@@ -95,7 +88,8 @@ stationThink(owner, team) {
     for (;;) {
         self waittill("captured", player);
         if (self canUseStation(player)) {
-            player giveStationAmmo();
+            // Stock refill: skips killstreak weapons and caps lethals/tacticals.
+            player maps\mp\gametypes\_supplydrop::giveCrateAmmo();
         } else {
             self setStationOwner(player);
         }
