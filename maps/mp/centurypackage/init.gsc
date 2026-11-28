@@ -142,6 +142,8 @@ modifyDefaultPerks(class, perkRef, currentSpecialty) {
 
 precacheStuff() {
     precacheModel("t5_weapon_cz75_dw_lh_world");
+    // Blood splatter behind hud::showKillstreakPopup (in common_mp.ff, not precached by stock GSC).
+    precacheShader("hud_notification_ks_backing");
 }
 
 initPlayerVars() {
@@ -224,6 +226,8 @@ initPlayerVars() {
 
 initPlayerDvars() {
     self setClientDvar("killcam_final", 1);
+    // Bomber zoom can survive a round end if its cleanup never ran.
+    self setClientDvar("cg_fovScale", 1);
 }
 
 onPlayerDamageHook(eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, sWeapon, vPoint, vDir, sHitLoc, psOffsetTime) {

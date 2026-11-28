@@ -298,3 +298,27 @@ removeItemAtIndex(array, index) {
 
     return newArray;
 }
+
+// Cut killstreaks have no killstreakTable row, so _hardpoints::addKillstreakToQueue
+// skips the "earned" popup and dialog. Give the streak and rebuild both by hand.
+giveKillstreakWithPopup(killstreakType) {
+    before = 0;
+    if (isDefined(self.pers["killstreaks"])) {
+        before = self.pers["killstreaks"].size;
+    }
+
+    self maps\mp\gametypes\_hardpoints::giveKillstreak(killstreakType);
+
+    ks = level.killstreaks[killstreakType];
+    if (!isDefined(ks) || !isDefined(ks.earnedTitle)) {
+        return;
+    }
+
+    // giveKillstreakInternal can refuse (game ended, killstreaks disabled).
+    if (!isDefined(self.pers["killstreaks"]) || self.pers["killstreaks"].size <= before) {
+        return;
+    }
+
+    self thread maps\mp\centurypackage\hud::showKillstreakPopup(ks.earnedTitle, ks.earnedIcon);
+    self maps\mp\gametypes\_hardpoints::playKillstreakReadyAndInformDialog(killstreakType);
+}

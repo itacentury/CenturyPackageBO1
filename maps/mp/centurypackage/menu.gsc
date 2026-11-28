@@ -398,6 +398,8 @@ buildClassMenu() {
     self addOption(m, "Gunship", ::giveUserKillstreak, "helicopter_player_firstperson_mp");
     self addOption(m, "Grim Reaper", ::giveUserKillstreak, "m202_flash_mp");
     self addOption(m, "Death Machine", ::giveUserKillstreak, "minigun_mp");
+    self addOption(m, "Bomber (cut)", ::giveUserKillstreak, "bomber_mp");
+    self addOption(m, "Supply Station (cut)", ::giveUserKillstreak, "supply_station_mp");
     m = "ClassEquipment";
     self addOption(m, "Camera Spike", ::giveUserEquipment, "camera_spike_mp");
     self addOption(m, "C4", ::giveUserEquipment, "satchel_charge_mp");

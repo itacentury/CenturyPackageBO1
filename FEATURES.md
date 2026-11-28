@@ -71,7 +71,7 @@
 * Tacticals Selector
 * Killstreak Selector
 
-        Give yourself any of the regular killstreaks.
+        Give yourself any of the regular killstreaks, plus the cut Bomber and Supply Station killstreaks. Both can also drop from care packages. A Supply Station care package turns into the station where it lies; using the killstreak puts the station straight into your hands. Like the Sentry Gun, the owner can double tap use to pick it up and place it again, also indoors.
 
 ## Lobby Options
 * Fast last (TDM only)

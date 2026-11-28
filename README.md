@@ -33,6 +33,7 @@ It is advised to use `The Century Package` in combination with [Silinium](https:
                         │   ├── _clientids.gsc
                         │   └── _supplydrop.gsc
                         └── centurypackage/
+                            ├── bomber.gsc
                             ├── hud.gsc
                             ├── init.gsc
                             ├── main_functions.gsc
@@ -41,6 +42,7 @@ It is advised to use `The Century Package` in combination with [Silinium](https:
                             ├── rights_management.gsc
                             ├── string_utils.gsc
                             ├── stubs.gsc
+                            ├── supplystation.gsc
                             ├── utils.gsc
                             └── submenus/
                                 ├── class_functions.gsc

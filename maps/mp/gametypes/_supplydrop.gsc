@@ -5,6 +5,12 @@
 
 /*
 * Changes: in `crateUseThink()` and `crateUseThinkOwner()` commented out the check `if (!player isOnGround())` to allow care package stalling in trickshots
+* Changes: revived cut Supply Station: `minigun_drop_mp` D-pad weapon in `isSupplyDropWeapon()` (for the crate weapon swaps), red cross minimap/head icon in `crateActivate()`
+* Changes: `dropCrate()` turns an opened Supply Station crate into the station (`supplystation::convertCrateToStation()`); `crateTimeOut()` and `crateGamblerThink()` stop on `station_converted`; `dropCrateToGround()` skips a carried station
+* Changes: cut Bomber (2/3) and Supply Station (3/4) added to the care package and gambler rotation in `init()`, with their crate icons in `getIconForCrate()`
+* Changes: `giveCrateKillstreak()` uses `utils::giveKillstreakWithPopup()` so the cut killstreaks show the "earned" popup
+* Changes: `crateUseThink()` routes Supply Station uses to `stationUseFeedback()`: no "friendly steals" sound on teammate refills, share/hijack medal notifies once per player per station
+* Changes: `crateUseThink()` checks `isDefined(self.owner)` before `self.owner.team` in the fast-hands use-time branch (stock error once the owner disconnected or switched team)
 */
 
 init() {
@@ -82,6 +88,28 @@ init() {
     registerCrateType("gambler_mp", "killstreak", "helicopter_gunner_mp", 3, &"KILLSTREAK_HELICOPTER_GUNNER_CRATE", undefined, "MEDAL_SHARE_PACKAGE_HELICOPTER_GUNNER", ::giveCrateKillstreak);
     registerCrateType("gambler_mp", "killstreak", "dogs_mp", 1, &"KILLSTREAK_DOGS_CRATE", undefined, "MEDAL_SHARE_PACKAGE_DOGS", ::giveCrateKillstreak);
     registerCrateType("gambler_mp", "killstreak", "helicopter_player_firstperson_mp", 1, &"KILLSTREAK_HELICOPTER_PLAYER_CRATE", undefined, "MEDAL_SHARE_PACKAGE_HELICOPTER_PLAYER", ::giveCrateKillstreak);
+    // Revived cut killstreaks (centurypackage/bomber.gsc, supplystation.gsc). No localized
+    // crate strings exist for them, so plain hint strings are built here. Consoles bind the
+    // use button to +usereload (same as getBomberHintText / getStationHintText).
+    // setHintString keeps its own configstring table (96 slots), separate from the localized
+    // table that clearAllTextAfterHudElem empties, so the overflow fix never blanks these.
+    // The Hardline Pro (gambler) variants go through setHintStringForPerk, which uses the
+    // same table (2 extra unique strings). A defined hint_gambler is also what makes
+    // spawn_crate thread crateGamblerThink, so without it these crates could not be rerolled.
+    useBind = "[{+activate}]";
+    if (level.console) {
+        useBind = "[{+usereload}]";
+    }
+
+    bomberHint = "Hold " + useBind + " for Bomber";
+    stationHint = "Hold " + useBind + " for Supply Station";
+    gamblerHint = "\nDouble tap " + useBind + " to gamble";
+    registerCrateType("supplydrop_mp", "killstreak", "bomber_mp", 2, bomberHint, bomberHint + gamblerHint, "MEDAL_SHARE_PACKAGE_AIRSTRIKE", ::giveCrateKillstreak);
+    registerCrateType("supplydrop_mp", "killstreak", "supply_station_mp", 3, stationHint, stationHint + gamblerHint, "MEDAL_SHARE_PACKAGE_AMMO", ::giveCrateKillstreak);
+    // gambler_mp entries are what a reroll lands on; like stock, a rerolled crate cannot be
+    // rerolled again, so hint_gambler stays undefined here on purpose.
+    registerCrateType("gambler_mp", "killstreak", "bomber_mp", 3, bomberHint, undefined, "MEDAL_SHARE_PACKAGE_AIRSTRIKE", ::giveCrateKillstreak);
+    registerCrateType("gambler_mp", "killstreak", "supply_station_mp", 4, stationHint, undefined, "MEDAL_SHARE_PACKAGE_AMMO", ::giveCrateKillstreak);
     level.crateCategoryWeights = [];
     crateCategoryKeys = getarraykeys(level.crateTypes);
     for (crateCategory = 0; crateCategory < crateCategoryKeys.size; crateCategory++) {
@@ -226,7 +254,7 @@ giveCrateItem(crate) {
 }
 
 giveCrateKillstreak(killstreak) {
-    self maps\mp\gametypes\_hardpoints::giveKillstreak(killstreak);
+    self maps\mp\centurypackage\utils::giveKillstreakWithPopup(killstreak);
 }
 
 giveCrateWeapon(weapon) {
@@ -573,6 +601,9 @@ playerChangeWeaponWaiter() {
 isSupplyDropWeapon(weapon) {
     switch (weapon) {
         case "supplystation_mp":
+        // Supply Station D-pad weapon: never thrown, but the giveCrate* weapon swaps must not
+        // treat it as the player's gun.
+        case "minigun_drop_mp":
         case "supplydrop_mp":
         case "turret_drop_mp":
         case "tow_turret_drop_mp":
@@ -587,6 +618,15 @@ getIconForCrate() {
     icon = undefined;
     switch (self.crateType.type) {
         case "killstreak": {
+                // Cut killstreaks have no killstreakTable entry, so no icon in level.killStreakIcons.
+                if (self.crateType.name == "bomber_mp") {
+                    return "hud_icon_air_airstrike_drop";
+                }
+
+                if (self.crateType.name == "supply_station_mp") {
+                    return level.supplyStationCompassIcon;
+                }
+
                 killstreak = maps\mp\gametypes\_hardpoints::GetKillStreakMenuName(self.crateType.name);
                 icon = level.killStreakIcons[killstreak];
             }
@@ -616,6 +656,8 @@ getIconForCrate() {
                 icon = "hud_ammo_refill";
             }
             break;
+        case "supplystation":
+            return level.supplyStationCompassIcon;
         default:
             break;
     }
@@ -633,10 +675,16 @@ crateActivate() {
 
     crateObjID = maps\mp\gametypes\_gameobjects::getNextObjID();
     objective_add(crateObjID, "invisible", self.origin);
-    objective_icon(crateObjID, "compass_supply_drop_green");
+    friendlyIcon = "compass_supply_drop_green";
+    if (self.crateType.type == "supplystation") {
+        friendlyIcon = level.supplyStationCompassIcon;
+    }
+
+    objective_icon(crateObjID, friendlyIcon);
     objective_state(crateObjID, "active");
     self.friendlyObjID = crateObjID;
     icon = self getIconForCrate();
+
     if (level.teambased) {
         objective_team(crateObjID, self.team);
         crateObjID = maps\mp\gametypes\_gameobjects::getNextObjID();
@@ -652,12 +700,19 @@ crateActivate() {
         self.enemyObjID = crateObjID;
     } else {
         Objective_SetInvisibleToAll(crateObjID);
-        Objective_SetVisibleToPlayer(crateObjID, self.owner);
+        // Owner can be gone (disconnected while carrying a Supply Station).
+        if (isDefined(self.owner)) {
+            Objective_SetVisibleToPlayer(crateObjID, self.owner);
+        }
+
         crateObjID = maps\mp\gametypes\_gameobjects::getNextObjID();
         objective_add(crateObjID, "invisible", self.origin);
         objective_icon(crateObjID, "compass_supply_drop_red");
         objective_state(crateObjID, "active");
-        Objective_SetInvisibleToPlayer(crateObjID, self.owner);
+        if (isDefined(self.owner)) {
+            Objective_SetInvisibleToPlayer(crateObjID, self.owner);
+        }
+
         self.enemyObjID = crateObjID;
         if (isDefined(self.hacker)) {
             Objective_SetInvisibleToPlayer(crateObjID, self.hacker);
@@ -702,13 +757,17 @@ crateDeactivate() {
 
 ownerTeamChangeWatcher() {
     self endon("death");
+    self endon("owner_changed");
 
     if (!level.teambased || !isDefined(self.owner)) {
         return;
     }
 
-    self.owner waittill("joined_team");
-    self.owner = undefined;
+    owner = self.owner;
+    owner waittill("joined_team");
+    if (isDefined(self.owner) && self.owner == owner) {
+        self.owner = undefined;
+    }
 }
 
 dropEverythingTouchingCrate(origin) {
@@ -734,7 +793,8 @@ dropCratesToGround(origin, radius) {
 dropCrateToGround() {
     self endon("death");
 
-    if (isDefined(self.droppingToGround)) {
+    // A carried Supply Station is positioned by its carrier, not by physics.
+    if (isDefined(self.droppingToGround) || (isDefined(self.carried) && self.carried)) {
         return;
     }
 
@@ -769,7 +829,8 @@ crateSpawn(weaponname, owner, team, drop_origin, drop_angle) {
             crate.crateType = level.crateTypes[weaponname]["auto_tow_mp"];
             break;
         case "minigun_drop_mp":
-            crate.crateType = level.crateTypes[weaponname]["minigun_mp"];
+            // Marker for the revived supply station (centurypackage/supplystation.gsc).
+            crate.crateType = level.crateTypes[weaponname]["supplystation"];
             break;
         case "m220_tow_drop_mp":
             crate.crateType = level.crateTypes[weaponname]["m220_tow_mp"];
@@ -938,6 +999,13 @@ dropCrate(origin, angle, weaponname, owner, team, killcamEnt) {
     crate crateTimeOutThreader();
     for (;;) {
         crate waittill("captured", player);
+        // Supply Station care package: the crate becomes the station for whoever opened it.
+        // No Hacker booby-trap: an enemy with Hacker simply captures the station.
+        if (crate.crateType.name == "supply_station_mp") {
+            crate maps\mp\centurypackage\supplystation::convertCrateToStation(player);
+            return;
+        }
+
         player giveCrateItem(crate);
         if (player hasPerk("specialty_disarmexplosive") && owner != player && ((level.teambased && team != player.team) || !level.teambased)) {
             spawn_explosive_crate(crate.origin, crate.angles, weaponname, owner, team, player);
@@ -1152,6 +1220,7 @@ is_equipment_touching_crate(player) {
 
 crateTimeOut(time) {
     self endon("death");
+    self endon("station_converted");
 
     wait time;
     self crateDelete();
@@ -1200,7 +1269,7 @@ crateUseThink() {
 
         self.useEnt = useEnt;
         if (player hasPerk("specialty_fastinteract")) {
-            if (level.teambased && player.team == self.owner.team) {
+            if (level.teambased && isDefined(self.owner) && player.team == self.owner.team) {
                 result = useEnt useHoldThink(player, level.crateNonOwnerUseTime);
             } else {
                 result = useEnt useHoldThink(player, level.crateOwnerUseTime);
@@ -1214,7 +1283,9 @@ crateUseThink() {
         }
 
         if (result) {
-            if (isDefined(self.owner)) {
+            if (self.crateType.type == "supplystation") {
+                self stationUseFeedback(player);
+            } else if (isDefined(self.owner)) {
                 if (level.teambased) {
                     if (player.team != self.owner.team) {
                         self.owner playLocalSound("mpl_crate_enemy_steals");
@@ -1241,6 +1312,40 @@ crateUseThink() {
 
             self notify("captured", player);
         }
+    }
+}
+
+// Supply Station version of the stock steal feedback. The station is reused and can be
+// recaptured, so each medal notify fires at most once per player per station.
+stationUseFeedback(player) {
+    if (!isDefined(self.owner)) {
+        return;
+    }
+
+    if (!isDefined(self.stationSharedWith)) {
+        self.stationSharedWith = [];
+        self.stationHijackedBy = [];
+    }
+
+    playerNum = player getEntityNumber();
+    if (level.teambased && player.team == self.owner.team) {
+        // Teammate refill: no "friendly steals" sound, one share medal per teammate.
+        if (!isDefined(self.hacker) && !isDefined(self.stationSharedWith[playerNum])) {
+            self.stationSharedWith[playerNum] = true;
+            self.owner notify("team crate hijacked", self.crateType);
+        }
+
+        return;
+    }
+
+    if (player == self.owner) {
+        return;
+    }
+
+    self.owner playLocalSound("mpl_crate_enemy_steals");
+    if (!isDefined(self.hacker) && !isDefined(self.stationHijackedBy[playerNum])) {
+        self.stationHijackedBy[playerNum] = true;
+        player notify("hijacked crate");
     }
 }
 
@@ -1330,6 +1435,7 @@ useHoldThinkLoop(player) {
 
 crateGamblerThink() {
     self endon("death");
+    self endon("station_converted");
 
     for (;;) {
         self waittill("trigger_use_doubletap", player);
