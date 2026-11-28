@@ -73,7 +73,8 @@ registerSupplyStation() {
     game["dialog"][type + "_enemy_end"] = "";
     game["dialog"][type] = "kls_supply_ready";
 
-    maps\mp\gametypes\_supplydrop::registerCrateType("minigun_drop_mp", "supplystation", "supplystation", 1, &"KILLSTREAK_AMMO_CRATE", undefined, "MEDAL_SHARE_PACKAGE_AMMO", maps\mp\gametypes\_supplydrop::giveCrateAmmo);
+    // No engine hint: it is one string for everyone. stationHint shows per-player text instead.
+    maps\mp\gametypes\_supplydrop::registerCrateType("minigun_drop_mp", "supplystation", "supplystation", 1, "", undefined, "MEDAL_SHARE_PACKAGE_AMMO", maps\mp\gametypes\_supplydrop::giveCrateAmmo);
     level.crateCategoryWeights["minigun_drop_mp"] = 1;
 }
 
@@ -351,11 +352,11 @@ getStationHintText(station) {
     }
 
     if (isDefined(station.owner) && station.owner == self) {
-        return "Supply Station - heals you while nearby | Double tap " + useBind + " to move";
+        return "Supply Station - heals you while nearby | Hold " + useBind + " for ammo, double tap to move";
     }
 
     if (station canUseStation(self)) {
-        return "Supply Station - heals you while nearby";
+        return "Supply Station - heals you while nearby | Hold " + useBind + " for ammo";
     }
 
     return "Enemy Supply Station | Hold " + useBind + " to capture";
