@@ -92,15 +92,23 @@ init() {
     // use button to +usereload (same as getBomberHintText / getStationHintText).
     // setHintString keeps its own configstring table (96 slots), separate from the localized
     // table that clearAllTextAfterHudElem empties, so the overflow fix never blanks these.
+    // The Hardline Pro (gambler) variants go through setHintStringForPerk, which uses the
+    // same table (2 extra unique strings). A defined hint_gambler is also what makes
+    // spawn_crate thread crateGamblerThink, so without it these crates could not be rerolled.
     useBind = "[{+activate}]";
     if (level.console) {
         useBind = "[{+usereload}]";
     }
 
-    registerCrateType("supplydrop_mp", "killstreak", "bomber_mp", 2, "Hold " + useBind + " for Bomber", undefined, "MEDAL_SHARE_PACKAGE_AIRSTRIKE", ::giveCrateKillstreak);
-    registerCrateType("supplydrop_mp", "killstreak", "supply_station_mp", 3, "Hold " + useBind + " for Supply Station", undefined, "MEDAL_SHARE_PACKAGE_AMMO", ::giveCrateKillstreak);
-    registerCrateType("gambler_mp", "killstreak", "bomber_mp", 3, "Hold " + useBind + " for Bomber", undefined, "MEDAL_SHARE_PACKAGE_AIRSTRIKE", ::giveCrateKillstreak);
-    registerCrateType("gambler_mp", "killstreak", "supply_station_mp", 4, "Hold " + useBind + " for Supply Station", undefined, "MEDAL_SHARE_PACKAGE_AMMO", ::giveCrateKillstreak);
+    bomberHint = "Hold " + useBind + " for Bomber";
+    stationHint = "Hold " + useBind + " for Supply Station";
+    gamblerHint = "\nDouble tap " + useBind + " to gamble";
+    registerCrateType("supplydrop_mp", "killstreak", "bomber_mp", 2, bomberHint, bomberHint + gamblerHint, "MEDAL_SHARE_PACKAGE_AIRSTRIKE", ::giveCrateKillstreak);
+    registerCrateType("supplydrop_mp", "killstreak", "supply_station_mp", 3, stationHint, stationHint + gamblerHint, "MEDAL_SHARE_PACKAGE_AMMO", ::giveCrateKillstreak);
+    // gambler_mp entries are what a reroll lands on; like stock, a rerolled crate cannot be
+    // rerolled again, so hint_gambler stays undefined here on purpose.
+    registerCrateType("gambler_mp", "killstreak", "bomber_mp", 3, bomberHint, undefined, "MEDAL_SHARE_PACKAGE_AIRSTRIKE", ::giveCrateKillstreak);
+    registerCrateType("gambler_mp", "killstreak", "supply_station_mp", 4, stationHint, undefined, "MEDAL_SHARE_PACKAGE_AMMO", ::giveCrateKillstreak);
     level.crateCategoryWeights = [];
     crateCategoryKeys = getarraykeys(level.crateTypes);
     for (crateCategory = 0; crateCategory < crateCategoryKeys.size; crateCategory++) {
