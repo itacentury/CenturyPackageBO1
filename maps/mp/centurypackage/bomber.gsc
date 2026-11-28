@@ -139,8 +139,16 @@ doBomber(origin, owner, team, strike) {
 
     // Hold the lock until every jet has left the map. If the owner disconnects,
     // callStrike stops spawning, so only wait for the jets already in the air.
+    // Safety net: never hold the lock longer than the whole strike can take, in case a jet
+    // is removed without its "delete" notify.
+    flyTime = flightPlan.distance / flightPlan.speed;
+    deadline = getTime() + (level.bomberPlaneCount * flightPlan.planeSpacing + flyTime + 5) * 1000;
     for (;;) {
         wait 0.5;
+        if (getTime() > deadline) {
+            break;
+        }
+
         if (strike.planesAlive == 0 && (strike.planesSpawned >= level.bomberPlaneCount || !isDefined(owner))) {
             break;
         }
