@@ -698,12 +698,19 @@ crateActivate() {
         self.enemyObjID = crateObjID;
     } else {
         Objective_SetInvisibleToAll(crateObjID);
-        Objective_SetVisibleToPlayer(crateObjID, self.owner);
+        // Owner can be gone (disconnected while carrying a Supply Station).
+        if (isDefined(self.owner)) {
+            Objective_SetVisibleToPlayer(crateObjID, self.owner);
+        }
+
         crateObjID = maps\mp\gametypes\_gameobjects::getNextObjID();
         objective_add(crateObjID, "invisible", self.origin);
         objective_icon(crateObjID, "compass_supply_drop_red");
         objective_state(crateObjID, "active");
-        Objective_SetInvisibleToPlayer(crateObjID, self.owner);
+        if (isDefined(self.owner)) {
+            Objective_SetInvisibleToPlayer(crateObjID, self.owner);
+        }
+
         self.enemyObjID = crateObjID;
         if (isDefined(self.hacker)) {
             Objective_SetInvisibleToPlayer(crateObjID, self.hacker);
