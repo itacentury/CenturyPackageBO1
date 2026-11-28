@@ -471,6 +471,7 @@ carryStationLoop(station, player) {
 
         if (state != lastState) {
             lastState = state;
+            text = "";
             if (valid) {
                 station setModel(level.crateModelFriendly);
                 text = "Press [{+attack}] to place";

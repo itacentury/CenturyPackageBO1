@@ -232,6 +232,7 @@ giveNewWeapon(currentWeapon, baseWeapon, attachmentList) {
     // that have their own clip: the alt-mode underbarrel and the left-hand dual wield half.
     weaponAmmoClip = self getWeaponAmmoClip(currentWeapon);
     weaponAmmoStock = self getWeaponAmmoStock(currentWeapon);
+    // Initialised on every path: the compiler rejects variables only assigned inside an if.
     altWeapon = weaponAltWeaponName(currentWeapon);
     altAmmoClip = 0;
     altAmmoStock = 0;
