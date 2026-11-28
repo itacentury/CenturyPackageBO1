@@ -88,6 +88,8 @@ init() {
     // Revived cut killstreaks (centurypackage/bomber.gsc, supplystation.gsc). No localized
     // crate strings exist for them, so plain hint strings are built here. Consoles bind the
     // use button to +usereload (same as getBomberHintText / getStationHintText).
+    // setHintString keeps its own configstring table (96 slots), separate from the localized
+    // table that clearAllTextAfterHudElem empties, so the overflow fix never blanks these.
     useBind = "[{+activate}]";
     if (level.console) {
         useBind = "[{+usereload}]";
