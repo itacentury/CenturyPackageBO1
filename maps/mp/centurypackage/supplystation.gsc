@@ -34,6 +34,14 @@ registerSupplyStation() {
     }
 
     type = "supply_station_mp";
+    // Stock _killstreakrules lists supply_station_mp, but don't rely on the shipped script:
+    // without an entry isKillstreakAllowed does GetArrayKeys(undefined).
+    if (isDefined(level.killstreakrules) && !isDefined(level.killstreaktype[type])) {
+        maps\mp\_killstreakrules::addKillstreakToRule(type, "vehicle", true, true);
+        maps\mp\_killstreakrules::addKillstreakToRule(type, "supplydrop", true, true);
+        maps\mp\_killstreakrules::addKillstreakToRule(type, "targetableent", true, true);
+    }
+
     ks = spawnStruct();
     ks.usageKey = "supply_station_used";
     ks.useFunction = ::useKillstreakSupplyStation;

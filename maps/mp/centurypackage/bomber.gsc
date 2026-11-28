@@ -21,6 +21,9 @@ init() {
     precacheShader("ac130_overlay_grain");
     precacheShader("ac130_overlay_105mm");
     precacheShader("waypoint_target");
+    // Stock only precaches these via the statsTable airstrike row (_class.gsc); not guaranteed.
+    precacheShader("hud_icon_air_airstrike"); // earned popup icon
+    precacheShader("hud_icon_air_airstrike_drop"); // care package crate icon
     precacheLocationSelector("map_mortar_selector");
     precacheString(&"KILLSTREAK_AIRSTRIKE_NOT_AVAILABLE");
 
