@@ -57,6 +57,8 @@ registerBomber() {
     ks.earnedIcon = "hud_icon_air_airstrike";
     level.killstreaks[type] = ks;
     level.killstreakWeapons["bomber_mp"] = type;
+    // Bombs are fired as mk82_mp; without this their kills count toward the next streak.
+    maps\mp\gametypes\_hardpoints::registerKillstreakAltWeapon(type, "mk82_mp");
     level.menuReferenceForKillStreak[ks.menuName] = type;
 
     game["dialog"][type + "_start"] = "kls_airstrike_used";
