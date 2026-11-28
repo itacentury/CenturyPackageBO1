@@ -233,12 +233,15 @@ giveNewWeapon(currentWeapon, baseWeapon, attachmentList) {
     weaponAmmoClip = self getWeaponAmmoClip(currentWeapon);
     weaponAmmoStock = self getWeaponAmmoStock(currentWeapon);
     altWeapon = weaponAltWeaponName(currentWeapon);
+    altAmmoClip = 0;
+    altAmmoStock = 0;
     if (altWeapon != "none") {
         altAmmoClip = self getWeaponAmmoClip(altWeapon);
         altAmmoStock = self getWeaponAmmoStock(altWeapon);
     }
 
     leftHandWeapon = getDualWieldLeftHand(currentWeapon);
+    leftHandAmmoClip = 0;
     if (leftHandWeapon != "none") {
         leftHandAmmoClip = self getWeaponAmmoClip(leftHandWeapon);
     }
