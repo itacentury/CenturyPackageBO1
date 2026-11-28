@@ -9,6 +9,7 @@
 * Changes: cut Bomber (2/3) and Supply Station (3/4) added to the care package and gambler rotation in `init()`, with their crate icons in `getIconForCrate()`
 * Changes: `giveCrateKillstreak()` uses `utils::giveKillstreakWithPopup()` so the cut killstreaks show the "earned" popup
 * Changes: `crateUseThink()` routes Supply Station uses to `stationUseFeedback()`: no "friendly steals" sound on teammate refills, share/hijack medal notifies once per player per station
+* Changes: `crateUseThink()` checks `isDefined(self.owner)` before `self.owner.team` in the fast-hands use-time branch (stock error once the owner disconnected or switched team)
 */
 
 init() {
@@ -1244,7 +1245,7 @@ crateUseThink() {
 
         self.useEnt = useEnt;
         if (player hasPerk("specialty_fastinteract")) {
-            if (level.teambased && player.team == self.owner.team) {
+            if (level.teambased && isDefined(self.owner) && player.team == self.owner.team) {
                 result = useEnt useHoldThink(player, level.crateNonOwnerUseTime);
             } else {
                 result = useEnt useHoldThink(player, level.crateOwnerUseTime);
