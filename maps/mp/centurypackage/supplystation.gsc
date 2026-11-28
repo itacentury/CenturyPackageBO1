@@ -343,25 +343,44 @@ getStationHintText(station) {
 }
 
 // Owner double taps use on the placed station to carry it again. Holding use still refills.
+// The engine's trigger_use_doubletap only fires for Gambler players, so taps are timed here.
 stationPickupThink() {
     self endon("death");
 
+    lastTapEnd = undefined;
     for (;;) {
-        self waittill("trigger_use_doubletap", player);
-        if (!isDefined(self.owner) || player != self.owner) {
+        self waittill("trigger", player);
+        if (!isDefined(self.owner) || player != self.owner || self isStationCarried()) {
+            lastTapEnd = undefined;
             continue;
         }
 
-        // The second tap also starts the owner's hold-to-refill; let it end first.
-        for (i = 0; i < 20 && isDefined(self.inUse) && self.inUse; i++) {
+        // Second short tap shortly after the first: pick up.
+        if (isDefined(lastTapEnd) && getTime() - lastTapEnd <= 350) {
+            lastTapEnd = undefined;
+            // The second tap also starts the owner's hold-to-refill; let it end first.
+            for (i = 0; i < 20 && isDefined(self.inUse) && self.inUse; i++) {
+                wait 0.05;
+            }
+
+            if (self canPickUpStation(player)) {
+                player startCarryStation(self);
+            }
+
+            continue;
+        }
+
+        // First press only counts as a tap if released before the 500ms owner refill completes.
+        held = 0;
+        while (isDefined(player) && isAlive(player) && player useButtonPressed() && held < 300) {
             wait 0.05;
+            held += 50;
         }
 
-        if (!self canPickUpStation(player)) {
-            continue;
+        lastTapEnd = undefined;
+        if (held < 300) {
+            lastTapEnd = getTime();
         }
-
-        player startCarryStation(self);
     }
 }
 
