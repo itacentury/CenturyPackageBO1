@@ -142,22 +142,44 @@ canUseStation(player) {
 }
 
 setStationOwner(player) {
+    oldOwner = self.owner;
     self.owner = player;
     self setOwner(player);
     if (self.ownerTeam != player.team) {
         self.ownerTeam = player.team;
         self.team = player.team;
         self setTeam(player.team);
-        if (level.teambased) {
-            if (isDefined(self.friendlyObjID)) {
-                objective_team(self.friendlyObjID, self.ownerTeam);
+    }
+
+    if (level.teambased) {
+        if (isDefined(self.friendlyObjID)) {
+            objective_team(self.friendlyObjID, self.ownerTeam);
+        }
+
+        if (isDefined(self.enemyObjID)) {
+            objective_team(self.enemyObjID, level.otherTeam[self.ownerTeam]);
+        }
+    } else {
+        // FFA: crateActivate set per-player visibility for the original owner.
+        if (isDefined(self.friendlyObjID)) {
+            if (isDefined(oldOwner)) {
+                Objective_SetInvisibleToPlayer(self.friendlyObjID, oldOwner);
             }
 
-            if (isDefined(self.enemyObjID)) {
-                objective_team(self.enemyObjID, level.otherTeam[self.ownerTeam]);
+            Objective_SetVisibleToPlayer(self.friendlyObjID, player);
+        }
+
+        if (isDefined(self.enemyObjID)) {
+            if (isDefined(oldOwner)) {
+                Objective_SetVisibleToPlayer(self.enemyObjID, oldOwner);
             }
+
+            Objective_SetInvisibleToPlayer(self.enemyObjID, player);
         }
     }
+
+    // Rebuild the red cross head icon for the new team (team modes) or new owner (FFA).
+    self maps\mp\_entityheadicons::setEntityHeadIcon(self.team, self, level.crate_headicon_offset, level.supplyStationCompassIcon, true);
 
     // Hints in range switch between the friendly and enemy text.
     self notify("station_owner_changed");
